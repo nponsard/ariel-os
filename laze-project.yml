@@ -96,11 +96,6 @@ contexts:
         cmd:
           - cd ${appdir} && ${CARGO_ENV} cargo ${CARGO_TOOLCHAIN} ${CARGO_ARGS} clippy ${FEATURES}
 
-      cargo-test:
-        cmd:
-          - cd ${relpath} && ${CARGO_ENV} cargo test --${PROFILE} --features=ariel-os-boards/${builder},ariel-os-rt/debug-console --manifest-path ${app}/Cargo.toml
-        build: false
-
       debug:
         cmd:
           - cd ${appdir} && ${CARGO_ENV} cargo ${CARGO_TOOLCHAIN} ${CARGO_ARGS} run --${PROFILE} ${FEATURES}
@@ -236,8 +231,8 @@ contexts:
         - --cfg context=\"esp\"
         # linkall first
         - -Clink-arg=-Tlinkall.x
-        # this might be needed for backtraces
-        # - -C force-frame-pointers
+        # this might be needed for backtraces. it is needed for probe-rs.
+        - -C force-frame-pointers
       CARGO_ARGS:
         - -Zbuild-std=core,alloc
 
@@ -543,7 +538,7 @@ modules:
 
     env:
       global:
-        CARGO_RUNNER: "'probe-rs run ${PROBE_RS_PROTOCOL} --chip ${PROBE_RS_CHIP}'"
+        CARGO_RUNNER: "'probe-rs run ${PROBE_RS_PROTOCOL} --chip ${PROBE_RS_CHIP} --preverify'"
 
     tasks:
       flash-erase-all:
@@ -840,7 +835,7 @@ modules:
           - ariel-os/semihosting
 
   - name: host-test-only
-    help: This application produces no .elf (it only has tests)
+    help: This application produces no .elf (it only has *cargo* tests)
     context:
       - host
     env:
@@ -857,6 +852,40 @@ modules:
         build: false
         cmd:
           - cd ${appdir} && cargo test --features _test
+
+  - name: embedded-test
+    context: ariel-os
+    selects:
+      # There is an issue with multi-core on esp.
+      - ?esp-single-core
+      - sw/threading
+      - rtt-target
+      - probe-rs
+    tasks:
+      test:
+        cmd:
+          - ${CARGO_ENV} cargo ${CARGO_TOOLCHAIN} ${CARGO_ARGS} -Z unstable-options -C${appdir} test ${FEATURES}
+        build: false
+
+    env:
+      global:
+        RUSTFLAGS:
+          - -Clink-arg=-Tembedded-test.x
+
+  # This helper module works around laze not supporting sth like "if context == foo then depend on bar".
+  - name: esp-single-core
+    help: force single core only on esp
+    context: esp
+    selects:
+      - single-core
+
+  - name: embedded-test-only
+    help: This application produces no .elf (it only has *embedded* tests)
+    selects:
+      - embedded-test
+    env:
+      global:
+        SKIP_CARGO_BUILD: "1"
 
 builders:
   # host builder (for housekeeping tasks)
