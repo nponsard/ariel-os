@@ -16,7 +16,7 @@ ariel_os::hal::define_peripherals!(Peripherals {
     pin_3: P0_05,
 });
 
-#[cfg(context = "rp2040")]
+#[cfg(context = "rp")]
 ariel_os::hal::define_peripherals!(Peripherals {
     pin_0: PIN_0,
     pin_1: PIN_1,

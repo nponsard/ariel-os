@@ -28,14 +28,20 @@ impl Multicore for Chip {
         // Trigger scheduler.
         let start_threading = move || {
             unsafe {
+                #[cfg(context = "rp2040")]
                 interrupt::SIO_IRQ_PROC1.enable();
+                #[cfg(context = "rp235xa")]
+                interrupt::SIO_IRQ_FIFO.enable();
             }
             Cpu::start_threading();
             unreachable!()
         };
         unsafe {
             spawn_core1(CORE1::steal(), STACK.take(), start_threading);
+            #[cfg(context = "rp2040")]
             interrupt::SIO_IRQ_PROC0.enable();
+            #[cfg(context = "rp235xa")]
+            interrupt::SIO_IRQ_FIFO.enable();
         }
     }
 
