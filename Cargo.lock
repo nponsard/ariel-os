@@ -442,6 +442,7 @@ dependencies = [
  "paste",
  "rp-pac",
  "static_cell",
+ "xtensa-lx-rt",
 ]
 
 [[package]]
