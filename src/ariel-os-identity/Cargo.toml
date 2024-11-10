@@ -5,6 +5,9 @@ license.workspace = true
 edition.workspace = true
 repository.workspace = true
 
+[lib]
+harness = false
+
 [lints]
 workspace = true
 
@@ -12,6 +15,11 @@ workspace = true
 ariel-os-embassy = { workspace = true }
 ariel-os-embassy-common = { workspace = true }
 
+[target.'cfg(context = "ariel-os")'.dev-dependencies]
+ariel-os = { path = "../../src/ariel-os" }
+ariel-os-boards = { path = "../../src/ariel-os-boards" }
+
+embedded-test = { workspace = true }
 
 [features]
 _test = ["ariel-os-embassy/executor-none"]

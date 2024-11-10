@@ -682,6 +682,16 @@ modules:
         RUSTFLAGS:
           - --cfg capability=\"hw/usb-device-port\"
 
+  - name: hw/device-identity
+    help: provided if the device implements ariel-os-identity
+    context:
+      - nrf
+      - stm32
+    env:
+      global:
+        RUSTFLAGS:
+          - --cfg capability=\"hw/device-identity\"
+
   - name: hwrng
     help: The board's peripherals are suitable for passing into ariel_os_random::construct_rng.
     context:
