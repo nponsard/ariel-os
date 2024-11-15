@@ -7,7 +7,7 @@ mod pins;
 
 #[allow(unused_imports)]
 use ariel_os::{
-    debug::{exit, log::info, EXIT_SUCCESS},
+    debug::{exit, log::info, ExitCode},
     gpio::{DriveStrength, Input, Level, Output, Pull, Speed},
 };
 
@@ -35,5 +35,5 @@ async fn main(peripherals: pins::Peripherals) {
     let _led_1 = led_1_builder.build();
 
     info!("Test passed!");
-    ariel_os::debug::exit_success();
+    exit(ExitCode::Success);
 }
