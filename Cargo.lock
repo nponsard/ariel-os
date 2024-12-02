@@ -822,7 +822,6 @@ dependencies = [
  "coap-request-implementations",
  "coap-scroll-ring-server",
  "embassy-futures",
- "embassy-net",
  "embassy-sync 0.6.1",
  "embedded-nal-coap",
  "heapless 0.8.0",
@@ -836,7 +835,7 @@ dependencies = [
  "ariel-os",
  "ariel-os-boards",
  "coap-handler-implementations",
- "embassy-sync 0.6.1",
+ "heapless 0.8.0",
  "riot-coap-handler-demos",
 ]
 
@@ -3150,7 +3149,7 @@ checksum = "bd2209fff77f705b00c737016a48e73733d7fbccb8b007194db148f03561fb70"
 dependencies = [
  "proc-macro2",
  "quote",
- "syn 2.0.87",
+ "syn 2.0.90",
 ]
 
 [[package]]
