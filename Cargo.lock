@@ -1000,6 +1000,7 @@ dependencies = [
  "coap-numbers",
  "defmt",
  "defmt-or-log",
+ "document-features",
  "heapless 0.8.0",
  "hexlit",
  "lakers",
