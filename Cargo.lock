@@ -2869,6 +2869,7 @@ version = "0.7.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "dc16a0cee3c98f2045e9b5eaa8f577dd4d8d668d70dec7312c9e617af222f3c5"
 dependencies = [
+ "defmt",
  "defmt-or-log",
  "lakers-shared",
 ]
