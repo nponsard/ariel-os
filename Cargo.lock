@@ -1030,7 +1030,7 @@ dependencies = [
  "liboscore",
  "liboscore-msgbackend",
  "log",
- "minicbor 0.23.0",
+ "minicbor 0.25.1",
 ]
 
 [[package]]
@@ -3256,18 +3256,18 @@ checksum = "d7005aaf257a59ff4de471a9d5538ec868a21586534fff7f85dd97d4043a6139"
 
 [[package]]
 name = "minicbor"
-version = "0.23.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0ded7eb446d01ad767689ff97ac883a548f6e0d266f20a8cb593b67c9d2590b3"
-
-[[package]]
-name = "minicbor"
 version = "0.24.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "29be4f60e41fde478b36998b88821946aafac540e53591e76db53921a0cc225b"
 dependencies = [
  "minicbor-derive",
 ]
+
+[[package]]
+name = "minicbor"
+version = "0.25.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "c0452a60c1863c1f50b5f77cd295e8d2786849f35883f0b9e18e7e6e1b5691b0"
 
 [[package]]
 name = "minicbor-derive"
