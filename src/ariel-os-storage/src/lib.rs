@@ -28,6 +28,9 @@ pub use storage::*;
 
 static STORAGE: OnceLock<Mutex<CriticalSectionRawMutex, Storage<Flash>>> = OnceLock::new();
 
+const MARKER_KEY: &str = "0xdeadcafe";
+const MARKER_VALUE: u32 = 0xdead_cafe;
+
 /// Gets a [`Range`] from the linker that can be used for a global [`Storage`].
 ///
 /// This expects two symbols `__storage_start` and `__storage_end`.
@@ -77,9 +80,6 @@ fn init_(p: &mut OptionalPeripherals) {
 /// Panics when initializing the flash fails.
 #[doc(hidden)]
 pub async fn init(p: &mut OptionalPeripherals) {
-    const MARKER_KEY: &str = "0xdeadcafe";
-    const MARKER_VALUE: u32 = 0xdead_cafe;
-
     init_(p);
 
     // add some delay to give an attached debug probe time to parse the
@@ -96,9 +96,7 @@ pub async fn init(p: &mut OptionalPeripherals) {
         }
         _ => {
             ariel_os_debug::log::info!("storage: initializing");
-            let mut s = lock().await;
-            s.erase_all().await.unwrap();
-            s.insert(MARKER_KEY, MARKER_VALUE).await.unwrap();
+            erase_all().await.unwrap();
         }
     }
 }
@@ -140,6 +138,13 @@ where
 #[cfg(not(context = "stm32"))]
 pub async fn remove(key: &str) -> Result<(), sequential_storage::Error<FlashError>> {
     lock().await.remove(key).await
+}
+
+/// Resets the flash in the entire flash range.
+pub async fn erase_all() -> Result<(), sequential_storage::Error<FlashError>> {
+    let mut s = lock().await;
+    s.erase_all().await?;
+    s.insert(MARKER_KEY, MARKER_VALUE).await
 }
 
 /// Gets a [`MutexGuard`] of the global [`Storage`] object.
