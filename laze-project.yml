@@ -12,7 +12,7 @@ contexts:
     selects:
       - executor-default
       - ?critical-section
-      - ?defmt
+      - ?debug-logging-facade-default
       - ?lto
       - ?semihosting
     env:
@@ -424,9 +424,18 @@ modules:
         FEATURES:
           - ariel-os/debug-console
 
+  # This module should be hard-selected when an application *requires* debug
+  # logging.
+  - name: debug-logging-facade-default
+    selects:
+      - ?defmt
+      - ?log
+      - debug-logging-facade
+
   - name: defmt
-    help: Enable use of defmt
-    context: ariel-os
+    help: Use the `defmt` crate as the debug logging facade
+    provides_unique:
+      - debug-logging-facade
     env:
       global:
         FEATURES:
@@ -439,6 +448,17 @@ modules:
           # `DEFMT_LOG`. Painful as it is, hard-disable `sccache` here.
           - RUSTC_WRAPPER=""
           - DEFMT_LOG=info,${LOG}
+
+  - name: log
+    help: Use the `log` crate as the debug logging facade
+    provides_unique:
+      - debug-logging-facade
+    env:
+      global:
+        FEATURES:
+          - ariel-os/log
+        CARGO_ENV:
+          - DEBUG_LOG_LEVEL=${LOG}
 
   - name: silent-panic
     context: ariel-os

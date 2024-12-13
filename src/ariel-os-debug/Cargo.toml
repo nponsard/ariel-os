@@ -11,13 +11,15 @@ repository.workspace = true
 workspace = true
 
 [dependencies]
-defmt = { workspace = true, optional = true }
+ariel-os-debug-log = { workspace = true }
+ariel-os-utils = { workspace = true }
+const-str = "0.5.7"
+log = { workspace = true, optional = true }
 rtt-target = { workspace = true, optional = true }
-
-semihosting = { version = "0.1.16", optional = true }
+semihosting = { workspace = true, optional = true }
 
 [target.'cfg(context = "xtensa")'.dependencies]
-semihosting = { version = "0.1.16", optional = true, features = [
+semihosting = { workspace = true, optional = true, features = [
   "openocd-semihosting",
 ] }
 
@@ -39,4 +41,13 @@ esp-println = { workspace = true, optional = true, features = ["esp32s3"] }
 
 [features]
 debug-console = []
-defmt = ["dep:defmt", "esp-println?/defmt-espflash", "rtt-target?/defmt"]
+
+defmt = [
+  "ariel-os-debug-log/defmt",
+  "esp-println?/defmt-espflash",
+  "rtt-target?/defmt",
+]
+log = ["dep:log", "ariel-os-debug-log/log"]
+
+rtt-target = ["dep:rtt-target"]
+semihosting = ["dep:semihosting"]

@@ -95,3 +95,4 @@ defmt = [
   "ariel-os-rp/defmt",
   "ariel-os-stm32/defmt",
 ]
+log = ["ariel-os-esp/log"]

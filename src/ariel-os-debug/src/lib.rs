@@ -14,6 +14,9 @@ compile_error!(
     r#"feature "debug-console" enabled but no backend. Select feature "rtt-target" or feature "esp-println"."#
 );
 
+#[doc(inline)]
+pub use ariel_os_debug_log as log;
+
 /// Represents the exit code of a debug session.
 #[derive(Debug, Copy, Clone, PartialEq, Eq)]
 pub enum ExitCode {
@@ -63,6 +66,9 @@ mod backend {
             rtt_target::rtt_init_print!(NoBlockTrim);
         }
 
+        #[cfg(feature = "log")]
+        crate::logger::init();
+
         #[cfg(feature = "defmt")]
         {
             use rtt_target::ChannelMode::{NoBlockSkip, NoBlockTrim};
@@ -91,11 +97,10 @@ mod backend {
 #[cfg(all(feature = "debug-console", feature = "esp-println"))]
 mod backend {
     pub use esp_println::{print, println};
+
     pub fn init() {
-        // TODO: unify logging config.
-        // Until then, `ESP_LOGLEVEL` can be used.
-        // See https://github.com/esp-rs/esp-println#logging.
-        esp_println::logger::init_logger_from_env();
+        #[cfg(feature = "log")]
+        crate::logger::init();
     }
 }
 
@@ -125,69 +130,58 @@ mod backend {
 
 pub use backend::*;
 
-#[cfg(feature = "defmt")]
-pub mod log {
-    pub use defmt;
+#[doc(hidden)]
+#[cfg(feature = "log")]
+mod logger {
+    use log::{Level, LevelFilter, Metadata, Record};
 
-    #[macro_export]
-    macro_rules! __trace {
-        ($($arg:tt)*) => {{
-            use $crate::log::defmt;
-            defmt::trace!($($arg)*);
-        }};
+    static LOGGER: DebugLogger = DebugLogger;
+
+    const MAX_LEVEL: LevelFilter = {
+        let max_level =
+            ariel_os_utils::str_from_env_or!("DEBUG_LOG_LEVEL", "info", "maximum level to log");
+
+        // NOTE: these magic strings could likely be replaced with calls to
+        // `LevelFilter::*::as_str()` if that method was const.
+        if const_str::compare!(==, max_level, "trace") {
+            LevelFilter::Trace
+        } else if const_str::compare!(==, max_level, "debug") {
+            LevelFilter::Debug
+        } else if const_str::compare!(==, max_level, "info") {
+            LevelFilter::Info
+        } else if const_str::compare!(==, max_level, "warn") {
+            LevelFilter::Warn
+        } else if const_str::compare!(==, max_level, "error") {
+            LevelFilter::Error
+        } else if const_str::compare!(==, max_level, "off") {
+            LevelFilter::Off
+        } else if const_str::compare!(==, max_level, "") {
+            // Default level
+            LevelFilter::Info
+        } else {
+            panic!("invalid log level");
+        }
+    };
+
+    pub fn init() {
+        log::set_logger(&LOGGER).unwrap();
+        log::set_max_level(MAX_LEVEL);
+        log::trace!("debug logging enabled");
     }
 
-    #[macro_export]
-    macro_rules! __debug {
-        ($($arg:tt)*) => {{
-            use $crate::log::defmt;
-            defmt::debug!($($arg)*);
-        }};
+    struct DebugLogger;
+
+    impl log::Log for DebugLogger {
+        fn enabled(&self, metadata: &Metadata) -> bool {
+            metadata.level() <= Level::Info
+        }
+
+        fn log(&self, record: &Record) {
+            if self.enabled(record.metadata()) {
+                crate::println!("[{}] {}", record.level(), record.args());
+            }
+        }
+
+        fn flush(&self) {}
     }
-
-    #[macro_export]
-    macro_rules! __info {
-        ($($arg:tt)*) => {{
-            use $crate::log::defmt;
-            defmt::info!($($arg)*);
-        }};
-    }
-
-    #[macro_export]
-    macro_rules! __warn {
-        ($($arg:tt)*) => {{
-            use $crate::log::defmt;
-            defmt::warn!($($arg)*);
-        }};
-    }
-
-    #[macro_export]
-    macro_rules! __error {
-        ($($arg:tt)*) => {{
-            use $crate::log::defmt;
-            defmt::error!($($arg)*);
-        }};
-    }
-
-    pub use __debug as debug;
-    pub use __error as error;
-    pub use __info as info;
-    pub use __trace as trace;
-    pub use __warn as warn;
-}
-
-#[cfg(not(feature = "defmt"))]
-pub mod log {
-    #[macro_export]
-    macro_rules! __stub {
-        ($($arg:tt)*) => {{
-            let _ = ($($arg)*); // Do nothing
-        }};
-    }
-
-    pub use __stub as debug;
-    pub use __stub as error;
-    pub use __stub as info;
-    pub use __stub as trace;
-    pub use __stub as warn;
 }

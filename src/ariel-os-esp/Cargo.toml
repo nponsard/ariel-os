@@ -93,6 +93,8 @@ spi = ["dep:fugit", "ariel-os-embassy-common/spi"]
 
 ## Enables defmt support.
 defmt = ["dep:defmt", "esp-hal/defmt", "esp-wifi?/defmt", "fugit?/defmt"]
+## Enables log support.
+log = ["esp-hal/log", "esp-hal-embassy/log", "esp-wifi?/log"]
 
 # Enables USB support.
 usb = []
