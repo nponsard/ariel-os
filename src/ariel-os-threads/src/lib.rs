@@ -470,7 +470,7 @@ impl Scheduler {
 }
 
 /// ID of a physical core.
-#[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub struct CoreId(pub(crate) u8);
 
