@@ -5,12 +5,13 @@ Ariel OS supports [defmt] on all platforms. It is enabled by default.
 See the [defmt documentation] for general info on `defmt`.
 
 In Ariel OS, the log level defaults to `info`. It can be configured using the
-laze variable `LOG`.
+laze variable `LOG`. As usual with defmt, different levels can be given per
+crate or per module.
 
 Example:
 
 ```shell
-# laze build -C examples/log --builders nrf52840dk -DLOG=warn run
+# laze build -C examples/log --builders nrf52840dk -DLOG=warn,ariel_os_rt=trace run
 ```
 
 Then within Rust code, import `ariel_os::debug::log` items, then use `defmt` log
