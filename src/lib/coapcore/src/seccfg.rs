@@ -400,7 +400,7 @@ impl ServerSecurityConfig for StaticSymmetric31 {
 
         ciphertext_buffer.truncate(ciphertext_len);
 
-        Ok(crate::scope::ParsingAif)
+        Ok(crate::scope::ParsingAif::default())
     }
 
     fn render_not_allowed<M: coap_message::MutableWritableMessage>(
