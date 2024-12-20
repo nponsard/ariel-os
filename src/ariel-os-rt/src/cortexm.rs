@@ -26,6 +26,10 @@ pub fn ipsr_isr_number_to_str(isr_number: usize) -> &'static str {
 /// Extra verbose Cortex-M HardFault handler
 ///
 /// (copied from Tock OS)
+///
+/// # Safety
+///
+/// - must not be called manually
 #[allow(non_snake_case)]
 #[allow(unsafe_op_in_unsafe_fn)]
 #[exception]
@@ -169,6 +173,9 @@ unsafe fn HardFault(ef: &ExceptionFrame) -> ! {
     );
 }
 
+/// # Safety
+///
+/// - must not be called manually
 #[exception]
 unsafe fn DefaultHandler(_irqn: i16) {
     #[cfg(not(feature = "silent-panic"))]

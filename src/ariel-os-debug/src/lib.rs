@@ -39,15 +39,15 @@ impl ExitCode {
 }
 
 pub fn exit(code: ExitCode) {
-    loop {
-        #[cfg(feature = "semihosting")]
-        semihosting::process::exit(code.to_semihosting_code());
+    #[cfg(feature = "semihosting")]
+    semihosting::process::exit(code.to_semihosting_code());
 
-        #[cfg(not(feature = "semihosting"))]
-        {
-            let _ = code;
-            core::hint::spin_loop();
-        }
+    #[allow(unreachable_code, reason = "stop nagging")]
+    let _ = code;
+
+    #[allow(unreachable_code, reason = "fallback loop")]
+    loop {
+        core::hint::spin_loop();
     }
 }
 

@@ -86,6 +86,9 @@ impl Arch for Cpu {
     }
 }
 
+/// # Safety
+///
+/// - must not be called manually
 #[cfg(any(armv7m, armv8m))]
 #[naked]
 #[no_mangle]
@@ -125,7 +128,10 @@ unsafe extern "C" fn PendSV() {
     };
 }
 
-#[cfg(any(armv6m))]
+/// # Safety
+///
+/// - must not be called manually
+#[cfg(armv6m)]
 #[naked]
 #[no_mangle]
 #[allow(non_snake_case)]
@@ -194,6 +200,10 @@ unsafe extern "C" fn PendSV() {
 ///   - `r1`: pointer to [`Thread::high_regs`] from new thread (to load new register state)
 ///
 /// This function is called in PendSV from assembly, so it must be `extern "C"`.
+///
+/// # Safety
+///
+/// - must not be called manually (only by PendSV)
 unsafe extern "C" fn sched() -> u64 {
     let (current_high_regs, next_high_regs) = loop {
         if let Some(res) = critical_section::with(|cs| {
