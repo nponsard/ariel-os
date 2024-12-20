@@ -95,8 +95,10 @@ pub const IDLE_THREAD_STACK_SIZE: usize = smp::Chip::IDLE_THREAD_STACK_SIZE;
 
 static SCHEDULER: EnsureOnce<Scheduler> = EnsureOnce::new(Scheduler::new());
 
+#[doc(hidden)]
 pub type ThreadFn = fn();
 
+#[doc(hidden)]
 #[linkme::distributed_slice]
 pub static THREAD_FNS: [ThreadFn] = [..];
 
@@ -491,6 +493,7 @@ impl From<CoreId> for usize {
 ///
 /// Currently it expects at least:
 /// - Cortex-M: to be called from the reset handler while MSP is active
+#[doc(hidden)]
 pub unsafe fn start_threading() {
     #[cfg(feature = "multi-core")]
     {
@@ -520,9 +523,8 @@ pub unsafe fn start_threading() {
 }
 
 /// Trait for types that fit into a single register.
-///
-/// Currently implemented for static references (`&'static T`) and usize.
 pub trait Arguable {
+    #[doc(hidden)]
     fn into_arg(self) -> usize;
 }
 
@@ -585,6 +587,7 @@ pub fn thread_create_noarg(
 /// # Safety
 ///
 /// Only use when you know what you are doing.
+#[doc(hidden)]
 pub unsafe fn thread_create_raw(
     func: usize,
     arg: usize,
