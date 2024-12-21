@@ -1,6 +1,6 @@
 //! Provides debug interface facilities.
 
-#![cfg_attr(not(test), no_std)]
+#![cfg_attr(not(any(test, feature = "std")), no_std)]
 #![cfg_attr(test, no_main)]
 #![deny(missing_docs)]
 
@@ -42,6 +42,9 @@ impl ExitCode {
 pub fn exit(code: ExitCode) {
     #[cfg(feature = "semihosting")]
     semihosting::process::exit(code.to_semihosting_code());
+
+    #[cfg(feature = "std")]
+    std::process::exit(code.to_semihosting_code());
 
     #[allow(unreachable_code, reason = "stop nagging")]
     let _ = code;
@@ -175,6 +178,17 @@ pub mod backend {
     }
 }
 
+#[cfg(all(feature = "debug-console", feature = "std"))]
+mod backend {
+    pub use std::println;
+
+    #[doc(hidden)]
+    pub fn init() {
+        #[cfg(feature = "log")]
+        crate::logger::init();
+    }
+}
+
 #[cfg(not(feature = "debug-console"))]
 mod backend {
     #[doc(hidden)]
@@ -252,7 +266,7 @@ mod logger {
             });
         }
 
-        log::trace!("debug logging enabled");
+        log::debug!("debug logging enabled at level {}", MAX_LEVEL);
     }
 
     struct DebugLogger;
