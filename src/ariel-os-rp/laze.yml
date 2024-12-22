@@ -1,0 +1,10 @@
+apps:
+  - name: crates/ariel-os-rp
+    selects:
+      - host-test-only
+    env:
+      global:
+        RUSTFLAGS:
+          - '--cfg context="rp2040"'
+        RUSTDOCFLAGS:
+          - '--cfg context="rp2040"'

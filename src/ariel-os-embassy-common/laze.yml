@@ -1,0 +1,4 @@
+apps:
+  - name: crates/ariel-os-embassy-common
+    selects:
+      - host-test-only

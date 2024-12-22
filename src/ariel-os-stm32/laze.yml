@@ -1,0 +1,10 @@
+apps:
+  - name: crates/ariel-os-stm32
+    selects:
+      - host-test-only
+    env:
+      global:
+        RUSTFLAGS:
+          - '--cfg context="stm32wb55rgvx"'
+        RUSTDOCFLAGS:
+          - '--cfg context="stm32wb55rgvx"'

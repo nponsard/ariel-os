@@ -13,3 +13,6 @@ description = "A FIFO index queue that can be used for implementing a ring buffe
 workspace = true
 
 [dependencies]
+
+[features]
+_test = []

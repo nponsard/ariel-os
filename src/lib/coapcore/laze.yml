@@ -1,0 +1,4 @@
+apps:
+  - name: crates/coapcore
+    selects:
+      - host-test-only

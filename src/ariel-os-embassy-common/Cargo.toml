@@ -29,3 +29,5 @@ i2c = ["dep:fugit"]
 spi = ["dep:fugit"]
 
 defmt = ["dep:defmt", "fugit?/defmt"]
+
+_test = ["i2c", "spi", "external-interrupts"]
