@@ -49,6 +49,3 @@ _esp32 = []
 _esp32c3 = []
 _esp32c6 = []
 _esp32s3 = []
-
-[dev-dependencies]
-ariel-os-boards = { path = "../ariel-os-boards" }
