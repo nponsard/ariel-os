@@ -1,4 +1,4 @@
 apps:
-  - name: log
+  - name: example-log
     selects:
       - defmt
