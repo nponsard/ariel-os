@@ -1,0 +1,4 @@
+apps:
+  - name: crates/ariel-os-threads
+    selects:
+      - host-test-only

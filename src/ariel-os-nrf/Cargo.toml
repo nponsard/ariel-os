@@ -74,3 +74,5 @@ defmt = ["dep:defmt", "embassy-nrf/defmt"]
 
 ## Enables the interrupt executor.
 executor-interrupt = ["embassy-executor/executor-interrupt"]
+
+_test = ["embassy-nrf/nrf52840", "external-interrupts", "i2c", "spi"]

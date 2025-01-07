@@ -29,65 +29,18 @@ jobs:
         with:
           toolchain: ${{ steps.get_toolchain.outputs.toolchain }}
 
-      # TODO: we'll eventually want to test the whole workspace with --workspace
-      # TODO: we'll eventually want to enable relevant features
-      - name: Run crate tests
-        run: |
-            RUSTFLAGS='-D warnings' cargo test \
-                --no-default-features \
-                --features "
-                    external-interrupts,
-                    i2c,
-                    no-boards,
-                    spi,
-                    " \
-                -p ariel-os \
-                -p ariel-os-embassy \
-                -p ariel-os-embassy-common \
-                -p ariel-os-identity \
-                -p ariel-os-macros \
-                -p ariel-os-runqueue \
-                -p ariel-os-threads \
+      - uses: taiki-e/install-action@v2
+        with:
+          tool: cargo-binstall
 
-            cargo test \
-                -p coapcore \
-                -p rbi \
-                -p ringbuffer \
-
-      # We need to set `RUSTDOCFLAGS` as well in the following jobs, because it
-      # is used for doc tests.
-      - name: cargo test for RP
+      - name: Install prerequisites
         run: |
-            RUSTDOCFLAGS='--cfg context="rp2040"' RUSTFLAGS='-D warnings --cfg context="rp2040"' cargo test \
-                --features "
-                    embassy-rp/rp2040,
-                    external-interrupts,
-                    i2c,
-                    spi,
-                    " \
-                -p ariel-os-rp
+          cargo binstall --no-confirm --no-symlinks --force --no-discover-github-token laze
+          echo "$HOME/.cargo/bin" >> $GITHUB_PATH
+          sudo apt-get install ninja-build gcc-arm-none-eabi
 
-      - name: cargo test for nRF
-        run: |
-            RUSTDOCFLAGS='--cfg context="nrf52840"' RUSTFLAGS='-D warnings --cfg context="nrf52840"' cargo test \
-                --features "
-                    embassy-nrf/nrf52840,
-                    external-interrupts,
-                    i2c,
-                    spi,
-                    " \
-                -p ariel-os-nrf
-
-      - name: cargo test for STM32
-        run: |
-            RUSTDOCFLAGS='--cfg context="stm32wb55rgvx"' RUSTFLAGS='-D warnings --cfg context="stm32wb55rgvx"' cargo test \
-                --features "
-                    embassy-stm32/stm32wb55rg,
-                    external-interrupts,
-                    i2c,
-                    spi,
-                    " \
-                -p ariel-os-stm32
+      - name: Run host-side crate tests
+        run: laze build --builders host --multiple-tasks --global --keep-going=0 test
 
   lint:
     runs-on: ubuntu-latest

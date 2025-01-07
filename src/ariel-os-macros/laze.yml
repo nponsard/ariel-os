@@ -1,0 +1,4 @@
+apps:
+  - name: crates/ariel-os-macros
+    selects:
+      - host-test-only

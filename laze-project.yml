@@ -68,6 +68,7 @@ contexts:
         pool: console
         always: true
         cmd: >-
+          test "${SKIP_CARGO_BUILD}" = "1" && exit 0;
           cd ${relpath} && ${CARGO_ENV} cargo ${CARGO_TOOLCHAIN} ${CARGO_ARGS} build --${PROFILE} ${FEATURES}
           && cp ${relroot}/${build-dir}/bin/${builder}/cargo/${RUSTC_TARGET}/${PROFILE}/${riot_binary} ${relroot}/${out}
 
@@ -437,7 +438,7 @@ modules:
           - ariel-os/defmt
         RUSTFLAGS:
           - -Clink-arg=-Tdefmt.x
-        ESPFLASH_LOG_FORMAT: '--log-format defmt'
+        ESPFLASH_LOG_FORMAT: "--log-format defmt"
         CARGO_ENV:
           # For some reason, `sccache` makes the build not realize changes to
           # `DEFMT_LOG`. Painful as it is, hard-disable `sccache` here.
@@ -837,6 +838,25 @@ modules:
       global:
         FEATURES:
           - ariel-os/semihosting
+
+  - name: host-test-only
+    help: This application produces no .elf (it only has tests)
+    context:
+      - host
+    env:
+      global:
+        SKIP_CARGO_BUILD: "1"
+        RUSTFLAGS:
+          - -Dwarnings
+    tasks:
+      test:
+        help: runs `cargo test` for this crate
+        export:
+          - RUSTFLAGS
+          - RUSTDOCFLAGS
+        build: false
+        cmd:
+          - cd ${appdir} && cargo test --features _test
 
 builders:
   # host builder (for housekeeping tasks)

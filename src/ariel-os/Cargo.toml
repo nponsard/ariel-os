@@ -138,3 +138,6 @@ executor-thread = ["ariel-os-embassy/executor-thread", "threading"]
 # Don't start any executor automatically.
 # *Used for internal testing only.*
 executor-none = ["ariel-os-embassy/executor-none"]
+
+# features needed for `cargo test`
+_test = ["i2c", "no-boards", "spi", "external-interrupts"]

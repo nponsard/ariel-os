@@ -10,3 +10,6 @@ workspace = true
 
 [dependencies]
 rbi = { path = "../rbi" }
+
+[features]
+_test = []

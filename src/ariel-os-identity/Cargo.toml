@@ -11,3 +11,7 @@ workspace = true
 [dependencies]
 ariel-os-embassy = { workspace = true }
 ariel-os-embassy-common = { workspace = true }
+
+
+[features]
+_test = ["ariel-os-embassy/executor-none"]

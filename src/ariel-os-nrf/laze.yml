@@ -1,0 +1,10 @@
+apps:
+  - name: crates/ariel-os-nrf
+    selects:
+      - host-test-only
+    env:
+      global:
+        RUSTFLAGS:
+          - '--cfg context="nrf52840"'
+        RUSTDOCFLAGS:
+          - '--cfg context="nrf52840"'

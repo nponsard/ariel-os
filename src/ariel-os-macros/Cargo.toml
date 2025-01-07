@@ -31,3 +31,6 @@ trybuild = "1.0.89"
 
 [lib]
 proc-macro = true
+
+[features]
+_test = []

@@ -56,3 +56,5 @@ multi-core = [
   "embassy-rp/fifo-handler",
 ]
 core-affinity = ["multi-core"]
+
+_test = []
