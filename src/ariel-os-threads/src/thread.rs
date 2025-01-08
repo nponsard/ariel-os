@@ -13,7 +13,7 @@ pub struct Thread {
     /// Priority of the thread between 0..[`super::SCHED_PRIO_LEVELS`].
     /// Multiple threads may have the same priority.
     pub prio: RunqueueId,
-    /// Id of the thread between 0..[`super::THREADS_NUMOF`].
+    /// Id of the thread between 0..[`super::THREAD_COUNT`].
     /// Ids are unique while a thread is alive but reused after a thread finished.
     pub tid: ThreadId,
     /// Flags set for the thread.

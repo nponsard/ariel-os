@@ -8,7 +8,7 @@
 //!
 //! Threads should be implemented using the `ariel_os_macros::thread` proc macro, which takes care
 //! of calling the necessary initialization methods and linking the thread function element it into the binary.
-//! A [`ThreadId`] between 0 and [`THREADS_NUMOF`] is assigned to each thread in the order in
+//! A [`ThreadId`] between 0 and [`THREAD_COUNT`] is assigned to each thread in the order in
 //! which the threads are declared.
 //!
 //! Optionally, the stacksize and a priority between 1 and [`SCHED_PRIO_LEVELS`] can be configured.
@@ -86,10 +86,10 @@ pub struct CoreAffinity {
 pub const SCHED_PRIO_LEVELS: usize = 12;
 
 /// The maximum number of concurrent threads that can be created.
-pub const THREADS_NUMOF: usize = 16;
+pub const THREAD_COUNT: usize = 16;
 
 #[cfg(feature = "multi-core")]
-pub const CORES_NUMOF: usize = smp::Chip::CORES as usize;
+pub const CORE_COUNT: usize = smp::Chip::CORES as usize;
 #[cfg(feature = "multi-core")]
 pub const IDLE_THREAD_STACK_SIZE: usize = smp::Chip::IDLE_THREAD_STACK_SIZE;
 
@@ -105,16 +105,16 @@ pub static THREAD_FNS: [ThreadFn] = [..];
 /// Struct holding all scheduler state
 struct Scheduler {
     /// Global thread runqueue.
-    runqueue: RunQueue<SCHED_PRIO_LEVELS, THREADS_NUMOF>,
+    runqueue: RunQueue<SCHED_PRIO_LEVELS, THREAD_COUNT>,
     /// The actual TCBs.
-    threads: [Thread; THREADS_NUMOF],
+    threads: [Thread; THREAD_COUNT],
     /// `Some` when a thread is blocking another thread due to conflicting
     /// resource access.
-    thread_blocklist: [Option<ThreadId>; THREADS_NUMOF],
+    thread_blocklist: [Option<ThreadId>; THREAD_COUNT],
 
     /// The currently running thread(s).
     #[cfg(feature = "multi-core")]
-    current_threads: [Option<ThreadId>; CORES_NUMOF],
+    current_threads: [Option<ThreadId>; CORE_COUNT],
     #[cfg(not(feature = "multi-core"))]
     current_thread: Option<ThreadId>,
 }
@@ -123,10 +123,10 @@ impl Scheduler {
     const fn new() -> Self {
         Self {
             runqueue: RunQueue::new(),
-            threads: [const { Thread::default() }; THREADS_NUMOF],
-            thread_blocklist: [const { None }; THREADS_NUMOF],
+            threads: [const { Thread::default() }; THREAD_COUNT],
+            thread_blocklist: [const { None }; THREAD_COUNT],
             #[cfg(feature = "multi-core")]
-            current_threads: [None; CORES_NUMOF],
+            current_threads: [None; CORE_COUNT],
             #[cfg(not(feature = "multi-core"))]
             current_thread: None,
         }
@@ -209,7 +209,7 @@ impl Scheduler {
     ///
     /// # Panics
     ///
-    /// Panics if `thread_id` is >= [`THREADS_NUMOF`].
+    /// Panics if `thread_id` is >= [`THREAD_COUNT`].
     /// If the thread for this `thread_id` is in an invalid state, the
     /// data in the returned [`Thread`] is undefined, i.e. empty or outdated.
     fn get_unchecked(&self, thread_id: ThreadId) -> &Thread {
@@ -220,7 +220,7 @@ impl Scheduler {
     ///
     /// # Panics
     ///
-    /// Panics if `thread_id` is >= [`THREADS_NUMOF`].
+    /// Panics if `thread_id` is >= [`THREAD_COUNT`].
     /// If the thread for this `thread_id` is in an invalid state, the
     /// data in the returned [`Thread`] is undefined, i.e. empty or outdated.
     fn get_unchecked_mut(&mut self, thread_id: ThreadId) -> &mut Thread {
@@ -229,7 +229,7 @@ impl Scheduler {
 
     /// Returns an unused ThreadId / Thread slot.
     fn get_unused(&mut self) -> Option<(&mut Thread, ThreadId)> {
-        for i in 0..THREADS_NUMOF {
+        for i in 0..THREAD_COUNT {
             if self.threads[i].state == ThreadState::Invalid {
                 return Some((&mut self.threads[i], ThreadId::new(i as u8)));
             }
@@ -239,7 +239,7 @@ impl Scheduler {
 
     /// Checks if a thread with valid state exists for this `thread_id`.
     fn is_valid_tid(&self, thread_id: ThreadId) -> bool {
-        if usize::from(thread_id) >= THREADS_NUMOF {
+        if usize::from(thread_id) >= THREAD_COUNT {
             false
         } else {
             self.threads[usize::from(thread_id)].state != ThreadState::Invalid
@@ -253,7 +253,7 @@ impl Scheduler {
     ///
     /// # Panics
     ///
-    /// Panics if `tid` is >= [`THREADS_NUMOF`].
+    /// Panics if `tid` is >= [`THREAD_COUNT`].
     fn set_state(&mut self, tid: ThreadId, state: ThreadState) -> ThreadState {
         let thread = self.get_unchecked_mut(tid);
         let old_state = core::mem::replace(&mut thread.state, state);
@@ -497,7 +497,7 @@ impl From<CoreId> for usize {
 pub unsafe fn start_threading() {
     #[cfg(feature = "multi-core")]
     {
-        ariel_os_debug::log::debug!("ariel-os-threads: SMP mode with {} cores", CORES_NUMOF);
+        ariel_os_debug::log::debug!("ariel-os-threads: SMP mode with {} cores", CORE_COUNT);
 
         // Idle thread that prompts the core to enter deep sleep.
         fn idle_thread() {
@@ -509,8 +509,8 @@ pub unsafe fn start_threading() {
         // Stacks for the idle threads.
         // Creating them inside the below for-loop is not possible because it would result in
         // duplicate identifiers for the created `static`.
-        static STACKS: [ConstStaticCell<[u8; IDLE_THREAD_STACK_SIZE]>; CORES_NUMOF] =
-            [const { ConstStaticCell::new([0u8; IDLE_THREAD_STACK_SIZE]) }; CORES_NUMOF];
+        static STACKS: [ConstStaticCell<[u8; IDLE_THREAD_STACK_SIZE]>; CORE_COUNT] =
+            [const { ConstStaticCell::new([0u8; IDLE_THREAD_STACK_SIZE]) }; CORE_COUNT];
 
         // Create one idle thread for each core with lowest priority.
         for stack in &STACKS {
@@ -556,7 +556,7 @@ impl<T> Arguable for &'static T {
 ///
 /// # Panics
 ///
-/// Panics if more than [`THREADS_NUMOF`] concurrent threads have been created.
+/// Panics if more than [`THREAD_COUNT`] concurrent threads have been created.
 pub fn thread_create<T: Arguable + Send>(
     func: fn(arg: T),
     arg: T,
@@ -572,7 +572,7 @@ pub fn thread_create<T: Arguable + Send>(
 ///
 /// # Panics
 ///
-/// Panics if more than [`THREADS_NUMOF`] concurrent threads have been created.
+/// Panics if more than [`THREAD_COUNT`] concurrent threads have been created.
 pub fn thread_create_noarg(
     func: fn(),
     stack: &'static mut [u8],
@@ -598,7 +598,7 @@ pub unsafe fn thread_create_raw(
     SCHEDULER.with_mut(|mut scheduler| {
         let thread_id = scheduler
             .create(func, arg, stack, RunqueueId::new(prio), core_affinity)
-            .expect("Max `THREADS_NUMOF` concurrent threads should be created.");
+            .expect("Max `THREAD_COUNT` concurrent threads should be created.");
         scheduler.set_state(thread_id, ThreadState::Running);
         thread_id
     })

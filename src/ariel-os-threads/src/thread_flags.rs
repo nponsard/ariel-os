@@ -19,7 +19,7 @@ pub enum WaitMode {
 ///
 /// # Panics
 ///
-/// Panics if `thread_id` is >= [`THREADS_NUMOF`](crate::THREADS_NUMOF).
+/// Panics if `thread_id` is >= [`THREAD_COUNT`](crate::THREAD_COUNT).
 pub fn set(thread_id: ThreadId, mask: ThreadFlags) {
     SCHEDULER.with_mut(|mut scheduler| scheduler.flag_set(thread_id, mask))
 }
