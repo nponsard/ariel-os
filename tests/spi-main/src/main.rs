@@ -24,6 +24,7 @@ use ariel_os::{
         Mode,
     },
 };
+
 use embassy_sync::mutex::Mutex;
 use embedded_hal_async::spi::{Operation, SpiDevice as _};
 

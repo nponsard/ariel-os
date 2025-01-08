@@ -27,6 +27,10 @@
 #![no_std]
 #![deny(missing_docs)]
 #![deny(clippy::pedantic)]
+// required for tests:
+#![cfg_attr(test, no_main)]
+#![cfg_attr(test, feature(impl_trait_in_assoc_type))]
+#![cfg_attr(test, feature(used_with_arg))]
 
 pub use ariel_os_embassy_common::identity::Eui48;
 
@@ -72,4 +76,19 @@ pub fn interface_eui48(if_index: u32) -> Result<Eui48, impl core::error::Error> 
     use ariel_os_embassy_common::identity::DeviceId;
 
     ariel_os_embassy::hal::identity::DeviceId::get().map(|d| d.interface_eui48(if_index))
+}
+
+#[cfg(test)]
+#[embedded_test::tests]
+mod tests {
+    #[test]
+    async fn has_device_id() {
+        let device_id = ariel_os::identity::device_id_bytes();
+
+        if cfg!(capability = "hw/device-identity") {
+            assert!(device_id.is_ok());
+        } else {
+            assert!(device_id.is_err());
+        }
+    }
 }

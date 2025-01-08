@@ -6,7 +6,6 @@ subdirs:
   - ariel-os-macros
   - ariel-os-nrf
   - ariel-os-rp
-  - ariel-os-rt
   - ariel-os-runqueue
   - ariel-os-stm32
   - ariel-os-threads

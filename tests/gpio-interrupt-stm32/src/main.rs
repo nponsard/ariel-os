@@ -4,7 +4,7 @@
 #![feature(used_with_arg)]
 
 use ariel_os::{
-    debug::log::info,
+    debug::{exit, log::info, ExitCode},
     gpio::{self, Input, Pull},
     hal::peripherals,
 };
@@ -38,4 +38,5 @@ async fn main(peripherals: ButtonPeripherals) {
     ));
 
     info!("Test passed!");
+    exit(ExitCode::Success);
 }

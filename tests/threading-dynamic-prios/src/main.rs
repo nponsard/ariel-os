@@ -5,7 +5,10 @@
 
 use portable_atomic::{AtomicUsize, Ordering};
 
-use ariel_os::thread::{RunqueueId, ThreadId};
+use ariel_os::{
+    debug::{exit, ExitCode},
+    thread::{RunqueueId, ThreadId},
+};
 
 static RUN_ORDER: AtomicUsize = AtomicUsize::new(0);
 
@@ -32,7 +35,7 @@ fn thread0() {
 
     assert_eq!(RUN_ORDER.fetch_add(1, Ordering::AcqRel), 2);
     ariel_os::debug::log::info!("Test passed!");
-    loop {}
+    exit(ExitCode::Success);
 }
 
 #[ariel_os::thread(autostart, priority = 1)]

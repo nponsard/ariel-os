@@ -3,7 +3,11 @@
 #![feature(type_alias_impl_trait)]
 #![feature(used_with_arg)]
 
-use ariel_os::thread::{sync::Lock, thread_flags, ThreadId};
+use ariel_os::{
+    debug::{exit, ExitCode},
+    thread::{sync::Lock, thread_flags, ThreadId},
+};
+
 use portable_atomic::{AtomicUsize, Ordering};
 
 static LOCK: Lock = Lock::new();
@@ -32,6 +36,7 @@ fn thread0() {
     // Wait for other threads to complete.
     thread_flags::wait_all(0b111);
     ariel_os::debug::log::info!("Test passed!");
+    exit(ExitCode::Success);
 }
 
 #[ariel_os::thread(autostart, priority = 2)]
