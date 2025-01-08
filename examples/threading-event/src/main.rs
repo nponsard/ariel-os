@@ -8,7 +8,7 @@ use ariel_os::thread::{sync::Event, ThreadId};
 static EVENT: Event = Event::new();
 
 fn waiter() {
-    let my_id = ariel_os::thread::current_pid().unwrap();
+    let my_id = ariel_os::thread::current_tid().unwrap();
     let my_prio = ariel_os::thread::get_priority(my_id).unwrap();
     info!("[{:?}@{}] Waiting for event...", my_id, my_prio);
     EVENT.wait();
@@ -42,7 +42,7 @@ fn thread3() {
 
 #[ariel_os::thread(autostart, priority = 1)]
 fn thread4() {
-    let my_id = ariel_os::thread::current_pid().unwrap();
+    let my_id = ariel_os::thread::current_tid().unwrap();
     let my_prio = ariel_os::thread::get_priority(my_id).unwrap();
     info!("[{:?}@{}] Setting event...", my_id, my_prio);
     EVENT.set();

@@ -212,8 +212,8 @@ unsafe extern "C" fn sched() -> u64 {
             #[cfg(feature = "multi-core")]
             scheduler.add_current_thread_to_rq();
 
-            let next_pid = match scheduler.get_next_pid() {
-                Some(pid) => pid,
+            let next_tid = match scheduler.get_next_tid() {
+                Some(tid) => tid,
                 None => {
                     #[cfg(feature = "multi-core")]
                     unreachable!("At least one idle thread is always present for each core.");
@@ -233,20 +233,20 @@ unsafe extern "C" fn sched() -> u64 {
             // The returned `r1` therefore will be null, and saving/ restoring
             // the context is skipped.
             let mut current_high_regs = core::ptr::null();
-            if let Some(ref mut current_pid_ref) = scheduler.current_pid_mut() {
-                if next_pid == *current_pid_ref {
+            if let Some(ref mut current_tid_ref) = scheduler.current_tid_mut() {
+                if next_tid == *current_tid_ref {
                     return Some((0, 0));
                 }
-                let current_pid = *current_pid_ref;
-                *current_pid_ref = next_pid;
-                let current = scheduler.get_unchecked_mut(current_pid);
+                let current_tid = *current_tid_ref;
+                *current_tid_ref = next_tid;
+                let current = scheduler.get_unchecked_mut(current_tid);
                 current.data.sp = cortex_m::register::psp::read() as usize;
                 current_high_regs = current.data.high_regs.as_ptr();
             } else {
-                *scheduler.current_pid_mut() = Some(next_pid);
+                *scheduler.current_tid_mut() = Some(next_tid);
             }
 
-            let next = scheduler.get_unchecked(next_pid);
+            let next = scheduler.get_unchecked(next_tid);
             // SAFETY: changing the PSP as part of context switch
             unsafe { cortex_m::register::psp::write(next.data.sp as u32) };
             let next_high_regs = next.data.high_regs.as_ptr();

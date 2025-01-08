@@ -131,26 +131,26 @@ unsafe fn sched(trap_frame: &mut TrapFrame) {
             #[cfg(feature = "multi-core")]
             scheduler.add_current_thread_to_rq();
 
-            let next_pid = match scheduler.get_next_pid() {
-                Some(pid) => pid,
+            let next_tid = match scheduler.get_next_tid() {
+                Some(tid) => tid,
                 None => {
                     Cpu::wfi();
                     return false;
                 }
             };
 
-            if let Some(current_pid) = scheduler.current_pid() {
-                if next_pid == current_pid {
+            if let Some(current_tid) = scheduler.current_tid() {
+                if next_tid == current_tid {
                     return true;
                 }
                 copy_registers(
                     trap_frame,
-                    &mut scheduler.threads[usize::from(current_pid)].data,
+                    &mut scheduler.threads[usize::from(current_tid)].data,
                 );
             }
-            *scheduler.current_pid_mut() = Some(next_pid);
+            *scheduler.current_tid_mut() = Some(next_tid);
 
-            copy_registers(&scheduler.get_unchecked(next_pid).data, trap_frame);
+            copy_registers(&scheduler.get_unchecked(next_tid).data, trap_frame);
             true
         }) {
             break;

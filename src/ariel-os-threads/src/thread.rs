@@ -15,7 +15,7 @@ pub struct Thread {
     pub prio: RunqueueId,
     /// Id of the thread between 0..[`super::THREADS_NUMOF`].
     /// Ids are unique while a thread is alive but reused after a thread finished.
-    pub pid: ThreadId,
+    pub tid: ThreadId,
     /// Flags set for the thread.
     pub flags: ThreadFlags,
     /// Arch-specific thread data.
@@ -57,7 +57,7 @@ impl Thread {
             data: Cpu::DEFAULT_THREAD_DATA,
             flags: 0,
             prio: RunqueueId::new(0),
-            pid: ThreadId::new(0),
+            tid: ThreadId::new(0),
             #[cfg(feature = "core-affinity")]
             core_affinity: crate::CoreAffinity::no_affinity(),
         }
