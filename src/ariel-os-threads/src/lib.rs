@@ -194,7 +194,7 @@ impl Scheduler {
         Cpu::setup_stack(thread, stack, func, arg);
         thread.prio = prio;
         thread.tid = tid;
-        thread.state = ThreadState::Paused;
+        thread.state = ThreadState::Parked;
         #[cfg(feature = "core-affinity")]
         {
             thread.core_affinity = _core_affinity.unwrap_or_default();
@@ -684,22 +684,24 @@ pub fn yield_same() {
 }
 
 /// Suspends/ pauses the current thread's execution.
-pub fn sleep() {
+#[doc(alias = "sleep")]
+pub fn park() {
     SCHEDULER.with_mut(|mut scheduler| {
         let Some(tid) = scheduler.current_tid() else {
             return;
         };
-        scheduler.set_state(tid, ThreadState::Paused);
+        scheduler.set_state(tid, ThreadState::Parked);
     });
 }
 
 /// Wakes up a thread and adds it to the runqueue.
 ///
-/// Returns `false` if no paused thread exists for `thread_id`.
-pub fn wakeup(thread_id: ThreadId) -> bool {
+/// Returns `false` if no parked thread exists for `thread_id`.
+#[doc(alias = "wakeup")]
+pub fn unpark(thread_id: ThreadId) -> bool {
     SCHEDULER.with_mut(|mut scheduler| {
         match scheduler.get_state(thread_id) {
-            Some(ThreadState::Paused) => {}
+            Some(ThreadState::Parked) => {}
             _ => return false,
         }
         scheduler.set_state(thread_id, ThreadState::Running);
