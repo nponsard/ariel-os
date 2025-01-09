@@ -105,7 +105,7 @@ wifi-esp = ["ariel-os-embassy/wifi-esp"]
 ## Enables the debug console, required to use
 ## [`println!`](ariel_os_debug::println).
 debug-console = ["ariel-os-rt/debug-console"]
-## Enables logging support through `defmt`.
+## Enables logging support through `defmt`, see [`debug::log`]..
 defmt = [
   "ariel-os-coap?/defmt",
   "ariel-os-debug/defmt",
@@ -113,6 +113,8 @@ defmt = [
   "ariel-os-threads?/defmt",
   "ariel-os-bench?/defmt",
 ]
+## Enables logging support through `log`, see [`debug::log`].
+log = ["ariel-os-debug/log", "ariel-os-embassy/log"]
 ## Enables benchmarking facilities.
 bench = ["dep:ariel-os-bench"]
 ## Prints nothing in case of panics (may help reduce binary size).

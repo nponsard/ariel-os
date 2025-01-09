@@ -10,8 +10,8 @@
 # User Guide
 
 - [Building an Application](./application.md)
+- [Debug Logging](./debug_logging.md)
 - [Tooling](./tooling/index.md)
-  - [defmt](./tooling/defmt.md)
   - [CoAP](./tooling/coap.md)
 - [Glossary](./glossary.md)
 

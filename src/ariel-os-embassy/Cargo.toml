@@ -116,5 +116,6 @@ defmt = [
   "ariel-os-embassy-common/defmt",
   "usbd-hid?/defmt",
 ]
+log = ["ariel-os-hal/log"]
 
 _test = ["executor-none", "i2c", "spi", "external-interrupts"]

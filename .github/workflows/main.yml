@@ -112,6 +112,7 @@ jobs:
             -p ariel-os-chips
             -p ariel-os-coap
             -p ariel-os-debug
+            -p ariel-os-debug-log
             -p ariel-os-embassy
             -p ariel-os-embassy-common
             -p ariel-os-hal
@@ -206,6 +207,7 @@ jobs:
                     bench,
                     coap,
                     csprng,
+                    defmt,
                     executor-thread,
                     external-interrupts,
                     hwrng,
