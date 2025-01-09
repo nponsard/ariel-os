@@ -27,4 +27,6 @@ Ariel OS can also be used to host legacy C application and libraries.
 However, the essence and ultimate goal of the Ariel OS is to
 provide everything one might need in Rust.
 
-![Architecture](figures/ariel-os-arch-diagram1.svg)
+<p style="text-align: center; margin: 4em">
+  <img src="figures/ariel-os-arch-diagram2.svg" alt="Architecture diagram">
+</p>
