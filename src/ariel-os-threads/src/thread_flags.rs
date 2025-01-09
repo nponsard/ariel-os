@@ -113,7 +113,7 @@ impl Scheduler {
             thread.flags &= !mask;
             Some(mask)
         } else {
-            let thread_id = thread.pid;
+            let thread_id = thread.tid;
             self.set_state(thread_id, ThreadState::FlagBlocked(WaitMode::All(mask)));
             None
         }
@@ -126,7 +126,7 @@ impl Scheduler {
             thread.flags &= !res;
             Some(res)
         } else {
-            let thread_id = thread.pid;
+            let thread_id = thread.tid;
             self.set_state(thread_id, ThreadState::FlagBlocked(WaitMode::Any(mask)));
             None
         }
@@ -141,7 +141,7 @@ impl Scheduler {
             thread.flags &= !res;
             Some(res)
         } else {
-            let thread_id = thread.pid;
+            let thread_id = thread.tid;
             self.set_state(thread_id, ThreadState::FlagBlocked(WaitMode::Any(mask)));
             None
         }

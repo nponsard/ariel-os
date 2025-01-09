@@ -24,7 +24,7 @@ impl ThreadList {
     /// Panics if this is called outside of a thread context.
     pub fn put_current(&mut self, cs: CriticalSection, state: ThreadState) -> Option<RunqueueId> {
         SCHEDULER.with_mut_cs(cs, |mut scheduler| {
-            let &mut Thread { pid, prio, .. } = scheduler
+            let &mut Thread { tid, prio, .. } = scheduler
                 .current()
                 .expect("Function should be called inside a thread context.");
             let mut curr = None;
@@ -36,18 +36,18 @@ impl ThreadList {
                 curr = next;
                 next = scheduler.thread_blocklist[usize::from(n)];
             }
-            scheduler.thread_blocklist[usize::from(pid)] = next;
+            scheduler.thread_blocklist[usize::from(tid)] = next;
             let inherit_priority = match curr {
                 Some(curr) => {
-                    scheduler.thread_blocklist[usize::from(curr)] = Some(pid);
+                    scheduler.thread_blocklist[usize::from(curr)] = Some(tid);
                     None
                 }
                 None => {
-                    self.head = Some(pid);
+                    self.head = Some(tid);
                     Some(prio)
                 }
             };
-            scheduler.set_state(pid, state);
+            scheduler.set_state(tid, state);
             inherit_priority
         })
     }

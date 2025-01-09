@@ -5,7 +5,7 @@
 
 use core::marker::PhantomData;
 
-use ariel_os_threads::{current_pid, thread_flags, thread_flags::ThreadFlags, ThreadId};
+use ariel_os_threads::{current_tid, thread_flags, thread_flags::ThreadFlags, ThreadId};
 use embassy_executor::{raw, Spawner};
 
 // This is only used between `__pender` and `Executor::run( )`, actual flag
@@ -42,7 +42,7 @@ impl Executor {
     /// This function panics when called without a running thread.
     #[expect(clippy::new_without_default)]
     pub fn new() -> Self {
-        let current_thread = current_pid().unwrap();
+        let current_thread = current_tid().unwrap();
         Self {
             inner: raw::Executor::new(usize::from(current_thread) as *mut ()),
             not_send: PhantomData,

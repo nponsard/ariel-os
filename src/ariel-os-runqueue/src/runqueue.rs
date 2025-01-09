@@ -71,7 +71,7 @@ impl<const N_QUEUES: usize, const N_THREADS: usize> RunQueue<{ N_QUEUES }, { N_T
         }
     }
 
-    /// Adds thread with pid `n` to runqueue number `rq`.
+    /// Adds thread with tid `n` to runqueue number `rq`.
     pub fn add(&mut self, n: ThreadId, rq: RunqueueId) {
         debug_assert!(usize::from(n) < N_THREADS);
         debug_assert!(usize::from(rq) < N_QUEUES);
@@ -84,7 +84,7 @@ impl<const N_QUEUES: usize, const N_THREADS: usize> RunQueue<{ N_QUEUES }, { N_T
         self.queues.peek_head(rq.0).map(ThreadId::new)
     }
 
-    /// Removes thread with pid `n` from runqueue number `rq`.
+    /// Removes thread with tid `n` from runqueue number `rq`.
     ///
     /// # Panics
     ///
@@ -101,22 +101,22 @@ impl<const N_QUEUES: usize, const N_THREADS: usize> RunQueue<{ N_QUEUES }, { N_T
         }
     }
 
-    /// Removes thread with pid `n`.
+    /// Removes thread with tid `n`.
     pub fn del(&mut self, n: ThreadId) {
         if let Some(empty_runqueue) = self.queues.del(n.0) {
             self.bitcache &= !(1 << empty_runqueue);
         }
     }
 
-    /// Returns the pid that should run next.
+    /// Returns the tid that should run next.
     ///
     /// Returns the next runnable thread of
     /// the runqueue with the highest index.
     pub fn get_next(&self) -> Option<ThreadId> {
-        self.get_next_with_rq().map(|(pid, _)| pid)
+        self.get_next_with_rq().map(|(tid, _)| tid)
     }
 
-    /// Returns the pid that should run next and the runqueue it is in.
+    /// Returns the tid that should run next and the runqueue it is in.
     pub fn get_next_with_rq(&self) -> Option<(ThreadId, RunqueueId)> {
         let rq_ffs = ffs(self.bitcache);
         if rq_ffs == 0 {

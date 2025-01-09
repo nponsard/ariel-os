@@ -11,15 +11,15 @@ use ariel_os::{
 #[ariel_os::thread(autostart, affinity = CoreAffinity::one(CoreId::new(1)))]
 fn thread0() {
     let core = ariel_os::thread::core_id();
-    let pid = ariel_os::thread::current_pid().unwrap();
-    info!("Hello from {:?} on {:?}", pid, core);
+    let tid = ariel_os::thread::current_tid().unwrap();
+    info!("Hello from {:?} on {:?}", tid, core);
     loop {}
 }
 
 #[ariel_os::thread(autostart)]
 fn thread1() {
     let core = ariel_os::thread::core_id();
-    let pid = ariel_os::thread::current_pid().unwrap();
-    info!("Hello from {:?} on {:?}", pid, core);
+    let tid = ariel_os::thread::current_tid().unwrap();
+    info!("Hello from {:?} on {:?}", tid, core);
     loop {}
 }

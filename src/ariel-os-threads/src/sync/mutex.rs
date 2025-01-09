@@ -42,7 +42,7 @@ impl LockState {
             let current = scheduler
                 .current()
                 .expect("Function should be called inside a thread context.");
-            (current.pid, current.prio)
+            (current.tid, current.prio)
         });
         LockState::Locked {
             waiters: ThreadList::new(),
@@ -156,10 +156,10 @@ impl<T> Mutex<T> {
                     scheduler.set_priority(*owner_id, *owner_prio);
                 });
                 // Pop next thread from waitlist so that it can acquire the mutex.
-                if let Some((pid, _)) = waiters.pop(cs) {
+                if let Some((tid, _)) = waiters.pop(cs) {
                     SCHEDULER.with_mut_cs(cs, |scheduler| {
-                        *owner_id = pid;
-                        *owner_prio = scheduler.get_unchecked(pid).prio;
+                        *owner_id = tid;
+                        *owner_prio = scheduler.get_unchecked(tid).prio;
                     });
                 } else {
                     // Unlock if waitlist was empty.
