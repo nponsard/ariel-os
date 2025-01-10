@@ -1,6 +1,7 @@
 /// Starts the `fn_name` function in a dedicated thread at startup.
 ///
 /// The thread is given a `stacksize`-byte stack, and has priority `priority`.
+#[doc(hidden)]
 #[macro_export]
 macro_rules! autostart_thread {
     ($fn_name:ident, stacksize = $stacksize:expr, priority = $priority:expr, affinity = $affinity:expr) => {
