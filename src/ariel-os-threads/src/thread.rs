@@ -38,7 +38,7 @@ pub enum ThreadState {
     /// but rather that it is in the runqueue.
     Running,
     /// Suspended / paused.
-    Paused,
+    Parked,
     /// Waiting to acquire a [`super::lock::Lock`].
     LockBlocked,
     /// Waiting for [`ThreadFlags`] to be set.
