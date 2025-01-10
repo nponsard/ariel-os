@@ -206,6 +206,7 @@ jobs:
                 --features "
                     bench,
                     coap,
+                    core-affinity,
                     csprng,
                     defmt,
                     executor-thread,
