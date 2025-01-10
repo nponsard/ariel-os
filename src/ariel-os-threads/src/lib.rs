@@ -88,8 +88,13 @@ pub const SCHED_PRIO_LEVELS: usize = 12;
 /// The maximum number of concurrent threads that can be created.
 pub const THREAD_COUNT: usize = 16;
 
-#[cfg(feature = "multi-core")]
-pub const CORE_COUNT: usize = smp::Chip::CORES as usize;
+pub const CORE_COUNT: usize = {
+    #[cfg(not(feature = "multi-core"))]
+    const CORE_COUNT: usize = 1;
+    #[cfg(feature = "multi-core")]
+    const CORE_COUNT: usize = smp::Chip::CORES as usize;
+    CORE_COUNT
+};
 #[cfg(feature = "multi-core")]
 pub const IDLE_THREAD_STACK_SIZE: usize = smp::Chip::IDLE_THREAD_STACK_SIZE;
 
