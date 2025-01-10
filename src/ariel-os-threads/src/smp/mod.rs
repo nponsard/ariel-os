@@ -6,7 +6,7 @@ impl CoreId {
     ///
     /// # Panics
     ///
-    /// Panics if `value` >= [`Chip::CORES`].
+    /// Panics if `value` >= [`CORE_COUNT`](crate::CORE_COUNT).
     pub fn new(value: u8) -> Self {
         if value >= Chip::CORES as u8 {
             panic!(
