@@ -12,7 +12,7 @@ macro_rules! autostart_thread {
             fn [<__start_thread_ $fn_name>] () {
                 use $crate::macro_reexports::static_cell::ConstStaticCell;
                 static STACK: ConstStaticCell<[u8; $stacksize]> = ConstStaticCell::new([0u8; $stacksize]);
-                $crate::thread_create_noarg($fn_name, STACK.take(), $priority, $affinity);
+                $crate::create_noarg($fn_name, STACK.take(), $priority, $affinity);
             }
         }
     };

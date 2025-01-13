@@ -519,7 +519,7 @@ pub unsafe fn start_threading() {
 
         // Create one idle thread for each core with lowest priority.
         for stack in &STACKS {
-            thread_create_noarg(idle_thread, stack.take(), 0, None);
+            create_noarg(idle_thread, stack.take(), 0, None);
         }
 
         smp::Chip::startup_other_cores();
@@ -562,7 +562,7 @@ impl<T> Arguable for &'static T {
 /// # Panics
 ///
 /// Panics if more than [`THREAD_COUNT`] concurrent threads have been created.
-pub fn thread_create<T: Arguable + Send>(
+pub fn create<T: Arguable + Send>(
     func: fn(arg: T),
     arg: T,
     stack: &'static mut [u8],
@@ -570,7 +570,7 @@ pub fn thread_create<T: Arguable + Send>(
     core_affinity: Option<CoreAffinity>,
 ) -> ThreadId {
     let arg = arg.into_arg();
-    unsafe { thread_create_raw(func as usize, arg, stack, prio, core_affinity) }
+    unsafe { create_raw(func as usize, arg, stack, prio, core_affinity) }
 }
 
 /// Low-level function to create a thread without argument
@@ -578,13 +578,13 @@ pub fn thread_create<T: Arguable + Send>(
 /// # Panics
 ///
 /// Panics if more than [`THREAD_COUNT`] concurrent threads have been created.
-pub fn thread_create_noarg(
+pub fn create_noarg(
     func: fn(),
     stack: &'static mut [u8],
     prio: u8,
     core_affinity: Option<CoreAffinity>,
 ) -> ThreadId {
-    unsafe { thread_create_raw(func as usize, 0, stack, prio, core_affinity) }
+    unsafe { create_raw(func as usize, 0, stack, prio, core_affinity) }
 }
 
 /// Creates a thread, low-level.
@@ -593,7 +593,7 @@ pub fn thread_create_noarg(
 ///
 /// Only use when you know what you are doing.
 #[doc(hidden)]
-pub unsafe fn thread_create_raw(
+pub unsafe fn create_raw(
     func: usize,
     arg: usize,
     stack: &'static mut [u8],
