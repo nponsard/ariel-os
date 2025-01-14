@@ -539,17 +539,6 @@ modules:
           - "-Clink-arg=-v"
         LINK_ARG_PREFIX: -Wl,
 
-  - name: riotboot
-    context: nrf52840
-    env:
-      global:
-        FLASH_OFFSET: "0x2000"
-        FLASH_SLOT_OFFSET: "0x400"
-        CARGO_ENV:
-          - NRF52840_FLASH_OFFSET=${FLASH_OFFSET}
-          - NRF52840_FLASH_SLOT_OFFSET=${FLASH_SLOT_OFFSET}
-          - NRF52840_FLASH_SLOT=0
-
   - name: probe-rs
     help: use probe-rs as runner
     selects:
@@ -596,24 +585,6 @@ modules:
             -c 'reset halt'
             -c "flash write_image erase \"${1}\" 0 elf"
             -c "verify_image \"${1}\" 0 elf"
-            -c 'reset run'
-            -c 'shutdown' ; } ;
-            _flash ${out}
-
-      flash-riotboot:
-        required_vars:
-          - FLASH_OFFSET
-        cmd:
-          - riotboot-genhdr generate ${out} $$(date +%s) $(${FLASH_OFFSET} + ${FLASH_SLOT_OFFSET}) ${FLASH_SLOT_OFFSET} - > ${out}.hdr.bin
-          - ${OBJCOPY} -Obinary ${out} ${out}.bin
-          - cat ${out}.hdr.bin ${out}.bin > ${out}.riotboot.bin
-          - _flash () { openocd
-            ${OPENOCD_ARGS}
-            -c 'init'
-            -c 'targets'
-            -c 'reset halt'
-            -c "flash write_image erase \"${1}.riotboot.bin\" ${FLASH_OFFSET} bin"
-            -c "verify_image \"${1}.riotboot.bin\" ${FLASH_OFFSET} bin"
             -c 'reset run'
             -c 'shutdown' ; } ;
             _flash ${out}

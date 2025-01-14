@@ -31,15 +31,9 @@ work.
 2023-10-14 Note: this is probably outdated
 
 - `flash` -> compiles (if needed) and flashes an application
-- `flash-riotboot` -> same as flash, but flashes to riotboot slot 0 (first slot)
-  This needs the "riotboot" feature to be enabled. e.g.,
-
-        laze task -b nrf52840dk --select riotboot flash-riotboot
-
-  This does not flash the bootloader itself ATM, please use RIOT for that.
 
 - `debug` -> starts a gdb debug session for the selected application.
-  The application needs to be flashed using the `flash` or `flash-riotboot` tasks
+  The application needs to be flashed using the `flash` task
   before starting `debug`.
 
 - `reset` -> reboots the target
@@ -61,4 +55,3 @@ run
   debug session.
 - `silent-panic`: don't print Ariel OS panics. Unless used elsewhere, this saves
   ~15k code on Cortex-M
-- `riotboot`: configures the build to link to the first riotboot slot.
