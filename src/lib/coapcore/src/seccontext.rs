@@ -883,7 +883,11 @@ impl<
                 match self {
                     WellKnownEdhoc => true,
                     AuthzInfo(_) => true,
-                    _ => false,
+                    Start => false,
+                    Oscore { .. } => false,
+                    Edhoc { .. } => false,
+                    WellKnown => false,
+                    Unencrypted => false,
                 }
             }
         }
