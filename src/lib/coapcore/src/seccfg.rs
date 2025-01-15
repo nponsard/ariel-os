@@ -250,17 +250,29 @@ impl ServerSecurityConfig for ConfigBuilder {
 
         debug!("Evaluating peer's credenital {}", id_cred_x.as_full_value());
 
+        #[expect(
+            clippy::single_element_loop,
+            reason = "Expected to be extended to actual loop soon"
+        )]
         for (credential, scope) in &[self.known_edhoc_clients.as_ref()?] {
             debug!("Comparing to {}", credential.bytes.as_slice());
             if id_cred_x.reference_only() {
                 // ad Ok: If our credential has no KID, it can't be recognized in this branch
                 if credential.by_kid() == Ok(id_cred_x) {
                     info!("Peer indicates use of the one preconfigured key");
+                    #[expect(
+                        clippy::clone_on_copy,
+                        reason = "Lakers items are overly copy happy"
+                    )]
                     return Some((credential.clone(), scope.clone()));
                 }
             } else {
                 // ad Ok: This is always the case for CCSs, but inapplicable eg. for PSKs.
                 if credential.by_value() == Ok(id_cred_x) {
+                    #[expect(
+                        clippy::clone_on_copy,
+                        reason = "Lakers items are overly copy happy"
+                    )]
                     return Some((credential.clone(), scope.clone()));
                 }
             }
@@ -271,6 +283,7 @@ impl ServerSecurityConfig for ConfigBuilder {
             debug!("There is an unauthenticated scope");
             if let Some(credential_by_value) = id_cred_x.get_ccs() {
                 debug!("and get_ccs worked");
+                #[expect(clippy::clone_on_copy, reason = "Lakers items are overly copy happy")]
                 return Some((credential_by_value.clone(), small_scope.clone()));
             }
         }
@@ -408,7 +421,7 @@ impl ConfigBuilder {
     /// configured.
     pub fn with_request_creation_hints(self, request_creation_hints: &'static [u8]) -> Self {
         debug_assert!(
-            self.request_creation_hints == [],
+            self.request_creation_hints.is_empty(),
             "Overwriting previously configured unauthenticated scope"
         );
         Self {

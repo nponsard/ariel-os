@@ -100,8 +100,22 @@ type EncryptedCwt<'a> = CoseEncrypt0<'a>;
 #[cbor(map)]
 #[non_exhaustive]
 struct CwtClaimsSet<'a> {
+    #[cfg_attr(
+        not(defmt),
+        expect(
+            dead_code,
+            reason = "Presence of the item makes CBOR derive tolerate the item"
+        )
+    )]
     #[n(4)]
     exp: u64,
+    #[cfg_attr(
+        not(defmt),
+        expect(
+            dead_code,
+            reason = "Presence of the item makes CBOR derive tolerate the item"
+        )
+    )]
     #[n(6)]
     iat: u64,
     #[b(8)]
@@ -145,6 +159,13 @@ struct Cnf<'a> {
 #[cbor(map)]
 #[non_exhaustive]
 struct OscoreInputMaterial<'a> {
+    #[cfg_attr(
+        not(defmt),
+        expect(
+            dead_code,
+            reason = "Presence of the item makes CBOR derive tolerate the item"
+        )
+    )]
     #[cbor(b(0), with = "minicbor::bytes")]
     id: &'a [u8],
     #[cbor(b(2), with = "minicbor::bytes")]
