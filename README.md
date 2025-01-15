@@ -106,7 +106,7 @@ The chip can be unlocked using this command:
 
 ## More information
 
-Please look [at the build system documentation](doc/build_system.md) for more usage
+Please look [at the build system documentation](https://ariel-os.github.io/ariel-os/dev/docs/book/build_system.html) for more usage
 information.
 
 ## Minimum Supported Rust Version (MSRV)
