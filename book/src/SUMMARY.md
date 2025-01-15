@@ -9,6 +9,7 @@
 
 # User Guide
 
+- [Build System](./build_system.md)
 - [Building an Application](./application.md)
 - [Debug Logging](./debug_logging.md)
 - [Tooling](./tooling/index.md)
