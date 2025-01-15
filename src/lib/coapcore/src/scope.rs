@@ -30,13 +30,13 @@ impl Scope for core::convert::Infallible {
 pub trait ScopeGenerator: Sized {
     type Scope: Scope;
 
-    fn from_token_scope(self, bytes: &[u8]) -> Result<Self::Scope, InvalidScope>;
+    fn new_from_token_scope(self, bytes: &[u8]) -> Result<Self::Scope, InvalidScope>;
 }
 
 impl ScopeGenerator for core::convert::Infallible {
     type Scope = core::convert::Infallible;
 
-    fn from_token_scope(self, _bytes: &[u8]) -> Result<Self::Scope, InvalidScope> {
+    fn new_from_token_scope(self, _bytes: &[u8]) -> Result<Self::Scope, InvalidScope> {
         match self {}
     }
 }
@@ -181,7 +181,7 @@ impl<S> Default for ParsingAif<S> {
 impl<S: Scope + From<AifValue>> ScopeGenerator for ParsingAif<S> {
     type Scope = S;
 
-    fn from_token_scope(self, bytes: &[u8]) -> Result<Self::Scope, InvalidScope> {
+    fn new_from_token_scope(self, bytes: &[u8]) -> Result<Self::Scope, InvalidScope> {
         let mut buffer = [0; AIF_SCOPE_MAX_LEN];
 
         buffer

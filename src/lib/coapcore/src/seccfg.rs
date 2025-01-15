@@ -134,7 +134,10 @@ pub enum NullGenerator<Scope> {
 impl<Scope: crate::scope::Scope> crate::scope::ScopeGenerator for NullGenerator<Scope> {
     type Scope = Scope;
 
-    fn from_token_scope(self, _bytes: &[u8]) -> Result<Self::Scope, crate::scope::InvalidScope> {
+    fn new_from_token_scope(
+        self,
+        _bytes: &[u8],
+    ) -> Result<Self::Scope, crate::scope::InvalidScope> {
         match self {
             NullGenerator::_Phantom(infallible, _) => match infallible {},
         }

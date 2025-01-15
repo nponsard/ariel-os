@@ -364,7 +364,7 @@ pub fn process_acecbor_authz_info<Scope>(
 
     use crate::scope::ScopeGenerator;
     let scope = scope_generator
-        .from_token_scope(claims.scope)
+        .new_from_token_scope(claims.scope)
         .map_err(|_| minicbor::decode::Error::message("Scope could not be processed"))?;
 
     let Cnf { osc: Some(osc) } = claims.cnf else {
