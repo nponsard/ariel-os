@@ -3,7 +3,7 @@
 use coap_message::{MessageOption, ReadableMessage};
 
 /// A data item representing the server access policy as evaluated for a particular security context.
-pub trait Scope: Sized + core::fmt::Debug + defmt::Format {
+pub trait Scope: Sized + core::fmt::Debug {
     /// Returns true if a request may be performed by the bound security context.
     fn request_is_allowed<M: ReadableMessage>(&self, request: &M) -> bool;
 
@@ -49,7 +49,8 @@ impl ScopeGenerator for core::convert::Infallible {
 pub struct InvalidScope;
 
 /// A scope expression that allows all requests.
-#[derive(Debug, defmt::Format)]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
+#[derive(Debug)]
 pub struct AllowAll;
 
 impl Scope for AllowAll {
@@ -59,7 +60,8 @@ impl Scope for AllowAll {
 }
 
 /// A scope expression that denies all requests.
-#[derive(Debug, defmt::Format)]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
+#[derive(Debug)]
 pub struct DenyAll;
 
 impl Scope for DenyAll {
@@ -85,7 +87,8 @@ const AIF_SCOPE_MAX_LEN: usize = 64;
 ///
 /// This completely disregards proper URI splitting; this works for very simple URI references in
 /// the AIF. This could be mitigated by switching to a CRI based model.
-#[derive(Debug, defmt::Format, Clone)]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
+#[derive(Debug, Clone)]
 pub struct AifValue([u8; AIF_SCOPE_MAX_LEN]);
 
 impl TryFrom<&[u8]> for AifValue {
@@ -208,7 +211,8 @@ impl<S: Scope + From<AifValue>> ScopeGenerator for ParsingAif<S> {
 /// This is useful when combining multiple authentication methods, eg. allowing ACE tokens (that
 /// need an [`AifValue`] to express their arbitrary scopes) as well as a configured admin key (that
 /// has "all" permission, which are not expressible in an [`AifValue`].
-#[derive(Debug, defmt::Format, Clone)]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
+#[derive(Debug, Clone)]
 pub enum UnionScope {
     AifValue(AifValue),
     AllowAll,

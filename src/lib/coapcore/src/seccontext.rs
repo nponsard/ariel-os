@@ -686,7 +686,7 @@ impl<
                     .unwrap_or(CoAPError::bad_request())
             })?;
 
-        info!("Established OSCORE context with recipient ID {:?} and authorization {:?} through ACE-OSCORE", oscore.recipient_id(), scope);
+        info!("Established OSCORE context with recipient ID {:?} and authorization {:?} through ACE-OSCORE", oscore.recipient_id(), Debug2Format(&scope));
         // FIXME: This should be flagged as "unconfirmed" for rapid eviction, as it could be part
         // of a replay.
         let _evicted = self.pool.force_insert(SecContextState {
