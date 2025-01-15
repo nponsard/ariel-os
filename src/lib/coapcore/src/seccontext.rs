@@ -160,10 +160,6 @@ impl<
     > OscoreEdhocHandler<H, Crypto, CryptoFactory, SSC, RNG>
 {
     /// Creates a new CoAP server implementation (a [Handler][coap_handler::Handler]).
-    ///
-    /// By default, this rejects all requests; access is allowed through builder calls such as
-    /// [`.with_seccfg()()`][Self::with_seccfg()] or
-    /// [`.allow_all()`][Self::allow_all()].
     pub fn new(inner: H, authorities: SSC, crypto_factory: CryptoFactory, rng: RNG) -> Self {
         Self {
             pool: Default::default(),

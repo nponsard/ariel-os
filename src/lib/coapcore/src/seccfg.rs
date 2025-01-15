@@ -46,15 +46,17 @@ pub trait ServerSecurityConfig: crate::Sealed {
     /// Unprotect a symmetriclly encrypted token.
     ///
     /// It would be preferable to return a decryption key and let the `ace` module do the
-    /// decryption, but the key is not dyn safe, and [`aead::AeadInPlace`] can not be enum'd around
-    /// different potential key types because the associated types are fixed length. (Returning a
-    /// key in some COSE crypto abstraction may work better).
+    /// decryption, but the key is not dyn safe, and
+    /// [`aead::AeadInPlace`](https://docs.rs/aead/latest/aead/trait.AeadInPlace.html) can not be
+    /// enum'd around different potential key types because the associated types are fixed length.
+    /// (Returning a key in some COSE crypto abstraction may work better).
     ///
     /// Note that the full AAD (COSE's AAD including the external AAD) is built by the caller; the
     /// headers are only passed in to enable the AS to select the right key.
     ///
-    /// The buffer is given as heapless buffer rather than an an [`aead::Buffer`] because the
-    /// latter is not on the latest heaples version in its released version.
+    /// The buffer is given as heapless buffer rather than an an
+    /// [`aead::Buffer`](https://docs.rs/aead/latest/aead/trait.Buffer.html) because the latter is
+    /// not on the latest heaples version in its released version.
     ///
     /// On success, the ciphertext_buffer contains the decrypted and verified plaintext.
     #[allow(
