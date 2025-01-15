@@ -18,6 +18,17 @@ pub enum DecryptionError {
     DecryptionError,
 }
 
+/// Error type of [`ServerSecurityConfig::render_not_allowed`].
+///
+/// This represents a failure to express the Request Creation Hints of ACE in a message. Unlike
+/// most CoAP rendering errors, this can not just fall back to rendering that produces an Internal
+/// Server Error, as that would be misunderstood by the client to mean that the requested operation
+/// was being performed and failed at runtime (whereas with this error, the requested operation was
+/// not performed). Therefore, no error details can be communicated to the client reliably.
+///
+/// Implementers are encouraged to log an error when returning this.
+pub struct NotAllowedRenderingFailed;
+
 /// A single or collection of authorization servers that a handler trusts to create ACE tokens.
 pub trait ServerSecurityConfig: crate::Sealed {
     /// True if the type will at any time need to process tokens at /authz-info
@@ -95,8 +106,8 @@ pub trait ServerSecurityConfig: crate::Sealed {
     fn render_not_allowed<M: coap_message::MutableWritableMessage>(
         &self,
         message: &mut M,
-    ) -> Result<(), ()> {
-        Err(())
+    ) -> Result<(), NotAllowedRenderingFailed> {
+        Err(NotAllowedRenderingFailed)
     }
 }
 
@@ -270,12 +281,18 @@ impl ServerSecurityConfig for ConfigBuilder {
     fn render_not_allowed<M: coap_message::MutableWritableMessage>(
         &self,
         message: &mut M,
-    ) -> Result<(), ()> {
+    ) -> Result<(), NotAllowedRenderingFailed> {
         use coap_message::Code;
-        message.set_code(M::Code::new(coap_numbers::code::UNAUTHORIZED).map_err(|_| ())?);
+        message.set_code(M::Code::new(coap_numbers::code::UNAUTHORIZED).map_err(|_| {
+            defmt_or_log::error!("CoAP stack can not represent Unauthorized responses.");
+            NotAllowedRenderingFailed
+        })?);
         message
             .set_payload(self.request_creation_hints)
-            .map_err(|_| ())?;
+            .map_err(|_| {
+                defmt_or_log::error!("Request creation hints do not fit in error message.");
+                NotAllowedRenderingFailed
+            })?;
         Ok(())
     }
 }
