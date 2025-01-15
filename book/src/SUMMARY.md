@@ -14,6 +14,7 @@
 - [Debug Logging](./debug_logging.md)
 - [Tooling](./tooling/index.md)
   - [CoAP](./tooling/coap.md)
+  - [Ferrocene](./tooling/ferrocene.md)
 - [Glossary](./glossary.md)
 
 # Developer Guide

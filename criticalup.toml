@@ -1,0 +1,19 @@
+#
+# This file configures "criticalup", the Ferrocene qualified Rust toolchain.
+#
+manifest-version = 1
+
+[products.ferrocene]
+release = "nightly-2024-12-10"
+packages = [
+  "rust-std-thumbv6m-none-eabi",
+  "rust-std-thumbv7em-none-eabi",
+  "rust-std-thumbv8m.main-none-eabi",
+  "rust-std-${rustc-host}",
+  "cargo-${rustc-host}",
+  "clippy-${rustc-host}",
+  "rustfmt-${rustc-host}",
+  "llvm-tools-${rustc-host}",
+  "rustc-${rustc-host}",
+  "rust-src",
+]
