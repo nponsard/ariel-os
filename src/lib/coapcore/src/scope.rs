@@ -93,11 +93,11 @@ impl TryFrom<&[u8]> for AifValue {
     type Error = ();
 
     fn try_from(value: &[u8]) -> Result<Self, Self::Error> {
+        let mut new = [0; AIF_SCOPE_MAX_LEN];
         if value.len() >= AIF_SCOPE_MAX_LEN {
             return Err(());
         }
-        let mut new = [0; AIF_SCOPE_MAX_LEN];
-        new[..value.len()].copy_from_slice(&value);
+        new.get_mut(..value.len()).ok_or(())?.copy_from_slice(value);
         Ok(AifValue(new))
     }
 }
@@ -181,11 +181,10 @@ impl<S: Scope + From<AifValue>> ScopeGenerator for ParsingAif<S> {
     fn from_token_scope(self, bytes: &[u8]) -> Result<Self::Scope, InvalidScope> {
         let mut buffer = [0; AIF_SCOPE_MAX_LEN];
 
-        if bytes.len() <= buffer.len() {
-            buffer[..bytes.len()].copy_from_slice(bytes);
-        } else {
-            return Err(InvalidScope);
-        }
+        buffer
+            .get_mut(..bytes.len())
+            .ok_or(InvalidScope)?
+            .copy_from_slice(bytes);
 
         let mut decoder = minicbor::Decoder::new(bytes);
         for item in decoder
