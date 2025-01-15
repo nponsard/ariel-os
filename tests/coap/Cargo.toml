@@ -9,12 +9,12 @@ publish = false
 workspace = true
 
 [dependencies]
-embassy-net = { workspace = true, features = ["udp"] }
 embassy-sync = { workspace = true }
 heapless = { workspace = true }
 ariel-os = { path = "../../src/ariel-os", features = [
   "override-network-config",
   "coap",
+  "udp",
 ] }
 ariel-os-boards = { path = "../../src/ariel-os-boards" }
 embassy-futures = "0.1.1"
