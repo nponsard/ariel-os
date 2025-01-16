@@ -1,6 +1,5 @@
 # Summary
 
-- [Manifesto](./manifesto.md)
 - [Introduction](./introduction.md)
 - [Hardware & Functionality Support](./hardware_functionality_support.md)
 - [Multithreading](./multithreading.md)
