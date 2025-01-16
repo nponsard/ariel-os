@@ -15,6 +15,9 @@
 //! handling, more fine grained control can be implemented (eg. offering an option to make
 //! Debug2Format merely print the type name or even make it empty).
 //!
+//! This crate mainly logs on the trace, debug and error level; the latter provides details when an
+//! error is sent over the network and the details are not visible to the peer.
+//!
 //! See the book for [how defmt is configured in
 //! Ariel OS](https://ariel-os.github.io/ariel-os/dev/docs/book/tooling/defmt.html).
 //!

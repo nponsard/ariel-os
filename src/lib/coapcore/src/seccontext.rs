@@ -5,7 +5,7 @@ use coap_message::{
     MutableWritableMessage, ReadableMessage,
 };
 use coap_message_utils::{Error as CoAPError, OptionsExt as _};
-use defmt_or_log::{error, info, Debug2Format};
+use defmt_or_log::{debug, error, trace, Debug2Format};
 
 use crate::helpers::COwn;
 use crate::scope::Scope;
@@ -205,14 +205,14 @@ impl<
             // until then, "there is no EDHOC" is a good rendition of lack of own key.
             .ok_or_else(CoAPError::not_found)?;
 
-        let (first_byte, edhoc_m1) = request
-            .payload()
-            .split_first()
-            .ok_or_else(CoAPError::bad_request)?;
+        let (first_byte, edhoc_m1) = request.payload().split_first().ok_or_else(|| {
+            error!("Empty EDHOC requests (reverse flow) not supported yet.");
+            CoAPError::bad_request()
+        })?;
         let starts_with_true = first_byte == &0xf5;
 
         if starts_with_true {
-            info!("Processing incoming EDHOC message 1");
+            trace!("Processing incoming EDHOC message 1");
             let message_1 =
                 &lakers::EdhocMessageBuffer::new_from_slice(edhoc_m1).map_err(too_small)?;
 
@@ -226,6 +226,7 @@ impl<
             .map_err(render_error)?;
 
             if ead_1.is_some_and(|e| e.is_critical) {
+                error!("Critical EAD1 item received, aborting");
                 // FIXME: send error message
                 return Err(CoAPError::bad_request());
             }
@@ -244,6 +245,9 @@ impl<
             Ok(OwnRequestData::EdhocOkSend2(c_r))
         } else {
             // for the time being we'll only take the EDHOC option
+            error!(
+                "Sending EDHOC message 3 to the /.well-known/edhoc resource is not supported yet"
+            );
             Err(CoAPError::bad_request())
         }
     }
@@ -332,14 +336,15 @@ impl<
         let payload = request.payload();
 
         // We know this to not fail b/c we only got here due to its presence
-        let oscore_option = liboscore::OscoreOption::parse(&oscore_option)
-            .map_err(|_| CoAPError::bad_option(coap_numbers::option::OSCORE))?;
+        let oscore_option = liboscore::OscoreOption::parse(&oscore_option).map_err(|_| {
+            error!("OSCORE option could not be parsed");
+            CoAPError::bad_option(coap_numbers::option::OSCORE)
+        })?;
 
-        let kid = COwn::from_kid(
-            oscore_option
-                .kid()
-                .ok_or(CoAPError::bad_option(coap_numbers::option::OSCORE))?,
-        )
+        let kid = COwn::from_kid(oscore_option.kid().ok_or_else(|| {
+            error!("OSCORE KID is not in our value space");
+            CoAPError::bad_option(coap_numbers::option::OSCORE)
+        })?)
         // same as if it's not found in the pool
         .ok_or_else(CoAPError::bad_request)?;
         // If we don't make progress, we're dropping it altogether. Unless we use the
@@ -350,8 +355,11 @@ impl<
             .pool
             .lookup(|c| c.corresponding_cown() == Some(kid), core::mem::take)
             // following RFC8613 Section 8.2 item 2.2
-            // FIXME unauthorized (unreleased in coap-message-utils)
-            .ok_or_else(CoAPError::bad_request)?;
+            .ok_or_else(|| {
+                error!("No security context with this KID.");
+                // FIXME unauthorized (unreleased in coap-message-utils)
+                CoAPError::bad_request()
+            })?;
 
         let (taken, front_trim_payload) = if with_edhoc {
             self.process_edhoc_in_payload(payload, taken)?
@@ -364,9 +372,10 @@ impl<
             authorization,
         } = taken
         else {
-            // FIXME: How'd we even get there?
+            // FIXME: How'd we even get there? Should this be unreachable?
             //
             // ... and return taken
+            error!("Found empty security context.");
             return Err(CoAPError::bad_request());
         };
 
@@ -460,7 +469,10 @@ impl<
         let mut decoder = minicbor::decode::Decoder::new(payload);
         let _ = decoder
             .decode::<&minicbor::bytes::ByteSlice>()
-            .map_err(|_| CoAPError::bad_request())?;
+            .map_err(|_| {
+                error!("EDHOC request is not prefixed with valid CBOR.");
+                CoAPError::bad_request()
+            })?;
         let cutoff = decoder.position();
 
         let sec_context_state = if let SecContextState {
@@ -481,6 +493,7 @@ impl<
                 responder.parse_message_3(&msg_3).map_err(render_error)?;
 
             if ead_3.is_some_and(|e| e.is_critical) {
+                error!("Critical EAD3 item received, aborting");
                 // FIXME: send error message
                 return Err(CoAPError::bad_request());
             }
@@ -489,7 +502,10 @@ impl<
                 .authorities
                 .expand_id_cred_x(id_cred_i)
                 // FIXME: send better message; how much variability should we allow?
-                .ok_or(CoAPError::bad_request())?;
+                .ok_or_else(|| {
+                    error!("Peer's ID_CRED_I could not be resolved into CRED_I.");
+                    CoAPError::bad_request()
+                })?;
 
             let (mut responder, _prk_out) =
                 responder.verify_message_3(cred_i).map_err(render_error)?;
@@ -532,8 +548,8 @@ impl<
             sec_context_state
         };
 
-        info!(
-            "Processed {} bytes at start of message into new EDHOC context",
+        debug!(
+            "Processing {} bytes at start of message into new EDHOC Message 3.",
             cutoff
         );
 
@@ -574,6 +590,7 @@ impl<
                             //
                             // As it is, depending on the CoAP stack, there may be DoS if a peer
                             // can send many requests before the server starts rendering responses.
+                            error!("State vanished before response was built.");
                             return Err(CoAPError::internal_server_error());
                         };
 
@@ -682,7 +699,7 @@ impl<
                     .unwrap_or(CoAPError::bad_request())
             })?;
 
-        info!("Established OSCORE context with recipient ID {:?} and authorization {:?} through ACE-OSCORE", oscore.recipient_id(), Debug2Format(&scope));
+        debug!("Established OSCORE context with recipient ID {:?} and authorization {:?} through ACE-OSCORE", oscore.recipient_id(), Debug2Format(&scope));
         // FIXME: This should be flagged as "unconfirmed" for rapid eviction, as it could be part
         // of a replay.
         let _evicted = self.pool.force_insert(SecContextState {
@@ -738,7 +755,16 @@ pub enum OwnRequestData<I> {
 ///
 /// Places using this function may be simplified if From/Into is specified (possibly after
 /// enlarging the Error type)
-fn too_small(_e: lakers::MessageBufferError) -> CoAPError {
+#[track_caller]
+fn too_small(e: lakers::MessageBufferError) -> CoAPError {
+    match e {
+        lakers::MessageBufferError::BufferAlreadyFull => {
+            error!("Lakers buffer size exceeded: Buffer full.")
+        }
+        lakers::MessageBufferError::SliceTooLong => {
+            error!("Lakers buffer size exceeded: Slice too long.")
+        }
+    };
     CoAPError::bad_request()
 }
 
@@ -749,7 +775,28 @@ fn too_small(_e: lakers::MessageBufferError) -> CoAPError {
 ///
 /// Places using this function may be simplified if From/Into is specified (possibly after
 /// enlarging the Error type)
-fn render_error(_e: lakers::EDHOCError) -> CoAPError {
+#[track_caller]
+fn render_error(e: lakers::EDHOCError) -> CoAPError {
+    match e {
+        lakers::EDHOCError::UnexpectedCredential => error!("Lakers error: UnexpectedCredential"),
+        lakers::EDHOCError::MissingIdentity => error!("Lakers error: MissingIdentity"),
+        lakers::EDHOCError::IdentityAlreadySet => error!("Lakers error: IdentityAlreadySet"),
+        lakers::EDHOCError::MacVerificationFailed => error!("Lakers error: MacVerificationFailed"),
+        lakers::EDHOCError::UnsupportedMethod => error!("Lakers error: UnsupportedMethod"),
+        lakers::EDHOCError::UnsupportedCipherSuite => {
+            error!("Lakers error: UnsupportedCipherSuite")
+        }
+        lakers::EDHOCError::ParsingError => error!("Lakers error: ParsingError"),
+        lakers::EDHOCError::EncodingError => error!("Lakers error: EncodingError"),
+        lakers::EDHOCError::CredentialTooLongError => {
+            error!("Lakers error: CredentialTooLongError")
+        }
+        lakers::EDHOCError::EadLabelTooLongError => error!("Lakers error: EadLabelTooLongError"),
+        lakers::EDHOCError::EadTooLongError => error!("Lakers error: EadTooLongError"),
+        lakers::EDHOCError::EADUnprocessable => error!("Lakers error: EADUnprocessable"),
+        lakers::EDHOCError::AccessDenied => error!("Lakers error: AccessDenied"),
+        _ => error!("Lakers error (unknown)"),
+    }
     CoAPError::bad_request()
 }
 

@@ -96,7 +96,7 @@ type EncryptedCwt<'a> = CoseEncrypt0<'a>;
 /// Full attribute references are in the [CWT Claims
 /// registry](https://www.iana.org/assignments/cwt/cwt.xhtml#claims-registry).
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
-#[derive(minicbor::Decode)]
+#[derive(minicbor::Decode, Debug)]
 #[cbor(map)]
 #[non_exhaustive]
 struct CwtClaimsSet<'a> {
@@ -139,7 +139,7 @@ struct CwtClaimsSet<'a> {
 /// `COSE_Key` and `Encrypted_COSE_Key` […] may be present", doesn't rule out that items without
 /// key material can't be attached.
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
-#[derive(minicbor::Decode)]
+#[derive(minicbor::Decode, Debug)]
 #[cbor(map)]
 #[non_exhaustive]
 struct Cnf<'a> {
@@ -155,7 +155,7 @@ struct Cnf<'a> {
 /// registry](https://www.iana.org/assignments/ace/ace.xhtml#oscore-security-context-parameters)
 /// has the full set in case it gets extended.
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
-#[derive(minicbor::Decode)]
+#[derive(minicbor::Decode, Debug)]
 #[cbor(map)]
 #[non_exhaustive]
 struct OscoreInputMaterial<'a> {
@@ -290,7 +290,7 @@ pub fn process_acecbor_authz_info<Scope>(
     server_recipient_id: impl FnOnce(&[u8]) -> COwn,
 ) -> Result<(AceCborAuthzInfoResponse, Scope, liboscore::PrimitiveContext), minicbor::decode::Error>
 {
-    trace!("Processing authz_info {:#02x}", payload);
+    trace!("Processing authz_info {=[u8]:02x}", payload); // :02x could be :cbor
 
     let decoded: UnprotectedAuthzInfoPost = minicbor::decode(payload)?;
     // FIXME: The `..` should be "all others are None"; se also comment on UnprotectedAuthzInfoPost
@@ -305,17 +305,20 @@ pub fn process_acecbor_authz_info<Scope>(
         return Err(minicbor::decode::Error::message("Missing fields"));
     };
 
-    trace!("Decodeded application/ace+cbor: {}", decoded);
+    trace!(
+        "Decodeded authz_info as application/ace+cbor: {:?}",
+        decoded
+    );
 
     let encrypt0: EncryptedCwt = minicbor::decode(access_token)?;
 
-    trace!("Token decoded as Encrypt0: {}", encrypt0);
+    trace!("Token decoded as Encrypt0: {:?}", encrypt0);
 
     // Could have the extra exception for empty byte strings expressing the empty map, but we don't
     // encounter this here
     let protected: HeaderMap = minicbor::decode(encrypt0.protected)?;
 
-    trace!("Protected decoded as header map: {}", protected);
+    trace!("Protected decoded as header map: {:?}", protected);
 
     let headers = encrypt0.unprotected.updated_with(protected);
 
@@ -344,7 +347,7 @@ pub fn process_acecbor_authz_info<Scope>(
     let mut aad_encoded = heapless::Vec::<u8, MAX_SUPPORTED_ACCESSTOKEN_LEN>::new();
     minicbor::encode(&aad, minicbor_adapters::WriteToHeapless(&mut aad_encoded))
         .map_err(|_| minicbor::decode::Error::message("AAD too long"))?;
-    trace!("Serialized AAD: {:#02x}", aad_encoded);
+    trace!("Serialized AAD: {:02x}", aad_encoded); // :02x could be :cbor
 
     let mut ciphertext_buffer =
         heapless::Vec::<u8, MAX_SUPPORTED_ACCESSTOKEN_LEN>::from_slice(encrypt0.encrypted)
@@ -360,7 +363,9 @@ pub fn process_acecbor_authz_info<Scope>(
         .map_err(|_| minicbor::decode::Error::message("Decryption failed"))?;
 
     let claims: CwtClaimsSet = minicbor::decode(ciphertext_buffer.as_slice())?;
-    trace!("Decrypted CWT claims: {}", claims);
+    // Currently disabled because no formatting is available while there; works with
+    // <https://codeberg.org/chrysn/minicbor-adapters/pulls/1>
+    // trace!("Decrypted CWT claims: {}", claims);
 
     use crate::scope::ScopeGenerator;
     let scope = scope_generator
