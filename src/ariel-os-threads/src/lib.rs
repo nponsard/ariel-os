@@ -83,7 +83,7 @@ pub struct CoreAffinity {
 }
 
 /// The number of possible priority levels.
-pub const SCHED_PRIO_LEVELS: usize = 12;
+pub const SCHED_PRIO_LEVELS: usize = THREAD_COUNT;
 
 /// The maximum number of concurrent threads that can be created.
 pub const THREAD_COUNT: usize = 16;
