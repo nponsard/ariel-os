@@ -8,13 +8,15 @@ jobs:
     if: github.event.action == 'opened' && github.repository == 'ariel-os/ariel-os'
     runs-on: ubuntu-latest
     continue-on-error: true
+    env:
+      message_label: ${{ github.event.pull_request.draft && '✨ New draft PR' || '✨⏩ New PR' }}
     steps:
       - name: send message
         uses: ariel-os/Matrix-Message@v0.0.4
         with:
           room_id: ${{ secrets.MATRIX_ROOM_ID }}
           access_token: ${{ secrets.MATRIX_ACCESS_TOKEN }}
-          message: "✨ New PR: [${{ github.event.pull_request.title }}](${{ github.event.pull_request.html_url }})"
+          message: "${{ message_label }}: [${{ github.event.pull_request.title }}](${{ github.event.pull_request.html_url }})"
           server: "matrix.org"
           message_type: "notice"
 
