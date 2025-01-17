@@ -4,55 +4,18 @@
 [![Documentation][rustdoc-badge]][documentation-dev-rustdoc]
 [![Matrix][matrix-badge]][matrix-link]
 
-> Rust & RIOT combined for ergonomic embedded development
-
 Ariel OS is an operating system for secure, memory-safe, low-power Internet of Things (IoT).
-Ariel OS is based on Rust from the ground up, and uses formal verification
-for critical modules. To learn more about our motivations, see this
-[manifesto](https://ariel-os.github.io/ariel-os/dev/docs/book/manifesto.html).
+Ariel OS is based on Rust from the ground up.
+Hardware targets include varieties of hardware based on 32-bit microcontroller architectures (such as Cortex-M, RISC-V, Xtensa).
+Check out our [table of supported hardware](https://ariel-os.github.io/ariel-os/dev/docs/book/hardware_functionality_support.html).
 
-Hardware targets include varieties of IoT hardware based on 
-32-bit microcontroller architectures (such as Cortex-M, RISC-V).
+Ariel OS builds on top of existing projects in the Embedded Rust ecosystem, including [Embassy](https://github.com/embassy-rs/embassy), [esp-hal](https://github.com/esp-rs/esp-hal), [defmt](https://github.com/knurling-rs/defmt), [probe-rs](https://github.com/probe-rs/probe-rs), [sequential-storage](https://github.com/tweedegolf/sequential-storage), and [embedded-test](https://github.com/probe-rs/embedded-test) among others.
+While those provide high-quality building blocks for a wide range of embedded applications, such projects do not provide the high level of integration that developers know from contemporary C-based operating systems for microcontrollers, such as [RIOT](https://github.com/RIOT-OS/RIOT/) or [Zephyr](https://github.com/zephyrproject-rtos/zephyr) for instance.
 
-In practice, Ariel OS builds on top of [Embassy](https://github.com/embassy-rs/embassy).
-Compared to what [Embassy](https://github.com/embassy-rs/embassy) already provides,
-Ariel OS brings additional value in terms of 
-abstraction, operating system functionalities, 
-and integration for a (curated) set of software modules, tools and libraries, as well as 
-a stronger focus on cybersecurity and formal verification.
- 
-In particular, Ariel OS aims to combine:
+Ariel OS thus follows an approach whereby it simultaneously integrates many heterogeneous pre-existing crates, and adds missing operating system functionalities such as a preemptive multicore scheduler, portable peripheral APIs, additional network security facilities, as well as [laze](https://github.com/kaspar030/laze), a meta-build system to bind it all together.
+The result?
+A powerful framework that allows to write portable embedded Rust applications with minimal boilerplate, providing a batteries-included experience.
 
-- **application code portability** across all supported hardware, via consistent memory/energy efficient APIs;
-- **async programming** paradigms, based on [Embassy](https://github.com/embassy-rs/embassy);
-- **preemptive scheduler** programming paradigms, based on formally verified modules using [hax](https://hacspec.org/blog/posts/hax-v0-1/);
-- **booting & update security**, via measured boot and secure software updates, using formally verified modules.
-
-Ariel OS is an offspring of [RIOT OS](https://github.com/RIOT-OS/RIOT).
-It shares many of its goals and [visions](https://doc.riot-os.org/vision.html),
-such as portability and providing a 'batteries-included' experience.
-
-## Supported hardware
-
-The following list of hardware is currently supported:
- - [Nordic nRF52840 DK](https://www.nordicsemi.com/Products/Development-hardware/nRF52840-DK) (Cortex-M4)
- - [Nordic nRF5340 DK](https://www.nordicsemi.com/Products/Development-hardware/nRF5340-DK) (Cortex-M33)
- - [Raspberry Pi Pico](https://www.raspberrypi.com/products/raspberry-pi-pico/) (RP2040, Cortex-M0+)
- - [Raspberry Pi Pico W](https://www.raspberrypi.com/products/raspberry-pi-pico/) (RP2040, Cortex-M0+)
- - [BBC Micro:Bit v2](https://tech.microbit.org/hardware/2-0-revision/) (Cortex-M4)
- - [Expressif ESP32-C6-DevKitC-1](https://docs.espressif.com/projects/espressif-esp-dev-kits/en/latest/esp32c6/esp32-c6-devkitc-1/user_guide.html) (RISC-V)
- - [ST NUCLEO-F401RE](https://www.st.com/en/evaluation-tools/nucleo-f401re.html) (Cortex-M4)
- - [ST NUCLEO-H755ZI-Q](https://www.st.com/en/evaluation-tools/nucleo-h755zi-q.html) (Cortex-M7)
- - [ST NUCLEO-WB55RG](https://www.st.com/en/evaluation-tools/p-nucleo-wb55.html) (Cortex-M4)
- - and more to come soon.
-
-## Status
-
-**This is currently work-in-progress. Expect missing functionalities and frequent changes!** 
-If you are not so adventurous, but nevertheless looking for a way 
-to run your Rust module on a microcontroller, you could try to 
-glue it directly on top of [Embassy](https://github.com/embassy-rs/embassy), 
-or instead, run your module in a [riot-wrappers](https://github.com/RIOT-OS/rust-riot-wrappers).
 
 ## Quickstart
 
@@ -129,7 +92,7 @@ Ariel OS is licensed under either of
 
 at your option.
 
-Copyright (C) 2020-2023 Freie Universität Berlin, Inria, Kaspar Schleiser
+Copyright (C) 2020-2025 Freie Universität Berlin, Inria, Kaspar Schleiser
 
 ## Contribution
 
