@@ -1939,7 +1939,7 @@ dependencies = [
 [[package]]
 name = "embedded-test"
 version = "0.5.0"
-source = "git+https://github.com/ariel-os/embedded-test?branch=for-ariel-os-2024-10-21#58ed8dc6a29f491da062cbe10772cd2d99ca109b"
+source = "git+https://github.com/ariel-os/embedded-test?branch=v0.5.0%2Bariel-os#b305fc1f3cb2ea7b7496ccada38fdd476ed06678"
 dependencies = [
  "embassy-executor",
  "embedded-test-macros",
@@ -1952,7 +1952,7 @@ dependencies = [
 [[package]]
 name = "embedded-test-macros"
 version = "0.5.0"
-source = "git+https://github.com/ariel-os/embedded-test?branch=for-ariel-os-2024-10-21#58ed8dc6a29f491da062cbe10772cd2d99ca109b"
+source = "git+https://github.com/ariel-os/embedded-test?branch=v0.5.0%2Bariel-os#b305fc1f3cb2ea7b7496ccada38fdd476ed06678"
 dependencies = [
  "darling",
  "proc-macro2",
