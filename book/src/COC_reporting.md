@@ -1,3 +1,5 @@
+## Reporting Guidelines
+
 If you believe someone is violating the code of conduct we ask that you
 report it to us by emailing <conduct@ariel-os.org>.
 
