@@ -45,7 +45,7 @@ ccm = { version = "0.5.0", default-features = false }
 aes = { version = "0.8.4", default-features = false }
 
 [features]
-#! Cargo features
+#! # Cargo features
 
 ## Sends the output of the crate's log statements to the `defmt` ecosystem.
 # `defmt` is not a link because we can't build docs with --all-features, see also

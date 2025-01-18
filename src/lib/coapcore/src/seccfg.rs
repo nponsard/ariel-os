@@ -1,6 +1,8 @@
 //! Descriptions of ACE Authorization Servers (AS) and other trust anchors, as viewed from the
 //! Resource Server (RS) which coapcore runs on.
 
+use defmt_or_log::{debug, error, trace};
+
 use crate::ace::HeaderMap;
 
 /// The error type for [`ServerSecurityConfig::decrypt_symmetric_token`] and future similar
@@ -194,7 +196,7 @@ impl ServerSecurityConfig for ConfigBuilder {
         use ccm::KeyInit;
 
         let key = self.as_key_31.ok_or_else(|| {
-            defmt_or_log::error!("ConfigBuilder is not configured with a symmetric key.");
+            error!("Symmetrically encrypted token was sent, but no symmetric key is configured.");
             DecryptionError::NoKeyFound
         })?;
 
@@ -208,12 +210,12 @@ impl ServerSecurityConfig for ConfigBuilder {
         let nonce: &[u8; NONCE_SIZE] = headers
             .iv
             .ok_or_else(|| {
-                defmt_or_log::error!("Decryption IV");
+                error!("IV missing from token.");
                 DecryptionError::InconsistentDetails
             })?
             .try_into()
             .map_err(|_| {
-                defmt_or_log::error!("IV length mismatch");
+                error!("Token's IV length mismatches algorithm.");
                 DecryptionError::InconsistentDetails
             })?;
 
@@ -221,7 +223,7 @@ impl ServerSecurityConfig for ConfigBuilder {
             .len()
             .checked_sub(TAG_SIZE)
             .ok_or_else(|| {
-                defmt_or_log::error!("Ciphertext too short for tag");
+                error!("Token's ciphertext too short for the algorithm's tag.");
                 DecryptionError::InconsistentDetails
             })?;
 
@@ -230,7 +232,7 @@ impl ServerSecurityConfig for ConfigBuilder {
         cipher
             .decrypt_in_place_detached(nonce.into(), aad, ciphertext, ccm::Tag::from_slice(tag))
             .map_err(|_| {
-                defmt_or_log::error!("Decryption failed");
+                error!("Token decryption failed.");
                 DecryptionError::DecryptionError
             })?;
 
@@ -251,20 +253,21 @@ impl ServerSecurityConfig for ConfigBuilder {
         &self,
         id_cred_x: lakers::IdCred,
     ) -> Option<(lakers::Credential, Self::Scope)> {
-        use defmt_or_log::{debug, info};
-
-        debug!("Evaluating peer's credenital {}", id_cred_x.as_full_value());
+        trace!(
+            "Evaluating peer's credential {=[u8]:02x}", // :02x could be :cbor
+            id_cred_x.as_full_value()
+        );
 
         #[expect(
             clippy::single_element_loop,
             reason = "Expected to be extended to actual loop soon"
         )]
         for (credential, scope) in &[self.known_edhoc_clients.as_ref()?] {
-            debug!("Comparing to {}", credential.bytes.as_slice());
+            trace!("Comparing to {=[u8]:02x}", credential.bytes.as_slice()); // :02x could be :cbor
             if id_cred_x.reference_only() {
                 // ad Ok: If our credential has no KID, it can't be recognized in this branch
                 if credential.by_kid() == Ok(id_cred_x) {
-                    info!("Peer indicates use of the one preconfigured key");
+                    debug!("Peer indicated use of the one preconfigured key by KID.");
                     #[expect(
                         clippy::clone_on_copy,
                         reason = "Lakers items are overly copy happy"
@@ -274,6 +277,7 @@ impl ServerSecurityConfig for ConfigBuilder {
             } else {
                 // ad Ok: This is always the case for CCSs, but inapplicable eg. for PSKs.
                 if credential.by_value() == Ok(id_cred_x) {
+                    debug!("Peer indicated use of the one preconfigured credential by value.");
                     #[expect(
                         clippy::clone_on_copy,
                         reason = "Lakers items are overly copy happy"
@@ -283,11 +287,10 @@ impl ServerSecurityConfig for ConfigBuilder {
             }
         }
 
-        debug!("Fell through");
         if let Some(small_scope) = self.nosec_authorization() {
-            debug!("There is an unauthenticated scope");
+            trace!("Unauthenticated clients are generally accepted, evaluating credential.");
             if let Some(credential_by_value) = id_cred_x.get_ccs() {
-                debug!("and get_ccs worked");
+                debug!("The unauthorized client provided a usable credential by value.");
                 #[expect(clippy::clone_on_copy, reason = "Lakers items are overly copy happy")]
                 return Some((credential_by_value.clone(), small_scope.clone()));
             }
@@ -302,13 +305,13 @@ impl ServerSecurityConfig for ConfigBuilder {
     ) -> Result<(), NotAllowedRenderingFailed> {
         use coap_message::Code;
         message.set_code(M::Code::new(coap_numbers::code::UNAUTHORIZED).map_err(|_| {
-            defmt_or_log::error!("CoAP stack can not represent Unauthorized responses.");
+            error!("CoAP stack can not represent Unauthorized responses.");
             NotAllowedRenderingFailed
         })?);
         message
             .set_payload(self.request_creation_hints)
             .map_err(|_| {
-                defmt_or_log::error!("Request creation hints do not fit in error message.");
+                error!("Request creation hints do not fit in error message.");
                 NotAllowedRenderingFailed
             })?;
         Ok(())
