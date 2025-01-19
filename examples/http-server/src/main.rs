@@ -7,7 +7,7 @@
 mod pins;
 mod routes;
 
-use ariel_os::{asynch::Spawner, cell::StaticCell, network, time::Duration};
+use ariel_os::{asynch::Spawner, cell::StaticCell, net, time::Duration};
 
 #[cfg(feature = "button-reading")]
 use embassy_sync::once_lock::OnceLock;
@@ -38,7 +38,7 @@ static BUTTON_INPUT: OnceLock<ariel_os::gpio::Input> = OnceLock::new();
 
 #[ariel_os::task(pool_size = WEB_TASK_POOL_SIZE)]
 async fn web_task(task_id: usize, app: &'static picoserve::Router<routes::AppRouter>) -> ! {
-    let stack = network::network_stack().await.unwrap();
+    let stack = net::network_stack().await.unwrap();
 
     let mut tcp_rx_buffer = [0; 1024];
     let mut tcp_tx_buffer = [0; 1024];

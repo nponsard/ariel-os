@@ -5,7 +5,7 @@
 
 use ariel_os::{
     debug::log::*,
-    network,
+    net,
     reexports::embassy_net::udp::{PacketMetadata, UdpSocket},
 };
 
@@ -22,7 +22,7 @@ const NETWORK_CONFIG: ariel_os::reexports::embassy_net::Config = {
 
 #[ariel_os::task(autostart)]
 async fn udp_echo() {
-    let stack = network::network_stack().await.unwrap();
+    let stack = net::network_stack().await.unwrap();
 
     let mut rx_meta = [PacketMetadata::EMPTY; 16];
     let mut rx_buffer = [0; 4096];
