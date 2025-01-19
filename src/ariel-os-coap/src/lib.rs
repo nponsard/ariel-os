@@ -61,7 +61,7 @@ mod demo_setup {
 pub async fn coap_run(handler: impl coap_handler::Handler + coap_handler::Reporting) -> ! {
     static COAP: StaticCell<embedded_nal_coap::CoAPShared<CONCURRENT_REQUESTS>> = StaticCell::new();
 
-    let stack = ariel_os_embassy::network::network_stack().await.unwrap();
+    let stack = ariel_os_embassy::net::network_stack().await.unwrap();
 
     // FIXME trim to CoAP requirements
     let mut rx_meta = [PacketMetadata::EMPTY; 16];

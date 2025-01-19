@@ -3,7 +3,7 @@
 #![feature(impl_trait_in_assoc_type)]
 #![feature(used_with_arg)]
 
-use ariel_os::{debug::log::*, network, reexports::embassy_net::tcp::TcpSocket, time::Duration};
+use ariel_os::{debug::log::*, net, reexports::embassy_net::tcp::TcpSocket, time::Duration};
 use embedded_io_async::Write;
 
 #[ariel_os::config(network)]
@@ -19,7 +19,7 @@ const NETWORK_CONFIG: ariel_os::reexports::embassy_net::Config = {
 
 #[ariel_os::task(autostart)]
 async fn tcp_echo() {
-    let stack = network::network_stack().await.unwrap();
+    let stack = net::network_stack().await.unwrap();
 
     let mut rx_buffer = [0; 4096];
     let mut tx_buffer = [0; 4096];

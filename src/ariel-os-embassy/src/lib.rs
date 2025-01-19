@@ -19,7 +19,7 @@ pub mod spi;
 pub mod usb;
 
 #[cfg(feature = "net")]
-pub mod network;
+pub mod net;
 
 #[cfg(feature = "wifi")]
 mod wifi;
@@ -50,7 +50,7 @@ pub mod api {
     #[cfg(feature = "i2c")]
     pub use crate::i2c;
     #[cfg(feature = "net")]
-    pub use crate::network;
+    pub use crate::net;
     #[cfg(feature = "spi")]
     pub use crate::spi;
     #[cfg(feature = "usb")]
@@ -80,12 +80,12 @@ cfg_if::cfg_if! {
     } else if #[cfg(context = "ariel-os")] {
         compile_error!("no backend for net is active");
     } else {
-        use network::DummyDriver as NetworkDevice;
+        use net::DummyDriver as NetworkDevice;
     }
 }
 
 #[cfg(feature = "net")]
-pub use network::NetworkStack;
+pub use net::NetworkStack;
 
 pub mod asynch;
 pub mod delegate;
@@ -263,12 +263,11 @@ async fn init_task(mut peripherals: hal::OptionalPeripherals) {
             .map(|d| d.interface_eui48(0).0)
             .unwrap_or([0xCA, 0xCC, 0xCC, 0xCC, 0xCC, 0xCC]);
 
-        static NET_STATE: StaticCell<NetState<{ network::ETHERNET_MTU }, 4, 4>> = StaticCell::new();
-        let (runner, device) = usb_cdc_ecm
-            .into_embassy_net_device::<{ network::ETHERNET_MTU }, 4, 4>(
-                NET_STATE.init_with(NetState::new),
-                our_mac_addr,
-            );
+        static NET_STATE: StaticCell<NetState<{ net::ETHERNET_MTU }, 4, 4>> = StaticCell::new();
+        let (runner, device) = usb_cdc_ecm.into_embassy_net_device::<{ net::ETHERNET_MTU }, 4, 4>(
+            NET_STATE.init_with(NetState::new),
+            our_mac_addr,
+        );
 
         spawner.spawn(usb::ethernet::usb_ncm_task(runner)).unwrap();
 
@@ -310,9 +309,9 @@ async fn init_task(mut peripherals: hal::OptionalPeripherals) {
         // The creation of `device` is not organized in such a way that they could be put in a
         // cfg-if without larger refactoring; relying on unused variable lints to keep the
         // condition list up to date.
-        let device: NetworkDevice = network::new_dummy();
+        let device: NetworkDevice = net::new_dummy();
 
-        let config = network::config();
+        let config = net::config();
 
         // Generate random seed
         // let mut rng = Rng::new(p.RNG, Irqs);
@@ -330,9 +329,9 @@ async fn init_task(mut peripherals: hal::OptionalPeripherals) {
             seed,
         );
 
-        spawner.spawn(network::net_task(runner)).unwrap();
+        spawner.spawn(net::net_task(runner)).unwrap();
 
-        if crate::network::STACK
+        if crate::net::STACK
             .init(SendCell::new(stack, spawner))
             .is_err()
         {
