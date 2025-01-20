@@ -1,7 +1,6 @@
 [workspace]
 members = [
   "examples/*",
-  "src/lib/clist",
   "src/lib/rbi",
   "src/lib/ringbuffer",
   "src/lib/coapcore",
