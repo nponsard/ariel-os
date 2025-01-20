@@ -9,6 +9,8 @@ Ariel OS is based on Rust from the ground up.
 Hardware targets include varieties of hardware based on 32-bit microcontroller architectures (such as Cortex-M, RISC-V, Xtensa).
 Check out our [table of supported hardware](https://ariel-os.github.io/ariel-os/dev/docs/book/hardware_functionality_support.html).
 
+## Design
+
 Ariel OS builds on top of existing projects in the Embedded Rust ecosystem, including [Embassy](https://github.com/embassy-rs/embassy), [esp-hal](https://github.com/esp-rs/esp-hal), [defmt](https://github.com/knurling-rs/defmt), [probe-rs](https://github.com/probe-rs/probe-rs), [sequential-storage](https://github.com/tweedegolf/sequential-storage), and [embedded-test](https://github.com/probe-rs/embedded-test) among others.
 While those provide high-quality building blocks for a wide range of embedded applications, such projects do not provide the high level of integration that developers know from contemporary C-based operating systems for microcontrollers, such as [RIOT](https://github.com/RIOT-OS/RIOT/) or [Zephyr](https://github.com/zephyrproject-rtos/zephyr) for instance.
 
