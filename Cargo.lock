@@ -121,8 +121,8 @@ dependencies = [
  "cfg-if",
  "dwm1001",
  "espressif-esp32-c6-devkitc-1",
- "espressif-esp32-s3-wroom-1",
- "espressif-esp32-wroom-32",
+ "espressif-esp32-devkitc",
+ "espressif-esp32-s3-devkitc-1",
  "linkme",
  "microbit",
  "microbit-v2",
@@ -2354,7 +2354,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "espressif-esp32-s3-wroom-1"
+name = "espressif-esp32-devkitc"
 version = "0.1.0"
 dependencies = [
  "ariel-os-debug",
@@ -2362,7 +2362,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "espressif-esp32-wroom-32"
+name = "espressif-esp32-s3-devkitc-1"
 version = "0.1.0"
 dependencies = [
  "ariel-os-debug",

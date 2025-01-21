@@ -216,8 +216,8 @@ boards:
       user_usb: not_currently_supported
       ethernet_over_usb: not_currently_supported
 
-  espressif-esp32-s3-wroom-1:
-    name: Espressif ESP32-S3-WROOM-1
+  espressif-esp32-s3-devkitc-1:
+    name: Espressif ESP32-S3-DevKitC-1
     chip: esp32-s3
     support:
       user_usb: not_currently_supported

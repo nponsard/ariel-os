@@ -6,12 +6,12 @@ use cfg_if::cfg_if;
 cfg_if! {
     if #[cfg(feature = "ai-c3")] {
         pub use ai_c3 as board;
-    } else if #[cfg(feature = "espressif-esp32-wroom-32")] {
-        pub use espressif_esp32_wroom_32 as board;
+    } else if #[cfg(feature = "espressif-esp32-devkitc")] {
+        pub use espressif_esp32_devkitc as board;
     } else if #[cfg(feature = "espressif-esp32-c6-devkitc-1")] {
         pub use espressif_esp32_c6_devkitc_1 as board;
-    } else if #[cfg(feature = "espressif-esp32-s3-wroom-1")] {
-        pub use espressif_esp32_s3_wroom_1 as board;
+    } else if #[cfg(feature = "espressif-esp32-s3-devkitc-1")] {
+        pub use espressif_esp32_s3_devkitc_1 as board;
     } else if #[cfg(feature = "nrf52dk")] {
         pub use nrf52dk as board;
     } else if #[cfg(feature = "dwm1001")] {

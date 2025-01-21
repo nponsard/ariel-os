@@ -670,7 +670,7 @@ modules:
   - name: hw/usb-device-port
     help: provided if a device has a USB device port wired up
     context:
-      - espressif-esp32-s3-wroom-1
+      - espressif-esp32-s3-devkitc-1
       - nrf5340dk
       - nrf52840dk
       - rpi-pico
@@ -1000,13 +1000,13 @@ builders:
   - name: ai-c3
     parent: esp32c3
 
-  - name: espressif-esp32-wroom-32
+  - name: espressif-esp32-devkitc
     parent: esp32
 
   - name: espressif-esp32-c6-devkitc-1
     parent: esp32c6
 
-  - name: espressif-esp32-s3-wroom-1
+  - name: espressif-esp32-s3-devkitc-1
     parent: esp32s3
 
   - name: nrf5340dk
