@@ -1351,7 +1351,7 @@ version = "0.4.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "3983b127f13995e68c1e29071e5d115cd96f215ccb5e6812e3728cd6f92653b3"
 dependencies = [
- "thiserror 2.0.4",
+ "thiserror 2.0.11",
 ]
 
 [[package]]
@@ -1489,14 +1489,12 @@ dependencies = [
 [[package]]
 name = "embassy-embedded-hal"
 version = "0.3.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "41fea5ef5bed4d3468dfd44f5c9fa4cda8f54c86d4fb4ae683eacf9d39e2ea12"
+source = "git+https://github.com/ariel-os/embassy?branch=embassy-embedded-hal-v0.3.0%2Bariel-os#21147bdceb85f55e375973f30e47c17036063689"
 dependencies = [
  "defmt",
  "embassy-futures",
  "embassy-sync 0.6.2",
  "embassy-time",
- "embedded-hal 0.2.7",
  "embedded-hal 1.0.0",
  "embedded-hal-async",
  "embedded-storage",
@@ -3760,8 +3758,9 @@ dependencies = [
 
 [[package]]
 name = "picoserve"
-version = "0.13.3"
-source = "git+https://github.com/sammhicks/picoserve?rev=c4fe40eccfcd1188f117d4b7c689f6dc48c94d44#c4fe40eccfcd1188f117d4b7c689f6dc48c94d44"
+version = "0.14.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "6d2c9a99cfe7a070728554f1d42f62067937ce30f9b057a6b507e0cc14fe96e9"
 dependencies = [
  "const-sha1",
  "data-encoding",
@@ -3771,9 +3770,22 @@ dependencies = [
  "futures-util",
  "heapless 0.8.0",
  "lhash",
+ "picoserve_derive",
  "ryu",
  "serde",
  "serde-json-core 0.6.0",
+ "thiserror 2.0.11",
+]
+
+[[package]]
+name = "picoserve_derive"
+version = "0.1.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "62ba0d83906d0357fedd23de7c5e3a5235342c248cc1d954d43d5e7b455c375c"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "syn 2.0.96",
 ]
 
 [[package]]
@@ -4898,11 +4910,11 @@ dependencies = [
 
 [[package]]
 name = "thiserror"
-version = "2.0.4"
+version = "2.0.11"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "2f49a1853cf82743e3b7950f77e0f4d622ca36cf4317cba00c767838bac8d490"
+checksum = "d452f284b73e6d76dd36758a0c8684b1d5be31f92b89d07fd5822175732206fc"
 dependencies = [
- "thiserror-impl 2.0.4",
+ "thiserror-impl 2.0.11",
 ]
 
 [[package]]
@@ -4918,9 +4930,9 @@ dependencies = [
 
 [[package]]
 name = "thiserror-impl"
-version = "2.0.4"
+version = "2.0.11"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8381894bb3efe0c4acac3ded651301ceee58a15d47c2e34885ed1908ad667061"
+checksum = "26afc1baea8a989337eeb52b6e72a039780ce45c3edfcc9c5b9d112feeb173c2"
 dependencies = [
  "proc-macro2",
  "quote",
