@@ -113,6 +113,27 @@ chips:
         comments:
           - not currently compatible with threading
 
+  esp32-s3:
+    name: ESP32-S3
+    support:
+      gpio: supported
+      debug_output: supported
+      hwrng: supported
+      i2c_controller:
+        status: not_currently_supported
+        comments:
+          - needs testing
+      spi_main:
+        status: not_currently_supported
+        comments:
+          - needs testing
+      logging: supported
+      storage: not_currently_supported
+      wifi:
+        status: supported_with_caveats
+        comments:
+          - not currently compatible with threading
+
   stm32f401retx:
     name: STM32F401RETX
     support:
@@ -191,6 +212,13 @@ boards:
   esp32-c6-devkitc-1:
     name: Espressif ESP32-C6-DevKitC-1
     chip: esp32-c6
+    support:
+      user_usb: not_currently_supported
+      ethernet_over_usb: not_currently_supported
+
+  espressif-esp32-s3-wroom-1:
+    name: Espressif ESP32-S3-WROOM-1
+    chip: esp32-s3
     support:
       user_usb: not_currently_supported
       ethernet_over_usb: not_currently_supported
