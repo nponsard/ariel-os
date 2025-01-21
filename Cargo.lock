@@ -440,7 +440,7 @@ dependencies = [
  "linkme",
  "panic-semihosting",
  "paste",
- "rp-pac 6.0.0",
+ "rp-pac",
  "static_cell",
 ]
 
@@ -1648,7 +1648,7 @@ dependencies = [
  "pio",
  "pio-proc",
  "rand_core",
- "rp-pac 7.0.0",
+ "rp-pac",
  "rp2040-boot2",
  "sha2-const-stable",
  "smart-leds",
@@ -4227,15 +4227,6 @@ dependencies = [
  "proc-macro2",
  "quote",
  "syn 2.0.96",
-]
-
-[[package]]
-name = "rp-pac"
-version = "6.0.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f30f6c4c846269293db805e9c77864ff7b923395b480550df44f0868e3765337"
-dependencies = [
- "cortex-m",
 ]
 
 [[package]]

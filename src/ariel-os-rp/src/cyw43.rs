@@ -8,7 +8,7 @@ use embassy_rp::{
     gpio::{Level, Output},
     pio::Pio,
 };
-use rpi_pico_w::{CywSpi, Irqs};
+use rpi_pico_w::{CywSpi, Irqs, DEFAULT_CLOCK_DIVIDER};
 use static_cell::StaticCell;
 
 pub type NetworkDevice = cyw43::NetDriver<'static>;
@@ -61,6 +61,7 @@ pub async fn device<'a, 'b: 'a>(
     let spi = CywSpi::new(
         &mut pio.common,
         pio.sm0,
+        DEFAULT_CLOCK_DIVIDER,
         pio.irq0,
         cs,
         pins.dio,

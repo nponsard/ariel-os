@@ -3,6 +3,8 @@
 use cyw43_pio::PioSpi;
 use embassy_rp::{bind_interrupts, peripherals, pio::InterruptHandler};
 
+pub use cyw43_pio::DEFAULT_CLOCK_DIVIDER;
+
 bind_interrupts!(pub struct Irqs {
     PIO0_IRQ_0 => InterruptHandler<CYW43_PIO>;
 });
