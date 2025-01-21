@@ -16,7 +16,7 @@ laze allows to override global variables using e.g., `-DFOO=BAR`.
 
 For tasks like flashing and debugging, Ariel OS uses laze *tasks*.
 laze tasks currently have the syntax `laze build -b <board> [other options] <task-name>`.
-For example, to run the hello-world example, the command would be:
+For example, to run the hello-world example from the `ariel-os` directory, the command would be:
 
     laze -C examples/hello-world build -b nrf52840dk run
 
@@ -54,3 +54,24 @@ The laze configuration defines a laze context for each MCU, MCU family, and boar
 
 laze passes the names of all contexts related to the selected builder as rustc `--cfg context=$CONTEXT` flags.
 This makes it possible to use the `#[cfg]` attribute to introduce feature-gates based on the MCU, MCU family, or board, when required.
+
+## Out-of-tree applications
+
+Out-of-tree applications use the `laze-project.yml` file for configuration through laze.
+
+Ariel OS's source and configuration are imported using [laze's `imports`][laze-imports-book] feature.
+The [project templates](./getting_started.md#starting-an-application-project-from-a-template-repository) use a [`git` import][laze-git-import-book] to ask laze to clone Ariel OS's repository.
+The cloned repository is stored inside `build/imports`.
+
+> It is currently recommended to use Ariel OS's commit ID to track the repository, to avoid surprising changes.
+> This commit ID needs to be updated to update the version of Ariel OS needs by the application.
+
+It is alternatively possible to clone the repository manually and specify the resulting directory using a [`path` import][laze-path-import-book].
+This can be useful when needing to modify Ariel OS itself, when also working on an application.
+
+FIXME:
+Do we *need* `dldir`? It's not in laze docs
+
+[laze-imports-book]: https://kaspar030.github.io/laze/dev/reference/imports.html
+[laze-git-import-book]: https://kaspar030.github.io/laze/dev/reference/import/git.html
+[laze-path-import-book]: https://kaspar030.github.io/laze/dev/reference/import/path.html
