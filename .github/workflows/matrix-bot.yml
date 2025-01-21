@@ -16,7 +16,7 @@ jobs:
         with:
           room_id: ${{ secrets.MATRIX_ROOM_ID }}
           access_token: ${{ secrets.MATRIX_ACCESS_TOKEN }}
-          message: "${{ message_label }}: [${{ github.event.pull_request.title }}](${{ github.event.pull_request.html_url }})"
+          message: "${{ env.message_label }}: [${{ github.event.pull_request.title }}](${{ github.event.pull_request.html_url }})"
           server: "matrix.org"
           message_type: "notice"
 
