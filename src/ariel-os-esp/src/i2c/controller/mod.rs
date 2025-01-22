@@ -2,8 +2,8 @@
 
 use ariel_os_embassy_common::impl_async_i2c_for_driver_enum;
 use esp_hal::{
-    gpio::{InputPin, OutputPin},
-    i2c::I2c as EspI2c,
+    gpio::interconnect::PeripheralOutput,
+    i2c::master::{BusTimeout, I2c as EspI2c},
     peripheral::Peripheral,
     peripherals, Async,
 };
@@ -83,7 +83,7 @@ macro_rules! define_i2c_drivers {
         $(
             /// Peripheral-specific I2C driver.
             pub struct $peripheral {
-                twim: EspI2c<'static, peripherals::$peripheral, Async>,
+                twim: EspI2c<'static, Async>,
             }
 
             impl $peripheral {
@@ -91,12 +91,17 @@ macro_rules! define_i2c_drivers {
                 /// I2C peripheral.
                 #[expect(clippy::new_ret_no_self)]
                 #[must_use]
-                pub fn new<SDA: OutputPin + InputPin, SCL: OutputPin + InputPin>(
+                pub fn new<SDA: PeripheralOutput, SCL: PeripheralOutput>(
                     sda_pin: impl Peripheral<P = SDA> + 'static,
                     scl_pin: impl Peripheral<P = SCL> + 'static,
                     config: Config,
                 ) -> I2c {
-                    let frequency = config.frequency.into();
+                    let mut twim_config = esp_hal::i2c::master::Config::default();
+                    twim_config.frequency = config.frequency.into();
+                    #[cfg(any(context = "esp32s3", context = "esp32c3", context = "esp32c6"))]
+                    let disabled_timeout = BusTimeout::Disabled;
+                    // Disable timeout as we implement it at a higher level.
+                    twim_config.timeout = disabled_timeout;
 
                     // Make this struct a compile-time-enforced singleton: having multiple statics
                     // defined with the same name would result in a compile-time error.
@@ -110,17 +115,14 @@ macro_rules! define_i2c_drivers {
                     // peripheral multiple times.
                     let i2c_peripheral = unsafe { peripherals::$peripheral::steal() };
 
-                    // NOTE(hal): even though we handle bus timeout at a higher level as well, it
-                    // does not seem possible to disable the timeout feature on ESP; so we keep the
-                    // default timeout instead (encoded as `None`).
-                    let timeout = None;
-                    let twim = EspI2c::new_with_timeout_async(
+                    let twim = EspI2c::new(
                         i2c_peripheral,
-                        sda_pin,
-                        scl_pin,
-                        frequency,
-                        timeout,
-                    );
+                        twim_config,
+                    )
+                        .unwrap()
+                        .into_async()
+                        .with_sda(sda_pin)
+                        .with_scl(scl_pin);
 
                     I2c::$peripheral(Self { twim })
                 }
@@ -144,19 +146,27 @@ macro_rules! define_i2c_drivers {
 }
 
 // We cannot impl From because both types are external to this crate.
-fn from_error(err: esp_hal::i2c::Error) -> ariel_os_embassy_common::i2c::controller::Error {
-    use esp_hal::i2c::Error::*;
+fn from_error(err: esp_hal::i2c::master::Error) -> ariel_os_embassy_common::i2c::controller::Error {
+    use esp_hal::i2c::master::{AcknowledgeCheckFailedReason, Error as EspError};
 
     use ariel_os_embassy_common::i2c::controller::{Error, NoAcknowledgeSource};
 
     match err {
-        ExceedingFifo => Error::Overrun,
-        AckCheckFailed => Error::NoAcknowledge(NoAcknowledgeSource::Unknown),
-        TimeOut => Error::Timeout,
-        ArbitrationLost => Error::ArbitrationLoss,
-        ExecIncomplete => Error::Other,
-        CommandNrExceeded => Error::Other,
-        InvalidZeroLength => Error::Other,
+        EspError::FifoExceeded => Error::Overrun,
+        EspError::AcknowledgeCheckFailed(reason) => {
+            let reason = match reason {
+                AcknowledgeCheckFailedReason::Address => NoAcknowledgeSource::Address,
+                AcknowledgeCheckFailedReason::Data => NoAcknowledgeSource::Data,
+                AcknowledgeCheckFailedReason::Unknown | _ => NoAcknowledgeSource::Unknown,
+            };
+            Error::NoAcknowledge(reason)
+        }
+        EspError::Timeout => Error::Timeout,
+        EspError::ArbitrationLost => Error::ArbitrationLoss,
+        EspError::ExecutionIncomplete => Error::Other,
+        EspError::CommandNumberExceeded => Error::Other,
+        EspError::ZeroLengthInvalid => Error::Other,
+        _ => Error::Other,
     }
 }
 

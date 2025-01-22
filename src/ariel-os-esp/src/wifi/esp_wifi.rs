@@ -2,11 +2,12 @@ use ariel_os_debug::log::{debug, info};
 use embassy_executor::Spawner;
 use embassy_time::{Duration, Timer};
 use esp_wifi::{
+    config::PowerSaveMode,
     wifi::{
         ClientConfiguration, Configuration, WifiController, WifiDevice, WifiEvent, WifiStaDevice,
         WifiState,
     },
-    EspWifiInitialization,
+    EspWifiController,
 };
 use once_cell::sync::OnceCell;
 
@@ -17,12 +18,15 @@ pub type NetworkDevice = WifiDevice<'static, WifiStaDevice>;
 // `EspWifiInitialization` from `crate::init()`.
 // Using a `once_cell::OnceCell` here for critical-section support, just to be
 // sure.
-pub static WIFI_INIT: OnceCell<EspWifiInitialization> = OnceCell::new();
+pub static WIFI_INIT: OnceCell<EspWifiController> = OnceCell::new();
 
 pub fn init(peripherals: &mut crate::OptionalPeripherals, spawner: Spawner) -> NetworkDevice {
     let wifi = peripherals.WIFI.take().unwrap();
     let init = WIFI_INIT.get().unwrap();
-    let (device, controller) = esp_wifi::wifi::new_with_mode(init, wifi, WifiStaDevice).unwrap();
+    let (device, mut controller) =
+        esp_wifi::wifi::new_with_mode(init, wifi, WifiStaDevice).unwrap();
+
+    controller.set_power_saving(PowerSaveMode::None).unwrap();
 
     spawner.spawn(connection(controller)).ok();
 
@@ -34,10 +38,10 @@ async fn connection(mut controller: WifiController<'static>) {
     debug!("start connection task");
 
     #[cfg(not(feature = "defmt"))]
-    debug!("Device capabilities: {:?}", controller.get_capabilities());
+    debug!("Device capabilities: {:?}", controller.capabilities());
 
     loop {
-        match esp_wifi::wifi::get_wifi_state() {
+        match esp_wifi::wifi::wifi_state() {
             WifiState::StaConnected => {
                 // wait until we're no longer connected
                 controller.wait_for_event(WifiEvent::StaDisconnected).await;
@@ -54,12 +58,12 @@ async fn connection(mut controller: WifiController<'static>) {
             });
             controller.set_configuration(&client_config).unwrap();
             debug!("Starting Wi-Fi");
-            controller.start().await.unwrap();
+            controller.start_async().await.unwrap();
             debug!("Wi-Fi started!");
         }
         debug!("About to connect...");
 
-        match controller.connect().await {
+        match controller.connect_async().await {
             Ok(_) => info!("Wifi connected!"),
             Err(e) => {
                 info!("Failed to connect to Wi-Fi: {:?}", e);
