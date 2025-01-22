@@ -2,6 +2,7 @@ use ariel_os_debug::log::{debug, info};
 use embassy_executor::Spawner;
 use embassy_time::{Duration, Timer};
 use esp_wifi::{
+    config::PowerSaveMode,
     wifi::{
         ClientConfiguration, Configuration, WifiController, WifiDevice, WifiEvent, WifiStaDevice,
         WifiState,
@@ -22,7 +23,10 @@ pub static WIFI_INIT: OnceCell<EspWifiController> = OnceCell::new();
 pub fn init(peripherals: &mut crate::OptionalPeripherals, spawner: Spawner) -> NetworkDevice {
     let wifi = peripherals.WIFI.take().unwrap();
     let init = WIFI_INIT.get().unwrap();
-    let (device, controller) = esp_wifi::wifi::new_with_mode(init, wifi, WifiStaDevice).unwrap();
+    let (device, mut controller) =
+        esp_wifi::wifi::new_with_mode(init, wifi, WifiStaDevice).unwrap();
+
+    controller.set_power_saving(PowerSaveMode::None).unwrap();
 
     spawner.spawn(connection(controller)).ok();
 
