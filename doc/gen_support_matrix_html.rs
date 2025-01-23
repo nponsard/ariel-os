@@ -38,7 +38,7 @@ r##"<!-- This table is auto-generated. Do not edit manually. -->
     {%- for board in boards %}
     <tr>
       <td>{{ board.chip }}</td>
-      <td>{{ board.name }}</td>
+      <td><a href="{{ board.url }}">{{ board.name }}</a></td>
       {%- for functionality in board.functionalities %}
       <td class="support-cell" title="{{ functionality.description }}">{{ functionality.icon }}</td>
       {%- endfor %}
@@ -207,6 +207,7 @@ fn render_html(matrix: &schema::Matrix) -> Result<String, Error> {
     #[derive(Debug, Serialize)]
     struct BoardSupport {
         chip: String,
+        url: String,
         name: String,
         functionalities: Vec<FunctionalitySupport>,
     }
@@ -277,6 +278,7 @@ fn render_html(matrix: &schema::Matrix) -> Result<String, Error> {
 
         Ok(BoardSupport {
             chip: chip.name.to_owned(),
+            url: board_info.url.to_owned(),
             name: board_name.to_owned(),
             functionalities,
         })
@@ -407,6 +409,7 @@ mod schema {
     pub struct BoardInfo {
         pub name: String,
         pub description: Option<String>,
+        pub url: String,
         pub chip: String,
         pub support: HashMap<String, SupportInfo>,
     }

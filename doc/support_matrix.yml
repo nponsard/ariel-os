@@ -175,6 +175,7 @@ chips:
 boards:
   microbit-v2:
     name: BBC micro:bit V2
+    url: https://web.archive.org/web/20250109121140/https://microbit.org/new-microbit/
     chip: nrf52833
     support:
       user_usb: not_available
@@ -182,6 +183,7 @@ boards:
 
   nrf52840-dk:
     name: nRF52840-DK
+    url: https://web.archive.org/web/20250112154748/https://www.nordicsemi.com/Products/Development-hardware/nrf52840-dk
     chip: nrf52840
     support:
       user_usb: supported
@@ -189,6 +191,7 @@ boards:
 
   nrf5340-dk:
     name: nRF5340-DK
+    url: https://web.archive.org/web/20250115224621/https://www.nordicsemi.com/Products/Development-hardware/nrf5340-dk
     chip: nrf53xx
     support:
       user_usb: supported
@@ -196,6 +199,7 @@ boards:
 
   rp-pico:
     name: Raspberry Pi Pico
+    url: https://web.archive.org/web/20250101022830/https://www.raspberrypi.com/products/raspberry-pi-pico/
     chip: rp2040
     support:
       user_usb: supported
@@ -203,6 +207,7 @@ boards:
 
   rp-pico-w:
     name: Raspberry Pi Pico W
+    url: https://web.archive.org/web/20250101022830/https://www.raspberrypi.com/products/raspberry-pi-pico/
     chip: rp2040
     support:
       user_usb: supported
@@ -211,6 +216,7 @@ boards:
 
   esp32-c6-devkitc-1:
     name: Espressif ESP32-C6-DevKitC-1
+    url: https://web.archive.org/web/20250122153727/https://www.espressif.com/en/dev-board/esp32-c6-devkitc-1-en
     chip: esp32-c6
     support:
       user_usb: not_currently_supported
@@ -218,6 +224,7 @@ boards:
 
   espressif-esp32-s3-devkitc-1:
     name: Espressif ESP32-S3-DevKitC-1
+    url: https://web.archive.org/web/20250122153707/https://www.espressif.com/en/dev-board/esp32-s3-devkitc-1-en
     chip: esp32-s3
     support:
       user_usb: not_currently_supported
@@ -225,6 +232,7 @@ boards:
 
   st-nucleo-f401re:
     name: ST NUCLEO-F401RE
+    url: https://web.archive.org/web/20250115005425/https://www.st.com/en/evaluation-tools/nucleo-f401re.html
     chip: stm32f401retx
     support:
       user_usb: not_available
@@ -233,6 +241,7 @@ boards:
 
   st-nucleo-h755zi-q:
     name: ST NUCLEO-H755ZI-Q
+    url: https://web.archive.org/web/20240524105149/https://www.st.com/en/evaluation-tools/nucleo-h755zi-q.html
     chip: stm32h755zitx
     support:
       user_usb: supported
@@ -241,6 +250,7 @@ boards:
 
   st-nucleo-wb55:
     name: ST NUCLEO-WB55RG
+    url: https://web.archive.org/web/20240803070523/https://www.st.com/en/evaluation-tools/nucleo-wb55rg.html
     chip: stm32wb55rgvx
     support:
       user_usb: supported
