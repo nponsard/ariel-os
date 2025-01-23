@@ -1,5 +1,5 @@
 [package]
-name = "microbit"
+name = "bbc-microbit-v2"
 version = "0.1.0"
 license.workspace = true
 edition.workspace = true
@@ -11,4 +11,4 @@ cortex-m.workspace = true
 ariel-os-debug.workspace = true
 ariel-os-rt.workspace = true
 
-nrf51 = { path = "../nrf51" }
+nrf52 = { path = "../nrf52", features = ["nrf52833"] }

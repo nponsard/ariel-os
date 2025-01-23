@@ -3,6 +3,6 @@
 use ariel_os_debug::log::debug;
 
 pub fn init() {
-    debug!("microbit::init()");
+    debug!("bbc_microbit_::init()");
     nrf51::init();
 }

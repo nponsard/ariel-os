@@ -1,6 +1,6 @@
 use ariel_os::hal::peripherals;
 
-#[cfg(context = "microbit-v2")]
+#[cfg(context = "bbc-microbit-v2")]
 ariel_os::hal::define_peripherals!(LedPeripherals {
     led_col1: P0_28,
     led: P0_21,

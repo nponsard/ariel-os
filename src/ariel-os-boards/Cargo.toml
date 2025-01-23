@@ -14,12 +14,12 @@ linkme.workspace = true
 ariel-os-rt = { path = "../ariel-os-rt" }
 
 ai-c3 = { optional = true, path = "ai-c3" }
+bbc-microbit = { optional = true, path = "bbc-microbit" }
+bbc-microbit-v2 = { optional = true, path = "bbc-microbit-v2" }
 espressif-esp32-c6-devkitc-1 = { optional = true, path = "espressif-esp32-c6-devkitc-1" }
 espressif-esp32-s3-devkitc-1 = { optional = true, path = "espressif-esp32-s3-devkitc-1" }
 espressif-esp32-devkitc = { optional = true, path = "espressif-esp32-devkitc" }
 dwm1001 = { optional = true, path = "dwm1001" }
-microbit = { optional = true, path = "microbit" }
-microbit-v2 = { optional = true, path = "microbit-v2" }
 nrf52840-mdk = { optional = true, path = "nrf52840-mdk" }
 nrf52840dk = { optional = true, path = "nrf52840dk" }
 nrf52dk = { optional = true, path = "nrf52dk" }
