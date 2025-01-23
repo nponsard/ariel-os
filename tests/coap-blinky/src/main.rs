@@ -6,21 +6,7 @@
 #[path = "../../../examples/blinky/src/pins.rs"]
 mod pins;
 
-use ariel_os::{
-    gpio::{Level, Output},
-    reexports::embassy_net,
-};
-
-#[ariel_os::config(network)]
-const NETWORK_CONFIG: embassy_net::Config = {
-    use embassy_net::{self, Ipv4Address};
-
-    embassy_net::Config::ipv4_static(embassy_net::StaticConfigV4 {
-        address: embassy_net::Ipv4Cidr::new(Ipv4Address::new(10, 42, 0, 61), 24),
-        dns_servers: heapless::Vec::new(),
-        gateway: Some(Ipv4Address::new(10, 42, 0, 1)),
-    })
-};
+use ariel_os::gpio::{Level, Output};
 
 #[ariel_os::task(autostart, peripherals)]
 async fn coap_run(peripherals: pins::LedPeripherals) {

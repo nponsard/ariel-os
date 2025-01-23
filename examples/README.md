@@ -26,9 +26,9 @@ This directory contains example applications that showcase how to use Ariel OS.
 
 ## Networking
 
-Some examples demonstrate networking capabilities. By default, they will listen on a static
-IPv4 address: `10.42.0.61`.
-To make the device use a DHCP client for address allocation instead of the static address,
-disable the `override-network-config` feature in the example's `Cargo.toml`.
+Some examples demonstrate networking capabilities. By default, they will try to
+get an IP address via DHCPv4.
 
-See the [networking documentation](https://ariel-os.github.io/ariel-os/dev/docs/book/networking.html) to learn how to set up networking.
+See the [networking documentation][book-networking] to learn how to set up networking.
+
+[book-networking]: https://ariel-os.github.io/ariel-os/dev/docs/book/networking.html
