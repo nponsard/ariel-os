@@ -119,14 +119,14 @@ version = "0.1.0"
 dependencies = [
  "ai-c3",
  "ariel-os-rt",
+ "bbc-microbit",
+ "bbc-microbit-v2",
  "cfg-if",
  "dwm1001",
  "espressif-esp32-c6-devkitc-1",
  "espressif-esp32-devkitc",
  "espressif-esp32-s3-devkitc-1",
  "linkme",
- "microbit",
- "microbit-v2",
  "nrf52840-mdk",
  "nrf52840dk",
  "nrf52dk",
@@ -529,6 +529,28 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "823388e228f614e9558c6804262db37960ec8821856535f5c3f59913140558f8"
 dependencies = [
  "serde",
+]
+
+[[package]]
+name = "bbc-microbit"
+version = "0.1.0"
+dependencies = [
+ "ariel-os-debug",
+ "ariel-os-rt",
+ "cortex-m",
+ "cortex-m-rt",
+ "nrf51",
+]
+
+[[package]]
+name = "bbc-microbit-v2"
+version = "0.1.0"
+dependencies = [
+ "ariel-os-debug",
+ "ariel-os-rt",
+ "cortex-m",
+ "cortex-m-rt",
+ "nrf52",
 ]
 
 [[package]]
@@ -3347,28 +3369,6 @@ name = "memchr"
 version = "2.7.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "78ca9ab1a0babb1e7d5695e3530886289c18cf2f87ec19a575a0abdce112e3a3"
-
-[[package]]
-name = "microbit"
-version = "0.1.0"
-dependencies = [
- "ariel-os-debug",
- "ariel-os-rt",
- "cortex-m",
- "cortex-m-rt",
- "nrf51",
-]
-
-[[package]]
-name = "microbit-v2"
-version = "0.1.0"
-dependencies = [
- "ariel-os-debug",
- "ariel-os-rt",
- "cortex-m",
- "cortex-m-rt",
- "nrf52",
-]
 
 [[package]]
 name = "minicbor"

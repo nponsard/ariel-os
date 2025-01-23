@@ -6,7 +6,7 @@ ariel_os::hal::define_peripherals!(Peripherals {
     btn1: P0_11
 });
 
-#[cfg(context = "microbit-v2")]
+#[cfg(context = "bbc-microbit-v2")]
 ariel_os::hal::define_peripherals!(Peripherals {
     led_col1: P0_28,
     led1: P0_21,

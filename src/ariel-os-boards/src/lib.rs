@@ -6,6 +6,10 @@ use cfg_if::cfg_if;
 cfg_if! {
     if #[cfg(feature = "ai-c3")] {
         pub use ai_c3 as board;
+    } else if #[cfg(feature = "bbc-microbit")] {
+        pub use bbc_microbit as board;
+    } else if #[cfg(feature = "bbc-microbit-v2")] {
+        pub use bbc_microbit_v2 as board;
     } else if #[cfg(feature = "espressif-esp32-devkitc")] {
         pub use espressif_esp32_devkitc as board;
     } else if #[cfg(feature = "espressif-esp32-c6-devkitc-1")] {
@@ -22,10 +26,6 @@ cfg_if! {
         pub use nrf52840_mdk as board;
     } else if #[cfg(feature = "nrf5340dk")] {
         pub use nrf5340dk as board;
-    } else if #[cfg(feature = "microbit")] {
-        pub use microbit as board;
-    } else if #[cfg(feature = "microbit-v2")] {
-        pub use microbit_v2 as board;
     } else if #[cfg(feature = "nucleo-f401re")] {
         pub use nucleo_f401re as board;
     } else if #[cfg(feature = "particle-xenon")] {

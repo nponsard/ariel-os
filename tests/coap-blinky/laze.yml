@@ -15,8 +15,8 @@ apps:
       - riscv
     context:
       # list of contexts that have an entry in `pins.rs`
+      - bbc-microbit-v2
       - esp
-      - microbit-v2
       - nrf52840dk
       - nrf5340dk
       - particle-xenon

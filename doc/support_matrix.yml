@@ -173,7 +173,7 @@ chips:
 # Encodes support status for each board.
 # Boards inherit support statuses of their chip, but can also override them.
 boards:
-  microbit-v2:
+  bbc-microbit-v2:
     name: BBC micro:bit V2
     url: https://web.archive.org/web/20250109121140/https://microbit.org/new-microbit/
     chip: nrf52833

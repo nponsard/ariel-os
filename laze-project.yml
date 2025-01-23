@@ -150,15 +150,15 @@ contexts:
     selects:
       - thumbv6m-none-eabi
 
-  - name: microbit-base
-    # this is a context, not a builder, to be used as parent by  "microbit" and
-    # "microbit-qemu"
+  - name: bbc-microbit-base
+    # this is a context, not a builder, to be used as parent by  "bbc-microbit" and
+    # "bbc-microbit-qemu"
     parent: nrf51
     selects:
-      - "microbit disabled due to missing nrf51 support in embassy"
+      - "bbc-microbit disabled due to missing nrf51 support in embassy"
     env:
       # override "${builder}"
-      BOARD: microbit
+      BOARD: bbc-microbit
       OPENOCD_ARGS:
         - "-f board/nordic_nrf52_dk.cfg"
 
@@ -956,16 +956,16 @@ builders:
       OPENOCD_ADAPTER_INIT:
         - " -c 'source [find interface/cmsis-dap.cfg]'"
 
-  - name: microbit
-    parent: microbit-base
+  - name: bbc-microbit
+    parent: bbc-microbit-base
     env:
       CARGO_RUNNER:
         - ${relroot}/${SCRIPTS}/debug-openocd.sh
       OPENOCD_ARGS:
         - "-f board/nordic_nrf52_dk.cfg"
 
-  - name: microbit-qemu
-    parent: microbit-base
+  - name: bbc-microbit-qemu
+    parent: bbc-microbit-base
     env:
       CARGO_RUNNER:
         - '"qemu-system-arm -machine microbit -nographic -semihosting-config enable=on,target=native -s -S -kernel"'
@@ -979,7 +979,7 @@ builders:
     disables:
       - periph_rtt
 
-  - name: microbit-v2
+  - name: bbc-microbit-v2
     parent: nrf52833
 
   - name: particle-xenon

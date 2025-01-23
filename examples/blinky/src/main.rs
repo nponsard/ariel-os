@@ -15,7 +15,7 @@ async fn blinky(peripherals: pins::LedPeripherals) {
     let mut led = Output::new(peripherals.led, Level::Low);
 
     // The micro:bit uses an LED matrix; pull the column line low.
-    #[cfg(context = "microbit-v2")]
+    #[cfg(context = "bbc-microbit-v2")]
     let _led_col1 = Output::new(peripherals.led_col1, Level::Low);
 
     loop {
