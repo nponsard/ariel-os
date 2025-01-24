@@ -51,6 +51,9 @@ jobs:
         with:
           toolchain: ${{ steps.get_toolchain.outputs.toolchain }}
 
+      - name: rust cache
+        uses: Swatinem/rust-cache@v2
+
       # Docs of HAL crates must be generated after that of the main crate,
       # otherwise this would result in broken links, as they use `--no-deps` for
       # faster generation.
@@ -150,7 +153,7 @@ jobs:
         if: github.event_name == 'pull_request'
         id: check
         run: |
-            hash="$(curl https://ariel-os.github.io/ariel-os/dev/docs/_hash | head -n 1)"
+            hash="$(curl https://ariel-os.github.io/ariel-os/_hash | head -n 1)"
             test "$hash" != "$(cat ./_site/_hash)"
 
       - name: Upload artifact (PR)
