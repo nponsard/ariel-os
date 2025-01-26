@@ -44,6 +44,7 @@ pub mod seccfg;
 //
 // This is pub only to make the doctests run (but the crate's pub-ness needs a major overhaul
 // anyway)
+#[doc(hidden)]
 pub mod oluru;
 mod seccontext;
 pub use seccontext::*;
