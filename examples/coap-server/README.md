@@ -19,14 +19,14 @@ making the former configurable and the latter dynamic is work in progress.
   to list the resources of the device:
 
   ```sh
-  $ pipx install 'aiocoap[all]'
+  $ pipx install 'aiocoap[oscore,prettyprint]'
   $ aiocoap-client coap://10.42.0.61/.well-known/core --credentials client.diag
   # application/link-format content was re-formatted
   </hello>
   ```
 
   If you prefer not to install the CoAP client, you can
-  replace any call to `aiocoap-client` with `pipx run --spec 'aiocoap[all]' aiocoap-client` instead.
+  replace any call to `aiocoap-client` with `pipx run --spec 'aiocoap[oscore,prettyprint]' aiocoap-client` instead.
 
   The output tells you there is a `/hello` resource, so read that next:
 

@@ -8,10 +8,12 @@ This application is a work in progress demo of running CoAP with OSCORE/EDHOC se
 
 * Run on any board with networking, eg. `laze build -b particle-xenon run`.
 * [Set up networking](../README.md).
+* Run `chmod go-rwX client.cosekey`.
+  This file contains the key we authenticate with, and aiocoap gets jumpy around world readable key material.
 * Run `pipx run coap-console coap://10.42.0.61 --credentials client.diag`,
   which establishes a secure CoAP connection using EDHOC and OSCORE,
   and shows the log of the device.
-* Run `pipx run --spec 'aiocoap[all]' aiocoap-client coap://10.42.0.61/.well-known/core --credentials client.diag`
+* Run `pipx run --spec 'aiocoap[oscore,prettyprint]' aiocoap-client coap://10.42.0.61/.well-known/core --credentials client.diag`
   to show what else the device can do.
   If you kept the log running, you will see that every new command runs through EDHOC once:
   aiocoap does not currently attempt to persist EDHOC derived OSCORE contexts across runs.

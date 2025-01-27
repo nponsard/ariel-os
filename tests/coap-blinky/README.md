@@ -8,7 +8,7 @@ This application makes the GPIO pin from the blinky example accessible over the 
 
 * Run on any board with networking, eg. `laze build -b particle-xenon run`.
 * [Set up networking](../README.md).
-* Run `pipx run --spec 'aiocoap[all]' aiocoap-client coap://10.42.0.61/led -m PUT --content-format application/cbor --payload true`
+* Run `pipx run --spec 'aiocoap[prettyprint]' aiocoap-client coap://10.42.0.61/led -m PUT --content-format application/cbor --payload true`
   or `false`.
 
 ## Roadmap
