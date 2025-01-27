@@ -11,7 +11,7 @@
 ///
 /// | Driver    | Expected type                  | Cargo feature to enable   |
 /// | --------- | ------------------------------ | ------------------------- |
-/// | `network` | `embassy_net::Config`          | `override-network-config` |
+/// | `network` | `embassy_net::Config`          | `network-config-override` |
 /// | `usb`     | `embassy_usb::Config`          | `override-usb-config`     |
 ///
 /// # Note
