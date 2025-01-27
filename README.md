@@ -79,11 +79,10 @@ information.
 Ariel OS makes use of selected Rust unstable features. For the time being, it is
 recommended to use the nightly version pinned by [`rust-toolchain.toml`](rust-toolchain.toml).
 
-## Coding Conventions
+## Contributing
 
-Please see the chapter on
-[coding conventions](https://ariel-os.github.io/ariel-os/dev/docs/book/coding-conventions.html)
-in the documentation.
+Contributions are very welcome!
+Please see our [contributing guide](./CONTRIBUTING.md) for details.
 
 ## Security
 
