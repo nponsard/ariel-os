@@ -1141,8 +1141,9 @@ checksum = "0d8a42181e0652c2997ae4d217f25b63c5337a52fd2279736e97b832fa0a3cff"
 
 [[package]]
 name = "const-str"
-version = "0.5.7"
-source = "git+https://github.com/Nugine/const-str?rev=91d01909fd83939008bee8d0287c935dbac48f7f#91d01909fd83939008bee8d0287c935dbac48f7f"
+version = "0.6.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "671927c085eb5827d30b95df08f6c6a2301eafe2274c368bb2c16f42e03547eb"
 
 [[package]]
 name = "const_panic"
