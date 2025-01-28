@@ -35,11 +35,11 @@ pub(crate) async fn net_task(mut runner: Runner<'static, NetworkDevice>) -> ! {
 
 #[allow(dead_code, reason = "false positive during builds outside of laze")]
 pub(crate) fn config() -> embassy_net::Config {
-    #[cfg(not(feature = "override-network-config"))]
+    #[cfg(not(feature = "network-config-override"))]
     {
         embassy_net::Config::dhcpv4(Default::default())
     }
-    #[cfg(feature = "override-network-config")]
+    #[cfg(feature = "network-config-override")]
     {
         extern "Rust" {
             fn __ariel_os_network_config() -> embassy_net::Config;
@@ -120,4 +120,34 @@ impl embassy_net::driver::RxToken for DummyDriver {
     {
         match self.0 {}
     }
+}
+
+#[cfg(feature = "network-config-static")]
+#[no_mangle]
+fn __ariel_os_network_config() -> embassy_net::Config {
+    use ariel_os_utils::{ipv4_addr_from_env_or, u8_from_env_or};
+
+    let ipaddr = ipv4_addr_from_env_or!(
+        "CONFIG_NET_IPV4_STATIC_ADDRESS",
+        "10.42.0.61",
+        "static IPv4 address",
+    );
+
+    let gw_addr = ipv4_addr_from_env_or!(
+        "CONFIG_NET_IPV4_STATIC_GATEWAY_ADDRESS",
+        "10.42.0.1",
+        "static IPv4 gateway address",
+    );
+
+    let prefix_len = u8_from_env_or!(
+        "CONFIG_NET_IPV4_STATIC_CIDR_PREFIX_LEN",
+        24,
+        "static IPv4 CIDR prefix length"
+    );
+
+    embassy_net::Config::ipv4_static(embassy_net::StaticConfigV4 {
+        address: embassy_net::Ipv4Cidr::new(ipaddr, prefix_len),
+        dns_servers: heapless::Vec::new(),
+        gateway: Some(gw_addr),
+    })
 }

@@ -12,7 +12,6 @@ ariel-os = { path = "../../src/ariel-os", features = [
   "csprng",
   "dns",
   "mdns",
-  "override-network-config",
   "tcp",
   "time",
 ] }

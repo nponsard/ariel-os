@@ -38,17 +38,6 @@ const ENDPOINT_URL: &str = config::str_from_env_or!(
     "endpoint to send the GET request to",
 );
 
-#[ariel_os::config(network)]
-const NETWORK_CONFIG: embassy_net::Config = {
-    use embassy_net::Ipv4Address;
-
-    embassy_net::Config::ipv4_static(embassy_net::StaticConfigV4 {
-        address: embassy_net::Ipv4Cidr::new(Ipv4Address::new(10, 42, 0, 61), 24),
-        dns_servers: heapless::Vec::new(),
-        gateway: Some(Ipv4Address::new(10, 42, 0, 1)),
-    })
-};
-
 #[ariel_os::task(autostart)]
 async fn main() {
     let stack = net::network_stack().await.unwrap();
