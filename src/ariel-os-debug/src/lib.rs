@@ -1,5 +1,9 @@
+//! Provides debug interface facilities.
+
 #![cfg_attr(not(test), no_std)]
 #![cfg_attr(test, no_main)]
+#![deny(missing_docs)]
+#![deny(clippy::pedantic)]
 
 #[cfg(all(feature = "rtt-target", feature = "esp-println"))]
 compile_error!(
@@ -41,6 +45,11 @@ impl ExitCode {
     }
 }
 
+/// Terminates the debug output session.
+///
+/// # Note
+///
+/// This may or may not stop the MCU.
 pub fn exit(code: ExitCode) {
     #[cfg(feature = "semihosting")]
     semihosting::process::exit(code.to_semihosting_code());
@@ -58,6 +67,7 @@ pub fn exit(code: ExitCode) {
 mod backend {
     pub use rtt_target::{rprint as print, rprintln as println};
 
+    #[doc(hidden)]
     pub fn init() {
         #[cfg(not(feature = "defmt"))]
         {
@@ -98,6 +108,7 @@ mod backend {
 mod backend {
     pub use esp_println::{print, println};
 
+    #[doc(hidden)]
     pub fn init() {
         #[cfg(feature = "log")]
         crate::logger::init();
@@ -106,26 +117,28 @@ mod backend {
 
 #[cfg(not(feature = "debug-console"))]
 mod backend {
+    #[doc(hidden)]
     pub fn init() {}
 
+    /// Prints to the debug output, with a newline.
     #[macro_export]
-    macro_rules! nop_println {
+    macro_rules! println {
         ($($arg:tt)*) => {{
             let _ = ($($arg)*);
             // Do nothing
         }};
     }
 
+    /// Prints to the debug output.
+    ///
+    /// Equivalent to the [`println!`] macro except that a newline is not printed at the end of the message.
     #[macro_export]
-    macro_rules! nop_print {
+    macro_rules! print {
         ($($arg:tt)*) => {{
             let _ = ($($arg)*);
             // Do nothing
         }};
     }
-
-    pub use nop_print as print;
-    pub use nop_println as println;
 }
 
 pub use backend::*;
