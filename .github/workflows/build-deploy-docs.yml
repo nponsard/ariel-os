@@ -152,6 +152,7 @@ jobs:
 
       - name: Compare hashes
         if: github.event_name == 'pull_request'
+        continue-on-error: true
         id: check
         run: |
             hash="$(curl https://ariel-os.github.io/ariel-os/_hash | head -n 1)"
