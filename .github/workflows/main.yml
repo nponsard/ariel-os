@@ -214,6 +214,7 @@ jobs:
       - name: rustdoc
         run: |
             RUSTDOCFLAGS='-D warnings' cargo doc \
+                --no-deps \
                 -p ariel-os \
                 --features "
                     bench,
@@ -243,6 +244,7 @@ jobs:
       - name: rustdoc for ESP32
         run: |
             RUSTDOCFLAGS='-D warnings --cfg context="esp32c6"' cargo doc \
+                --no-deps \
                 --target=riscv32imac-unknown-none-elf \
                 --features "
                     esp-hal-embassy/esp32c6,
@@ -256,6 +258,7 @@ jobs:
       - name: rustdoc for RP
         run: |
             RUSTDOCFLAGS='-D warnings --cfg context="rp2040"' cargo doc \
+                --no-deps \
                 --features "
                     embassy-rp/rp2040,
                     external-interrupts,
@@ -267,6 +270,7 @@ jobs:
       - name: rustdoc for nRF
         run: |
             RUSTDOCFLAGS='-D warnings --cfg context="nrf52840"' cargo doc \
+                --no-deps \
                 --features "
                     embassy-nrf/nrf52840,
                     external-interrupts,
@@ -278,6 +282,7 @@ jobs:
       - name: rustdoc for STM32
         run: |
             RUSTDOCFLAGS='-D warnings --cfg context="stm32wb55rgvx"' cargo doc \
+                --no-deps \
                 --features "
                     embassy-stm32/stm32wb55rg,
                     external-interrupts,
