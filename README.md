@@ -85,6 +85,10 @@ Please see the chapter on
 [coding conventions](https://ariel-os.github.io/ariel-os/dev/docs/book/coding-conventions.html)
 in the documentation.
 
+## Security
+
+If you think you may have found an issue that represents a security risk to Ariel OS users, please report it privately using [GitHub's Security section](https://github.com/ariel-os/ariel-os/security).
+
 ## Copyright & License
 
 Ariel OS is licensed under either of
