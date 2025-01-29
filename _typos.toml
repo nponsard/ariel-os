@@ -11,4 +11,7 @@ negativ = "negativ" # Typo in a branch name in ariel-os-cargo.toml
 celcius = "celcius" # Until embedded-aht20 is fixed
 
 [files]
-extend-exclude = ["doc/*.svg", "src/ariel-os-rp/src/cyw43/firmware/README.md"]
+extend-exclude = [
+  "book/src/*.svg",
+  "src/ariel-os-rp/src/cyw43/firmware/README.md",
+]

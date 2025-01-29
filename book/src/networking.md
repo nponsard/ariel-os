@@ -13,12 +13,7 @@ through [laze modules](./build_system.md#laze-modules):
 - `wifi-esp`: Selects Wi-Fi on an ESP32 MCU.
 
 When available on the device, one of these module is always selected by default, currently preferring Wi-Fi networking.
-
-Overriding this default selection is possible by explicitly selecting the desired module, as follows:
-
-```sh
-laze build --select usb-ethernet -b rpi-pico-w
-```
+Overriding this default selection is possible by explicitly [selecting the desired module][laze-modules-book].
 
 ## Network Credentials
 
@@ -89,3 +84,4 @@ a second cable.
 [network-stack-rustdoc]: https://ariel-os.github.io/ariel-os/dev/docs/api/ariel_os/net/fn.network_stack.html
 [embassy-net-reexport-rustdoc]: https://ariel-os.github.io/ariel-os/dev/docs/api/ariel_os/reexports/embassy_net/index.html
 [examples-dir-repo]: https://github.com/ariel-os/ariel-os/tree/main/examples
+[laze-modules-book]: ./build_system.md#laze-modules

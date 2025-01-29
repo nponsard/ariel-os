@@ -4,7 +4,7 @@
 # steady pace via xdotool. dash is used as subshell because it doesn't print
 # 'exit' on exit.
 # usage:
-# termtosvg -D 3000 doc/hello-world_render.svg -t doc/recorder_template.svg -c ./recorder.sh -g 100x23
+# termtosvg -D 3000 book/src/hello-world_render.svg -t doc/recorder_template.svg -c ./recorder.sh -g 100x23
 #
 # When the typing has stopped, switch to a next console and end this script via `kill`
 #

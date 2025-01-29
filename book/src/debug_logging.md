@@ -32,7 +32,7 @@ $ laze build -C examples/log --builders nrf52840dk -DLOG=info run
 Ariel OS supports multiple logging facades and loggers.
 Only one of them may be enabled at a time;
 if none of them are enabled, logging statements become no-operations.
-Enabling either the `defmt` or `log` laze modules allows selecting which logging facade and logger is used.
+Enabling either the `defmt` or `log` [laze modules][laze-modules-book] allows selecting which logging facade and logger is used.
 defmt should be preferred when possible as it results in smaller binaries.
 
 ### [defmt]
@@ -55,3 +55,4 @@ Ariel OS's logger for `log` supports configuring the log level globally, but do
 [defmt]: https://github.com/knurling-rs/defmt
 [defmt documentation]: https://defmt.ferrous-systems.com/
 [log]: https://github.com/rust-lang/log
+[laze-modules-book]: ./build_system.md#laze-modules
