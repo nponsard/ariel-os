@@ -62,6 +62,7 @@ jobs:
           cargo doc \
               --no-deps \
               -p ariel-os \
+              -p coapcore \
               --features "
                   bench,
                   coap,
@@ -85,6 +86,7 @@ jobs:
                   udp,
                   usb,
                   usb-hid,
+                  coapcore/_nightly_docs
                   "
           RUSTDOCFLAGS='-D warnings --cfg context="esp32c6"' cargo doc \
               --target=riscv32imac-unknown-none-elf \
