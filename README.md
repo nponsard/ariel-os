@@ -23,7 +23,7 @@ A powerful framework that allows to write portable embedded Rust applications wi
 
 See the [Getting Started page][getting-started-mdbook] in the User Guide to get the [`hello-world` example][hello-world-example] running in less than 5 minutes.
 
-![Terminal screencast of compiling and flashing the hello-world example](./doc/hello-world_render.svg)
+![Terminal screencast of compiling and flashing the hello-world example](./book/src/hello-world_render.svg)
 
 ## Minimum Supported Rust Version (MSRV)
 

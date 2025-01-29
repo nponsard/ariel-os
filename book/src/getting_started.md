@@ -70,8 +70,7 @@ laze -C examples/hello-world build -b nrf52840dk flash-erase-all
 ```
 </details>
 
-<!-- FIXME: path not accessible when deployed -->
-![Terminal screencast of compiling and flashing the hello-world example](../../doc/hello-world_render.svg)
+![Terminal screencast of compiling and flashing the hello-world example](./hello-world_render.svg)
 
 > If you do not plan on working on Ariel OS *itself*, this repository is not needed anymore and can be deleted.
 
