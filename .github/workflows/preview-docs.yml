@@ -1,7 +1,9 @@
 name: Preview PR docs
 
-# read-write repo token
-# access to secrets
+# commenting needs these
+permissions:
+  pull-requests: write
+
 on:
   workflow_run:
     workflows: ["Deploy docs"]
