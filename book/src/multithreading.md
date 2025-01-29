@@ -20,8 +20,8 @@ Ariel OS currently supports symmetric multiprocessing (SMP) on the following MC
   - ESP32-S3
   - RP2040
 
-When the `sw/threading` laze module is selected and when available on the MCU, the `multi-core` laze module automatically gets selected, which enables SMP.
-To disable multicore, [disable the `multi-core` laze module][laze-modules-book].
+When the `sw/threading` [laze module][laze-modules-book] is selected and when available on the MCU, the `multi-core` laze module automatically gets selected, which enables SMP.
+To disable multicore, disable the `multi-core` [laze module][laze-modules-book].
 
 > Porting single-core applications to support multicore requires no changes to them.
 

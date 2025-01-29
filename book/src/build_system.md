@@ -39,6 +39,7 @@ before starting the debug session.
 
 laze allows enabling/disabling individual features using [*modules*](#laze-modules), which can be selected
 or disabled on the command line using `--select <module>` or `--disable <module>`.
+To specify laze modules for an out-of-tree application, see [below](#enabling-laze-modules-for-an-application).
 
 Modules available in Ariel OS include:
 
@@ -53,7 +54,9 @@ Modules available in Ariel OS include:
 The laze configuration defines a laze context for each MCU, MCU family, and board.
 These can be found in the [support matrix](./hardware_functionality_support.html), where they are called “Ariel OS name”.
 
-laze passes the names of all contexts related to the selected builder as rustc `--cfg context=$CONTEXT` flags.
+Out-of-tree applications can be restricted to specific laze contexts, see [below](#restricting-an-application-to-specific-mcusboards).
+
+In addition, laze passes the names of all contexts related to the selected builder as rustc `--cfg context=$CONTEXT` flags.
 This makes it possible to use the `#[cfg]` attribute to introduce feature-gates based on the MCU, MCU family, or board, when required.
 
 ## Out-of-tree applications
