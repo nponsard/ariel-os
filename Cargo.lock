@@ -381,7 +381,7 @@ dependencies = [
 
 [[package]]
 name = "ariel-os-runqueue"
-version = "0.1.2"
+version = "0.1.0"
 dependencies = [
  "defmt",
  "hax-lib",
@@ -904,27 +904,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "coap"
-version = "0.0.0"
-dependencies = [
- "ariel-os",
- "ariel-os-boards",
- "ariel-os-coap",
- "coap-handler",
- "coap-handler-implementations",
- "coap-message",
- "coap-message-demos",
- "coap-request",
- "coap-request-implementations",
- "coap-scroll-ring-server",
- "embassy-futures",
- "embassy-sync 0.6.2",
- "embedded-nal-coap",
- "heapless 0.8.0",
- "scroll-ring",
-]
-
-[[package]]
 name = "coap-blinky"
 version = "0.0.0"
 dependencies = [
@@ -933,19 +912,6 @@ dependencies = [
  "coap-handler-implementations",
  "heapless 0.8.0",
  "riot-coap-handler-demos",
-]
-
-[[package]]
-name = "coap-client"
-version = "0.0.0"
-dependencies = [
- "ariel-os",
- "ariel-os-boards",
- "coap-handler-implementations",
- "coap-request",
- "coap-request-implementations",
- "embedded-nal-coap",
- "heapless 0.8.0",
 ]
 
 [[package]]
@@ -1068,20 +1034,6 @@ dependencies = [
  "coap-message-utils",
  "coap-numbers",
  "scroll-ring",
-]
-
-[[package]]
-name = "coap-server"
-version = "0.0.0"
-dependencies = [
- "ariel-os",
- "ariel-os-boards",
- "coap-handler",
- "coap-handler-implementations",
- "coap-message",
- "coap-message-demos",
- "embassy-sync 0.6.2",
- "heapless 0.8.0",
 ]
 
 [[package]]
@@ -2476,6 +2428,33 @@ version = "0.1.0"
 dependencies = [
  "ariel-os-debug",
  "ariel-os-rt",
+]
+
+[[package]]
+name = "example-coap-client"
+version = "0.0.0"
+dependencies = [
+ "ariel-os",
+ "ariel-os-boards",
+ "coap-handler-implementations",
+ "coap-request",
+ "coap-request-implementations",
+ "embedded-nal-coap",
+ "heapless 0.8.0",
+]
+
+[[package]]
+name = "example-coap-server"
+version = "0.0.0"
+dependencies = [
+ "ariel-os",
+ "ariel-os-boards",
+ "coap-handler",
+ "coap-handler-implementations",
+ "coap-message",
+ "coap-message-demos",
+ "embassy-sync 0.6.2",
+ "heapless 0.8.0",
 ]
 
 [[package]]
@@ -5051,6 +5030,27 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "06794f8f6c5c898b3275aebefa6b8a1cb24cd2c6c79397ab15774837a0bc5755"
 dependencies = [
  "winapi-util",
+]
+
+[[package]]
+name = "test-coap"
+version = "0.0.0"
+dependencies = [
+ "ariel-os",
+ "ariel-os-boards",
+ "ariel-os-coap",
+ "coap-handler",
+ "coap-handler-implementations",
+ "coap-message",
+ "coap-message-demos",
+ "coap-request",
+ "coap-request-implementations",
+ "coap-scroll-ring-server",
+ "embassy-futures",
+ "embassy-sync 0.6.2",
+ "embedded-nal-coap",
+ "heapless 0.8.0",
+ "scroll-ring",
 ]
 
 [[package]]

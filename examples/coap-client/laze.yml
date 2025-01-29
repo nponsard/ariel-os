@@ -1,5 +1,5 @@
 apps:
-  - name: coap-client
+  - name: example-coap-client
     env:
       global:
         CARGO_ENV:

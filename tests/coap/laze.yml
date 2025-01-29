@@ -1,5 +1,5 @@
 apps:
-  - name: coap
+  - name: test-coap
     env:
       global:
         CARGO_ENV:

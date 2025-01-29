@@ -1,5 +1,5 @@
 [package]
-name = "coap"
+name = "test-coap"
 license.workspace = true
 edition.workspace = true
 publish = false
