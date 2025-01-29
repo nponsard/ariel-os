@@ -769,6 +769,10 @@ modules:
     depends:
       - random
       - network
+    env:
+      global:
+        FEATURES:
+          - ariel-os/coap
 
   - name: coap-server
     help: Support for applications to set up CoAP server handlers.
