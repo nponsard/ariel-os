@@ -30,11 +30,6 @@ See the [Getting Started page][getting-started-mdbook] in the User Guide to get 
 Ariel OS makes use of selected Rust unstable features. For the time being, it is
 recommended to use the nightly version pinned by [`rust-toolchain.toml`](rust-toolchain.toml).
 
-## Contributing
-
-Contributions are very welcome!
-Please see our [contributing guide](./CONTRIBUTING.md) for details.
-
 ## Security
 
 If you think you may have found an issue that represents a security risk to Ariel OS users, please report it privately using [GitHub's Security section](https://github.com/ariel-os/ariel-os/security).
@@ -50,7 +45,10 @@ at your option.
 
 Copyright (C) 2020-2025 Freie Universität Berlin, Inria, Kaspar Schleiser
 
-## Contribution
+## Contributing
+
+Contributions are very welcome!
+Please see our [contributing guide](./CONTRIBUTING.md) for details.
 
 Unless you explicitly state otherwise, any contribution intentionally submitted
 for inclusion in the work by you, as defined in the Apache-2.0 license, shall
