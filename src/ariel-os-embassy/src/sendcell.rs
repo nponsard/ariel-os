@@ -24,7 +24,7 @@ unsafe impl<T> Send for SendCell<T> {}
 /// handle for the current [`Spawner`] themselves. They internally call the non-async versions. Use
 /// the sync versions if a [`Spawner`] object is available or the async versions cannot be used,
 /// e.g., in closures. Otherwise, the async versions are also fine.
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct SendCell<T> {
     executor_id: usize,
     inner: T,
