@@ -26,8 +26,7 @@ mod wifi;
 
 use ariel_os_debug::log::debug;
 
-// re-exports
-pub use linkme::{self, distributed_slice};
+use linkme::distributed_slice;
 
 // All items of this module are re-exported at the root of `ariel_os`.
 pub mod api {
