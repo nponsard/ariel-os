@@ -5,15 +5,6 @@
 
 use ariel_os::debug::log::info;
 
-/// Run a CoAP stack without serving any actual resources.
-#[ariel_os::task(autostart)]
-async fn coap_run() {
-    use coap_handler_implementations::new_dispatcher;
-
-    let handler = new_dispatcher();
-    ariel_os::coap::coap_run(handler).await;
-}
-
 #[ariel_os::task(autostart)]
 async fn run_client_operations() {
     use coap_request::Stack;

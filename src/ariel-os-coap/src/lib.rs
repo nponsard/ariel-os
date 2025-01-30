@@ -8,6 +8,8 @@
 #![no_std]
 #![deny(missing_docs)]
 #![deny(clippy::pedantic)]
+// for #[ariel_os_macros::task(autostart)]
+#![feature(impl_trait_in_assoc_type, used_with_arg)]
 
 // Moving work from https://github.com/embassy-rs/embassy/pull/2519 in here for the time being
 mod udp_nal;
@@ -63,7 +65,20 @@ mod demo_setup {
 /// # Panics
 ///
 /// This can only be run once, as it sets up a system wide CoAP handler.
+#[cfg(feature = "coap-server")]
 pub async fn coap_run(handler: impl coap_handler::Handler + coap_handler::Reporting) -> ! {
+    coap_run_impl(handler).await
+}
+
+/// Workhorse of [`coap_run`], see there for details.
+///
+/// This is a separate function because if that function is not exposed publicly (i.e. when the
+/// laze feature `coap-server` is not active), it is called automatically in a separate task.
+///
+/// # Panics
+///
+/// This can only be run once, as it sets up a system wide CoAP handler.
+async fn coap_run_impl(handler: impl coap_handler::Handler + coap_handler::Reporting) -> ! {
     static COAP: StaticCell<embedded_nal_coap::CoAPShared<CONCURRENT_REQUESTS>> = StaticCell::new();
 
     let stack = ariel_os_embassy::net::network_stack().await.unwrap();
@@ -138,8 +153,8 @@ pub async fn coap_run(handler: impl coap_handler::Handler + coap_handler::Report
 
 /// Returns a CoAP client requester.
 ///
-/// This asynchronously blocks until [`coap_run`] has been called, and the CoAP stack is
-/// operational.
+/// This asynchronously blocks until [`coap_run`] has been called (which happens at startup
+/// when the corresponding feature `coap-server` is not active), and the CoAP stack is operational.
 ///
 /// # Panics
 ///
@@ -154,4 +169,19 @@ pub async fn coap_client(
         .get_async()
         .await // Not an actual await, just a convenient way to see which executor is running
         .expect("CoAP client can currently only be used from the thread the network is bound to")
+}
+
+/// Auto-started CoAP server that serves two purposes:
+///
+/// * It provides the backend for the CoAP client operation (which leaves message sending to that
+///   task).
+/// * It runs any CoAP server components provided by the OS (none yet).
+#[cfg(not(feature = "coap-server"))]
+#[ariel_os_macros::task(autostart)]
+async fn coap_run() {
+    use coap_handler_implementations::new_dispatcher;
+
+    // FIXME: Provide an "all system components" constructor in this crate.
+    let handler = new_dispatcher();
+    coap_run_impl(handler).await;
 }

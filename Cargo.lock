@@ -158,6 +158,7 @@ version = "0.1.0"
 dependencies = [
  "ariel-os-debug",
  "ariel-os-embassy",
+ "ariel-os-macros",
  "ariel-os-random",
  "cbor-macro",
  "cboritem",

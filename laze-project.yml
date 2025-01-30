@@ -785,6 +785,10 @@ modules:
     # will have their own entry point when they exist.
     depends:
       - coap
+    env:
+      global:
+        FEATURES:
+          - ariel-os/coap-server
 
   - name: coap-client
     help: Support for CoAP client functionality.
