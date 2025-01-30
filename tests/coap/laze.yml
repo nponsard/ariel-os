@@ -1,12 +1,12 @@
 apps:
-  - name: coap
+  - name: test-coap
     env:
       global:
         CARGO_ENV:
           - CONFIG_ISR_STACKSIZE=32768
     selects:
-      - network
-      - random
+      - coap-server
+      - coap-client
     conflicts:
       # see https://github.com/ariel-os/ariel-os/issues/418
       - thumbv6m-none-eabi

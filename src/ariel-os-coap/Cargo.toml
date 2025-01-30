@@ -29,6 +29,7 @@ lakers = { version = "0.7.2", default-features = false }
 ariel-os-debug.workspace = true
 ariel-os-embassy = { workspace = true, features = ["net"] }
 ariel-os-random = { workspace = true, features = ["csprng"] }
+ariel-os-macros = { path = "../ariel-os-macros" }
 static_cell = "2.1.0"
 
 # FIXME: Should go out eventually
@@ -43,9 +44,19 @@ embedded-io-async = "0.6.1"
 workspace = true
 
 [features]
+# Enables the coap_run function through which a server is passed in. The
+# crate setting this must call `ariel_os{_,::}coap::coap_run()`; if not set,
+# that function is run with a default minimal server automatically (as is
+# required by the implementation to have client functionality).
+#
+# At the feature level, this is a bit of a misnomer, could also be
+# called "manual-server-start"; the name is chosen to align with
+# laze's name for this (where coap-server makes more sense).
+coap-server = []
+
 ## Enables an arbitrary set of features in dependencies where dependencies fail
 ## if no features are configured at all.
-doc = ["embassy-net/proto-ipv6", "embassy-net/medium-ip"]
+doc = ["embassy-net/proto-ipv6", "embassy-net/medium-ip", "coap-server"]
 
 ## Enables defmt logging of coapcore
 defmt = ["coapcore/defmt"]
