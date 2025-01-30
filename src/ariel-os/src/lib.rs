@@ -62,6 +62,5 @@ pub mod config {
 pub mod reexports {
     pub use ariel_os_embassy::reexports::*;
     // These are used by proc-macros we provide
-    pub use linkme;
     pub use static_cell;
 }

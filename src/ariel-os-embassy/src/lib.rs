@@ -26,8 +26,7 @@ mod wifi;
 
 use ariel_os_debug::log::debug;
 
-// re-exports
-pub use linkme::{self, distributed_slice};
+use linkme::distributed_slice;
 
 // All items of this module are re-exported at the root of `ariel_os`.
 pub mod api {
@@ -69,6 +68,10 @@ pub mod reexports {
     pub use usbd_hid;
     // Used by a macro we provide
     pub use embassy_executor;
+    // Used by macros for task autostarting.
+    // (In most applications, it'd suffice to have this in ariel-os, but not when an internal crate
+    // does an autostart)
+    pub use linkme;
 }
 
 #[cfg(feature = "net")]
