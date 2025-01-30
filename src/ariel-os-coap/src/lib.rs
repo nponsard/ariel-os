@@ -83,6 +83,13 @@ async fn coap_run_impl(handler: impl coap_handler::Handler + coap_handler::Repor
 
     let stack = ariel_os_embassy::net::network_stack().await.unwrap();
 
+    // There's no strong need to wait this early (it matters that we wait before populating
+    // CLIENT), but this is a convenient place in the code (we have a `stack` now, to populate
+    // CLIENT after the server, we'd have to poll the server and `wait_config_up` in parallel), and
+    // it's not like we'd expect requests to come in before everything is up. (Not even a loopback
+    // request, because we shouldn't hand out a client early).
+    stack.wait_config_up().await;
+
     // FIXME trim to CoAP requirements
     let mut rx_meta = [PacketMetadata::EMPTY; 16];
     let mut rx_buffer = [0; 4096];
