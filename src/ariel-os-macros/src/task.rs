@@ -80,7 +80,7 @@ pub fn task(args: TokenStream, item: TokenStream) -> TokenStream {
 
     // TODO: forbid generics on the function
 
-    let ariel_os_crate = utils::ariel_os_crate();
+    let ariel_os_crate = utils::ariel_os_crate_or_internal(Some("ariel-os-embassy"));
 
     let expanded = if attrs.autostart {
         let peripheral_param = if attrs.peripherals {
@@ -205,7 +205,7 @@ mod task {
         pub fn hook_definitions() -> [HookDefinition; 1] {
             use quote::quote;
 
-            let ariel_os_crate = crate::utils::ariel_os_crate();
+            let ariel_os_crate = crate::utils::ariel_os_crate_or_internal(Some("ariel-os-embassy"));
 
             // New hooks need to be defined here, in the order they are run during system
             // initialization

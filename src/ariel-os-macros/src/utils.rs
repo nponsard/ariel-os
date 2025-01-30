@@ -10,8 +10,28 @@ const ARIEL_OS_CRATE_NAME: &str = "ariel-os";
 ///   this function is called.
 /// - Panics if `ariel-os` is used as a dependency of itself.
 pub fn ariel_os_crate() -> syn::Ident {
+    ariel_os_crate_or_internal(None)
+}
+
+/// Returns a [`struct@syn::Ident`] identifying the `ariel-os` dependency, or an (internal)
+/// fallback crate that provides the same relevant items.
+///
+/// # Panics
+///
+/// - Panics when neither crate can be found as a dependency of the crate in which
+///   this function is called.
+/// - Panics if either crate is used as a dependency of itself.
+pub fn ariel_os_crate_or_internal(internal: Option<&'static str>) -> syn::Ident {
     find_crate(ARIEL_OS_CRATE_NAME)
-        .unwrap_or_else(|| panic!("{ARIEL_OS_CRATE_NAME} should be present in `Cargo.toml`"))
+        .or_else(|| find_crate(internal?))
+        .unwrap_or_else(|| {
+            panic!(
+                "{ARIEL_OS_CRATE_NAME} should be present in `Cargo.toml`{}",
+                internal
+                    .map(|i| format!(" (internal crates may also use {i})"))
+                    .unwrap_or_default()
+            )
+        })
 }
 
 /// Returns a [`struct@syn::Ident`] identifying the `name` dependency (or `None`).
