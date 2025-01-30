@@ -19,7 +19,7 @@ The log level can be provided on the command line as argument to laze via the
 
 ## How to run
 
-In this folder, run
+In this directory, run
 
     laze build -b nrf52840dk -DLOG+=info -DLOG+=ariel_os_embassy=warn run
 

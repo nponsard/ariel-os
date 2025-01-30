@@ -8,7 +8,7 @@ Note: The application is not stateless, as it writes to flash.
 
 ## How to run
 
-In this folder, run
+In this directory, run
 
     laze build -b nrf52840dk run
 

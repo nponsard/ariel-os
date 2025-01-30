@@ -6,7 +6,7 @@ This application is demonstrating making basic HTTP GET requests.
 
 ## How to run
 
-In this folder, run
+In this directory, run
 
     laze build -b nrf52840dk run
 

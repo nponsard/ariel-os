@@ -6,7 +6,7 @@ This application demonstrates running an HTTP server with Ariel OS.
 
 ## How to run
 
-In this folder, run
+In this directory, run
 
     laze build -b nrf52840dk run
 

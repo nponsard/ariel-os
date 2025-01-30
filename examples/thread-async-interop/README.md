@@ -13,7 +13,7 @@ returned. After 10 values received, the main thread exits.
 
 ## How to run
 
-In this folder, run
+In this directory, run
 
     laze build -b nrf52840dk run
 

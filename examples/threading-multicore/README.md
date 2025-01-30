@@ -6,7 +6,7 @@ This application demonstrates basic threading on multicore.
 
 ## How to run
 
-In this folder, run
+In this directory, run
 
     laze build -b rpi-pico run
 

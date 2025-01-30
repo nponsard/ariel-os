@@ -6,7 +6,7 @@ This application is testing raw I2C bus usage in Ariel OS.
 
 ## How to run
 
-In this folder, run
+In this directory, run
 
     laze build -b nrf52840dk run
 

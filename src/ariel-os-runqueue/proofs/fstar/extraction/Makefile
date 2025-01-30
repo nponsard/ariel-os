@@ -87,9 +87,9 @@ define FINDLIBS
     : "path."; \
     function find_hax_libraries_at_path() { \
         path="$$1" ; \
-        : "if there is a [proofs/fstar/extraction] subfolder, then that s a F* library" ; \
+        : "if there is a [proofs/fstar/extraction] subdirectory, then that s a F* library" ; \
         print_if_exists "$$path/proofs/fstar/extraction" ; \
-        : "Maybe the [proof-libs] folder of hax is around?" ; \
+        : "Maybe the [proof-libs] directory of hax is around?" ; \
         MAYBE_PROOF_LIBS=$$(realpath -q "$$path/../proof-libs/fstar") ; \
         if [ $$? -eq 0 ]; then \
             print_if_exists "$$MAYBE_PROOF_LIBS/core" ; \

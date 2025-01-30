@@ -6,7 +6,7 @@ This application is testing raw SPI bus loopback in Ariel OS.
 
 ## How to run
 
-In this folder, run
+In this directory, run
 
     laze build -b nrf52840dk run
 
