@@ -12,7 +12,7 @@ Thread 1 will wait for a message on the channel and print the received value.
 
 ## How to run
 
-In this folder, run
+In this directory, run
 
     laze build -b nrf52840dk run
 

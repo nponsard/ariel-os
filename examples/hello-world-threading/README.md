@@ -8,6 +8,6 @@ It needs to be run within a debug session.
 
 ## How to run
 
-In this folder, run
+In this directory, run
 
     laze build -b nrf52840dk run

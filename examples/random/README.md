@@ -8,7 +8,7 @@ It prints out multiple random values via the debug console.
 
 ## How to run
 
-In this folder, run
+In this directory, run
 
     laze build -b nrf52840dk run
 
