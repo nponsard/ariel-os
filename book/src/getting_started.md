@@ -11,9 +11,7 @@ It explains how to compile and run the `hello-word` example to verify your setup
    On Ubuntu, the following is sufficient:
 
 ```sh
-apt install build-essential curl git python3 pkg-config \
-  libssl-dev llvm-dev cmake libclang-dev gcc-arm-none-eabi \
-  clang unzip lld ninja-build
+apt install git rustup ninja-build pkg-config libudev-dev clang gcc-arm-none-eabi
 ```
 
 1. Install the Rust installer [rustup](https://rustup.rs/) using the website's instructions or through your distribution package manager.
