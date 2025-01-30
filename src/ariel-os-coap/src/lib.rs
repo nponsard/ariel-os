@@ -18,14 +18,16 @@ use ariel_os_debug::log::info;
 use ariel_os_embassy::sendcell::SendCell;
 use coap_handler_implementations::ReportingHandlerBuilder;
 use embassy_net::udp::{PacketMetadata, UdpSocket};
-use embassy_sync::once_lock::OnceLock;
+use embassy_sync::watch::Watch;
 use static_cell::StaticCell;
 
 const CONCURRENT_REQUESTS: usize = 3;
 
-static CLIENT: OnceLock<
-    SendCell<embedded_nal_coap::CoAPRuntimeClient<'static, CONCURRENT_REQUESTS>>,
-> = OnceLock::new();
+static CLIENT_READY: Watch<
+    embassy_sync::blocking_mutex::raw::CriticalSectionRawMutex,
+    SendCell<&'static embedded_nal_coap::CoAPRuntimeClient<'static, CONCURRENT_REQUESTS>>,
+    1,
+> = Watch::new();
 
 mod demo_setup {
     use cbor_macro::cbor;
@@ -84,8 +86,8 @@ async fn coap_run_impl(handler: impl coap_handler::Handler + coap_handler::Repor
     let stack = ariel_os_embassy::net::network_stack().await.unwrap();
 
     // There's no strong need to wait this early (it matters that we wait before populating
-    // CLIENT), but this is a convenient place in the code (we have a `stack` now, to populate
-    // CLIENT after the server, we'd have to poll the server and `wait_config_up` in parallel), and
+    // CLIENT_READY), but this is a convenient place in the code (we have a `stack` now, to populate
+    // CLIENT_READY after the server, we'd have to poll the server and `wait_config_up` in parallel), and
     // it's not like we'd expect requests to come in before everything is up. (Not even a loopback
     // request, because we shouldn't hand out a client early).
     stack.wait_config_up().await;
@@ -142,10 +144,16 @@ async fn coap_run_impl(handler: impl coap_handler::Handler + coap_handler::Repor
 
     let coap = COAP.init_with(embedded_nal_coap::CoAPShared::new);
     let (client, server) = coap.split();
-    CLIENT
-        .init(SendCell::new_async(client).await)
-        .ok()
-        .expect("CLIENT can not be populated when COAP was just not populated.");
+    #[expect(
+        clippy::items_after_statements,
+        reason = "This is the item's place in the workflow."
+    )]
+    static CLIENT: StaticCell<embedded_nal_coap::CoAPRuntimeClient<'static, CONCURRENT_REQUESTS>> =
+        StaticCell::new();
+
+    CLIENT_READY
+        .sender()
+        .send(SendCell::new_async(&*CLIENT.init(client)).await);
 
     server
         .run(
@@ -170,7 +178,10 @@ async fn coap_run_impl(handler: impl coap_handler::Handler + coap_handler::Repor
 /// [`embedded_nal_coap`] to allow different mutexes).
 pub async fn coap_client(
 ) -> &'static embedded_nal_coap::CoAPRuntimeClient<'static, CONCURRENT_REQUESTS> {
-    CLIENT
+    let mut receiver = CLIENT_READY
+        .receiver()
+        .expect("Too many CoAP clients are waiting for the network to come up.");
+    receiver
         .get()
         .await
         .get_async()
