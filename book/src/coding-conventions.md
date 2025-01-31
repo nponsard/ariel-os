@@ -81,3 +81,10 @@ TODO: how to name error types/error enum variants (`CannotDoSth` vs `DoingSth`)?
 ## Dependencies
 
 If the same dependency is used in multiples crates within the workspace, that dependency SHOULD be specified in the *workspace*'s `Cargo.toml` file and workspace crates should import them from there.
+
+## laze
+
+### Modules
+
+laze modules in examples and tests MUST use [`selects`](https://kaspar030.github.io/laze/dev/reference/module/selects.html) instead of [`depends`](https://kaspar030.github.io/laze/dev/reference/module/depends.html).
+Even though their behaviors are different in the general case, they are equivalent in our case.
