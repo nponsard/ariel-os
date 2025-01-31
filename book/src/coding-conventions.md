@@ -1,6 +1,8 @@
 # Coding Conventions
 
-## Item Order in Rust Modules
+## Rust
+
+### Item Order in Rust Modules
 
 Items SHOULD appear in Rust modules in the following order, based on [the one used by rust-analyzer](https://rust-analyzer.github.io/manual.html#auto-import):
 
@@ -24,11 +26,11 @@ TODO: type aliases before other items?
 
 TODO: how to organize type definitions w.r.t. related logic?
 
-## Imports
+### Imports
 
 Imports from the same crate with the same visibility MUST be [merged into a single use statement](https://rust-analyzer.github.io/manual.html#auto-import).
 
-### Imports from Re-exports
+#### Imports from Re-exports
 
 When using whole-crate re-exports from [`ariel_os::reexports`](https://ariel-os.github.io/ariel-os/dev/docs/api/ariel_os/reexports/index.html), two imports SHOULD be used: one to bring the re-exported crate into the scope, and the other one to import the required items from that crate, as it it were a direct dependency of the crate, as follows:
 
@@ -37,9 +39,9 @@ use ariel_os::reexports::embassy_usb;
 use embassy_usb::class::hid::HidReaderWriter;
 ```
 
-## Comments
+### Comments
 
-### Doc Comments
+#### Doc Comments
 
 All public items listed in the documentation—i.e., not marked with [`#[doc(hidden)]`](https://doc.rust-lang.org/rustdoc/write-documentation/the-doc-attribute.html#hidden)—SHOULD be documented.
 
@@ -64,13 +66,13 @@ More generally, use the [`std` docs](https://doc.rust-lang.org/stable/std/) as i
 When possible—i.e., when items are in scope—items mentioned in the documentation MUST be linked to (see [C-LINK](https://rust-lang.github.io/api-guidelines/documentation.html#prose-contains-hyperlinks-to-relevant-things-c-link)).
 This is useful for readers, to quickly access the mentioned item, but it also helps prevent the docs from lagging behind, as broken links are tested for in CI, making it easy to spot renamed or removed items.
 
-## `unsafe` Code
+### `unsafe` Code
 
 When `unsafe` is used, a `SAFETY` comment MUST be added, in the style [supported by Clippy](https://rust-lang.github.io/rust-clippy/master/index.html#/undocumented_unsafe_blocks).
 
 TODO: enforce it in CI
 
-## Naming Conventions
+### Naming Conventions
 
 Names SHOULD adhere to the [official API guidelines](https://rust-lang.github.io/api-guidelines/naming.html).
 
