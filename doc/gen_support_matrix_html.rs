@@ -51,11 +51,6 @@ r##"<!-- This table is auto-generated. Do not edit manually. -->
   </tbody>
 </table>
 <style>
-.support-matrix {
-    position: relative;
-    left: 50%;
-    transform: translate(-50%, 0);
-}
 .support-cell {
   text-align: center;
 }
