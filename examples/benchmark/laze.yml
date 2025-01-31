@@ -1,5 +1,5 @@
 apps:
   - name: benchmark
-    depends:
+    selects:
       - sw/benchmark
       - sw/threading
