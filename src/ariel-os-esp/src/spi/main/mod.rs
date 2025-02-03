@@ -17,7 +17,7 @@ use esp_hal::{
 
 // TODO: we could consider making this `pub`
 // NOTE(hal): values from the datasheets.
-#[cfg(any(context = "esp32c3", context = "esp32c6"))]
+#[cfg(any(context = "esp32c3", context = "esp32c6", context = "esp32s3"))]
 const MAX_FREQUENCY: Kilohertz = Kilohertz::MHz(80);
 
 /// SPI bus configuration.
@@ -131,7 +131,11 @@ macro_rules! define_spi_drivers {
     };
 }
 
-// FIXME: there seems to be an SPI3 on ESP32-S2 and ESP32-S3
 // Define a driver per peripheral
+// SPI0 and SPI1 exist but are not general-purpose SPI peripherals.
+#[cfg(context = "esp32c3")]
+define_spi_drivers!(SPI2);
 #[cfg(context = "esp32c6")]
 define_spi_drivers!(SPI2);
+#[cfg(context = "esp32s3")]
+define_spi_drivers!(SPI2, SPI3);
