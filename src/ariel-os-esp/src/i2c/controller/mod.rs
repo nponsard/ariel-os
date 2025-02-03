@@ -98,7 +98,7 @@ macro_rules! define_i2c_drivers {
                 ) -> I2c {
                     let mut twim_config = esp_hal::i2c::master::Config::default();
                     twim_config.frequency = config.frequency.into();
-                    #[cfg(any(context = "esp32s3", context = "esp32c3", context = "esp32c6"))]
+                    #[cfg(any(context = "esp32c3", context = "esp32c6", context = "esp32s3"))]
                     let disabled_timeout = BusTimeout::Disabled;
                     // Disable timeout as we implement it at a higher level.
                     twim_config.timeout = disabled_timeout;
@@ -170,7 +170,10 @@ fn from_error(err: esp_hal::i2c::master::Error) -> ariel_os_embassy_common::i2c:
     }
 }
 
-// FIXME: support other MCUs
 // Define a driver per peripheral
+#[cfg(context = "esp32c3")]
+define_i2c_drivers!(I2C0);
 #[cfg(context = "esp32c6")]
 define_i2c_drivers!(I2C0);
+#[cfg(context = "esp32s3")]
+define_i2c_drivers!(I2C0, I2C1);
