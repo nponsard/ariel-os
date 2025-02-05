@@ -11,6 +11,7 @@ workspace = true
 const_panic.workspace = true
 critical-section.workspace = true
 linkme.workspace = true
+rand_core = { workspace = true, optional = true }
 static_cell.workspace = true
 cfg-if.workspace = true
 
@@ -77,6 +78,8 @@ usb-hid = ["dep:usbd-hid", "embassy-usb?/usbd-hid", "usb"]
 # embassy-net requires embassy-time and support for timeouts in the executor
 net = ["dep:embassy-net", "time"]
 usb-ethernet = ["usb", "net"]
+
+random = ["dep:ariel-os-random", "dep:rand_core"]
 ## Use a hardware RNG to seed into the ariel-os-random system-wide RNG
 hwrng = ["ariel-os-hal/hwrng"]
 

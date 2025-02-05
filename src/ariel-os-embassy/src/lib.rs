@@ -313,12 +313,12 @@ async fn init_task(mut peripherals: hal::OptionalPeripherals) {
 
         let config = net::config();
 
-        // Generate random seed
-        // let mut rng = Rng::new(p.RNG, Irqs);
-        // let mut seed = [0; 8];
-        // rng.blocking_fill_bytes(&mut seed);
-        // let seed = u64::from_le_bytes(seed);
+        // This seed is mostly used by smoltcp and does not have to be cryptographically secure.
+        #[cfg(feature = "random")]
+        let seed = rand_core::RngCore::next_u64(&mut ariel_os_random::fast_rng());
+        #[cfg(not(feature = "random"))]
         let seed = 1234u64;
+        debug!("Network stack seed: {:#x}", seed);
 
         // Init network stack
         static RESOURCES: StaticCell<StackResources<MAX_CONCURRENT_SOCKETS>> = StaticCell::new();
