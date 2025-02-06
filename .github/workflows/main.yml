@@ -322,3 +322,24 @@ jobs:
 
       - name: typos
         uses: crate-ci/typos@v1.22.0
+
+      - name: Install mdbook and mdbook utils
+        uses: taiki-e/install-action@v2
+        with:
+          tool: mdbook, mdbook-cmdrun
+
+      - name: Check for unexpected cmdrun uses
+        run: |
+            cd book
+            ./cmdrun-check.sh
+
+      - name: Build the book
+        run: |
+          cd book
+          mdbook build
+
+      - name: Link Checker
+        uses: lycheeverse/lychee-action@v2
+        with:
+          args: --offline --require-https --no-progress --include-fragments --include-verbatim -v '*.md' book/book
+          fail: true
