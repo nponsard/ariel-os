@@ -728,6 +728,7 @@ modules:
   - name: sw/storage
     context:
       - rp2040
+      - rp235xa
       - nrf52840
       - nrf5340
       - stm32h755zitx
