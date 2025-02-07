@@ -19,7 +19,7 @@ fn from_mode(mode: Mode) -> (Polarity, Phase) {
 pub fn init(peripherals: &mut crate::OptionalPeripherals) {
     // Take all SPI peripherals and do nothing with them.
     cfg_if::cfg_if! {
-        if #[cfg(context = "rp2040")] {
+        if #[cfg(context = "rp")] {
             let _ = peripherals.SPI0.take().unwrap();
             let _ = peripherals.SPI1.take().unwrap();
         } else {

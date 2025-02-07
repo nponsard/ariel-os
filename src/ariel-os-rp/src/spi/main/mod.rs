@@ -15,6 +15,8 @@ use embassy_rp::{
 // NOTE(hal): values from the datasheets.
 #[cfg(context = "rp2040")]
 const MAX_FREQUENCY: Kilohertz = Kilohertz::kHz(62_500);
+#[cfg(context = "rp235xa")]
+const MAX_FREQUENCY: Kilohertz = Kilohertz::kHz(70_500);
 
 /// SPI bus configuration.
 #[derive(Clone)]
