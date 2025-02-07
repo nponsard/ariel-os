@@ -101,6 +101,18 @@ chips:
       storage: supported
       wifi: not_available
 
+  rp235xa:
+    name: RP235xa
+    support:
+      gpio: supported
+      debug_output: supported
+      hwrng: supported
+      i2c_controller: needs_testing
+      spi_main: supported
+      logging: supported
+      storage: supported
+      wifi: not_available
+
   esp32c6:
     name: ESP32-C6
     support:
@@ -218,6 +230,14 @@ boards:
     support:
       user_usb: supported
       wifi: supported
+      ethernet_over_usb: supported
+
+  rpi-pico2:
+    name: Raspberry Pi Pico 2
+    url: https://web.archive.org/web/20250130144056/https://www.raspberrypi.com/products/raspberry-pi-pico-2/
+    chip: rp235xa
+    support:
+      user_usb: supported
       ethernet_over_usb: supported
 
   espressif-esp32-c6-devkitc-1:
