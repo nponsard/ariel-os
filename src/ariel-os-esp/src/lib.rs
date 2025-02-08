@@ -128,9 +128,6 @@ pub fn init() -> OptionalPeripherals {
     {
         use esp_hal::timer::timg::TimerGroup;
 
-        use esp_alloc as _;
-        esp_alloc::heap_allocator!(72 * 1024);
-
         ariel_os_debug::log::debug!("ariel-os-embassy::hal::esp::init(): wifi");
 
         let timer = TimerGroup::new(peripherals.TIMG0.take().unwrap()).timer0;

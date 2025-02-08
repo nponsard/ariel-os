@@ -126,6 +126,7 @@ jobs:
                 usb-ethernet,
                 "
             -p ariel-os
+            -p ariel-os-alloc
             -p ariel-os-boards
             -p ariel-os-chips
             -p ariel-os-coap

@@ -7,6 +7,7 @@ fn main() {
 
     std::fs::copy("isr_stack.ld.in", out.join("isr_stack.x")).unwrap();
     std::fs::copy("linkme.x", out.join("linkme.x")).unwrap();
+    std::fs::copy("eheap.x", out.join("eheap.x")).unwrap();
 
     println!("cargo:rustc-link-search={}", out.display());
 }

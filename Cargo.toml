@@ -5,6 +5,7 @@ members = [
   "src/lib/ringbuffer",
   "src/lib/coapcore",
   "src/ariel-os",
+  "src/ariel-os-alloc",
   "src/ariel-os-bench",
   "src/ariel-os-boards",
   "src/ariel-os-boards/nrf52",
@@ -101,6 +102,7 @@ xtensa-lx-rt = { version = "0.18.0", default-features = false }
 linkme = { version = "0.3.21", features = ["used_linker"] }
 
 ariel-os = { path = "src/ariel-os", default-features = false }
+ariel-os-alloc = { path = "src/ariel-os-alloc", default-features = false }
 ariel-os-bench = { path = "src/ariel-os-bench", default-features = false }
 ariel-os-boards = { path = "src/ariel-os-boards", default-features = false }
 ariel-os-buildinfo = { path = "src/ariel-os-buildinfo", default-features = false }
