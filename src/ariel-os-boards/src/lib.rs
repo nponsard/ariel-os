@@ -37,6 +37,8 @@ cfg_if! {
         pub use rpi_pico as board;
     } else if #[cfg(feature = "st-nucleo-f401re")] {
         pub use st_nucleo_f401re as board;
+    } else if #[cfg(feature = "st-nucleo-wba55")] {
+        pub use st_nucleo_wba55 as board;
     } else if #[cfg(feature = "st-nucleo-wb55")] {
         pub use st_nucleo_wb55 as board;
     } else if #[cfg(feature = "st-nucleo-h755zi-q")] {
