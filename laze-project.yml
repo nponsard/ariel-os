@@ -677,8 +677,6 @@ modules:
           - -Clink-arg=-Tstorage.x
 
   - name: sw/threading
-    conflicts:
-      - executor-single-thread
     selects:
       - ?multi-core
     env:
@@ -849,6 +847,8 @@ modules:
       - esp
     provides_unique:
       - executor
+    conflicts:
+      - sw/threading
     env:
       global:
         FEATURES:
