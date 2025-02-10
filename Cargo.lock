@@ -136,7 +136,7 @@ dependencies = [
  "st-nucleo-f401re",
  "st-nucleo-h755zi-q",
  "st-nucleo-wb55",
-"st-nucleo-wba55",
+ "st-nucleo-wba55",
 ]
 
 [[package]]
@@ -4550,9 +4550,9 @@ checksum = "f97841a747eef040fcd2e7b3b9a220a7205926e60488e673d9e4926d27772ce5"
 
 [[package]]
 name = "sequential-storage"
-version = "3.0.1"
+version = "4.0.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b80693b2169b3fe0f9c68d5fae804490cc437113c0526dbabb75c01e758db597"
+checksum = "8d8e933f534642c25b7341338c10e2250187c8cd198c3957ef6894265eefda86"
 dependencies = [
  "arrayvec",
  "embedded-storage-async",
