@@ -4,6 +4,7 @@ defaults:
       - ariel-os
 
 subdirs:
+  - alloc
   - benchmark
   - blinky
   - coap-client

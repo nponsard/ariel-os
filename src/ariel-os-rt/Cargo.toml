@@ -10,6 +10,7 @@ workspace = true
 [dependencies]
 cfg-if.workspace = true
 linkme.workspace = true
+ariel-os-alloc = { workspace = true, optional = true }
 ariel-os-debug.workspace = true
 ariel-os-threads = { path = "../ariel-os-threads", optional = true }
 ariel-os-utils = { workspace = true }
@@ -33,6 +34,7 @@ cortex-m = { workspace = true, features = ["critical-section-single-core"] }
 cortex-m = { workspace = true, features = ["critical-section-single-core"] }
 
 [features]
+alloc = ["dep:ariel-os-alloc"]
 threading = ["dep:ariel-os-threads"]
 
 debug-console = ["ariel-os-debug/debug-console"]

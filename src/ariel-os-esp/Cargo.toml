@@ -26,6 +26,7 @@ esp-wifi = { workspace = true, default-features = false, features = [
 fugit = { workspace = true, optional = true }
 once_cell = { workspace = true }
 paste = { workspace = true }
+ariel-os-rt = { workspace = true, features = ["alloc"] }
 ariel-os-debug = { workspace = true }
 ariel-os-embassy-common = { workspace = true }
 ariel-os-random = { workspace = true, optional = true }

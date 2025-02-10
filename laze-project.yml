@@ -391,6 +391,7 @@ modules:
           - -Clink-arg=${LINK_ARG_PREFIX}--no-eh-frame-hdr
           - -Clink-arg=-Tlinkme.x
           - -Clink-arg=-Tlink.x
+          - -Clink-arg=-Teheap.x
           - -Clink-arg=-Tdevice.x
           - -Clink-arg=-Tisr_stack.x
           - --cfg context=\"cortex-m\"
@@ -463,6 +464,14 @@ modules:
       global:
         RUSTFLAGS:
           - "-Clink-arg=-Tlink-rp.x"
+
+  ## System functionality modules
+  - name: alloc
+    context: ariel-os
+    env:
+      global:
+        FEATURES:
+          - ariel-os/alloc
 
   - name: debug-console
     context: ariel-os
