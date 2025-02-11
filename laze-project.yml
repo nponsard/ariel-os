@@ -457,6 +457,7 @@ modules:
       global:
         RUSTFLAGS:
           - --cfg context=\"riscv\"
+          - -Clink-arg=-Tisr_stack.x
 
   - name: rp-link-arg
     help: helper module that ensures link-rp.x is added behind cortex-m ld scripts
