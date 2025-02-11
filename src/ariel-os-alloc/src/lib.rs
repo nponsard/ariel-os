@@ -75,7 +75,8 @@ mod alloc {
         use ariel_os_debug::log::debug;
 
         // TODO: figure out amount of leftover memory
-        const HEAP_SIZE: usize = 128 * 1024;
+        // 112k currently works on all our supported boards.
+        const HEAP_SIZE: usize = 112 * 1024;
 
         debug!("ariel-os-alloc: initializing heap with {} bytes", HEAP_SIZE);
 
