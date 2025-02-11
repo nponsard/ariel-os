@@ -14,6 +14,7 @@ use embassy_sync::blocking_mutex::CriticalSectionMutex;
 pub mod blocker;
 
 pub use embassy_executor::{SendSpawner, Spawner};
+pub use embassy_futures::yield_now;
 
 #[cfg(feature = "executor-thread")]
 pub use crate::thread_executor;
