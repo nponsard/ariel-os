@@ -10,7 +10,7 @@ coapcore.path = "../lib/coapcore"
 coap-handler = "0.2.0"
 coap-handler-implementations = "0.5.0"
 critical-section.workspace = true
-embassy-futures = "0.1.1"
+embassy-futures = { workspace = true }
 # These features should be more selective and not enabled here, but as things
 # stand, this modules also contains the embedded-nal implementation for
 # embassy-net, and that needs its features in sync; enabling them all ensures a

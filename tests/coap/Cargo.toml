@@ -12,7 +12,7 @@ embassy-sync = { workspace = true }
 heapless = { workspace = true }
 ariel-os = { path = "../../src/ariel-os" }
 ariel-os-boards = { path = "../../src/ariel-os-boards" }
-embassy-futures = "0.1.1"
+embassy-futures = { workspace = true }
 embedded-nal-coap = { workspace = true }
 coap-request = "0.2.0-alpha.2"
 coap-message = "0.3.2"
