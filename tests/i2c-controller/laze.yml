@@ -6,7 +6,7 @@ apps:
           - CONFIG_ISR_STACKSIZE=16384
     context:
       - bbc-microbit-v2
-      - espressif-esp32-c6-devkitc-1
+      - esp
       - nrf52840
       - nrf5340
       - rp2040
