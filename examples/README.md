@@ -16,8 +16,8 @@ This directory contains example applications that showcase how to use Ariel OS.
 - [http-server/](./http-server): HTTP server example
 - [log](./log): Example demonstrating different log levels for printing feedback messages.
 - [minimal/](./minimal): Minimized to the max Ariel OS config
-- [random/](./random): Demonstrate obtaining random values
-- [storage/](./storage): Demonstrate persistent storage interaction
+- [random/](./random): Demonstrates obtaining random values
+- [storage/](./storage): Demonstrates persistent storage interaction
 - [tcp-echo/](./tcp-echo): TCP echo example
 - [testing/](./testing): Demonstrates `embedded-test` integration
 - [thread-async-interop/](./thread-async-interop): How to make async tasks and preemptively scheduled threads interoperate
