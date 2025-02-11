@@ -54,6 +54,10 @@ jobs:
       - name: rust cache
         uses: Swatinem/rust-cache@v2
 
+      - uses: taiki-e/install-action@v2
+        with:
+          tool: cargo-binstall
+
       # Docs of HAL crates must be generated after that of the main crate,
       # otherwise this would result in broken links, as they use `--no-deps` for
       # faster generation.
@@ -136,6 +140,9 @@ jobs:
           mkdir mdbook
           curl -Lf https://github.com/rust-lang/mdBook/releases/download/v0.4.36/mdbook-v0.4.36-x86_64-unknown-linux-gnu.tar.gz | tar -xz --directory=./mdbook
           echo `pwd`/mdbook >> $GITHUB_PATH
+
+      - name: Install mdbook cmdrun
+        run: cargo binstall --no-confirm --no-symlinks --force --no-discover-github-token mdbook-cmdrun
 
       - name: Build the book
         run: |
