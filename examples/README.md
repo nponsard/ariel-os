@@ -4,7 +4,9 @@
 
 This directory contains example applications that showcase how to use Ariel OS.
 
+- [alloc/](./alloc): Demonstrates how to use an allocator
 - [benchmark/](./benchmark): how to use `benchmark()`
+- [blinky/](./blinky): Demonstrates basic GPIO output usage
 - [coap-server](./coap-server) and [coap-client](./coap-client): Application level networking examples
 - [device-metadata/](./device-metadata): Retrieve metadata about the running device
 - [gpio/](./gpio): GPIO pin control example.
@@ -17,10 +19,12 @@ This directory contains example applications that showcase how to use Ariel OS.
 - [random/](./random): demonstrate obtaining random values
 - [storage/](./storage): demonstrate persistent storage interaction
 - [tcp-echo/](./tcp-echo): TCP echo example
+- [testing/](./testing): demonstrates `embedded-test` integration
 - [thread-async-interop/](./thread-async-interop): how to make async tasks and preemptively scheduled threads interoperate
 - [threading/](./threading): how to start and use preemptively scheduled threads
 - [threading-channel/](./threading-channel): how to use `ariel_os::thread::sync::Channel` for passing messages between threads
 - [threading-event/](./threading-event): how to use `ariel_os::thread::sync::Event`
+- [threading-multicore/](./threading-multicore): Demonstrates basic threading on multicore
 - [udp-echo/](./udp-echo): UDP echo example
 - [usb-keyboard/](./usb-keyboard): USB HID example
 - [usb-serial/](./usb-serial): USB serial example
