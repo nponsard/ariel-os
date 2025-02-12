@@ -13,3 +13,5 @@ title = "Ariel OS manual"
 [output.html]
 git-repository-url = "https://github.com/ariel-os/ariel-os"
 edit-url-template = "https://github.com/ariel-os/ariel-os/edit/master/book/{path}"
+
+[preprocessor.cmdrun]

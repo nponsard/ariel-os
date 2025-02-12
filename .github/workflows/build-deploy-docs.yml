@@ -12,6 +12,8 @@ on:
       - main
     paths:
       - book/**
+      - doc/gen_support_matrix_html.rs
+      - doc/support_matrix.yml
       - src/**
       - Cargo.toml
       - rust-toolchain.toml
@@ -53,6 +55,10 @@ jobs:
 
       - name: rust cache
         uses: Swatinem/rust-cache@v2
+
+      - uses: taiki-e/install-action@v2
+        with:
+          tool: cargo-binstall
 
       # Docs of HAL crates must be generated after that of the main crate,
       # otherwise this would result in broken links, as they use `--no-deps` for
@@ -136,6 +142,14 @@ jobs:
           mkdir mdbook
           curl -Lf https://github.com/rust-lang/mdBook/releases/download/v0.4.36/mdbook-v0.4.36-x86_64-unknown-linux-gnu.tar.gz | tar -xz --directory=./mdbook
           echo `pwd`/mdbook >> $GITHUB_PATH
+
+      - name: Install mdbook cmdrun
+        run: cargo binstall --no-confirm --no-symlinks --force --no-discover-github-token mdbook-cmdrun
+
+      - name: Check for unexpected cmdrun uses
+        run: |
+            cd book
+            ./cmdrun-check.sh
 
       - name: Build the book
         run: |
