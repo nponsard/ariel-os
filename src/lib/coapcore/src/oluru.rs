@@ -165,6 +165,11 @@ impl<T: PriorityLevel, const N: usize, const L: usize> OrderedPool<T, N, L> {
     /// If the new element's priority is lower than the lowest in the queue, it is returned as an
     /// Err. Otherwise, the element is inserted, and any dropped lower priority element is
     /// returned in the Ok value.
+    // Dead code is only allowed and not expected because of interactions testing.
+    #[allow(
+        dead_code,
+        reason = "Need for this function is unclear, but it is covered in tests and docs, and may easily be needed again as coapcore is being refactored."
+    )]
     pub fn insert(&mut self, new: T) -> Result<Option<T>, T> {
         let new_index = self.entries.len();
         if new_index < N {
@@ -257,7 +262,7 @@ impl<T: PriorityLevel, const N: usize, const L: usize> OrderedPool<T, N, L> {
     }
 
     /// Returns an iterator visiting all items in arbitrary order.
-    pub fn iter(&self) -> impl Iterator<Item = &T> {
+    pub(crate) fn iter(&self) -> impl Iterator<Item = &T> {
         self.entries.iter()
     }
 }

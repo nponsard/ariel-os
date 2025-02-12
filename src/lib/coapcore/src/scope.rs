@@ -6,12 +6,6 @@ use coap_message::{MessageOption, ReadableMessage};
 pub trait Scope: Sized + core::fmt::Debug {
     /// Returns true if a request may be performed by the bound security context.
     fn request_is_allowed<M: ReadableMessage>(&self, request: &M) -> bool;
-
-    /// Returns true if a bound security context should be preferably retained when hitting
-    /// resource limits.
-    fn is_admin(&self) -> bool {
-        false
-    }
 }
 
 impl Scope for core::convert::Infallible {
@@ -148,10 +142,6 @@ impl Scope for AifValue {
         // No matches found
         false
     }
-
-    fn is_admin(&self) -> bool {
-        self.0[0] >= 0x83
-    }
 }
 
 /// A scope that can use multiple backends, erasing its type.
@@ -175,14 +165,6 @@ impl Scope for UnionScope {
             UnionScope::AifValue(v) => v.request_is_allowed(request),
             UnionScope::AllowAll => AllowAll.request_is_allowed(request),
             UnionScope::DenyAll => DenyAll.request_is_allowed(request),
-        }
-    }
-
-    fn is_admin(&self) -> bool {
-        match self {
-            UnionScope::AifValue(v) => v.is_admin(),
-            UnionScope::AllowAll => AllowAll.is_admin(),
-            UnionScope::DenyAll => DenyAll.is_admin(),
         }
     }
 }

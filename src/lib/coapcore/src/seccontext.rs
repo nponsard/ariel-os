@@ -7,31 +7,33 @@ use coap_message::{
 use coap_message_utils::{Error as CoAPError, OptionsExt as _};
 use defmt_or_log::{debug, error, trace, Debug2Format};
 
+use crate::generalclaims::{self, GeneralClaims as _};
 use crate::helpers::COwn;
 use crate::scope::Scope;
 use crate::seccfg::ServerSecurityConfig;
+
+use crate::time::TimeProvider;
 
 const MAX_CONTEXTS: usize = 4;
 const _MAX_CONTEXTS_CHECK: () = assert!(MAX_CONTEXTS <= COwn::GENERATABLE_VALUES);
 
 /// A pool of security contexts shareable by several users inside a thread.
-type SecContextPool<Crypto, Authorization> =
-    crate::oluru::OrderedPool<SecContextState<Crypto, Authorization>, MAX_CONTEXTS, LEVEL_COUNT>;
+type SecContextPool<Crypto, Claims> =
+    crate::oluru::OrderedPool<SecContextState<Crypto, Claims>, MAX_CONTEXTS, LEVEL_COUNT>;
 
 /// Copy of the OSCORE option
 type OscoreOption = heapless::Vec<u8, 16>;
 
-struct SecContextState<Crypto: lakers::Crypto, Authorization: Scope> {
-    // FIXME: Should also include timeout. How do? Store expiry, do raytime in not-even-RTC mode,
-    // and whenever there is a new time stamp from SSC, remove old ones?
+struct SecContextState<Crypto: lakers::Crypto, GeneralClaims: generalclaims::GeneralClaims> {
+    // FIXME: Updating this should also check the timeout.
 
     // This is Some(...) unless the stage is unusable.
-    authorization: Option<Authorization>,
+    authorization: Option<GeneralClaims>,
     protocol_stage: SecContextStage<Crypto>,
 }
 
-impl<Crypto: lakers::Crypto, Authorization: Scope> Default
-    for SecContextState<Crypto, Authorization>
+impl<Crypto: lakers::Crypto, GeneralClaims: generalclaims::GeneralClaims> Default
+    for SecContextState<Crypto, GeneralClaims>
 {
     fn default() -> Self {
         Self {
@@ -75,10 +77,11 @@ const LEVEL_ADMIN: usize = 0;
 const LEVEL_AUTHENTICATED: usize = 1;
 const LEVEL_ONGOING: usize = 2;
 const LEVEL_EMPTY: usize = 3;
+// FIXME introduce a level for expired states; they're probably the least priority.
 const LEVEL_COUNT: usize = 4;
 
-impl<Crypto: lakers::Crypto, Authorization: Scope> crate::oluru::PriorityLevel
-    for SecContextState<Crypto, Authorization>
+impl<Crypto: lakers::Crypto, GeneralClaims: generalclaims::GeneralClaims>
+    crate::oluru::PriorityLevel for SecContextState<Crypto, GeneralClaims>
 {
     fn level(&self) -> usize {
         match &self.protocol_stage {
@@ -94,7 +97,11 @@ impl<Crypto: lakers::Crypto, Authorization: Scope> crate::oluru::PriorityLevel
                 LEVEL_ONGOING
             }
             SecContextStage::Oscore(_) => {
-                if self.authorization.as_ref().is_some_and(|a| a.is_admin()) {
+                if self
+                    .authorization
+                    .as_ref()
+                    .is_some_and(|a| a.is_important())
+                {
                     LEVEL_ADMIN
                 } else {
                     LEVEL_AUTHENTICATED
@@ -104,7 +111,9 @@ impl<Crypto: lakers::Crypto, Authorization: Scope> crate::oluru::PriorityLevel
     }
 }
 
-impl<Crypto: lakers::Crypto, Authorization: Scope> SecContextState<Crypto, Authorization> {
+impl<Crypto: lakers::Crypto, GeneralClaims: generalclaims::GeneralClaims>
+    SecContextState<Crypto, GeneralClaims>
+{
     fn corresponding_cown(&self) -> Option<COwn> {
         match &self.protocol_stage {
             SecContextStage::Empty => None,
@@ -128,11 +137,12 @@ pub struct OscoreEdhocHandler<
     CryptoFactory: Fn() -> Crypto,
     SSC: ServerSecurityConfig,
     RNG: rand_core::RngCore + rand_core::CryptoRng,
+    TP: TimeProvider,
 > {
     // It'd be tempted to have sharing among multiple handlers for multiple CoAP stacks, but
     // locks for such sharing could still be acquired in a factory (at which point it may make
     // sense to make this a &mut).
-    pool: SecContextPool<Crypto, SSC::Scope>,
+    pool: SecContextPool<Crypto, SSC::GeneralClaims>,
 
     authorities: SSC,
 
@@ -147,6 +157,8 @@ pub struct OscoreEdhocHandler<
     // called, or an AuthorizationChecked::Allowed is around.
     inner: H,
 
+    time: TP,
+
     crypto_factory: CryptoFactory,
     rng: RNG,
 }
@@ -157,16 +169,28 @@ impl<
         CryptoFactory: Fn() -> Crypto,
         SSC: ServerSecurityConfig,
         RNG: rand_core::RngCore + rand_core::CryptoRng,
-    > OscoreEdhocHandler<H, Crypto, CryptoFactory, SSC, RNG>
+        TP: TimeProvider,
+    > OscoreEdhocHandler<H, Crypto, CryptoFactory, SSC, RNG, TP>
 {
     /// Creates a new CoAP server implementation (a [Handler][coap_handler::Handler]).
-    pub fn new(inner: H, authorities: SSC, crypto_factory: CryptoFactory, rng: RNG) -> Self {
+    ///
+    /// The time provider is used to evaluate any time limited tokens leniently; choosing a "bad"
+    /// time source here (in particular [`crate::time::TimeUnknown`] leads to acceptance of expired
+    /// tokens.
+    pub fn new(
+        inner: H,
+        authorities: SSC,
+        crypto_factory: CryptoFactory,
+        rng: RNG,
+        time: TP,
+    ) -> Self {
         Self {
             pool: Default::default(),
             inner,
             crypto_factory,
             authorities,
             rng,
+            time,
         }
     }
 
@@ -369,15 +393,29 @@ impl<
 
         let SecContextState {
             protocol_stage: SecContextStage::Oscore(mut oscore_context),
-            authorization,
+            authorization: Some(authorization),
         } = taken
         else {
             // FIXME: How'd we even get there? Should this be unreachable?
-            //
-            // ... and return taken
             error!("Found empty security context.");
             return Err(CoAPError::bad_request());
         };
+
+        if !authorization
+            .time_constraint()
+            .is_valid_with(&mut self.time)
+        {
+            // Token expired.
+            //
+            // By returning early after having taken the context, we discard it completely.
+            //
+            // FIXME: Find out whether there is any merit in retaining the security context without
+            // authorization at all -- it may be that for the purpose of time series it is useful
+            // to retain the authorization (if there is some kind of renewal tokens / token
+            // series).
+            debug!("Discarding expired context");
+            return Err(CoAPError::bad_request());
+        }
 
         // Until liboscore can work on an arbitrary message, in particular a
         // `StrippingTheEdhocOptionAndPayloadPart<M>`, we have to create a copy.
@@ -421,10 +459,7 @@ impl<
             oscore_option,
             &mut oscore_context,
             |request| {
-                if authorization
-                    .as_ref()
-                    .is_some_and(|a| a.request_is_allowed(request))
-                {
+                if authorization.scope().request_is_allowed(request) {
                     AuthorizationChecked::Allowed(self.inner.extract_request_data(request))
                 } else {
                     AuthorizationChecked::NotAllowed
@@ -438,7 +473,7 @@ impl<
         // FIXME, should we increment an error count and lower priority?)
         let _evicted = self.pool.force_insert(SecContextState {
             protocol_stage: SecContextStage::Oscore(oscore_context),
-            authorization,
+            authorization: Some(authorization),
         });
         debug_assert!(matches!(_evicted, Some(SecContextState { protocol_stage: SecContextStage::Empty, .. }) | None), "A Default (Empty) was placed when an item was taken, which should have the lowest priority");
 
@@ -460,8 +495,8 @@ impl<
     fn process_edhoc_in_payload(
         &self,
         payload: &[u8],
-        sec_context_state: SecContextState<Crypto, SSC::Scope>,
-    ) -> Result<(SecContextState<Crypto, SSC::Scope>, usize), CoAPError> {
+        sec_context_state: SecContextState<Crypto, SSC::GeneralClaims>,
+    ) -> Result<(SecContextState<Crypto, SSC::GeneralClaims>, usize), CoAPError> {
         // We're not supporting block-wise here -- but could later, to the extent we support
         // outer block-wise.
 
@@ -704,7 +739,7 @@ impl<
         let mut nonce2 = [0; crate::ace::OWN_NONCE_LEN];
         self.rng.fill_bytes(&mut nonce2);
 
-        let (response, scope, oscore) =
+        let (response, oscore, generalclaims) =
             crate::ace::process_acecbor_authz_info(payload, &self.authorities, nonce2, |nonce1| {
                 // This preferably (even exclusively) produces EDHOC-ideal recipient IDs, but as long
                 // as we're having more of those than slots, no point in not reusing the code.
@@ -719,12 +754,12 @@ impl<
                     .unwrap_or(CoAPError::bad_request())
             })?;
 
-        debug!("Established OSCORE context with recipient ID {:?} and authorization {:?} through ACE-OSCORE", oscore.recipient_id(), Debug2Format(&scope));
+        debug!("Established OSCORE context with recipient ID {:?} and authorization {:?} through ACE-OSCORE", oscore.recipient_id(), Debug2Format(&generalclaims));
         // FIXME: This should be flagged as "unconfirmed" for rapid eviction, as it could be part
         // of a replay.
         let _evicted = self.pool.force_insert(SecContextState {
             protocol_stage: SecContextStage::Oscore(oscore),
-            authorization: Some(scope),
+            authorization: Some(generalclaims),
         });
 
         Ok(response)
@@ -860,7 +895,8 @@ impl<
         CryptoFactory: Fn() -> Crypto,
         SSC: ServerSecurityConfig,
         RNG: rand_core::RngCore + rand_core::CryptoRng,
-    > coap_handler::Handler for OscoreEdhocHandler<H, Crypto, CryptoFactory, SSC, RNG>
+        TP: TimeProvider,
+    > coap_handler::Handler for OscoreEdhocHandler<H, Crypto, CryptoFactory, SSC, RNG, TP>
 {
     type RequestData = OrInner<
         OwnRequestData<Result<H::RequestData, H::ExtractRequestError>>,
@@ -989,11 +1025,10 @@ impl<
 
         match state {
             Start | WellKnown | Unencrypted => {
-                if self
-                    .authorities
-                    .nosec_authorization()
-                    .is_some_and(|s| s.request_is_allowed(request))
-                {
+                if self.authorities.nosec_authorization().is_some_and(|s| {
+                    s.scope().request_is_allowed(request)
+                        && s.time_constraint().is_valid_with(&mut self.time)
+                }) {
                     self.inner
                         .extract_request_data(request)
                         .map(|extracted| Inner(AuthorizationChecked::Allowed(extracted)))

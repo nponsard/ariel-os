@@ -34,14 +34,19 @@ mod iana;
 
 mod helpers;
 
+pub mod time;
+
 mod ace;
+mod generalclaims;
 pub mod scope;
+pub use generalclaims::GeneralClaims;
 pub mod seccfg;
 
 // Might warrant a standalone crate at some point
 //
 // This is pub only to make the doctests run (but the crate's pub-ness needs a major overhaul
 // anyway)
+#[doc(hidden)]
 pub mod oluru;
 mod seccontext;
 pub use seccontext::*;

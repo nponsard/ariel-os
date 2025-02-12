@@ -145,6 +145,7 @@ async fn coap_run_impl(handler: impl coap_handler::Handler + coap_handler::Repor
             .with_known_edhoc_credential(admin_key, admin_scope),
         || lakers_crypto_rustcrypto::Crypto::new(ariel_os_random::crypto_rng()),
         ariel_os_random::crypto_rng(),
+        coapcore::time::TimeUnknown,
     );
 
     info!("Server is ready.");
