@@ -1,0 +1,19 @@
+name: PR title checks
+
+on:
+  pull_request:
+    types: [opened, edited, reopened]
+
+jobs:
+  pr-title:
+    name: Lint PR Title
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: taiki-e/install-action@v2
+        with:
+          tool: cargo-binstall
+      - run: cargo +stable binstall committed
+      - run: committed --config committed.toml --commit-file <(echo "${{ github.event.pull_request.title }}")
