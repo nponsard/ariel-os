@@ -146,6 +146,11 @@ jobs:
       - name: Install mdbook cmdrun
         run: cargo binstall --no-confirm --no-symlinks --force --no-discover-github-token mdbook-cmdrun
 
+      - name: Check for unexpected cmdrun uses
+        run: |
+            cd book
+            ./cmdrun-check.sh
+
       - name: Build the book
         run: |
           cd book
