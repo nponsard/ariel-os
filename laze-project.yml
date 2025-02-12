@@ -691,6 +691,8 @@ modules:
       - rp2040
       - nrf52840
       - nrf5340
+      - stm32h755zitx
+      - stm32wb55rgvx
     env:
       global:
         FEATURES:
