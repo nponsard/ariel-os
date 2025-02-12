@@ -11,7 +11,6 @@ use defmt_or_log::trace;
 use crate::error::{CredentialError, CredentialErrorDetail};
 
 use crate::helpers::COwn;
-use crate::time::TimeConstraint;
 
 /// Fixed length of the ACE OSCORE nonce issued by this module.
 pub(crate) const OWN_NONCE_LEN: usize = 8;
@@ -375,20 +374,12 @@ impl AceCborAuthzInfoResponse {
 /// * Instead of the random nonce2, it would be preferable to pass in an RNG -- but some owners of
 ///   an RNG may have a hard time lending out an exclusive reference to it for the whole function
 ///   call duration.
-pub(crate) fn process_acecbor_authz_info<Scope>(
+pub(crate) fn process_acecbor_authz_info<GC: crate::GeneralClaims>(
     payload: &[u8],
-    authorities: &impl crate::seccfg::ServerSecurityConfig<Scope = Scope>,
+    authorities: &impl crate::seccfg::ServerSecurityConfig<GeneralClaims = GC>,
     nonce2: [u8; OWN_NONCE_LEN],
     server_recipient_id: impl FnOnce(&[u8]) -> COwn,
-) -> Result<
-    (
-        AceCborAuthzInfoResponse,
-        liboscore::PrimitiveContext,
-        Scope,
-        crate::time::TimeConstraint,
-    ),
-    CredentialError,
-> {
+) -> Result<(AceCborAuthzInfoResponse, liboscore::PrimitiveContext, GC), CredentialError> {
     trace!("Processing authz_info {=[u8]:02x}", payload); // :02x could be :cbor
 
     let decoded: UnprotectedAuthzInfoPost = minicbor::decode(payload)?;
@@ -422,7 +413,7 @@ pub(crate) fn process_acecbor_authz_info<Scope>(
         return Err(CredentialErrorDetail::UnsupportedAlgorithm.into());
     }
 
-    let (scope, claims) = authorities.decrypt_symmetric_token(
+    let (processed, parsed) = authorities.decrypt_symmetric_token(
         &headers,
         aad_encoded.as_ref(),
         buffer,
@@ -431,14 +422,12 @@ pub(crate) fn process_acecbor_authz_info<Scope>(
 
     // Currently disabled because no formatting is available while there; works with
     // <https://codeberg.org/chrysn/minicbor-adapters/pulls/1>
-    // trace!("Decrypted CWT claims: {}", claims);
-
-    let time_constraint = TimeConstraint::from_claims_set(&claims);
+    // trace!("Decrypted CWT claims: {}", parsed);
 
     let Cnf {
         osc: Some(osc),
         cose_key: None,
-    } = claims.cnf
+    } = parsed.cnf
     else {
         return Err(CredentialErrorDetail::InconsistentDetails.into());
     };
@@ -457,19 +446,19 @@ pub(crate) fn process_acecbor_authz_info<Scope>(
         ace_server_recipientid,
     };
 
-    Ok((response, derived, scope, time_constraint))
+    Ok((response, derived, processed))
 }
 
-pub(crate) fn process_edhoc_token<Scope>(
+pub(crate) fn process_edhoc_token<GeneralClaims>(
     ead3: &[u8],
-    authorities: &impl crate::seccfg::ServerSecurityConfig<Scope = Scope>,
-) -> Result<(lakers::Credential, Scope, TimeConstraint), CredentialError> {
+    authorities: &impl crate::seccfg::ServerSecurityConfig<GeneralClaims = GeneralClaims>,
+) -> Result<(lakers::Credential, GeneralClaims), CredentialError> {
     let mut buffer = heapless::Vec::<u8, MAX_SUPPORTED_ACCESSTOKEN_LEN>::new();
 
     // Trying and falling back means that the minicbor error is not too great ("Expected tag 16"
     // rather than "Expected tag 16 or 18"), but we don't
     // show much of that anyway.
-    let (scope, claims) = if let Ok(encrypt0) = minicbor::decode::<EncryptedCwt>(ead3) {
+    let (processed, parsed) = if let Ok(encrypt0) = minicbor::decode::<EncryptedCwt>(ead3) {
         let (headers, aad_encoded, buffer) = encrypt0.prepare_decryption(&mut buffer)?;
 
         authorities.decrypt_symmetric_token(
@@ -508,25 +497,21 @@ pub(crate) fn process_edhoc_token<Scope>(
         minicbor::encode(&aad, minicbor_adapters::WriteToHeapless(&mut buffer))?;
         trace!("Serialized AAD: {:#02x}", buffer);
 
-        let (scope, claims) = authorities.verify_asymmetric_token(
+        authorities.verify_asymmetric_token(
             &headers,
             &buffer,
             sign1.signature,
             sign1.payload,
             crate::PrivateMethod,
-        )?;
-
-        (scope, claims)
+        )?
     } else {
         return Err(CredentialErrorDetail::UnsupportedExtension.into());
     };
 
-    let time_constraint = crate::time::TimeConstraint::from_claims_set(&claims);
-
     let Cnf {
         osc: None,
         cose_key: Some(cose_key),
-    } = claims.cnf
+    } = parsed.cnf
     else {
         return Err(CredentialErrorDetail::InconsistentDetails.into());
     };
@@ -549,5 +534,5 @@ pub(crate) fn process_edhoc_token<Scope>(
             .map_err(|_| CredentialErrorDetail::InconsistentDetails)?,
     );
 
-    Ok((credential, scope, time_constraint))
+    Ok((credential, processed))
 }

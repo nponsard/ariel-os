@@ -52,6 +52,7 @@ impl TimeProvider for TimeUnknown {
 }
 
 /// A processed set of token claims that limit it in time.
+#[derive(Copy, Clone, Debug)]
 pub struct TimeConstraint {
     // iat would not go in here (that's only to feed a `TimeProvider::past_trusted`; nbf would go
     // in here but we don't read that yet)

@@ -37,7 +37,9 @@ mod helpers;
 pub mod time;
 
 mod ace;
+mod generalclaims;
 pub mod scope;
+pub use generalclaims::GeneralClaims;
 pub mod seccfg;
 
 // Might warrant a standalone crate at some point

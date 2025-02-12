@@ -5,6 +5,7 @@ use defmt_or_log::{debug, error, trace};
 
 use crate::ace::HeaderMap;
 use crate::error::{CredentialError, CredentialErrorDetail};
+use crate::generalclaims::{GeneralClaims, Unlimited};
 use crate::time::TimeConstraint;
 
 pub(crate) const MAX_AUD_SIZE: usize = 8;
@@ -29,15 +30,17 @@ pub trait ServerSecurityConfig: crate::Sealed {
     const PARSES_TOKENS: bool;
 
     /// The way scopes issued with this system as audience by this AS are expressed here.
-    type Scope: crate::scope::Scope;
+    type GeneralClaims: GeneralClaims;
 
     /// Unprotects a symmetriclly encrypted token and processes the contained [CWT Claims
-    /// Set][crate::ace::CwtClaimsSet] into a [`Self::Scope`] and returns the claims.
+    /// Set][crate::ace::CwtClaimsSet] into a [`Self::GeneralClaims`] and returns the full claims.
     ///
     /// The steps are performed together rather than in separate functions because it is yet
     /// unclear how data would precisely be carried around. (Previous iterations of this API had a
     /// `ScopeGenerator` associated type that would carry such data, but that did not scale well to
-    /// different kinds of tokens).
+    /// different kinds of tokens; for example, it would need a `TimeConstraintGenerator` in
+    /// parallel because while the token may indicate some time, the issuer's trusted time might be
+    /// more limited).
     ///
     /// As part of such a dissection it would be preferable to return a decryption key and let the
     /// `ace` module do the decryption, but the key is not dyn safe, and
@@ -67,7 +70,7 @@ pub trait ServerSecurityConfig: crate::Sealed {
         aad: &[u8],
         ciphertext_buffer: &'buf mut [u8],
         _: crate::PrivateMethod,
-    ) -> Result<(Self::Scope, crate::ace::CwtClaimsSet<'buf>), CredentialError> {
+    ) -> Result<(Self::GeneralClaims, crate::ace::CwtClaimsSet<'buf>), CredentialError> {
         Err(CredentialErrorDetail::KeyNotPresent.into())
     }
 
@@ -78,6 +81,9 @@ pub trait ServerSecurityConfig: crate::Sealed {
     /// created for signature verification, and signed_payload is around inside the caller for
     /// longer. As common with signed data, it should only be parsed once the signature has been
     /// verified.
+    ///
+    /// Like [`Self::decrypt_symmetric_token()`], this conflates a few aspects, which is tolerated
+    /// for the time being.
     #[allow(
         unused_variables,
         reason = "Names are human visible part of API description"
@@ -89,7 +95,7 @@ pub trait ServerSecurityConfig: crate::Sealed {
         signature: &[u8],
         signed_payload: &'b [u8],
         _: crate::PrivateMethod,
-    ) -> Result<(Self::Scope, crate::ace::CwtClaimsSet<'b>), CredentialError> {
+    ) -> Result<(Self::GeneralClaims, crate::ace::CwtClaimsSet<'b>), CredentialError> {
         Err(CredentialErrorDetail::KeyNotPresent.into())
     }
 
@@ -110,12 +116,14 @@ pub trait ServerSecurityConfig: crate::Sealed {
     fn expand_id_cred_x(
         &self,
         id_cred_x: lakers::IdCred,
-    ) -> Option<(lakers::Credential, Self::Scope, TimeConstraint)> {
+    ) -> Option<(lakers::Credential, Self::GeneralClaims)> {
         None
     }
 
     /// Generates the scope representing unauthenticated access.
-    fn nosec_authorization(&self) -> Option<Self::Scope> {
+    ///
+    /// Their time aspect is typically unbounded.
+    fn nosec_authorization(&self) -> Option<Self::GeneralClaims> {
         None
     }
 
@@ -143,7 +151,7 @@ impl crate::Sealed for DenyAll {}
 impl ServerSecurityConfig for DenyAll {
     const PARSES_TOKENS: bool = false;
 
-    type Scope = core::convert::Infallible;
+    type GeneralClaims = core::convert::Infallible;
 }
 
 /// An SSC representing unconditionally allowed access, including unencrypted.
@@ -154,10 +162,10 @@ impl crate::Sealed for AllowAll {}
 impl ServerSecurityConfig for AllowAll {
     const PARSES_TOKENS: bool = false;
 
-    type Scope = crate::scope::AllowAll;
+    type GeneralClaims = Unlimited<crate::scope::AllowAll>;
 
-    fn nosec_authorization(&self) -> Option<Self::Scope> {
-        Some(crate::scope::AllowAll)
+    fn nosec_authorization(&self) -> Option<Self::GeneralClaims> {
+        Some(Unlimited(crate::scope::AllowAll))
     }
 }
 
@@ -165,6 +173,10 @@ impl ServerSecurityConfig for AllowAll {
 ///
 /// This is very much in flux, and will need further exploration as to inhowmuch this can be
 /// type-composed from components.
+///
+/// Lacking better sources of information, the scope's imporatance is chosen by source: Only
+/// preconfigured EDHOC keys are regarded as important, and thus kept around even in the presence
+/// of multiple competing token based contexts.
 pub struct ConfigBuilder {
     /// Symmetric used when tokens are symmetrically encrypted with AES-CCM-16-128-256
     as_key_31: Option<[u8; 32]>,
@@ -185,7 +197,7 @@ impl ServerSecurityConfig for ConfigBuilder {
     // We can't know at build time, assume yes
     const PARSES_TOKENS: bool = true;
 
-    type Scope = crate::scope::UnionScope;
+    type GeneralClaims = ConfigBuilderClaims;
 
     fn decrypt_symmetric_token<'buf>(
         &self,
@@ -193,7 +205,7 @@ impl ServerSecurityConfig for ConfigBuilder {
         aad: &[u8],
         ciphertext_buffer: &'buf mut [u8],
         _: crate::PrivateMethod,
-    ) -> Result<(Self::Scope, crate::ace::CwtClaimsSet<'buf>), CredentialError> {
+    ) -> Result<(Self::GeneralClaims, crate::ace::CwtClaimsSet<'buf>), CredentialError> {
         use ccm::aead::AeadInPlace;
         use ccm::KeyInit;
 
@@ -241,10 +253,20 @@ impl ServerSecurityConfig for ConfigBuilder {
         let claims: crate::ace::CwtClaimsSet = minicbor::decode(ciphertext)
             .map_err(|_| CredentialErrorDetail::UnsupportedExtension)?;
 
+        // FIXME: Consider moving into general parser.
         let scope = crate::scope::AifValue::parse(claims.scope)
-            .map_err(|_| CredentialErrorDetail::UnsupportedExtension)?;
+            .map_err(|_| CredentialErrorDetail::UnsupportedExtension)?
+            .into();
+        let time_constraint = crate::time::TimeConstraint::from_claims_set(&claims);
 
-        Ok((scope.into(), claims))
+        Ok((
+            ConfigBuilderClaims {
+                scope,
+                time_constraint,
+                is_important: false,
+            },
+            claims,
+        ))
     }
 
     fn verify_asymmetric_token<'b>(
@@ -254,7 +276,7 @@ impl ServerSecurityConfig for ConfigBuilder {
         signature: &[u8],
         signed_payload: &'b [u8],
         _: crate::PrivateMethod,
-    ) -> Result<(Self::Scope, crate::ace::CwtClaimsSet<'b>), CredentialError> {
+    ) -> Result<(Self::GeneralClaims, crate::ace::CwtClaimsSet<'b>), CredentialError> {
         if headers.alg != Some(-7) {
             // ES256
             return Err(CredentialErrorDetail::UnsupportedAlgorithm.into());
@@ -284,14 +306,30 @@ impl ServerSecurityConfig for ConfigBuilder {
             return Err(CredentialErrorDetail::VerifyFailed.into());
         }
 
+        // FIXME: Consider moving into general parser.
         let scope = crate::scope::AifValue::parse(claims.scope)
-            .map_err(|_| CredentialErrorDetail::UnsupportedExtension)?;
+            .map_err(|_| CredentialErrorDetail::UnsupportedExtension)?
+            .into();
+        let time_constraint = crate::time::TimeConstraint::from_claims_set(&claims);
 
-        Ok((scope.into(), claims))
+        Ok((
+            ConfigBuilderClaims {
+                scope,
+                time_constraint,
+                is_important: false,
+            },
+            claims,
+        ))
     }
 
-    fn nosec_authorization(&self) -> Option<Self::Scope> {
-        self.unauthenticated_scope.clone()
+    fn nosec_authorization(&self) -> Option<Self::GeneralClaims> {
+        self.unauthenticated_scope
+            .clone()
+            .map(|scope| ConfigBuilderClaims {
+                scope,
+                time_constraint: TimeConstraint::unbounded(),
+                is_important: false,
+            })
     }
 
     fn own_edhoc_credential(&self) -> Option<(lakers::Credential, lakers::BytesP256ElemLen)> {
@@ -301,7 +339,7 @@ impl ServerSecurityConfig for ConfigBuilder {
     fn expand_id_cred_x(
         &self,
         id_cred_x: lakers::IdCred,
-    ) -> Option<(lakers::Credential, Self::Scope, TimeConstraint)> {
+    ) -> Option<(lakers::Credential, Self::GeneralClaims)> {
         trace!(
             "Evaluating peer's credential {=[u8]:02x}", // :02x could be :cbor
             id_cred_x.as_full_value()
@@ -323,8 +361,11 @@ impl ServerSecurityConfig for ConfigBuilder {
                     )]
                     return Some((
                         credential.clone(),
-                        scope.clone(),
-                        TimeConstraint::unbounded(),
+                        ConfigBuilderClaims {
+                            scope: scope.clone(),
+                            time_constraint: TimeConstraint::unbounded(),
+                            is_important: true,
+                        },
                     ));
                 }
             } else {
@@ -337,23 +378,22 @@ impl ServerSecurityConfig for ConfigBuilder {
                     )]
                     return Some((
                         credential.clone(),
-                        scope.clone(),
-                        TimeConstraint::unbounded(),
+                        ConfigBuilderClaims {
+                            scope: scope.clone(),
+                            time_constraint: TimeConstraint::unbounded(),
+                            is_important: true,
+                        },
                     ));
                 }
             }
         }
 
-        if let Some(small_scope) = self.nosec_authorization() {
+        if let Some(unauthorized_claims) = self.nosec_authorization() {
             trace!("Unauthenticated clients are generally accepted, evaluating credential.");
             if let Some(credential_by_value) = id_cred_x.get_ccs() {
                 debug!("The unauthorized client provided a usable credential by value.");
                 #[expect(clippy::clone_on_copy, reason = "Lakers items are overly copy happy")]
-                return Some((
-                    credential_by_value.clone(),
-                    small_scope.clone(),
-                    TimeConstraint::unbounded(),
-                ));
+                return Some((credential_by_value.clone(), unauthorized_claims));
             }
         }
 
@@ -525,5 +565,33 @@ impl ConfigBuilder {
             request_creation_hints,
             ..self
         }
+    }
+}
+
+/// An implementation of [`GeneralClaims`] for [`ConfigBuilder`].
+///
+/// It stores a [`UnionScope`][crate::scope::UnionScope] (effectively a
+/// [`AifValue`][crate::scope::AifValue]), a [`TimeConstraint`][crate::time::TimeConstraint], and a
+/// flag for importance.
+#[derive(Debug)]
+pub struct ConfigBuilderClaims {
+    pub scope: crate::scope::UnionScope,
+    pub time_constraint: crate::time::TimeConstraint,
+    pub is_important: bool,
+}
+
+impl GeneralClaims for ConfigBuilderClaims {
+    type Scope = crate::scope::UnionScope;
+
+    fn scope(&self) -> &Self::Scope {
+        &self.scope
+    }
+
+    fn time_constraint(&self) -> crate::time::TimeConstraint {
+        self.time_constraint
+    }
+
+    fn is_important(&self) -> bool {
+        self.is_important
     }
 }
