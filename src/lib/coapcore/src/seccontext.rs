@@ -17,6 +17,12 @@ use crate::time::TimeProvider;
 const MAX_CONTEXTS: usize = 4;
 const _MAX_CONTEXTS_CHECK: () = assert!(MAX_CONTEXTS <= COwn::GENERATABLE_VALUES);
 
+/// Helper for cutting branches that can not be reached; could be a provided function of the
+/// [`ServerSecurityConfig`], but we need it const.
+const fn has_oscore<SSC: ServerSecurityConfig>() -> bool {
+    SSC::HAS_EDHOC || SSC::PARSES_TOKENS
+}
+
 /// A pool of security contexts shareable by several users inside a thread.
 type SecContextPool<Crypto, Claims> =
     crate::oluru::OrderedPool<SecContextState<Crypto, Claims>, MAX_CONTEXTS, LEVEL_COUNT>;
@@ -386,6 +392,11 @@ impl<
             })?;
 
         let (taken, front_trim_payload) = if with_edhoc {
+            if !SSC::HAS_EDHOC {
+                unreachable!(
+                    "In this variant, that option is not consumed so the argument is always false"
+                );
+            }
             self.process_edhoc_in_payload(payload, taken)?
         } else {
             (taken, 0)
@@ -951,19 +962,19 @@ impl<
                 match (self, o.number(), o.value()) {
                     // FIXME: Store full value (but a single one is sufficient while we do EDHOC
                     // extraction)
-                    (Start, option::OSCORE, optval) => match optval.try_into() {
+                    (Start, option::OSCORE, optval) if has_oscore::<SSC>() => match optval.try_into() {
                         Ok(oscore) => (Oscore { oscore }, false),
                         _ => (Start, true),
                     },
-                    (Start, option::URI_PATH, b".well-known") => (WellKnown, false),
+                    (Start, option::URI_PATH, b".well-known") if SSC::HAS_EDHOC /* or anything else that lives in here */ => (WellKnown, false),
                     (Start, option::URI_PATH, b"authz-info") if SSC::PARSES_TOKENS => {
                         (AuthzInfo(Default::default()), false)
                     }
                     (Start, option::URI_PATH, _) => (Unencrypted, true /* doesn't matter */),
-                    (Oscore { oscore }, option::EDHOC, b"") => {
+                    (Oscore { oscore }, option::EDHOC, b"") if SSC::HAS_EDHOC => {
                         (Edhoc { oscore }, true /* doesn't matter */)
                     }
-                    (WellKnown, option::URI_PATH, b"edhoc") => (WellKnownEdhoc, false),
+                    (WellKnown, option::URI_PATH, b"edhoc") if SSC::HAS_EDHOC => (WellKnownEdhoc, false),
                     (AuthzInfo(ai), option::CONTENT_FORMAT, &[19]) if SSC::PARSES_TOKENS => {
                         (AuthzInfo(ai), false)
                     }
@@ -1038,6 +1049,9 @@ impl<
                 }
             }
             WellKnownEdhoc => {
+                if !SSC::HAS_EDHOC {
+                    unreachable!("State is not constructed");
+                }
                 require_post()?;
                 self.extract_edhoc(&request).map(Own).map_err(Own)
             }
@@ -1056,14 +1070,26 @@ impl<
                     .map(|r| Own(OwnRequestData::ProcessedToken(r)))
                     .map_err(Own)
             }
-            Edhoc { oscore } => self
-                .extract_oscore_edhoc(&request, oscore, true)
-                .map(Own)
-                .map_err(Own),
-            Oscore { oscore } => self
-                .extract_oscore_edhoc(&request, oscore, false)
-                .map(Own)
-                .map_err(Own),
+            Edhoc { oscore } => {
+                if !SSC::HAS_EDHOC {
+                    // We wouldn't get that far in a non-EDHOC situation because the option is not processed,
+                    // but the optimizer may not see that, and this is the place where a reviewer of
+                    // extract_oscore_edhoc can convince themself that indeed the with_edhoc=true case is
+                    // unreachable when HAS_EDHOC is not set.
+                    unreachable!("State is not constructed");
+                }
+                self.extract_oscore_edhoc(&request, oscore, true)
+                    .map(Own)
+                    .map_err(Own)
+            }
+            Oscore { oscore } => {
+                if !has_oscore::<SSC>() {
+                    unreachable!("State is not constructed");
+                }
+                self.extract_oscore_edhoc(&request, oscore, false)
+                    .map(Own)
+                    .map_err(Own)
+            }
         }
     }
     fn estimate_length(&mut self, req: &Self::RequestData) -> usize {
@@ -1082,9 +1108,15 @@ impl<
 
         match req {
             Own(OwnRequestData::EdhocOkSend2(c_r)) => {
+                if !SSC::HAS_EDHOC {
+                    unreachable!("State is not constructed");
+                }
                 self.build_edhoc_message_2(response, c_r).map_err(Own)?
             }
             Own(OwnRequestData::ProcessedToken(r)) => {
+                if !SSC::PARSES_TOKENS {
+                    unreachable!("State is not constructed");
+                }
                 r.render(response).map_err(|e| Own(Err(e)))?;
             }
             Own(OwnRequestData::EdhocOscoreRequest {
@@ -1092,6 +1124,9 @@ impl<
                 correlation,
                 extracted,
             }) => {
+                if !has_oscore::<SSC>() {
+                    unreachable!("State is not constructed");
+                }
                 self.build_oscore_response(response, kid, correlation, extracted)
                     .map_err(Own)?;
             }
