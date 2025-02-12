@@ -232,6 +232,7 @@ dependencies = [
  "critical-section",
  "embassy-embedded-hal",
  "embassy-executor",
+ "embassy-futures",
  "embassy-hal-internal",
  "embassy-net",
  "embassy-sync 0.6.2",

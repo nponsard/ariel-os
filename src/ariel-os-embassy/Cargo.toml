@@ -18,6 +18,7 @@ cfg-if.workspace = true
 
 embassy-embedded-hal = { workspace = true, optional = true }
 embassy-executor = { workspace = true, features = ["nightly"] }
+embassy-futures = { workspace = true }
 embassy-hal-internal = { workspace = true }
 embassy-net = { workspace = true, optional = true, features = [
   "dhcpv4",
