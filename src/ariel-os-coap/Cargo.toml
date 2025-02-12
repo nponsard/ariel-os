@@ -32,6 +32,8 @@ ariel-os-random = { workspace = true, features = ["csprng"] }
 ariel-os-macros = { path = "../ariel-os-macros" }
 static_cell = "2.1.0"
 
+cfg-if = { workspace = true }
+
 # FIXME: Should go out eventually
 hexlit = "0.5.5"
 cbor-macro = "0.1.0"
@@ -53,6 +55,9 @@ workspace = true
 # called "manual-server-start"; the name is chosen to align with
 # laze's name for this (where coap-server makes more sense).
 coap-server = []
+
+coap-server-config-unprotected = []
+coap-server-config-demokeys = []
 
 ## Enables an arbitrary set of features in dependencies where dependencies fail
 ## if no features are configured at all.

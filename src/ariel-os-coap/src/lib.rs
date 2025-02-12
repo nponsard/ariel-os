@@ -29,6 +29,7 @@ static CLIENT_READY: Watch<
     1,
 > = Watch::new();
 
+#[cfg(feature = "coap-server-config-demokeys")]
 mod demo_setup {
     use cbor_macro::cbor;
     use hexlit::hex;
@@ -142,7 +143,20 @@ async fn coap_run_impl(handler: impl coap_handler::Handler + coap_handler::Repor
         .await
         .unwrap();
 
-    let security_config = demo_setup::build_demo_ssc();
+    cfg_if::cfg_if! {
+        if #[cfg(feature = "coap-server-config-demokeys")] {
+            let security_config = demo_setup::build_demo_ssc();
+        } else if #[cfg(feature = "coap-server-config-unprotected")] {
+            let security_config = coapcore::seccfg::AllowAll;
+        } else {
+            // We could pick another policy too to get 4.04 errors, but "there may be something but
+            // I won't tell you" is just as good an answer, and may prune some more branches even.
+            let security_config = coapcore::seccfg::DenyAll;
+
+            #[cfg(all(feature = "coap-server", not(feature = "doc")))]
+            compile_error!("No CoAP server configuration chosen out of the coap-server-config-* features.");
+        }
+    }
 
     // FIXME: Should we allow users to override that? After all, this is just convenience and may
     // be limiting in special applications.
