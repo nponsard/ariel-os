@@ -9,7 +9,7 @@
 - [Build System](./build_system.md)
 - [Building an Application](./application.md)
 - [Async Executors](./async_support.md)
-- [Debug Logging](./debug_logging.md)
+- [Debug Console](./debug_console.md)
 - [Networking](./networking.md)
 - [Multithreading](./multithreading.md)
 - [Testing](./testing.md)
