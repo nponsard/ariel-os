@@ -22,7 +22,6 @@ contexts:
     selects:
       - executor-default
       - ?critical-section
-      - ?debug-logging-facade-default
       - ?lto
       - ?semihosting
     env:
@@ -475,6 +474,8 @@ modules:
 
   - name: debug-console
     context: ariel-os
+    selects:
+      - ?debug-logging-facade-default
     env:
       global:
         FEATURES:
