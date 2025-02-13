@@ -8,10 +8,12 @@ fn main() {
     std::fs::copy("isr_stack.ld.in", out.join("isr_stack.x")).unwrap();
     std::fs::copy("linkme.x", out.join("linkme.x")).unwrap();
     std::fs::copy("eheap.x", out.join("eheap.x")).unwrap();
+    std::fs::copy("keep-stack-sizes.x", out.join("keep-stack-sizes.x")).unwrap();
 
     println!("cargo:rerun-if-changed=isr_stack.x");
     println!("cargo:rerun-if-changed=linkme.x");
     println!("cargo:rerun-if-changed=eheap.x");
+    println!("cargo:rerun-if-changed=keep-stack-sizes.x");
 
     println!("cargo:rustc-link-search={}", out.display());
 }

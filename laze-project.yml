@@ -394,7 +394,9 @@ modules:
           - -Clink-arg=-Teheap.x
           - -Clink-arg=-Tdevice.x
           - -Clink-arg=-Tisr_stack.x
+          - -Clink-arg=-Tkeep-stack-sizes.x
           - --cfg context=\"cortex-m\"
+          - -Z emit-stack-sizes
 
   - name: thumbv6m-none-eabi
     depends:
