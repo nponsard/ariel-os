@@ -36,6 +36,9 @@ It explains how to compile and run the `hello-word` example to verify your setup
     laze build install-toolchain
     ```
 
+    This invokes rustup to add all easy-to-install targets and components;
+    the ESP toolchain needs additional manual installation steps.
+
 ## Running the `hello-world` example
 
 To check that everything is installed correctly, the `hello-word` example can be compiled and run from the `ariel-os` directory.
