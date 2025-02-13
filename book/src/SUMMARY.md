@@ -12,6 +12,7 @@
 - [Debug Logging](./debug_logging.md)
 - [Networking](./networking.md)
 - [Multithreading](./multithreading.md)
+- [Persistent Storage](./storage.md)
 - [Testing](./testing.md)
 - [Tooling](./tooling/index.md)
   - [CoAP](./tooling/coap.md)
