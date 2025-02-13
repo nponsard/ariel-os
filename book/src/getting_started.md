@@ -10,31 +10,34 @@ It explains how to compile and run the `hello-word` example to verify your setup
 1. Install the needed build dependencies.
    On Ubuntu, the following is sufficient:
 
-```sh
-apt install git rustup ninja-build pkg-config libudev-dev clang gcc-arm-none-eabi
-```
+    ```sh
+    apt install git rustup ninja-build pkg-config libudev-dev clang gcc-arm-none-eabi
+    ```
 
 1. Install the Rust installer [rustup](https://rustup.rs/) using the website's instructions or through your distribution package manager.
 
 1. Install the build system [laze](https://github.com/kaspar030/laze):
 
-```sh
-cargo install laze
-```
+    ```sh
+    cargo install laze
+    ```
 
 1. Install the debugging and flashing utility [probe-rs](https://github.com/probe-rs/probe-rs):
 
-```sh
-cargo install --locked probe-rs-tools
-```
+    ```sh
+    cargo install --locked probe-rs-tools
+    ```
 
 1. Clone the [Ariel OS repository][ariel-os-repo] and `cd` into it.
 
 1. Install the Rust targets:
 
-```sh
-laze build install-toolchain
-```
+    ```sh
+    laze build install-toolchain
+    ```
+
+    This invokes rustup to add all easy-to-install targets and components;
+    the ESP toolchain needs additional manual installation steps.
 
 ## Running the `hello-world` example
 

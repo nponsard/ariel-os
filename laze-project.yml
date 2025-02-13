@@ -1065,6 +1065,7 @@ builders:
       install-toolchain:
         build: false
         cmd:
+          # If this starts doing anything else other than rustup, update the book that currently claims this to be rustup only.
           - rustup target add thumbv6m-none-eabi
           - rustup target add thumbv7m-none-eabi
           - rustup target add thumbv7em-none-eabi
