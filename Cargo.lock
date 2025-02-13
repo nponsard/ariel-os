@@ -175,6 +175,7 @@ dependencies = [
  "ariel-os-random",
  "cbor-macro",
  "cboritem",
+ "cfg-if",
  "coap-handler",
  "coap-handler-implementations",
  "coapcore",

@@ -21,6 +21,12 @@ This application is a work in progress demo of running CoAP with OSCORE/EDHOC se
   up to the maximum number of security contexts that are stored (currently 4).
 * There is also `./fauxhoc.py`, which did EDHOC manually before it was integrated in aiocoap.
 
+### Variation
+
+* CoAP in NoSec mode: Building a smaller binary at the cost of confidentiality and integrity protection.
+    * Add `-s coap-server-config-unprotected` to the laze invocation; this replaces the demokeys setup.
+    * All resources are now only accessible without `--credentials`. (The "fauxhoc" script does not work in that mode).
+
 ## Roadmap
 
 Eventually, all of this should be covered by 20-line examples.

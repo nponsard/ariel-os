@@ -29,6 +29,12 @@ pub trait ServerSecurityConfig: crate::Sealed {
     /// paths.
     const PARSES_TOKENS: bool;
 
+    /// True if the type will at any time need to process requests to /.well-known/edhoc
+    ///
+    /// This is used by the handler implementation to shortcut through some message processing
+    /// paths.
+    const HAS_EDHOC: bool;
+
     /// The way scopes issued with this system as audience by this AS are expressed here.
     type GeneralClaims: GeneralClaims;
 
@@ -150,17 +156,19 @@ impl crate::Sealed for DenyAll {}
 
 impl ServerSecurityConfig for DenyAll {
     const PARSES_TOKENS: bool = false;
+    const HAS_EDHOC: bool = false;
 
     type GeneralClaims = core::convert::Infallible;
 }
 
-/// An SSC representing unconditionally allowed access, including unencrypted.
+/// An SSC representing unconditionally allowed access without the option for opportunistic EDHOC.
 pub struct AllowAll;
 
 impl crate::Sealed for AllowAll {}
 
 impl ServerSecurityConfig for AllowAll {
     const PARSES_TOKENS: bool = false;
+    const HAS_EDHOC: bool = false;
 
     type GeneralClaims = Unlimited<crate::scope::AllowAll>;
 
@@ -196,6 +204,7 @@ impl crate::Sealed for ConfigBuilder {}
 impl ServerSecurityConfig for ConfigBuilder {
     // We can't know at build time, assume yes
     const PARSES_TOKENS: bool = true;
+    const HAS_EDHOC: bool = true;
 
     type GeneralClaims = ConfigBuilderClaims;
 
