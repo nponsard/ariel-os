@@ -56,6 +56,7 @@ jobs:
         uses: mozilla-actions/sccache-action@v0.0.4
 
       - id: get_toolchain
+        if: steps.result-cache.outputs.cache-hit != 'true'
         run: echo "toolchain=$(scripts/rust-toolchain.sh)" >> $GITHUB_OUTPUT
 
       - name: Install toolchain
@@ -69,12 +70,14 @@ jobs:
           components: rust-src, rustfmt
 
       - name: Install Rust for Xtensa
+        if: steps.result-cache.outputs.cache-hit != 'true'
         uses: esp-rs/xtensa-toolchain@v1.5
         with:
           version: "1.84.0.0"
           buildtargets: esp32s3
 
       - name: Keep general build environment clean of Xtensa peculiarities
+        if: steps.result-cache.outputs.cache-hit != 'true'
         # The Xtensa setup unconditionally sets LIBCLANG_PATH in GITHUB_ENV --
         # we can't undo that. (It also sets it in ~/exports, but that is just
         # what it uses internally to get that data around into the action
