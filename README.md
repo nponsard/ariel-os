@@ -17,7 +17,8 @@ While those provide high-quality building blocks for a wide range of embedded ap
 Ariel OS thus follows an approach whereby it simultaneously integrates many heterogeneous pre-existing crates, and adds missing operating system functionalities such as a preemptive multicore scheduler, portable peripheral APIs, additional network security facilities, as well as [laze](https://github.com/kaspar030/laze), a meta-build system to bind it all together.
 The result?
 A powerful framework that allows to write portable embedded Rust applications with minimal boilerplate, providing a batteries-included experience.
-
+Still have questions?
+Check out our [FAQ](https://github.com/ariel-os/ariel-os/blob/main/FAQ.md) and/or take a look at the [Ariel OS book](https://ariel-os.github.io/ariel-os/dev/docs/book/).
 
 ## Getting Started
 
