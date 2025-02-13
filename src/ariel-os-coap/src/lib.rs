@@ -99,11 +99,12 @@ async fn coap_run_impl(handler: impl coap_handler::Handler + coap_handler::Repor
     // request, because we shouldn't hand out a client early).
     stack.wait_config_up().await;
 
-    // FIXME trim to CoAP requirements
-    let mut rx_meta = [PacketMetadata::EMPTY; 16];
-    let mut rx_buffer = [0; 4096];
-    let mut tx_meta = [PacketMetadata::EMPTY; 16];
-    let mut tx_buffer = [0; 4096];
+    // FIXME trim to CoAP requirements (those values are just a likely good starting point for "we
+    // process any message immediately anyway")
+    let mut rx_meta = [PacketMetadata::EMPTY; 2];
+    let mut rx_buffer = [0; 1500];
+    let mut tx_meta = [PacketMetadata::EMPTY; 2];
+    let mut tx_buffer = [0; 1500];
 
     let socket = UdpSocket::new(
         stack,
