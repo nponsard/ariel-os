@@ -807,6 +807,9 @@ modules:
     # will have their own entry point when they exist.
     depends:
       - coap
+      # This does *not* depend on (or select) coap-server-config yet, because
+      # doing so would cause a config to be auto-selected, and there's none
+      # that can currently be recommended without explicit configuration.
     env:
       global:
         FEATURES:
@@ -819,6 +822,7 @@ modules:
       accept opportunistic EDHOC.
     depends:
       - coap
+    provides_unique: [coap-server-config]
     env:
       global:
         FEATURES:
@@ -830,6 +834,7 @@ modules:
       This configuration may change over time, in lockstep with the examples' setup.
     depends:
       - coap
+    provides_unique: [coap-server-config]
     env:
       global:
         FEATURES:

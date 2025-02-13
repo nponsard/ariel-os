@@ -24,7 +24,7 @@ This application is a work in progress demo of running CoAP with OSCORE/EDHOC se
 ### Variation
 
 * CoAP in NoSec mode: Building a smaller binary at the cost of confidentiality and integrity protection.
-    * In `laze.yml`, replace `coap-server-config-demokeys` with `coap-server-config-unprotected`.
+    * Add `-s coap-server-config-unprotected` to the laze invocation; this replaces the demokeys setup.
     * All resources are now only accessible without `--credentials`. (The "fauxhoc" script does not work in that mode).
 
 ## Roadmap
