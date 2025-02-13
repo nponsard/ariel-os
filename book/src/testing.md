@@ -33,7 +33,7 @@ Steps for enabling tests:
 
 ```yaml
 [dev-dependencies]
-embedded-test = { version = "0.5.0", features = ["ariel-os"] }
+embedded-test = { version = "0.6.0", features = ["ariel-os"] }
 ```
 
 2. Disable the default test harness:
