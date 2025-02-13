@@ -171,6 +171,8 @@ fn from_error(err: esp_hal::i2c::master::Error) -> ariel_os_embassy_common::i2c:
 }
 
 // Define a driver per peripheral
+#[cfg(context = "esp32")]
+define_i2c_drivers!(I2C0, I2C1);
 #[cfg(context = "esp32c3")]
 define_i2c_drivers!(I2C0);
 #[cfg(context = "esp32c6")]
