@@ -3390,9 +3390,9 @@ checksum = "8355be11b20d696c8f18f6cc018c4e372165b1fa8126cef092399c9951984ffa"
 
 [[package]]
 name = "liboscore"
-version = "0.2.2"
+version = "0.2.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "63dc508dbff1679752f2920bc4b083b340f3a0b4007b7d7a992636cfd0803b9d"
+checksum = "af6e1648c4033839670d2e5d053540cc441cee37e83ccdd512815c77c1d08f5a"
 dependencies = [
  "bindgen",
  "cbindgen",
@@ -3407,9 +3407,9 @@ dependencies = [
 
 [[package]]
 name = "liboscore-cryptobackend"
-version = "0.2.2"
+version = "0.2.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5af92747829a4c493c1b8e6e657f411cf293225e793ffdfa4646bbbe0ae0cac9"
+checksum = "b43bf8217ae374d7fb5d47ca584bde97167cca1d975085a453a370184741556a"
 dependencies = [
  "aead",
  "aes",
@@ -3426,9 +3426,9 @@ dependencies = [
 
 [[package]]
 name = "liboscore-msgbackend"
-version = "0.2.2"
+version = "0.2.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "cca9f002a403f35e914deab972dbfb381b28b7fd9c43c312fbd3ba59c5b60cb2"
+checksum = "584661daca0fb237c9018ffd4644ad5aff95473c51ce38b1eee614655fc01e3f"
 dependencies = [
  "coap-message",
  "coap-message-implementations",
