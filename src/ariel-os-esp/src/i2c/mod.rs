@@ -7,7 +7,10 @@ pub mod controller;
 pub fn init(peripherals: &mut crate::OptionalPeripherals) {
     // Take all I2C peripherals and do nothing with them.
     cfg_if::cfg_if! {
-        if #[cfg(context = "esp32c3")] {
+        if #[cfg(context = "esp32")] {
+            let _ = peripherals.I2C0.take().unwrap();
+            let _ = peripherals.I2C1.take().unwrap();
+        } else if #[cfg(context = "esp32c3")] {
             let _ = peripherals.I2C0.take().unwrap();
         } else if #[cfg(context = "esp32c6")] {
             let _ = peripherals.I2C0.take().unwrap();

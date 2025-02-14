@@ -25,7 +25,11 @@ fn from_bit_order(bit_order: BitOrder) -> esp_hal::spi::BitOrder {
 pub fn init(peripherals: &mut crate::OptionalPeripherals) {
     // Take all SPI peripherals and do nothing with them.
     cfg_if::cfg_if! {
-        if #[cfg(context = "esp32c3")] {
+        if #[cfg(context = "esp32")] {
+            let _ = peripherals.SPI1.take().unwrap();
+            let _ = peripherals.SPI2.take().unwrap();
+            let _ = peripherals.SPI3.take().unwrap();
+        } else if #[cfg(context = "esp32c3")] {
             let _ = peripherals.SPI2.take().unwrap();
         } else if #[cfg(context = "esp32c6")] {
             let _ = peripherals.SPI2.take().unwrap();
