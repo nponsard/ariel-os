@@ -580,8 +580,7 @@ impl ConfigBuilder {
 /// An implementation of [`GeneralClaims`] for [`ConfigBuilder`].
 ///
 /// It stores a [`UnionScope`][crate::scope::UnionScope] (effectively a
-/// [`AifValue`][crate::scope::AifValue]), a [`TimeConstraint`][crate::time::TimeConstraint], and a
-/// flag for importance.
+/// [`AifValue`][crate::scope::AifValue]), a [`TimeConstraint`], and a flag for importance.
 #[derive(Debug)]
 pub struct ConfigBuilderClaims {
     pub scope: crate::scope::UnionScope,
