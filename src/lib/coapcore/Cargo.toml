@@ -27,7 +27,6 @@ coap-message-utils = "0.3.3"
 coap-numbers = "0.2.3"
 lakers-crypto-rustcrypto = "0.7.2"
 liboscore = "0.2.2"
-liboscore-msgbackend = "0.2.2"
 
 # actually we depend on <https://github.com/twittner/minicbor/pull/9> so it
 # should be

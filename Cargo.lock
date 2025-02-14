@@ -1080,7 +1080,6 @@ dependencies = [
  "lakers",
  "lakers-crypto-rustcrypto",
  "liboscore",
- "liboscore-msgbackend",
  "log",
  "minicbor 0.25.1",
  "minicbor-adapters",
