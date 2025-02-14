@@ -1169,7 +1169,7 @@ builders:
       install-toolchain:
         build: false
         cmd:
-          # If this starts doing anything else other than rustup, update the book that currently claims this to be rustup only.
+          # If this starts doing anything else other than rustup and espup, update the book that currently claims this to be rustup only.
           - rustup target add thumbv6m-none-eabi
           - rustup target add thumbv7m-none-eabi
           - rustup target add thumbv7em-none-eabi
@@ -1179,6 +1179,7 @@ builders:
           - rustup target add riscv32imc-unknown-none-elf
           - rustup target add riscv32imac-unknown-none-elf
           - rustup component add rust-src
+          - if command -v espup >/dev/null; then espup update --targets=esp32,esp32s3; fi
 
       install-c2rust:
         build: false
