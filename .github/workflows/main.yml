@@ -223,6 +223,7 @@ jobs:
             RUSTDOCFLAGS='-D warnings' cargo doc \
                 --no-deps \
                 -p ariel-os \
+                -p coapcore \
                 --features "
                     bench,
                     coap,
@@ -246,6 +247,7 @@ jobs:
                     udp,
                     usb,
                     usb-hid,
+                    coapcore/_nightly_docs
                     "
 
       - name: rustdoc for ESP32
