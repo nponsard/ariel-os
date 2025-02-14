@@ -39,12 +39,18 @@ cfg_if::cfg_if! {
     }
 }
 
-const ISR_STACKSIZE: usize =
-    ariel_os_utils::usize_from_env_or!("CONFIG_ISR_STACKSIZE", 8192, "ISR stack size (in bytes)");
+#[cfg(any(context = "cortex-m", context = "riscv"))]
+mod isr_stack {
+    const ISR_STACKSIZE: usize = ariel_os_utils::usize_from_env_or!(
+        "CONFIG_ISR_STACKSIZE",
+        8192,
+        "ISR stack size (in bytes)"
+    );
 
-#[link_section = ".isr_stack"]
-#[used(linker)]
-static ISR_STACK: [u8; ISR_STACKSIZE] = [0u8; ISR_STACKSIZE];
+    #[link_section = ".isr_stack"]
+    #[used(linker)]
+    static ISR_STACK: [u8; ISR_STACKSIZE] = [0u8; ISR_STACKSIZE];
+}
 
 #[cfg(feature = "_panic-handler")]
 #[panic_handler]
