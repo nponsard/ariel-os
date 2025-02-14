@@ -28,8 +28,8 @@ pub use storage::*;
 
 static STORAGE: OnceLock<Mutex<CriticalSectionRawMutex, Storage<Flash>>> = OnceLock::new();
 
-const MARKER_KEY: &str = "0xdeadcafe";
-const MARKER_VALUE: u32 = 0xdead_cafe;
+const MARKER_KEY: &str = "ARIEL_INIT_MARK";
+const MARKER_VALUE: u8 = 0;
 
 /// Gets a [`Range`] from the linker that can be used for a global [`Storage`].
 ///
@@ -90,7 +90,7 @@ pub async fn init(p: &mut OptionalPeripherals) {
     embassy_time::Timer::after_millis(10).await;
 
     // Use a marker to ensure that this storage is initialized.
-    match get::<u32>(MARKER_KEY).await {
+    match get::<u8>(MARKER_KEY).await {
         Ok(Some(val)) if val == MARKER_VALUE => {
             // all good
         }
