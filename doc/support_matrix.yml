@@ -8,6 +8,9 @@ support_keys:
   - name: supported_with_caveats
     icon: ☑️
     description: supported with some caveats
+  - name: needs_testing
+    icon: 🚦
+    description: needs testing
   - name: not_currently_supported
     icon: ❌
     description: available in hardware, but not currently supported by Ariel OS
@@ -119,14 +122,8 @@ chips:
       gpio: supported
       debug_output: supported
       hwrng: supported
-      i2c_controller:
-        status: not_currently_supported
-        comments:
-          - needs testing
-      spi_main:
-        status: not_currently_supported
-        comments:
-          - needs testing
+      i2c_controller: needs_testing
+      spi_main: needs_testing
       logging: supported
       storage: not_currently_supported
       wifi:
@@ -140,8 +137,8 @@ chips:
       gpio: supported
       debug_output: supported
       hwrng: not_available
-      i2c_controller: not_currently_supported
-      spi_main: not_currently_supported
+      i2c_controller: needs_testing
+      spi_main: needs_testing
       logging: supported
       storage:
         status: not_currently_supported
