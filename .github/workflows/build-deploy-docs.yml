@@ -105,7 +105,7 @@ jobs:
                   spi,
                   " \
               -p ariel-os-esp
-          RUSTDOCFLAGS='-D warnings --cfg context="rp2040"' cargo doc \
+          RUSTDOCFLAGS='-D warnings --cfg context="rp" --cfg context="rp2040"' cargo doc \
               --no-deps \
               --features "
                   embassy-rp/rp2040,

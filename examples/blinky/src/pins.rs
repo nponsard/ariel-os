@@ -15,7 +15,10 @@ ariel_os::hal::define_peripherals!(LedPeripherals { led: P0_28 });
 #[cfg(context = "particle-xenon")]
 ariel_os::hal::define_peripherals!(LedPeripherals { led: P1_12 });
 
-#[cfg(context = "rp")]
+#[cfg(any(context = "rpi-pico", context = "rpi-pico2"))]
+ariel_os::hal::define_peripherals!(LedPeripherals { led: PIN_25 });
+
+#[cfg(all(context = "rp", not(any(context = "rpi-pico", context = "rpi-pico2"))))]
 ariel_os::hal::define_peripherals!(LedPeripherals { led: PIN_1 });
 
 #[cfg(context = "esp")]

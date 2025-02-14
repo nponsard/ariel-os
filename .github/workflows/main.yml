@@ -164,7 +164,7 @@ jobs:
             --
             --deny warnings
 
-      - run: echo 'RUSTFLAGS=--cfg context="rp2040"' >> $GITHUB_ENV
+      - run: echo 'RUSTFLAGS=--cfg context="rp" --cfg context="rp2040"' >> $GITHUB_ENV
       - name: clippy for RP
         uses: clechasseur/rs-clippy-check@v3
         with:
@@ -264,7 +264,8 @@ jobs:
 
       - name: rustdoc for RP
         run: |
-            RUSTDOCFLAGS='-D warnings --cfg context="rp2040"' cargo doc \
+            RUSTDOCFLAGS='-D warnings --cfg context="rp" --cfg context="rp2040"' \
+                cargo doc \
                 --no-deps \
                 --features "
                     embassy-rp/rp2040,

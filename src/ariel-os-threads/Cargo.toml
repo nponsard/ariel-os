@@ -45,7 +45,7 @@ cortex-m-rt.workspace = true
 cortex-m-semihosting.workspace = true
 panic-semihosting = { version = "0.6.0", features = ["exit"] }
 
-[target.'cfg(context = "rp2040")'.dependencies]
+[target.'cfg(context = "rp")'.dependencies]
 static_cell = { workspace = true, optional = true }
 rp-pac = { workspace = true, optional = true }
 embassy-rp = { workspace = true, optional = true }

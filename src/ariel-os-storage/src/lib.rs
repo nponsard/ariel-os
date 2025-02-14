@@ -40,7 +40,7 @@ const MARKER_VALUE: u32 = 0xdead_cafe;
 fn flash_range_from_linker() -> Range<u32> {
     #[cfg(context = "nrf")]
     const OFFSET: usize = 0x0;
-    #[cfg(context = "rp2040")]
+    #[cfg(context = "rp")]
     const OFFSET: usize = 0x1000_0000;
     #[cfg(context = "stm32")]
     const OFFSET: usize = 0x0800_0000;
