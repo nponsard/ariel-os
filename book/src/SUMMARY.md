@@ -11,6 +11,7 @@
 - [Async Executors](./async_support.md)
 - [Debug Console](./debug_console.md)
 - [Networking](./networking.md)
+- [Randomness and Entropy](./randomness.md)
 - [Multithreading](./multithreading.md)
 - [Testing](./testing.md)
 - [Tooling](./tooling/index.md)
