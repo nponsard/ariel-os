@@ -321,6 +321,7 @@ contexts:
     parent: esp
     selects:
       - xtensa
+    provides_unique: [c-function-abort]
     env:
       CARGO_TOOLCHAIN: +esp
       RUSTFLAGS:
@@ -864,6 +865,10 @@ modules:
       # buildable without a C compiler, but right now it's easier to just make
       # the C compiler a prerequisite.
       - c-compiler
+      # These are usually provided by liboscore's features, which are selected through this
+      # unless provided by the context.
+      - c-function-assert
+      - c-function-abort
     env:
       global:
         FEATURES:
@@ -917,6 +922,22 @@ modules:
     help: Support for CoAP client functionality.
     depends:
       - coap
+
+  - name: liboscore-provide-abort
+    help: Make liboscore provide an implementation of the `abort` C function that it needs.
+    env:
+      global:
+        FEATURES:
+          - ariel-os/liboscore-provide-abort
+    provides_unique: [c-function-abort]
+
+  - name: liboscore-provide-assert
+    help: Make liboscore provide an implementation of the `assert` C function that it needs.
+    env:
+      global:
+        FEATURES:
+          - ariel-os/liboscore-provide-assert
+    provides_unique: [c-function-assert]
 
   - name: random
     help: A system-wide RNG is available (through the ariel_os::random module).
