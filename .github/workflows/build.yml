@@ -71,10 +71,13 @@ jobs:
 
       - name: Install Rust for Xtensa
         if: steps.result-cache.outputs.cache-hit != 'true'
-        uses: esp-rs/xtensa-toolchain@v1.5
+        # No tag yet after https://github.com/esp-rs/xtensa-toolchain/pull/38 (will probably be @v1.5.5)
+        uses: esp-rs/xtensa-toolchain@main
         with:
           version: "1.84.0.0"
           buildtargets: esp32s3
+          override: false
+          export: false
 
       - name: Keep general build environment clean of Xtensa peculiarities
         if: steps.result-cache.outputs.cache-hit != 'true'
