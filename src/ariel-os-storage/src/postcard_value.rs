@@ -1,4 +1,4 @@
-//! A [`Storage`] value serialized using Postcard.
+//! A [`Storage`][crate::storage::Storage] value serialized using Postcard.
 use core::ops::Deref;
 
 use postcard::{from_bytes, to_slice};

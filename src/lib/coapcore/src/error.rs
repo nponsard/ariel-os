@@ -15,14 +15,15 @@ pub struct CredentialError {
 pub(crate) enum CredentialErrorDetail {
     /// Input data contains items that violate a protocol.
     ///
-    /// This is somewhat fuzzy towards [`UnsupportedExtension`] if extension points are not clearly
-    /// documented or understood in a protocol.
+    /// This is somewhat fuzzy towards
+    /// [`UnsupportedExtension`][CredentialErrorDetail::UnsupportedExtension] if extension points
+    /// are not clearly documented or understood in a protocol.
     ProtocolViolation,
     /// Input data contains items that are understood in principle, but not supported by the
     /// implementation.
     ///
-    /// In the fuzziness towards [`ProtocolViolation`], it is preferred to err on the side of
-    /// `UnsupportedExtension`.
+    /// In the fuzziness towards [`ProtocolViolation`][CredentialErrorDetail::ProtocolViolation],
+    /// it is preferred to err on the side of `UnsupportedExtension`.
     UnsupportedExtension,
     /// Input data uses a COSE algorithm that is not supported by the implementation.
     UnsupportedAlgorithm,
