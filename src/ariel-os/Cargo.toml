@@ -132,8 +132,8 @@ defmt = [
 log = ["ariel-os-debug/log", "ariel-os-embassy/log"]
 ## Enables benchmarking facilities.
 bench = ["dep:ariel-os-bench"]
-## Prints nothing in case of panics (may help reduce binary size).
-silent-panic = ["ariel-os-rt/silent-panic"]
+# Prints panic messages on the debug console.
+panic-printing = ["ariel-os-rt/panic-printing"]
 ## Allows to have no boards selected, useful to run target-independent tooling.
 no-boards = ["ariel-os-boards/no-boards", "executor-none"]
 

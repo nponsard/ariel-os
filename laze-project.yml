@@ -507,6 +507,7 @@ modules:
     context: ariel-os
     selects:
       - ?debug-logging-facade-default
+      - ?panic-printing
     env:
       global:
         FEATURES:
@@ -548,12 +549,12 @@ modules:
         CARGO_ENV:
           - DEBUG_LOG_LEVEL=${LOG}
 
-  - name: silent-panic
+  - name: panic-printing
     context: ariel-os
     env:
       global:
         FEATURES:
-          - ariel-os/silent-panic
+          - ariel-os/panic-printing
 
   - name: lto
     context: ariel-os

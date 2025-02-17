@@ -42,7 +42,7 @@ threading = ["dep:ariel-os-threads"]
 
 debug-console = ["ariel-os-debug/debug-console"]
 executor-single-thread = []
-silent-panic = []
+panic-printing = []
 _panic-handler = []
 single-core = ["cortex-m/critical-section-single-core"]
 multi-core = ["embassy-rp/critical-section-impl"]
