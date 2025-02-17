@@ -17,7 +17,12 @@ use esp_hal::{
 
 // TODO: we could consider making this `pub`
 // NOTE(hal): values from the datasheets.
-#[cfg(any(context = "esp32c3", context = "esp32c6", context = "esp32s3"))]
+#[cfg(any(
+    context = "esp32",
+    context = "esp32c3",
+    context = "esp32c6",
+    context = "esp32s3"
+))]
 const MAX_FREQUENCY: Kilohertz = Kilohertz::MHz(80);
 
 /// SPI bus configuration.
