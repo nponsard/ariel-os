@@ -26,6 +26,9 @@ It explains how to compile and run the `hello-word` example to verify your setup
    cargo install espflash
    ```
 
+   There is no need to actively source the `~/export-esp.sh` file which `espup` produces:
+   Ariel OS's build system will consult that file when building for ESP.
+
 1. Install the build system [laze](https://github.com/kaspar030/laze):
 
     ```sh
