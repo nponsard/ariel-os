@@ -1,4 +1,4 @@
-laze_required_version: 0.1.28
+laze_required_version: 0.1.31
 
 contexts:
   # base context that all other contexts inherit from
