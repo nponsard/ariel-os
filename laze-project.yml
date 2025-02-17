@@ -285,6 +285,7 @@ contexts:
     parent: esp
     selects:
       - riscv
+    provides_unique: [c-function-abort]
     env:
       RUSTFLAGS:
         - --cfg context=\"esp32c3\"
@@ -303,6 +304,7 @@ contexts:
     parent: esp
     selects:
       - riscv
+    provides_unique: [c-function-abort]
     env:
       RUSTFLAGS:
         - --cfg context=\"esp32c6\"
