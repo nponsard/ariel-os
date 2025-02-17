@@ -137,10 +137,9 @@ macro_rules! define_spi_drivers {
 }
 
 // Define a driver per peripheral
-// SPI0 exists but is not a general-purpose SPI peripheral.
-#[cfg(context = "esp32")]
-define_spi_drivers!(SPI1, SPI2, SPI3);
 // SPI0 and SPI1 exist but are not general-purpose SPI peripherals.
+#[cfg(context = "esp32")]
+define_spi_drivers!(SPI2, SPI3);
 #[cfg(context = "esp32c3")]
 define_spi_drivers!(SPI2);
 #[cfg(context = "esp32c6")]
