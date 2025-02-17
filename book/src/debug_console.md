@@ -5,6 +5,9 @@
 The debug console is enabled by default and the corresponding [laze module][laze-modules-book] is `debug-console`.
 The [`ariel_os::debug::print!()`][print-macro-rustdoc]/[`ariel_os::debug::println!()`][println-macro-rustdoc] macros are used to print on the debug console.
 
+When the debug console is enabled, panic messages are automatically printed to it.
+If this is unwanted, the `panic-printing` [laze module][laze-modules-book] can be disabled.
+
 ## Debug Logging
 
 Ariel OS supports debug logging on all platforms and it is enabled by default with the `debug-logging-facade` [laze module][laze-modules-book].

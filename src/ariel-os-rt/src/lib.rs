@@ -55,11 +55,11 @@ mod isr_stack {
 #[cfg(feature = "_panic-handler")]
 #[panic_handler]
 fn panic(_info: &core::panic::PanicInfo) -> ! {
-    #[cfg(not(feature = "silent-panic"))]
-    {
-        ariel_os_debug::println!("panic: {}\n", _info);
-        ariel_os_debug::exit(ariel_os_debug::ExitCode::FAILURE);
-    }
+    #[cfg(feature = "panic-printing")]
+    ariel_os_debug::println!("panic: {}\n", _info);
+
+    ariel_os_debug::exit(ariel_os_debug::ExitCode::FAILURE);
+
     #[allow(clippy::empty_loop)]
     loop {}
 }

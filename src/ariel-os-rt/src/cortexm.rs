@@ -178,11 +178,11 @@ unsafe fn HardFault(ef: &ExceptionFrame) -> ! {
 /// - must not be called manually
 #[exception]
 unsafe fn DefaultHandler(_irqn: i16) {
-    #[cfg(not(feature = "silent-panic"))]
-    {
-        ariel_os_debug::log::debug!("IRQn = {}", _irqn);
-        ariel_os_debug::exit(ariel_os_debug::ExitCode::FAILURE);
-    }
+    #[cfg(feature = "panic-printing")]
+    ariel_os_debug::log::debug!("IRQn = {}", _irqn);
+
+    ariel_os_debug::exit(ariel_os_debug::ExitCode::FAILURE);
+
     #[allow(clippy::empty_loop)]
     loop {}
 }
