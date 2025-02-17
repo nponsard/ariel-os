@@ -6,6 +6,9 @@
 #![feature(type_alias_impl_trait)]
 #![deny(missing_docs)]
 
+#[cfg(all(feature = "threading", feature = "wifi"))]
+mod preempt;
+
 pub mod gpio;
 
 #[cfg(feature = "hwrng")]

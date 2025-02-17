@@ -101,7 +101,7 @@ wifi = []
 wifi-cyw43 = ["ariel-os-hal/wifi-cyw43", "net", "wifi"]
 wifi-esp = ["ariel-os-hal/wifi-esp", "net", "wifi"]
 
-threading = ["dep:ariel-os-threads"]
+threading = ["dep:ariel-os-threads", "ariel-os-hal/threading"]
 network-config-static = ["network-config-override"]
 network-config-override = []
 override-usb-config = []
@@ -111,7 +111,7 @@ executor-single-thread = [
   "ariel-os-rt/executor-single-thread",
 ]
 executor-interrupt = ["ariel-os-hal/executor-interrupt"]
-executor-thread = ["threading"]
+executor-thread = ["threading", "ariel-os-embassy-common/executor-thread"]
 executor-none = []
 
 defmt = [

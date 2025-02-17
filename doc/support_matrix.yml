@@ -138,10 +138,7 @@ chips:
       spi_main: needs_testing
       logging: supported
       storage: not_currently_supported
-      wifi:
-        status: supported_with_caveats
-        comments:
-          - not currently compatible with threading
+      wifi: supported
 
   stm32f401retx:
     name: STM32F401RETX
