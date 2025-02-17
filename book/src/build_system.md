@@ -41,11 +41,7 @@ laze allows enabling/disabling individual features using [*modules*](#laze-modul
 or disabled on the command line using `--select <module>` or `--disable <module>`.
 To specify laze modules for an out-of-tree application, see [below](#enabling-laze-modules-for-an-application).
 
-Modules available in Ariel OS include:
-
-- `silent-panic`: Disables printing panics. May help reduce binary size.
-
-> Other modules are documented in their respective pages.
+> Modules are documented in their respective pages.
 
 [laze]: https://kaspar030.github.io/laze/dev/
 
