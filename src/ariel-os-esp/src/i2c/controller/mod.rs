@@ -100,6 +100,9 @@ macro_rules! define_i2c_drivers {
                     twim_config.frequency = config.frequency.into();
                     #[cfg(any(context = "esp32c3", context = "esp32c6", context = "esp32s3"))]
                     let disabled_timeout = BusTimeout::Disabled;
+                    #[cfg(context = "esp32")]
+                    // Use the maximum value as timeout cannot be disabled.
+                    let disabled_timeout = BusTimeout::Maximum;
                     // Disable timeout as we implement it at a higher level.
                     twim_config.timeout = disabled_timeout;
 
