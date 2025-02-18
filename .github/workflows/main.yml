@@ -315,13 +315,6 @@ jobs:
       - name: Check toml formatting
         run: taplo fmt --check
 
-      # TODO: cargo-sort is disabled for now, as it won't stop formatting / failing perfectly sorted Cargo.toml files.
-      # - name: Install cargo-sort
-      #   run: cargo install --git=https://github.com/DevinR528/cargo-sort --rev 55ec89082466f6bb246d870a8d56d166a8e1f08b cargo-sort
-
-      # - name: Check item order of Cargo.toml files
-      #   run: cargo sort --check --grouped --workspace --no-format
-
       - name: Ruff
         uses: chartboost/ruff-action@v1
         with:
