@@ -527,28 +527,33 @@ pub unsafe fn start_threading() {
     Cpu::start_threading();
 }
 
-/// Trait for types that fit into a single register.
-pub trait Arguable {
-    #[doc(hidden)]
+/// Trait for types that can be used as argument for threads.
+///
+/// # Safety
+///
+/// This trait must only be implemented on types whose binary representation fits into a single
+/// general-purpose register on *all supported architectures*.
+pub unsafe trait Arguable {
+    /// Returns the ABI representation.
     fn into_arg(self) -> usize;
 }
 
-impl Arguable for usize {
+// SAFETY: this is the identity.
+unsafe impl Arguable for usize {
     fn into_arg(self) -> usize {
         self
     }
 }
 
-impl Arguable for () {
+// SAFETY:
+// This is only implemented on *static* references because the references passed to a thread must
+// be valid for its entire lifetime.
+unsafe impl<T: Sync + Sized> Arguable for &'static T {
     fn into_arg(self) -> usize {
-        0
-    }
-}
-
-/// [`Arguable`] is only implemented on *static* references because the references passed to a
-/// thread must be valid for its entire lifetime.
-impl<T> Arguable for &'static T {
-    fn into_arg(self) -> usize {
+        // Ensure that a pointer does fit into a single machine word.
+        const {
+            assert!(size_of::<*const T>() == size_of::<u32>());
+        }
         self as *const T as usize
     }
 }
