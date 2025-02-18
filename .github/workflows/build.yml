@@ -85,10 +85,11 @@ jobs:
         with:
           key: "${{ matrix.partition }}"
 
-      - uses: taiki-e/install-action@v2
+      - name: Install laze
+        uses: taiki-e/install-action@v2
         if: steps.result-cache.outputs.cache-hit != 'true'
         with:
-          tool: cargo-binstall
+          tool: laze
 
       - name: "installing prerequisites"
         if: steps.result-cache.outputs.cache-hit != 'true'
@@ -96,8 +97,6 @@ jobs:
           git config --global init.defaultBranch main
           git config --global user.email "ci@riot-labs.de"
           git config --global user.name "CI"
-          cargo binstall --no-confirm --no-symlinks --force --no-discover-github-token laze
-          echo "$HOME/.cargo/bin" >> $GITHUB_PATH
           sudo apt-get install ninja-build gcc-arm-none-eabi gcc-riscv64-unknown-elf
 
       - name: "Show installed versions"

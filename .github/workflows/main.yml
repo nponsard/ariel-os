@@ -29,15 +29,13 @@ jobs:
         with:
           toolchain: ${{ steps.get_toolchain.outputs.toolchain }}
 
-      - uses: taiki-e/install-action@v2
+      - name: Install laze
+        uses: taiki-e/install-action@v2
         with:
-          tool: cargo-binstall
+          tool: laze
 
       - name: Install prerequisites
-        run: |
-          cargo binstall --no-confirm --no-symlinks --force --no-discover-github-token laze
-          echo "$HOME/.cargo/bin" >> $GITHUB_PATH
-          sudo apt-get install ninja-build gcc-arm-none-eabi
+        run: sudo apt-get install ninja-build gcc-arm-none-eabi
 
       - name: Run host-side crate tests
         run: laze build --builders host --multiple-tasks --global --keep-going=0 test
