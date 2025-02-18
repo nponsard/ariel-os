@@ -8,6 +8,7 @@ contexts:
       CARGO:
         - ${CARGO_WRAPPER}
         - cargo
+      CARGO_PRESHELL: true &&
 
     tasks:
       info-modules:
@@ -495,7 +496,7 @@ modules:
           # Note that one \ escapes for YAML, the reaming \ escapes for laze,
           # and the second $ escapes for laze's internal ninja, resulting in
           # the shell to see just ${ESPUP_...
-          - '. $\\${ESPUP_EXPORT_FILE:-~/export-esp.sh} &&'
+          - . $\\${ESPUP_EXPORT_FILE:-~/export-esp.sh} &&
 
   - name: riscv
     env:
