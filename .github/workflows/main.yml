@@ -215,6 +215,15 @@ jobs:
             --
             --deny warnings
 
+      - name: clippy
+        uses: clechasseur/rs-clippy-check@v3
+        with:
+          args: |
+            --locked
+            -p coapcore
+            --
+            --deny warnings
+
       # Reset `RUSTFLAGS`
       - run: echo 'RUSTFLAGS=' >> $GITHUB_ENV
 
