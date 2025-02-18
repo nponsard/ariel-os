@@ -348,6 +348,19 @@ contexts:
     env:
       OPENOCD_ARGS: foo
 
+  - name: stm32c031c6tx
+    parent: stm32
+    selects:
+      - cortex-m0-plus
+    provides:
+      - has_swi
+    env:
+      PROBE_RS_CHIP: STM32C031C6Tx
+      PROBE_RS_PROTOCOL: swd
+      CARGO_ENV:
+        # This ISR is unused on a naked board. Configured here for testing.
+        - CONFIG_SWI=USART2
+
   - name: stm32f401retx
     parent: stm32
     selects:
@@ -1326,6 +1339,9 @@ builders:
 
   - name: nrf5340dk
     parent: nrf5340
+
+  - name: st-nucleo-c031c6
+    parent: stm32c031c6tx
 
   - name: st-nucleo-f401re
     parent: stm32f401retx
