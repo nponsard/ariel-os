@@ -1,4 +1,4 @@
-laze_required_version: 0.1.28
+laze_required_version: 0.1.31
 
 contexts:
   # base context that all other contexts inherit from
@@ -78,7 +78,7 @@ contexts:
         always: true
         cmd: >-
           test "${SKIP_CARGO_BUILD}" = "1" && exit 0;
-          cd ${relpath} && ${CARGO_ENV} ${CARGO} ${CARGO_TOOLCHAIN} ${CARGO_ARGS} build --${PROFILE} ${FEATURES}
+          cd ${relpath} && ${CARGO_PRESHELL} ${CARGO_ENV} ${CARGO} ${CARGO_TOOLCHAIN} ${CARGO_ARGS} build --${PROFILE} ${FEATURES}
           && cp ${relroot}/${build-dir}/bin/${builder}/cargo/${RUSTC_TARGET}/${PROFILE}/${riot_binary} ${relroot}/${out}
           ${POST_LINK}
 
@@ -89,26 +89,26 @@ contexts:
       exec:
         build: false
         cmd:
-          - ${CARGO_ENV}
+          - ${CARGO_PRESHELL} ${CARGO_ENV}
 
       cargo:
         cmd:
-          - cd ${relpath} && ${CARGO_ENV} ${CARGO} ${CARGO_TOOLCHAIN} ${CARGO_ARGS}
+          - cd ${relpath} && ${CARGO_PRESHELL} ${CARGO_ENV} ${CARGO} ${CARGO_TOOLCHAIN} ${CARGO_ARGS}
         build: false
 
       run:
         build: false
         cmd:
-          - cd ${appdir} && ${CARGO_ENV} ${CARGO} ${CARGO_TOOLCHAIN} ${CARGO_ARGS} run --${PROFILE} ${FEATURES}
+          - cd ${appdir} && ${CARGO_PRESHELL} ${CARGO_ENV} ${CARGO} ${CARGO_TOOLCHAIN} ${CARGO_ARGS} run --${PROFILE} ${FEATURES}
 
       clippy:
         build: false
         cmd:
-          - cd ${appdir} && ${CARGO_ENV} ${CARGO} ${CARGO_TOOLCHAIN} ${CARGO_ARGS} clippy ${FEATURES}
+          - cd ${appdir} && ${CARGO_PRESHELL} ${CARGO_ENV} ${CARGO} ${CARGO_TOOLCHAIN} ${CARGO_ARGS} clippy ${FEATURES}
 
       debug:
         cmd:
-          - cd ${appdir} && ${CARGO_ENV} ${CARGO} ${CARGO_TOOLCHAIN} ${CARGO_ARGS} run --${PROFILE} ${FEATURES}
+          - cd ${appdir} && ${CARGO_PRESHELL} ${CARGO_ENV} ${CARGO} ${CARGO_TOOLCHAIN} ${CARGO_ARGS} run --${PROFILE} ${FEATURES}
         build: false
         ignore_ctrl_c: true
 
@@ -120,12 +120,12 @@ contexts:
 
       bloat:
         cmd:
-          - cd ${appdir} && ${CARGO_ENV} ${CARGO} ${CARGO_TOOLCHAIN} ${CARGO_ARGS} bloat --${PROFILE} ${FEATURES}
+          - cd ${appdir} && ${CARGO_PRESHELL} ${CARGO_ENV} ${CARGO} ${CARGO_TOOLCHAIN} ${CARGO_ARGS} bloat --${PROFILE} ${FEATURES}
         build: false
 
       tree:
         cmd:
-          - cd ${appdir} && ${CARGO_ENV} ${CARGO} ${CARGO_TOOLCHAIN} ${CARGO_ARGS} tree ${FEATURES}
+          - cd ${appdir} && ${CARGO_PRESHELL} ${CARGO_ENV} ${CARGO} ${CARGO_TOOLCHAIN} ${CARGO_ARGS} tree ${FEATURES}
         build: false
 
       size:
@@ -273,6 +273,7 @@ contexts:
         - --cfg context=\"esp32\"
       RUSTC_TARGET: xtensa-esp32-none-elf
       CARGO_TARGET_PREFIX: CARGO_TARGET_XTENSA_ESP32_NONE_ELF
+      CC: xtensa-esp32-elf-gcc
 
   - name: esp-wroom-32
     parent: esp32
@@ -284,6 +285,7 @@ contexts:
     parent: esp
     selects:
       - riscv
+    provides_unique: [c-function-abort]
     env:
       RUSTFLAGS:
         - --cfg context=\"esp32c3\"
@@ -302,6 +304,7 @@ contexts:
     parent: esp
     selects:
       - riscv
+    provides_unique: [c-function-abort]
     env:
       RUSTFLAGS:
         - --cfg context=\"esp32c6\"
@@ -320,6 +323,7 @@ contexts:
     parent: esp
     selects:
       - xtensa
+    provides_unique: [c-function-abort]
     env:
       CARGO_TOOLCHAIN: +esp
       RUSTFLAGS:
@@ -328,6 +332,7 @@ contexts:
       PROBE_RS_CHIP: esp32s3
       PROBE_RS_PROTOCOL: jtag
       CARGO_TARGET_PREFIX: CARGO_TARGET_XTENSA_ESP32S3_NONE_ELF
+      CC: xtensa-esp32s3-elf-gcc
 
   - name: esp32-s3-wroom-1
     parent: esp32s3
@@ -480,6 +485,17 @@ modules:
       global:
         RUSTFLAGS:
           - --cfg context=\"xtensa\"
+        CFLAGS:
+          - -mlongcalls
+        CARGO_PRESHELL:
+          # ~/export-esp.sh is the common location, but espup install can
+          # override it with its --export-file argument, which is done in CI;
+          # the environment variable is used by espup and exported by its action.
+          #
+          # Note that one \ escapes for YAML, the reaming \ escapes for laze,
+          # and the second $ escapes for laze's internal ninja, resulting in
+          # the shell to see just ${ESPUP_...
+          - '. $\\${ESPUP_EXPORT_FILE:-~/export-esp.sh} &&'
 
   - name: riscv
     env:
@@ -502,6 +518,19 @@ modules:
       global:
         FEATURES:
           - ariel-os/alloc
+
+  - name: c-compiler
+    help: Configures a C compiler (which is used by build crates such as `cc`).
+    # This may later also check for whether a C compiler is present on the
+    # selected platform in the first place.
+    env:
+      global:
+        # It's fine if either is not set -- that is how the ARM platforms work,
+        # the `cc` crate figures out a good compiler. On ESP, things are not so
+        # solid, and the context contributes variables.
+        CARGO_ENV:
+          - CC="${CC}"
+          - CFLAGS="${CFLAGS}"
 
   - name: debug-console
     context: ariel-os
@@ -834,6 +863,14 @@ modules:
     depends:
       - random
       - network
+      # A NoSec version (coap-server-config-unprotected) could be made to be
+      # buildable without a C compiler, but right now it's easier to just make
+      # the C compiler a prerequisite.
+      - c-compiler
+      # These are usually provided by liboscore's features, which are selected through this
+      # unless provided by the context.
+      - c-function-assert
+      - c-function-abort
     env:
       global:
         FEATURES:
@@ -887,6 +924,22 @@ modules:
     help: Support for CoAP client functionality.
     depends:
       - coap
+
+  - name: liboscore-provide-abort
+    help: Make liboscore provide an implementation of the `abort` C function that it needs.
+    env:
+      global:
+        FEATURES:
+          - ariel-os/liboscore-provide-abort
+    provides_unique: [c-function-abort]
+
+  - name: liboscore-provide-assert
+    help: Make liboscore provide an implementation of the `assert` C function that it needs.
+    env:
+      global:
+        FEATURES:
+          - ariel-os/liboscore-provide-assert
+    provides_unique: [c-function-assert]
 
   - name: random
     help: A system-wide RNG is available (through the ariel_os::random module).

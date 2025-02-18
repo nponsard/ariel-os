@@ -11,7 +11,7 @@ It explains how to compile and run the `hello-word` example to verify your setup
    On Ubuntu, the following is sufficient:
 
     ```sh
-    apt install git rustup ninja-build pkg-config libudev-dev clang gcc-arm-none-eabi
+    apt install git rustup ninja-build pkg-config libudev-dev clang gcc-arm-none-eabi gcc-riscv64-unknown-elf
     ```
 
 1. Install the Rust installer [rustup](https://rustup.rs/) using the website's instructions or through your distribution package manager.
