@@ -308,7 +308,9 @@ jobs:
           yamllint_strict: true # Set error code on warnings
 
       - name: Install taplo
-        run: cargo binstall --no-confirm --no-symlinks --no-discover-github-token --force taplo-cli
+        uses: taiki-e/install-action@v2
+        with:
+          tool: taplo-cli
 
       - name: Check toml formatting
         run: taplo fmt --check
