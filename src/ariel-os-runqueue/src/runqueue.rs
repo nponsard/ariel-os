@@ -13,6 +13,7 @@ const USIZE_BITS: usize = mem::size_of::<usize>() * 8;
 pub struct RunqueueId(u8);
 
 impl RunqueueId {
+    #[must_use]
     pub const fn new(value: u8) -> Self {
         Self(value)
     }
@@ -29,6 +30,7 @@ impl From<RunqueueId> for usize {
 pub struct ThreadId(u8);
 
 impl ThreadId {
+    #[must_use]
     pub const fn new(value: u8) -> Self {
         Self(value)
     }
@@ -62,6 +64,7 @@ pub struct RunQueue<const N_QUEUES: usize, const N_THREADS: usize> {
 }
 
 impl<const N_QUEUES: usize, const N_THREADS: usize> RunQueue<{ N_QUEUES }, { N_THREADS }> {
+    #[must_use]
     pub const fn new() -> RunQueue<{ N_QUEUES }, { N_THREADS }> {
         // unfortunately we cannot assert!() on N_QUEUES and N_THREADS,
         // as panics in const fn's are not (yet) implemented.
@@ -112,11 +115,13 @@ impl<const N_QUEUES: usize, const N_THREADS: usize> RunQueue<{ N_QUEUES }, { N_T
     ///
     /// Returns the next runnable thread of
     /// the runqueue with the highest index.
+    #[must_use]
     pub fn get_next(&self) -> Option<ThreadId> {
         self.get_next_with_rq().map(|(tid, _)| tid)
     }
 
     /// Returns the tid that should run next and the runqueue it is in.
+    #[must_use]
     pub fn get_next_with_rq(&self) -> Option<(ThreadId, RunqueueId)> {
         let rq_ffs = ffs(self.bitcache);
         if rq_ffs == 0 {
@@ -177,6 +182,7 @@ impl<const N_QUEUES: usize, const N_THREADS: usize> RunQueue<{ N_QUEUES }, { N_T
     /// Returns an iterator over the [`RunQueue`], starting after thread `start` in runqueue `rq`.
     ///
     /// The `start` is not included in the iterator.
+    #[must_use]
     pub fn iter_from(&self, start: ThreadId, rq: RunqueueId) -> RunQueueIter<N_QUEUES, N_THREADS> {
         RunQueueIter {
             prev: start.0,
