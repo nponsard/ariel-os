@@ -93,11 +93,7 @@ jobs:
 
       - name: "installing prerequisites"
         if: steps.result-cache.outputs.cache-hit != 'true'
-        run: |
-          git config --global init.defaultBranch main
-          git config --global user.email "ci@riot-labs.de"
-          git config --global user.name "CI"
-          sudo apt-get install ninja-build gcc-arm-none-eabi gcc-riscv64-unknown-elf
+        run: sudo apt-get install ninja-build gcc-arm-none-eabi gcc-riscv64-unknown-elf
 
       - name: "Show installed versions"
         run: |
