@@ -5,5 +5,5 @@ license.workspace = true
 edition.workspace = true
 
 [dependencies]
-ariel-os-rt = { workspace = true, features = ["_esp32c3"] }
+ariel-os-rt = { workspace = true }
 ariel-os-debug.workspace = true
