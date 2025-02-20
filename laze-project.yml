@@ -8,7 +8,6 @@ contexts:
       CARGO:
         - ${CARGO_WRAPPER}
         - cargo
-      CARGO_PRESHELL: true &&
 
     tasks:
       info-modules:
@@ -59,6 +58,7 @@ contexts:
         -semihosting-config enable=on,target=native
         -kernel
       PROBE_RS_PROTOCOL: swd
+      CARGO_PRESHELL: []
 
     var_options:
       # this turns ${FEATURES} from a list to "--features=feature1,feature2"
@@ -67,6 +67,11 @@ contexts:
         joiner: ","
       LOG:
         joiner: ","
+      CARGO_PRESHELL:
+        # List of extra commands to be executed by the shell that runs cargo before cargo is run.
+        #
+        # This is typically used to source additional shell scripts that set up extra environment.
+        suffix: " && "
 
       # this prefixes `--protocol=` to `PROBE_RS_PROTOCOL`
       PROBE_RS_PROTOCOL:
@@ -496,7 +501,7 @@ modules:
           # Note that one \ escapes for YAML, the reaming \ escapes for laze,
           # and the second $ escapes for laze's internal ninja, resulting in
           # the shell to see just ${ESPUP_...
-          - . $\\${ESPUP_EXPORT_FILE:-~/export-esp.sh} &&
+          - . $\\${ESPUP_EXPORT_FILE:-~/export-esp.sh}
 
   - name: riscv
     env:
