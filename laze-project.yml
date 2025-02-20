@@ -27,7 +27,6 @@ contexts:
       - ?semihosting
     env:
       RUSTFLAGS:
-        - --cfg builder=\"${builder}\"
         - --cfg context=\"${builder}\"
         - --cfg context=\"ariel-os\"
       FEATURES:
