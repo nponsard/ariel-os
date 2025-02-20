@@ -87,7 +87,7 @@ pub fn init() -> OptionalPeripherals {
 
 // TODO: find better place for this
 fn board_config(config: &mut Config) {
-    #[cfg(builder = "st-nucleo-wb55")]
+    #[cfg(context = "st-nucleo-wb55")]
     {
         use embassy_stm32::rcc::*;
 

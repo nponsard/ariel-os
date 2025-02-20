@@ -1,6 +1,6 @@
 use ariel_os::hal::peripherals;
 
-#[cfg(builder = "nrf52840dk")]
+#[cfg(context = "nrf52840dk")]
 ariel_os::hal::define_peripherals!(Buttons {
     btn1: P0_11,
     btn2: P0_12,
@@ -8,7 +8,7 @@ ariel_os::hal::define_peripherals!(Buttons {
     btn4: P0_25,
 });
 
-#[cfg(builder = "nrf5340dk")]
+#[cfg(context = "nrf5340dk")]
 ariel_os::hal::define_peripherals!(Buttons {
     btn1: P0_23,
     btn2: P0_24,

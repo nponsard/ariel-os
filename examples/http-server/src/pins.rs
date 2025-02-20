@@ -1,7 +1,7 @@
 #[cfg(feature = "button-reading")]
 use ariel_os::hal::peripherals;
 
-#[cfg(all(feature = "button-reading", builder = "nrf52840dk"))]
+#[cfg(all(feature = "button-reading", context = "nrf52840dk"))]
 ariel_os::hal::define_peripherals!(Button { btn1: P0_11 });
 
 #[cfg(context = "nrf5340dk")]

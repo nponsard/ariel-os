@@ -1,4 +1,4 @@
-#[cfg_attr(builder = "rpi-pico-w", path = "cyw43/rpi-pico-w.rs")]
+#[cfg_attr(context = "rpi-pico-w", path = "cyw43/rpi-pico-w.rs")]
 mod rpi_pico_w;
 
 use ariel_os_debug::log::info;
