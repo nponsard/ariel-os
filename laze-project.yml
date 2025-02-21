@@ -850,6 +850,7 @@ modules:
       - rp
       - stm32h755zitx
       - stm32wb55rgvx
+      - stm32wba55cgux
     env:
       global:
         FEATURES:
