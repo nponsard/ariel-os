@@ -2,4 +2,3 @@ apps:
   - name: device-metadata
     selects:
       - debug-console
-      - sw/threading

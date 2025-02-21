@@ -1,11 +1,12 @@
 #![no_main]
 #![no_std]
+#![feature(impl_trait_in_assoc_type)]
 #![feature(used_with_arg)]
 
 use ariel_os::debug::{exit, log::*, ExitCode};
 
-#[ariel_os::thread(autostart)]
-fn main() {
+#[ariel_os::task(autostart)]
+async fn main() {
     info!("Available information:");
     info!("Board type: {}", ariel_os::buildinfo::BOARD);
     if let Ok(id) = ariel_os::identity::device_id_bytes() {
