@@ -5,8 +5,6 @@ extint = "extint"     # External interrupt
 synopsys = "synopsys" # Manufacturer name
 COSE = "COSE"         # A technology we use
 
-negativ = "negativ" # Typo in a branch name in ariel-os-cargo.toml
-
 [files]
 extend-exclude = [
   "book/src/*.svg",
