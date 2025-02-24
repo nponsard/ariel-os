@@ -1,4 +1,4 @@
-laze_required_version: 0.1.31
+laze_required_version: 0.1.33
 
 contexts:
   # base context that all other contexts inherit from
@@ -97,23 +97,27 @@ contexts:
           - ${CARGO_PRESHELL} ${CARGO_ENV}
 
       cargo:
+        workdir: ${relpath}
         cmd:
-          - cd ${relpath} && ${CARGO_PRESHELL} ${CARGO_ENV} ${CARGO} ${CARGO_TOOLCHAIN} ${CARGO_ARGS}
+          - ${CARGO_PRESHELL} ${CARGO_ENV} ${CARGO} ${CARGO_TOOLCHAIN} ${CARGO_ARGS}
         build: false
 
       run:
         build: false
+        workdir: ${appdir}
         cmd:
-          - cd ${appdir} && ${CARGO_PRESHELL} ${CARGO_ENV} ${CARGO} ${CARGO_TOOLCHAIN} ${CARGO_ARGS} run --${PROFILE} ${FEATURES}
+          - ${CARGO_PRESHELL} ${CARGO_ENV} ${CARGO} ${CARGO_TOOLCHAIN} ${CARGO_ARGS} run --${PROFILE} ${FEATURES}
 
       clippy:
         build: false
+        workdir: ${appdir}
         cmd:
-          - cd ${appdir} && ${CARGO_PRESHELL} ${CARGO_ENV} ${CARGO} ${CARGO_TOOLCHAIN} ${CARGO_ARGS} clippy ${FEATURES}
+          - ${CARGO_PRESHELL} ${CARGO_ENV} ${CARGO} ${CARGO_TOOLCHAIN} ${CARGO_ARGS} clippy ${FEATURES}
 
       debug:
+        workdir: ${appdir}
         cmd:
-          - cd ${appdir} && ${CARGO_PRESHELL} ${CARGO_ENV} ${CARGO} ${CARGO_TOOLCHAIN} ${CARGO_ARGS} run --${PROFILE} ${FEATURES}
+          - ${CARGO_PRESHELL} ${CARGO_ENV} ${CARGO} ${CARGO_TOOLCHAIN} ${CARGO_ARGS} run --${PROFILE} ${FEATURES}
         build: false
         ignore_ctrl_c: true
 
@@ -124,13 +128,15 @@ contexts:
         ignore_ctrl_c: true
 
       bloat:
+        workdir: ${appdir}
         cmd:
-          - cd ${appdir} && ${CARGO_PRESHELL} ${CARGO_ENV} ${CARGO} ${CARGO_TOOLCHAIN} ${CARGO_ARGS} bloat --${PROFILE} ${FEATURES}
+          - ${CARGO_PRESHELL} ${CARGO_ENV} ${CARGO} ${CARGO_TOOLCHAIN} ${CARGO_ARGS} bloat --${PROFILE} ${FEATURES}
         build: false
 
       tree:
+        workdir: ${appdir}
         cmd:
-          - cd ${appdir} && ${CARGO_PRESHELL} ${CARGO_ENV} ${CARGO} ${CARGO_TOOLCHAIN} ${CARGO_ARGS} tree ${FEATURES}
+          - ${CARGO_PRESHELL} ${CARGO_ENV} ${CARGO} ${CARGO_TOOLCHAIN} ${CARGO_ARGS} tree ${FEATURES}
         build: false
 
       size:
@@ -1107,8 +1113,9 @@ modules:
           - RUSTFLAGS
           - RUSTDOCFLAGS
         build: false
+        workdir: ${appdir}
         cmd:
-          - cd ${appdir} && ${CARGO} test --features _test
+          - ${CARGO} test --features _test
 
   - name: embedded-test
     context: ariel-os
