@@ -318,8 +318,8 @@ version = "0.1.0"
 dependencies = [
  "ariel-os",
  "ariel-os-boards",
- "ariel-os-embassy",
  "ariel-os-embassy-common",
+ "ariel-os-hal",
  "embedded-test",
 ]
 

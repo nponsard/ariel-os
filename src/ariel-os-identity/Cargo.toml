@@ -12,8 +12,8 @@ harness = false
 workspace = true
 
 [dependencies]
-ariel-os-embassy = { workspace = true }
 ariel-os-embassy-common = { workspace = true }
+ariel-os-hal = { workspace = true }
 
 [target.'cfg(context = "ariel-os")'.dev-dependencies]
 ariel-os = { path = "../../src/ariel-os" }
@@ -22,4 +22,4 @@ ariel-os-boards = { path = "../../src/ariel-os-boards" }
 embedded-test = { workspace = true }
 
 [features]
-_test = ["ariel-os-embassy/executor-none"]
+_test = []
