@@ -48,7 +48,6 @@ contexts:
           CARGO_TARGET_DIR=${relroot}/${build-dir}/bin/${builder}/cargo
       BOARD: ${builder}
       PROFILE: release
-      riot_binary: ${app}
       QEMU_SYSTEM_ARM: >-
         qemu-system-arm
         -machine ${QEMU_MACHINE}
@@ -84,7 +83,7 @@ contexts:
         cmd: >-
           test "${SKIP_CARGO_BUILD}" = "1" && exit 0;
           cd ${relpath} && ${CARGO_PRESHELL} ${CARGO_ENV} ${CARGO} ${CARGO_TOOLCHAIN} ${CARGO_ARGS} build --${PROFILE} ${FEATURES}
-          && cp ${relroot}/${build-dir}/bin/${builder}/cargo/${RUSTC_TARGET}/${PROFILE}/${riot_binary} ${relroot}/${out}
+          && cp ${relroot}/${build-dir}/bin/${builder}/cargo/${RUSTC_TARGET}/${PROFILE}/${app} ${relroot}/${out}
           ${POST_LINK}
 
       - name: GIT_DOWNLOAD
