@@ -7,19 +7,19 @@
 /// # Parameters
 ///
 /// - `autostart`: (*optional*) run the task at startup; required to use `peripherals` and/or
-///     hooks.
+///   hooks.
 ///     - `peripherals`: (*optional*) provide the function with a peripheral struct as the first
-///         parameter.
-///         The `peripherals` parameter can only be used on `autostart` tasks.
-///         The peripheral struct must be defined with the `ariel_os::hal::define_peripherals!`
-///         macro.
+///       parameter.
+///       The `peripherals` parameter can only be used on `autostart` tasks.
+///       The peripheral struct must be defined with the `ariel_os::hal::define_peripherals!`
+///       macro.
 ///     - hooks: (*optional*) available hooks are:
 ///         - `usb_builder_hook`: when present, the macro will define a static `USB_BUILDER_HOOK`
 ///           of type `UsbBuilderHook`, allowing to access and modify the system-provided
 ///           `embassy_usb::Builder` through `Delegate::with()`, *before* it is built by the system.
 /// - `pool_size`: (*optional*) set the maximum number of concurrent tasks that can be spawned for
-///     the function (defaults to `1`).
-///     Cannot be used on `autostart` tasks.
+///   the function (defaults to `1`).
+///   Cannot be used on `autostart` tasks.
 ///
 /// # Examples
 ///

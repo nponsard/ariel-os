@@ -13,7 +13,7 @@
 ///
 /// - `autostart`: (*mandatory*) run the task at startup.
 /// - `peripherals`: (*optional*) provide the function with a peripheral struct as the second
-///     parameter.
+///   parameter.
 ///
 /// # Examples
 ///

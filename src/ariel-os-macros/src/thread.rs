@@ -8,7 +8,7 @@
 /// - `stacksize`: (*optional*) the size of the stack allocated to the thread (in bytes).
 /// - `priority`: (*optional*) the thread's priority.
 /// - `no_wait`: (*optional*) don't wait for system initialization to be finished
-///              before starting the thread.
+///   before starting the thread.
 ///
 /// # Examples
 ///
