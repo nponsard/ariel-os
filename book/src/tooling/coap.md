@@ -106,6 +106,10 @@ Examples of described policy entries are:
 In Ariel OS, the policies are selected through [laze modules][laze-modules-book]:
 * `coap-server-config-demokeys` selects a set of hard-coded identities and policies usable for examples.
 * `coap-server-config-unprotected` allows access from any client without any authentication or integrity protection.
+* `coap-server-config-storage` reads configuration of the application, currently in a `peers.yml` file ([example](https://github.com/ariel-os/ariel-os/blob/main/tests/coap/peers.yml)).
+  CoAP clients described in there are assigned permissions as described there; the file format is currently only documented in the example file, and still in flux.
+  The device generates an EDHOC key at first startup, [stores it locally](../storage.md), and reports its public credential at startup.
+
 The list of supported policies is being extended.
 
 
