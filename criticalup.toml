@@ -4,7 +4,7 @@
 manifest-version = 1
 
 [products.ferrocene]
-release = "nightly-2024-12-10"
+release = "nightly-2025-02-25"
 packages = [
   "rust-std-thumbv6m-none-eabi",
   "rust-std-thumbv7em-none-eabi",
