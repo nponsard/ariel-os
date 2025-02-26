@@ -40,7 +40,7 @@ members = [
   "tests/threading-mutex",
 ]
 
-exclude = ["src/lib"]
+exclude = ["src/lib", "doc"]
 
 default-members = ["examples/hello-world"]
 resolver = "2"
