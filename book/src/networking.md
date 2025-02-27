@@ -1,19 +1,22 @@
 # Networking
 
+## Enabling Networking
+
+Networking is enabled by selecting the `network` [laze module][laze-modules-book].
+When enabled, a network link is automatically selected among the ones available on the target board, currently preferring Wi-Fi networking.
+Overriding this default selection is possible by explicitly selecting the desired [network link module](#network-link-selection).
+
 ## Network Link Selection
 
 Ariel OS currently supports two different networking links: Ethernet-over-USB (aka CDC-NCM) and Wi-Fi.
 Boards may support both of them, only one of them, or none of them. However, currently the network stack supports at most one interface.
 
-Which link layer is used for networking must be selected at compile time,
-through [laze modules](./build_system.md#laze-modules):
+Which link layer is used for networking is selected at compile time,
+through [laze modules][laze-modules-book].
 
 - `usb-ethernet`: Selects Ethernet-over-USB.
 - `wifi-cyw43`: Selects Wi-Fi using the CYW43 chip along an RP2040 MCU (e.g., on the Raspberry Pi Pico W).
 - `wifi-esp`: Selects Wi-Fi on an ESP32 MCU.
-
-When available on the device, one of these module is always selected by default, currently preferring Wi-Fi networking.
-Overriding this default selection is possible by explicitly [selecting the desired module][laze-modules-book].
 
 ## Network Credentials
 
