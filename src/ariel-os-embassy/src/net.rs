@@ -28,6 +28,41 @@ pub async fn network_stack() -> Option<NetworkStack> {
     STACK.get().await.get_async().await.copied()
 }
 
+/// Returns a seed suitable for [`embassy_net::new()`], on a best-effort basis.
+///
+/// It does not have to be different across reboots, only to be different between devices from the
+/// same network.
+///
+/// # Current implementation
+///
+/// If support for RNGs is enabled, an RNG is used to obtain a seed.
+/// Otherwise, if the device provides a hardware-backed unique ID, it is used for the seed.
+/// If none of these is available, a hard-coded, constant seed is returned.
+#[allow(dead_code, reason = "conditional compilation")]
+#[must_use]
+pub(crate) fn unique_seed() -> u64 {
+    cfg_if::cfg_if! {
+        if #[cfg(feature = "random")] {
+            // Even when some using entropy to ensure uniqueness of the seed, the RNG does not need
+            // to be cryptographically secure.
+            return rand_core::RngCore::next_u64(&mut ariel_os_random::fast_rng());
+        } else if #[cfg(capability = "hw/device-identity")] {
+            if let Ok(eui48) = ariel_os_identity::interface_eui48(0) {
+                // Construct the seed by zero-extending the obtained EUI-48 identifier.
+                let mut seed = [0; 8];
+                seed[2..].copy_from_slice(&eui48.0);
+                // Use a fixed endianness to avoid unfortunate collisions between LE and BE
+                // devices; use LE because it is the most common on our supported architectures and
+                // avoids the need for reversing instructions on these.
+                return u64::from_le_bytes(seed);
+            }
+        }
+    }
+
+    #[allow(unreachable_code, reason = "conditional compilation")]
+    1234
+}
+
 #[embassy_executor::task]
 pub(crate) async fn net_task(mut runner: Runner<'static, NetworkDevice>) -> ! {
     runner.run().await

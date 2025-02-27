@@ -305,11 +305,7 @@ async fn init_task(mut peripherals: hal::OptionalPeripherals) {
 
         let config = net::config();
 
-        // This seed is mostly used by smoltcp and does not have to be cryptographically secure.
-        #[cfg(feature = "random")]
-        let seed = rand_core::RngCore::next_u64(&mut ariel_os_random::fast_rng());
-        #[cfg(not(feature = "random"))]
-        let seed = 1234u64;
+        let seed = net::unique_seed();
         debug!("Network stack seed: {:#x}", seed);
 
         // Init network stack

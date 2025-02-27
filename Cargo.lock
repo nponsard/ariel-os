@@ -295,6 +295,7 @@ dependencies = [
  "ariel-os-debug",
  "ariel-os-embassy-common",
  "ariel-os-hal",
+ "ariel-os-identity",
  "ariel-os-macros",
  "ariel-os-random",
  "ariel-os-rt",
