@@ -382,7 +382,7 @@ modules:
           - -Z emit-stack-sizes
 
   - name: thumbv6m-none-eabi
-    depends:
+    selects:
       - cortex-m
     env:
       global:
@@ -392,7 +392,7 @@ modules:
           - --cfg armv6m
 
   - name: thumbv7em-none-eabi
-    depends:
+    selects:
       - cortex-m
     env:
       global:
@@ -402,7 +402,7 @@ modules:
           - --cfg armv7m
 
   - name: thumbv7m-none-eabi
-    depends:
+    selects:
       - cortex-m
     env:
       global:
@@ -412,7 +412,7 @@ modules:
           - --cfg armv7m
 
   - name: thumbv8m.main-none-eabi
-    depends:
+    selects:
       - cortex-m
     env:
       global:
@@ -422,7 +422,7 @@ modules:
           - --cfg armv8m
 
   - name: thumbv8m.main-none-eabihf
-    depends:
+    selects:
       - cortex-m
     env:
       global:
@@ -432,7 +432,7 @@ modules:
           - --cfg armv8m
 
   - name: thumbv7em-none-eabihf
-    depends:
+    selects:
       - cortex-m
     env:
       global:
@@ -606,7 +606,7 @@ modules:
     help: Enable cross-language LTO
     # This requires rustc's llvm and clang's llvm version to match.
     context: ariel-os
-    depends:
+    selects:
       - lto
       - linker-clang
     env:
@@ -822,7 +822,7 @@ modules:
       On its own, this does nothing but load code; this should be auto-selected
       by coap-client and/or coap-server as per the needs of other modules and
       the application.
-    depends:
+    selects:
       - random
       - network
       # A NoSec version (coap-server-config-unprotected) could be made to be
@@ -847,7 +847,7 @@ modules:
       loop to run) get stalled.
     # Modules that want to inject a CoAP server will *not* depend on this, and
     # will have their own entry point when they exist.
-    depends:
+    selects:
       - coap
       # This does *not* depend on (or select) coap-server-config yet, because
       # doing so would cause a config to be auto-selected, and there's none
@@ -859,7 +859,7 @@ modules:
 
   - name: coap-server-config-storage
     help: Configure the CoAP server to accept requests depending on build- and runtime configuration
-    depends:
+    selects:
       - coap
       - sw/storage
     provides_unique:
@@ -877,7 +877,7 @@ modules:
 
       The device will have no cryptographic identity for CoAP, and not even
       accept opportunistic EDHOC.
-    depends:
+    selects:
       - coap
     provides_unique: [coap-server-config]
     env:
@@ -889,7 +889,7 @@ modules:
     help: Configure the CoAP server as expected by simple examples that expect a fixed server key.
 
       This configuration may change over time, in lockstep with the examples' setup.
-    depends:
+    selects:
       - coap
     provides_unique: [coap-server-config]
     env:
@@ -899,7 +899,7 @@ modules:
 
   - name: coap-client
     help: Support for CoAP client functionality.
-    depends:
+    selects:
       - coap
 
   - name: liboscore-provide-abort
@@ -923,7 +923,7 @@ modules:
 
       As the ariel_os::random module will refuse operation at run time if not
       properly initialized, this depends on sources of original entropy.
-    depends:
+    selects:
       # could later alternatively depend on mutable config storage
       - hwrng
     env:
@@ -948,7 +948,7 @@ modules:
       # - esp32s2
 
   - name: wifi-esp
-    depends: # using depends so the following syntax works
+    selects:
       - riscv:
           - wifi-esp-xor-threads
     context:
@@ -962,7 +962,7 @@ modules:
 
   - name: wifi-esp-xor-threads
     help: Helper module to conditionally make esp-wifi conflict with threads on esp32 riscv
-    depends: # using depends so the following syntax works
+    selects:
       - sw/threading:
           - wifi-with-threads-currently-broken-on-esp-riscv
 
