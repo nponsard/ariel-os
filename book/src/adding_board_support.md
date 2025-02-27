@@ -103,7 +103,7 @@ Example:
 modules:
   # ...
   - name: thumbv6m-none-eabi
-    depends:
+    selects:
       - cortex-m
     env:
       global:
