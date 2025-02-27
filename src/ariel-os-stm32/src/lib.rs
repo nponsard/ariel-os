@@ -69,6 +69,7 @@ use {core::mem::MaybeUninit, embassy_stm32::SharedData};
 static SHARED_DATA: MaybeUninit<SharedData> = MaybeUninit::uninit();
 
 #[cfg(feature = "executor-interrupt")]
+#[doc(hidden)]
 pub static EXECUTOR: Executor = Executor::new();
 
 #[doc(hidden)]
