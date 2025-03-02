@@ -1,7 +1,7 @@
 #![no_std]
 
-use ariel_os_debug::println;
+use ariel_os_debug::log::debug;
 
 pub fn init() {
-    println!("st-nucleo-h755zi-q::init()");
+    debug!("st-nucleo-h755zi-q::init()");
 }
