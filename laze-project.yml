@@ -155,6 +155,8 @@ contexts:
     parent: ariel-os
     selects:
       - ?probe-rs
+    provides:
+      - has_swi
 
   - name: nrf51
     parent: nrf
@@ -205,6 +207,8 @@ contexts:
   - name: rp
     help: Raspberry Pi Pico (2) MCU support (based on embassy-rp)
     parent: ariel-os
+    provides:
+      - has_swi
 
   - name: rp2040
     parent: rp
@@ -993,9 +997,8 @@ modules:
   # interrupt.
   - name: executor-interrupt
     help: use the Embassy interrupt executor
-    context:
-      - nrf
-      - rp
+    selects:
+      - has_swi
     provides_unique:
       - executor
     env:
