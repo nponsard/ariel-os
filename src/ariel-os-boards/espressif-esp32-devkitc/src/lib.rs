@@ -1,7 +1,7 @@
 #![no_std]
 
-use ariel_os_debug::println;
+use ariel_os_debug::log::debug;
 
 pub fn init() {
-    println!("espressif-esp32-devkitc::init()");
+    debug!("espressif-esp32-devkitc::init()");
 }
