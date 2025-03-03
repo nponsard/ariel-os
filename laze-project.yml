@@ -326,6 +326,8 @@ contexts:
     parent: stm32
     selects:
       - thumbv7em-none-eabi # actually eabihf, but ariel-os doesn't support hard float yet
+    provides:
+      - has_swi
     env:
       PROBE_RS_CHIP: STM32F401RETx
       PROBE_RS_PROTOCOL: swd
@@ -337,6 +339,8 @@ contexts:
     parent: stm32
     selects:
       - thumbv7em-none-eabi # actually eabihf, but ariel-os doesn't support hard float yet
+    provides:
+      - has_swi
     env:
       PROBE_RS_CHIP: STM32WB55RGVx
       PROBE_RS_PROTOCOL: swd
@@ -348,6 +352,8 @@ contexts:
     parent: stm32
     selects:
       - thumbv8m.main-none-eabi # actually eabihf, but ariel-os doesn't support hard float yet
+    provides:
+      - has_swi
     env:
       PROBE_RS_CHIP: STM32WBA55CGUx
       PROBE_RS_PROTOCOL: swd
@@ -359,6 +365,8 @@ contexts:
     parent: stm32
     selects:
       - thumbv7em-none-eabi # actually eabihf, but ariel-os doesn't support hard float yet
+    provides:
+      - has_swi
     env:
       PROBE_RS_CHIP: STM32H755ZITx
       PROBE_RS_PROTOCOL: swd
