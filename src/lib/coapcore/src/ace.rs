@@ -166,6 +166,10 @@ impl CoseEncrypt0<'_> {
         // Copying around is not a constraint of this function (well that too but that could
         // change) -- but the callers don't usually get their data in a mutable buffer for in-place
         // decryption.
+        #[expect(
+            clippy::ignored_unit_patterns,
+            reason = "heapless has non-recommended error type"
+        )]
         buffer
             .extend_from_slice(self.encrypted)
             .map_err(|_| CredentialErrorDetail::ConstraintExceeded)?;

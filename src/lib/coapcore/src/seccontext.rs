@@ -1,5 +1,7 @@
 //! The main workhorse module of this crate.
 
+use core::marker::PhantomData;
+
 use coap_message::{
     error::RenderableOnMinimal, Code, MessageOption, MinimalWritableMessage,
     MutableWritableMessage, ReadableMessage,
@@ -842,7 +844,15 @@ pub enum OwnRequestData<I> {
 /// Places using this function may be simplified if From/Into is specified (possibly after
 /// enlarging the Error type)
 #[track_caller]
+#[expect(
+    clippy::needless_pass_by_value,
+    reason = "ergonomics at the call sites need this"
+)]
 fn too_small(e: lakers::MessageBufferError) -> CoAPError {
+    #[allow(
+        clippy::match_same_arms,
+        reason = "https://github.com/rust-lang/rust-clippy/issues/13522"
+    )]
     match e {
         lakers::MessageBufferError::BufferAlreadyFull => {
             error!("Lakers buffer size exceeded: Buffer full.");
@@ -863,7 +873,15 @@ fn too_small(e: lakers::MessageBufferError) -> CoAPError {
 /// Places using this function may be simplified if From/Into is specified (possibly after
 /// enlarging the Error type)
 #[track_caller]
+#[expect(
+    clippy::needless_pass_by_value,
+    reason = "ergonomics at the call sites need this"
+)]
 fn render_error(e: lakers::EDHOCError) -> CoAPError {
+    #[allow(
+        clippy::match_same_arms,
+        reason = "https://github.com/rust-lang/rust-clippy/issues/13522"
+    )]
     match e {
         lakers::EDHOCError::UnexpectedCredential => error!("Lakers error: UnexpectedCredential"),
         lakers::EDHOCError::MissingIdentity => error!("Lakers error: MissingIdentity"),
@@ -966,11 +984,12 @@ impl<
             //
             // Also, the PhantomData doesn't actually need to be precisely in here, but it needs to
             // be somewhere.
-            AuthzInfo(core::marker::PhantomData<SSC>),
+            AuthzInfo(PhantomData<SSC>),
             /// Seen anything else (where the request handler, or more likely the ACL filter, will
             /// trip over the critical options)
             Unencrypted,
         }
+        #[allow(clippy::enum_glob_use, reason = "local use")]
         use Recognition::*;
 
         impl<SSC: ServerSecurityConfig> Recognition<SSC> {
@@ -989,7 +1008,7 @@ impl<
                     },
                     (Start, option::URI_PATH, b".well-known") if SSC::HAS_EDHOC /* or anything else that lives in here */ => (WellKnown, false),
                     (Start, option::URI_PATH, b"authz-info") if SSC::PARSES_TOKENS => {
-                        (AuthzInfo(Default::default()), false)
+                        (AuthzInfo(PhantomData), false)
                     }
                     (Start, option::URI_PATH, _) => (Unencrypted, true /* doesn't matter */),
                     (Oscore { oscore }, option::EDHOC, b"") if SSC::HAS_EDHOC => {
@@ -1012,13 +1031,8 @@ impl<
             /// processor check on its own.
             fn errors_handled_here(&self) -> bool {
                 match self {
-                    WellKnownEdhoc => true,
-                    AuthzInfo(_) => true,
-                    Start => false,
-                    Oscore { .. } => false,
-                    Edhoc { .. } => false,
-                    WellKnown => false,
-                    Unencrypted => false,
+                    WellKnownEdhoc | AuthzInfo(_) => true,
+                    Start | Oscore { .. } | Edhoc { .. } | WellKnown | Unencrypted => false,
                 }
             }
         }
