@@ -331,6 +331,8 @@ contexts:
     env:
       PROBE_RS_CHIP: STM32F401RETx
       PROBE_RS_PROTOCOL: swd
+      RUSTFLAGS:
+        - --cfg capability=\"async-flash-driver\"
       CARGO_ENV:
         # This ISR is unused on a naked board. Configured here for testing.
         - CONFIG_SWI=USART2
