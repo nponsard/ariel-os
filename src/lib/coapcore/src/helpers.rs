@@ -30,6 +30,11 @@ impl COwn {
     /// Find a value of self that is not found in the iterator.
     ///
     /// This asserts that the iterator is (known to be) short enough that this will always succeed.
+    ///
+    /// # Panics
+    ///
+    /// Panics if the iterator produces (or even may produce, per its size hints) more items than
+    /// `GENERATABLE_VALUES`.
     pub(crate) fn not_in_iter(iterator: impl Iterator<Item = Self>) -> Self {
         // In theory, this would allow the compiler to see that the unreachable below is indeed
         // unreachable
@@ -57,10 +62,18 @@ impl COwn {
         // trailing_ones = n implies that bit 1<<n is a zero and thus COwn(n) is free
         let pos_to = seen_pos.trailing_ones();
         if pos_to < 24 {
+            #[expect(
+                clippy::cast_possible_truncation,
+                reason = "ensured by the GENERATABLE_VALUES check"
+            )]
             return Self(pos_to as u8);
         }
         let neg_to = seen_neg.trailing_ones();
         if neg_to < 24 {
+            #[expect(
+                clippy::cast_possible_truncation,
+                reason = "ensured by the GENERATABLE_VALUES check"
+            )]
             return Self(0x20 | neg_to as u8);
         }
         unreachable!("Iterator is not long enough to set this many bits.");

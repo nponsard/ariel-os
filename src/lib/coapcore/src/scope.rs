@@ -67,6 +67,12 @@ const AIF_SCOPE_MAX_LEN: usize = 64;
 pub struct AifValue([u8; AIF_SCOPE_MAX_LEN]);
 
 impl AifValue {
+    /// Ingests an AIF scope, verifying that it satisfies the constraints of this type.
+    ///
+    /// # Errors
+    ///
+    /// This produces errors if the input (which is typically received from the network) is
+    /// malformed or contains unsupported items.
     pub fn parse(bytes: &[u8]) -> Result<Self, InvalidScope> {
         let mut buffer = [0; AIF_SCOPE_MAX_LEN];
 

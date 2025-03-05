@@ -70,7 +70,7 @@ pub struct HeaderMap<'a> {
 
 impl HeaderMap<'_> {
     /// Merge two header maps, using the latter's value in case of conflict.
-    fn updated_with(&self, other: Self) -> Self {
+    fn updated_with(&self, other: &Self) -> Self {
         Self {
             alg: self.alg.or(other.alg),
             iv: self.iv.or(other.iv),
@@ -130,6 +130,11 @@ impl CoseEncrypt0<'_> {
     /// The buffer could be initialized anew and place-returned, but as it is large, it is taken as
     /// a reference so that (eg. in `process_edhoc_token`) it can be guaranteed to be shared with
     /// the large buffer of the other path.
+    ///
+    /// # Errors
+    ///
+    /// This produces errors if the input (which is typically received from the network) is
+    /// malformed or contains unsupported items.
     fn prepare_decryption<'t>(
         &self,
         buffer: &'t mut heapless::Vec<u8, MAX_SUPPORTED_ACCESSTOKEN_LEN>,
@@ -140,7 +145,7 @@ impl CoseEncrypt0<'_> {
         // encounter this here
         let protected: HeaderMap = minicbor::decode(self.protected)?;
         trace!("Protected decoded as header map: {:?}", protected);
-        let headers = self.unprotected.updated_with(protected);
+        let headers = self.unprotected.updated_with(&protected);
 
         #[derive(minicbor::Encode)]
         struct Encrypt0<'a> {
@@ -377,6 +382,11 @@ impl AceCborAuthzInfoResponse {
 /// * Instead of the random nonce2, it would be preferable to pass in an RNG -- but some owners of
 ///   an RNG may have a hard time lending out an exclusive reference to it for the whole function
 ///   call duration.
+///
+/// # Errors
+///
+/// This produces errors if the input (which is typically received from the network) is malformed
+/// or contains unsupported items.
 pub(crate) fn process_acecbor_authz_info<GC: crate::GeneralClaims>(
     payload: &[u8],
     authorities: &impl crate::seccfg::ServerSecurityConfig<GeneralClaims = GC>,
@@ -448,6 +458,13 @@ pub(crate) fn process_acecbor_authz_info<GC: crate::GeneralClaims>(
     Ok((response, derived, processed))
 }
 
+/// Verifies an ACE token sent in an EAD3 by the rules of the `authorities`, and produces both the
+/// decrypted claims and the extracted EDHOC specific credential.
+///
+/// # Errors
+///
+/// This produces errors if the input (which is typically received from the network) is
+/// malformed or contains unsupported items.
 pub(crate) fn process_edhoc_token<GeneralClaims>(
     ead3: &[u8],
     authorities: &impl crate::seccfg::ServerSecurityConfig<GeneralClaims = GeneralClaims>,
@@ -468,7 +485,7 @@ pub(crate) fn process_edhoc_token<GeneralClaims>(
             &protected,
             &sign1
         );
-        let headers = sign1.unprotected.updated_with(protected);
+        let headers = sign1.unprotected.updated_with(&protected);
 
         #[derive(minicbor::Encode)]
         struct SigStructureForSignature1<'a> {
