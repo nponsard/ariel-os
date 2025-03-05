@@ -82,7 +82,7 @@ pub trait ServerSecurityConfig {
     ///
     /// `signed_payload` is the payload part of the signed CWT; while it is part of `signed_data` and
     /// can be recovered from it, `signed_data` currently typically resides in a copied buffer
-    /// created for signature verification, and signed_payload is around inside the caller for
+    /// created for signature verification, and `signed_payload` is around inside the caller for
     /// longer. As common with signed data, it should only be parsed once the signature has been
     /// verified.
     ///
@@ -430,6 +430,7 @@ impl ConfigBuilder {
     /// Creates an empty server security configuration.
     ///
     /// Without any additional building steps, this is equivalent to [`DenyAll`].
+    #[must_use]
     pub fn new() -> Self {
         Self {
             as_key_31: None,
@@ -460,6 +461,7 @@ impl ConfigBuilder {
     ///
     /// Currently, keys are taken as byte sequence. With the expected flexibilization of crypto
     /// backends, this may later allow a more generic type that reflects secure element key slots.
+    #[must_use]
     pub fn with_aif_symmetric_as_aesccm256(self, key: [u8; 32]) -> Self {
         Self {
             as_key_31: Some(key),
@@ -480,6 +482,7 @@ impl ConfigBuilder {
     ///
     /// Same from [`Self::with_aif_symmetric_as_aesccm256`] apply, minus the considerations for
     /// secure key storage.
+    #[must_use]
     pub fn with_aif_asymmetric_es256(
         self,
         x: [u8; 32],
@@ -502,6 +505,7 @@ impl ConfigBuilder {
     /// Currently, this type just supports a single credential; it should therefore only be called
     /// once, and the latest value overwrites any earlier. (See
     /// [`Self::with_aif_symmetric_as_aesccm256`] for plans).
+    #[must_use]
     pub fn with_known_edhoc_credential(
         self,
         credential: lakers::Credential,
@@ -519,6 +523,7 @@ impl ConfigBuilder {
     ///
     /// When debug assertions are enabled, this panics if an own credential has already been
     /// configured.
+    #[must_use]
     pub fn with_own_edhoc_credential(
         self,
         credential: lakers::Credential,
@@ -540,6 +545,7 @@ impl ConfigBuilder {
     ///
     /// When debug assertions are enabled, this panics if an unauthenticated scope has already been
     /// configured.
+    #[must_use]
     pub fn allow_unauthenticated(self, scope: crate::scope::UnionScope) -> Self {
         debug_assert!(
             self.unauthenticated_scope.is_none(),
@@ -557,6 +563,7 @@ impl ConfigBuilder {
     ///
     /// When debug assertions are enabled, this panics if an unauthenticated scope has already been
     /// configured.
+    #[must_use]
     pub fn with_request_creation_hints(self, request_creation_hints: &'static [u8]) -> Self {
         debug_assert!(
             self.request_creation_hints.is_empty(),

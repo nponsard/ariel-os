@@ -210,7 +210,7 @@ impl<
         }
     }
 
-    /// Produces a COwn (as a recipient identifier) that is both available and not equal to the
+    /// Produces a [`COwn`] (as a recipient identifier) that is both available and not equal to the
     /// peer's recipient identifier.
     fn cown_but_not(&self, c_peer: &[u8]) -> COwn {
         // Let's pick one now already: this allows us to use the identifier in our
@@ -643,7 +643,7 @@ impl<
     }
 
     /// Builds an OSCORE response message after successful processing of a request in
-    /// [Self::extract_oscore_edhoc()].
+    /// [`Self::extract_oscore_edhoc()`].
     fn build_oscore_response<M: MutableWritableMessage>(
         &mut self,
         response: &mut M,
@@ -711,7 +711,7 @@ impl<
                                                 // FIXME rewind message
                                                 response.set_code(coap_numbers::code::INTERNAL_SERVER_ERROR);
                                             }
-                                        };
+                                        }
                                     },
                                 },
                                 AuthorizationChecked::Allowed(Err(inner_request_error)) => {
@@ -781,8 +781,7 @@ impl<
                 error!("{}", Debug2Format(&e));
                 e.position
                     // FIXME: Could also come from processing inner
-                    .map(CoAPError::bad_request_with_rbep)
-                    .unwrap_or(CoAPError::bad_request())
+                    .map_or(CoAPError::bad_request(), CoAPError::bad_request_with_rbep)
             })?;
 
         debug!("Established OSCORE context with recipient ID {:?} and authorization {:?} through ACE-OSCORE", oscore.recipient_id(), Debug2Format(&generalclaims));
@@ -846,19 +845,20 @@ pub enum OwnRequestData<I> {
 fn too_small(e: lakers::MessageBufferError) -> CoAPError {
     match e {
         lakers::MessageBufferError::BufferAlreadyFull => {
-            error!("Lakers buffer size exceeded: Buffer full.")
+            error!("Lakers buffer size exceeded: Buffer full.");
         }
         lakers::MessageBufferError::SliceTooLong => {
-            error!("Lakers buffer size exceeded: Slice too long.")
+            error!("Lakers buffer size exceeded: Slice too long.");
         }
-    };
+    }
     CoAPError::bad_request()
 }
 
 /// Renders a [`lakers::EDHOCError`] into the common Error type.
 ///
-/// It is yet to be decided based on the EDHOC specification which EDHOCError values would be
-/// reported with precise data, and which should rather produce a generic response.
+/// It is yet to be decided based on the EDHOC specification which
+/// [`EDHOCError`][lakers::EDHOCError] values would be reported with precise data, and which should
+/// rather produce a generic response.
 ///
 /// Places using this function may be simplified if From/Into is specified (possibly after
 /// enlarging the Error type)
@@ -871,12 +871,12 @@ fn render_error(e: lakers::EDHOCError) -> CoAPError {
         lakers::EDHOCError::MacVerificationFailed => error!("Lakers error: MacVerificationFailed"),
         lakers::EDHOCError::UnsupportedMethod => error!("Lakers error: UnsupportedMethod"),
         lakers::EDHOCError::UnsupportedCipherSuite => {
-            error!("Lakers error: UnsupportedCipherSuite")
+            error!("Lakers error: UnsupportedCipherSuite");
         }
         lakers::EDHOCError::ParsingError => error!("Lakers error: ParsingError"),
         lakers::EDHOCError::EncodingError => error!("Lakers error: EncodingError"),
         lakers::EDHOCError::CredentialTooLongError => {
-            error!("Lakers error: CredentialTooLongError")
+            error!("Lakers error: CredentialTooLongError");
         }
         lakers::EDHOCError::EadLabelTooLongError => error!("Lakers error: EadLabelTooLongError"),
         lakers::EDHOCError::EadTooLongError => error!("Lakers error: EadTooLongError"),
@@ -976,7 +976,7 @@ impl<
         impl<SSC: ServerSecurityConfig> Recognition<SSC> {
             /// Given a state and an option, produce the next state and whether the option should
             /// be counted as consumed for the purpose of assessing .well-known/edchoc's
-            /// ignore_elective_others().
+            /// [`ignore_elective_others()`][coap_message_utils::option_processing::OptionsExt::ignore_elective_others].
             fn update(self, o: &impl MessageOption) -> (Self, bool) {
                 use coap_numbers::option;
 
@@ -1132,7 +1132,7 @@ impl<
                 if !SSC::HAS_EDHOC {
                     unreachable!("State is not constructed");
                 }
-                self.build_edhoc_message_2(response, c_r).map_err(Own)?
+                self.build_edhoc_message_2(response, c_r).map_err(Own)?;
             }
             Own(OwnRequestData::ProcessedToken(r)) => {
                 if !SSC::PARSES_TOKENS {
@@ -1152,14 +1152,14 @@ impl<
                     .map_err(Own)?;
             }
             Inner(AuthorizationChecked::Allowed(i)) => {
-                self.inner.build_response(response, i).map_err(Inner)?
+                self.inner.build_response(response, i).map_err(Inner)?;
             }
             Inner(AuthorizationChecked::NotAllowed) => {
                 self.authorities
                     .render_not_allowed(response)
                     .map_err(|_| Own(Ok(CoAPError::unauthorized())))?;
             }
-        };
+        }
         Ok(())
     }
 }

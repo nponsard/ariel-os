@@ -35,7 +35,7 @@ impl<T: TimeProvider> TimeProvider for &mut T {
     }
 
     fn past_trusted(&mut self, timestamp: u64) {
-        (*self).past_trusted(timestamp)
+        (*self).past_trusted(timestamp);
     }
 }
 
@@ -61,6 +61,7 @@ pub struct TimeConstraint {
 
 impl TimeConstraint {
     /// Creates a [`TimeConstraint`] with no bounds; it is valid at any time.
+    #[must_use]
     pub fn unbounded() -> Self {
         Self { exp: None }
     }
@@ -69,6 +70,7 @@ impl TimeConstraint {
     ///
     /// This is infallible as long as all relevant constraints on the value can be encoded in the
     /// ace module; doing that is preferable because it eases error tracking.
+    #[must_use]
     pub fn from_claims_set(claims: &crate::ace::CwtClaimsSet<'_>) -> Self {
         TimeConstraint {
             exp: Some(claims.exp),

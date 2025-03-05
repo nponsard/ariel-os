@@ -81,7 +81,7 @@ impl AifValue {
             .map_err(|_| InvalidScope)?
         {
             let (path, _mask) = item.map_err(|_| InvalidScope)?;
-            if !path.starts_with("/") {
+            if !path.starts_with('/') {
                 return Err(InvalidScope);
             }
         }
@@ -117,9 +117,7 @@ impl Scope for AifValue {
                 // Special case: For consistency should be a single empty option.
                 return true;
             }
-            if !path.starts_with("/") {
-                panic!("Invalid AIF");
-            }
+            assert!(path.starts_with('/'), "Invalid AIF");
             let mut remainder = &path[1..];
             while !remainder.is_empty() {
                 let (next_part, next_remainder) = match remainder.split_once('/') {

@@ -120,6 +120,7 @@ pub struct OrderedPool<T: PriorityLevel, const N: usize, const L: usize> {
 
 impl<T: PriorityLevel, const N: usize, const L: usize> OrderedPool<T, N, L> {
     /// Create an empty cache.
+    #[must_use]
     pub const fn new() -> Self {
         assert!(N < u16::MAX as usize, "Capacity overflow");
         // Clipping levels to u16 because they may be stored if the implementation changes.

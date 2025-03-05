@@ -19,7 +19,7 @@ const MAX_SUPPORTED_PEER_NONCE_LEN: usize = 16;
 
 /// Maximum size a CWT processed by this module can have (at least when it needs to be copied)
 const MAX_SUPPORTED_ACCESSTOKEN_LEN: usize = 256;
-/// Maximum size of a COSE_Encrypt0 protected header (used to size the AAD buffer)
+/// Maximum size of a `COSE_Encrypt0` protected header (used to size the AAD buffer)
 const MAX_SUPPORTED_ENCRYPT_PROTECTED_LEN: usize = 32;
 
 /// The content of an application/ace+cbor file.
@@ -78,7 +78,7 @@ impl HeaderMap<'_> {
     }
 }
 
-/// A COSE_Key as described in Section 7 of RFC9052.
+/// A `COSE_Key` as described in Section 7 of RFC9052.
 ///
 /// This combines [COSE Key Common
 /// Parameters](https://www.iana.org/assignments/cose/cose.xhtml#key-common-parameters) with [COSE
@@ -109,7 +109,7 @@ pub(crate) struct CoseKey<'a> {
     pub(crate) y: Option<&'a [u8]>, // or bool (unsupported here so far)
 }
 
-/// A COSE_Encrypt0 structure as defined in [RFC8152](https://www.rfc-editor.org/rfc/rfc8152)
+/// A `COSE_Encrypt0` structure as defined in [RFC8152](https://www.rfc-editor.org/rfc/rfc8152)
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 #[derive(minicbor::Decode)]
 #[cbor(tag(16))]
@@ -176,7 +176,7 @@ impl CoseEncrypt0<'_> {
 
 type EncryptedCwt<'a> = CoseEncrypt0<'a>;
 
-/// A COSE_Sign1 structure as defined in [RFC8152](https://www.rfc-editor.org/rfc/rfc8152)
+/// A `COSE_Sign1` structure as defined in [RFC8152](https://www.rfc-editor.org/rfc/rfc8152)
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 #[derive(minicbor::Decode)]
 #[cbor(tag(18))]
@@ -243,7 +243,7 @@ struct Cnf<'a> {
     cose_key: Option<minicbor_adapters::WithOpaque<'a, CoseKey<'a>>>,
 }
 
-/// OSCORE_Input_Material.
+/// `OSCORE_Input_Material`.
 ///
 /// All current parameters are described in [Section 3.2.1 of
 /// RFC9203](https://datatracker.ietf.org/doc/html/rfc9203#name-the-oscore_input_material); the

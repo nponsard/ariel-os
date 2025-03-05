@@ -2,13 +2,13 @@
 
 /// An own identifier for a security context.
 ///
-/// This is used with EDHOC as C_I when in an initiator role, C_R when in a responder role, and
+/// This is used with EDHOC as `C_I` when in an initiator role, `C_R` when in a responder role, and
 /// recipient ID in OSCORE.
 ///
 /// This type represents any of the 48 efficient identifiers that use CBOR one-byte integer
 /// encodings (see RFC9528 Section 3.3.2), or equivalently the 1-byte long OSCORE identifiers
 ///
-/// Lakers supports a much larger value space for C_x, and coapcore processes larger values
+/// Lakers supports a much larger value space for `C_x`, and coapcore processes larger values
 /// selected by the peer -- but on its own, will select only those that fit in this type.
 // FIXME Could even limit to positive values if MAX_CONTEXTS < 24
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
