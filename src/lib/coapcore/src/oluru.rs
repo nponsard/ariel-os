@@ -14,6 +14,7 @@
 //! to "large").
 #![forbid(unsafe_code)]
 #![expect(clippy::indexing_slicing, reason = "module is scheduled for overhaul")]
+#![expect(clippy::pedantic)]
 
 use arrayvec::ArrayVec;
 

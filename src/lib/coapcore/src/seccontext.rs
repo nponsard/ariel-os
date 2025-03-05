@@ -1,4 +1,8 @@
 //! The main workhorse module of this crate.
+#![expect(
+    clippy::redundant_closure_for_method_calls,
+    reason = "all occurrences of this make the code strictly less obvious to understand"
+)]
 
 use core::marker::PhantomData;
 
@@ -24,6 +28,22 @@ const _MAX_CONTEXTS_CHECK: () = assert!(MAX_CONTEXTS <= COwn::GENERATABLE_VALUES
 const fn has_oscore<SSC: ServerSecurityConfig>() -> bool {
     SSC::HAS_EDHOC || SSC::PARSES_TOKENS
 }
+
+/// Space allocated for the message into which an EDHOC request is copied to remove EDHOC option
+/// and payload.
+///
+/// embedded-nal-coap uses this max size, and our messages are same size or smaller,
+/// so it's a guaranteed fit.
+///
+/// # FIXME: Having a buffer here should just go away
+///
+/// Until liboscore can work on an arbitrary message, in particular a
+/// `StrippingTheEdhocOptionAndPayloadPart<M>`, we have to create a copy to remove the EDHOC option
+/// and payload. (Conveniently, that also sidesteps the need to `downcast_from` to a type libOSCORE
+/// knows, but that's not why we do it, that's what downcasting would be for.)
+///
+/// Furthermore, we need mutable access (something we can't easily gain by just downcasting).
+const EDHOC_COPY_BUFFER_SIZE: usize = 1152;
 
 /// A pool of security contexts shareable by several users inside a thread.
 type SecContextPool<Crypto, Claims> =
@@ -127,8 +147,8 @@ impl<Crypto: lakers::Crypto, GeneralClaims: generalclaims::GeneralClaims>
             SecContextStage::Empty => None,
             // We're keeping a c_r in there assigned early so that we can find the context when
             // building the response; nothing in the responder is tied to c_r yet.
-            SecContextStage::EdhocResponderProcessedM1 { c_r, .. } => Some(*c_r),
-            SecContextStage::EdhocResponderSentM2 { c_r, .. } => Some(*c_r),
+            SecContextStage::EdhocResponderProcessedM1 { c_r, .. }
+            | SecContextStage::EdhocResponderSentM2 { c_r, .. } => Some(*c_r),
             SecContextStage::Oscore(ctx) => COwn::from_kid(ctx.recipient_id()),
         }
     }
@@ -203,7 +223,7 @@ impl<
         time: TP,
     ) -> Self {
         Self {
-            pool: Default::default(),
+            pool: crate::oluru::OrderedPool::new(),
             inner,
             crypto_factory,
             authorities,
@@ -224,7 +244,7 @@ impl<
                 // C_R does not only need to be unique, it also must not be identical
                 // to C_I. If it is not expressible as a COwn (as_slice gives []),
                 // that's fine and we don't have to consider it.
-                .chain(COwn::from_kid(c_peer).as_slice().iter().cloned()),
+                .chain(COwn::from_kid(c_peer).as_slice().iter().copied()),
         )
     }
 
@@ -232,6 +252,11 @@ impl<
     ///
     /// The caller has already checked Uri-Path and all other critical options, and that the
     /// request was a POST.
+    ///
+    /// # Errors
+    ///
+    /// This produces errors if the input (which is typically received from the network) is
+    /// malformed or contains unsupported items.
     #[allow(
         clippy::type_complexity,
         reason = "Type is subset of RequestData that has no alias in the type"
@@ -296,6 +321,11 @@ impl<
 
     /// Builds an EDHOC response message 2 after successful processing of a request in
     /// [`Self::extract_edhoc()`]
+    ///
+    /// # Errors
+    ///
+    /// This produces errors if the input (which is typically received from the network) is
+    /// malformed or contains unsupported items.
     fn build_edhoc_message_2<M: MutableWritableMessage>(
         &mut self,
         response: &mut M,
@@ -373,20 +403,25 @@ impl<
     }
 
     /// Processes a CoAP request containing an OSCORE option and possibly an EDHOC option.
+    ///
+    /// # Errors
+    ///
+    /// This produces errors if the input (which is typically received from the network) is
+    /// malformed, contains unsupported items, or is too large for the allocated buffers.
     #[allow(
         clippy::type_complexity,
-        reason = "Type is subset of RequestData that has no alias in the type"
+        reason = "type is subset of RequestData that has no alias in the type"
     )]
     fn extract_oscore_edhoc<M: ReadableMessage>(
         &mut self,
         request: &M,
-        oscore_option: OscoreOption,
+        oscore_option: &OscoreOption,
         with_edhoc: bool,
     ) -> Result<OwnRequestData<Result<H::RequestData, H::ExtractRequestError>>, CoAPError> {
         let payload = request.payload();
 
         // We know this to not fail b/c we only got here due to its presence
-        let oscore_option = liboscore::OscoreOption::parse(&oscore_option).map_err(|_| {
+        let oscore_option = liboscore::OscoreOption::parse(oscore_option).map_err(|_| {
             error!("OSCORE option could not be parsed");
             CoAPError::bad_option(coap_numbers::option::OSCORE)
         })?;
@@ -448,16 +483,8 @@ impl<
             return Err(CoAPError::bad_request());
         }
 
-        // Until liboscore can work on an arbitrary message, in particular a
-        // `StrippingTheEdhocOptionAndPayloadPart<M>`, we have to create a copy.
-        // (Conveniently, that also sidesteps the need to `downcast_from` to a type
-        // libOSCORE knows, but that's not why we do it, that's what downcasting would be
-        // for.)
-
-        // embedded-nal-coap uses this max size, and our messages are same size or smaller,
-        // so it's a guaranteed fit.
-        const MAX_SIZE: usize = 1152;
-        let mut read_copy = [0u8; MAX_SIZE];
+        // See comment on EDHOC_COPY_BUFFER_SIZE
+        let mut read_copy = [0u8; EDHOC_COPY_BUFFER_SIZE];
         let mut code_copy = 0;
         let mut copied_message = coap_message_implementations::inmemory_write::Message::new(
             &mut code_copy,
@@ -478,12 +505,18 @@ impl<
             }
             copied_message
                 .add_option(opt.number(), opt.value())
-                .unwrap();
+                .map_err(|_| {
+                    error!("Options produced in unexpected sequence.");
+                    CoAPError::internal_server_error()
+                })?;
         }
         #[allow(clippy::indexing_slicing, reason = "slice fits by construction")]
         copied_message
             .set_payload(&payload[front_trim_payload..])
-            .unwrap();
+            .map_err(|_| {
+                error!("Unexpectedly large EDHOC-less message");
+                CoAPError::internal_server_error()
+            })?;
 
         let decrypted = liboscore::unprotect_request(
             &mut copied_message,
@@ -502,6 +535,7 @@ impl<
         //
         // Storing it even on decryption failure to avoid DoS from the first message (but
         // FIXME, should we increment an error count and lower priority?)
+        #[allow(clippy::used_underscore_binding, reason = "used only in debug asserts")]
         let _evicted = self.pool.force_insert(SecContextState {
             protocol_stage: SecContextStage::Oscore(oscore_context),
             authorization: Some(authorization),
@@ -523,6 +557,16 @@ impl<
 
     /// Processes an EDHOC message 3 at the beginning of a payload, and returns the number of bytes
     /// that were in the message.
+    ///
+    /// # Errors
+    ///
+    /// This produces errors if the input (which is typically received from the network) is
+    /// malformed or contains unsupported items.
+    ///
+    /// # Panics
+    ///
+    /// This panics if cipher suite negotiation passed for a suite whose algorithms are unsupported
+    /// in libOSCORE.
     fn process_edhoc_in_payload(
         &self,
         payload: &[u8],
@@ -646,6 +690,16 @@ impl<
 
     /// Builds an OSCORE response message after successful processing of a request in
     /// [`Self::extract_oscore_edhoc()`].
+    ///
+    /// # Errors
+    ///
+    /// This produces errors if requests are processed in unexpected out-of-order ways.
+    ///
+    /// # Panics
+    ///
+    /// Panics if the writable message is not a
+    /// [`coap_message_implementations::inmemory_write::Message`]. See module level documentation
+    /// for details.
     fn build_oscore_response<M: MutableWritableMessage>(
         &mut self,
         response: &mut M,
@@ -765,6 +819,11 @@ impl<
     /// This assumes that the content format was pre-checked to be application/ace+cbor, both in
     /// Content-Format and Accept (absence is fine too), no other critical options are present,
     /// and the code was POST.
+    ///
+    /// # Errors
+    ///
+    /// This produces errors if the input (which is typically received from the network) is
+    /// malformed or contains unsupported items.
     fn extract_token(
         &mut self,
         payload: &[u8],
@@ -957,6 +1016,7 @@ impl<
     type BuildResponseError<M: MinimalWritableMessage> =
         OrInner<Result<CoAPError, M::UnionError>, H::BuildResponseError<M>>;
 
+    #[expect(clippy::too_many_lines, reason = "no good refactoring point known")]
     fn extract_request_data<M: ReadableMessage>(
         &mut self,
         request: &M,
@@ -1113,7 +1173,7 @@ impl<
                     // unreachable when HAS_EDHOC is not set.
                     unreachable!("State is not constructed");
                 }
-                self.extract_oscore_edhoc(&request, oscore, true)
+                self.extract_oscore_edhoc(&request, &oscore, true)
                     .map(Own)
                     .map_err(Own)
             }
@@ -1121,7 +1181,7 @@ impl<
                 if !has_oscore::<SSC>() {
                     unreachable!("State is not constructed");
                 }
-                self.extract_oscore_edhoc(&request, oscore, false)
+                self.extract_oscore_edhoc(&request, &oscore, false)
                     .map(Own)
                     .map_err(Own)
             }

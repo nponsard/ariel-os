@@ -63,6 +63,11 @@ pub trait ServerSecurityConfig {
     /// The buffer is given as heapless buffer rather than an an
     /// [`aead::Buffer`](https://docs.rs/aead/latest/aead/trait.Buffer.html) because the latter is
     /// not on the latest heaples version in its released version.
+    ///
+    /// # Errors
+    ///
+    /// This produces errors if the input (which is typically received from the network) is
+    /// malformed or contains unsupported items.
     #[allow(
         unused_variables,
         reason = "Names are human visible part of API description"
@@ -88,6 +93,11 @@ pub trait ServerSecurityConfig {
     ///
     /// Like [`Self::decrypt_symmetric_token()`], this conflates a few aspects, which is tolerated
     /// for the time being.
+    ///
+    /// # Errors
+    ///
+    /// This produces errors if the input (which is typically received from the network) is
+    /// malformed or contains unsupported items.
     #[allow(
         unused_variables,
         reason = "Names are human visible part of API description"
@@ -136,6 +146,12 @@ pub trait ServerSecurityConfig {
     ///
     /// The default (or any error) renderer produces a generic 4.01 Unauthorized in the handler;
     /// specifics can be useful in ACE scenarios to return a Request Creation Hint.
+    ///
+    /// # Errors
+    ///
+    /// The implementation may fail like [any CoAP response
+    /// rendering][coap_handler::Handler::extract_request_data()]. No error details are conveyed;
+    /// instead, the caller needs to produce a generic response.
     #[allow(
         unused_variables,
         reason = "Names are human visible part of API description"
@@ -211,16 +227,16 @@ impl ServerSecurityConfig for ConfigBuilder {
         use ccm::aead::AeadInPlace;
         use ccm::KeyInit;
 
+        pub type Aes256Ccm = ccm::Ccm<aes::Aes256, ccm::consts::U16, ccm::consts::U13>;
+        // FIXME: should be something Aes256Ccm::TagLength
+        const TAG_SIZE: usize = 16;
+        const NONCE_SIZE: usize = 13;
+
         let key = self.as_key_31.ok_or_else(|| {
             error!("Symmetrically encrypted token was sent, but no symmetric key is configured.");
             CredentialErrorDetail::KeyNotPresent
         })?;
 
-        // FIXME: should be something Aes256Ccm::TagLength
-        const TAG_SIZE: usize = 16;
-        const NONCE_SIZE: usize = 13;
-
-        pub type Aes256Ccm = ccm::Ccm<aes::Aes256, ccm::consts::U16, ccm::consts::U13>;
         let cipher = Aes256Ccm::new((&key).into());
 
         let nonce: &[u8; NONCE_SIZE] = headers
@@ -278,6 +294,8 @@ impl ServerSecurityConfig for ConfigBuilder {
         signature: &[u8],
         signed_payload: &'b [u8],
     ) -> Result<(Self::GeneralClaims, crate::ace::CwtClaimsSet<'b>), CredentialError> {
+        use p256::ecdsa::{signature::Verifier, VerifyingKey};
+
         if headers.alg != Some(-7) {
             // ES256
             return Err(CredentialErrorDetail::UnsupportedAlgorithm.into());
@@ -287,7 +305,6 @@ impl ServerSecurityConfig for ConfigBuilder {
             return Err(CredentialErrorDetail::KeyNotPresent.into());
         };
 
-        use p256::ecdsa::{signature::Verifier, VerifyingKey};
         let as_key = VerifyingKey::from_encoded_point(
             &p256::EncodedPoint::from_affine_coordinates(x.into(), y.into(), false),
         )

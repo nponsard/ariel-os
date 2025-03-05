@@ -5,6 +5,7 @@
 //! On the long run, those might contribute to
 //! <https://github.com/namib-project/dcaf-rs/issues/29>.
 
+use coap_message::Code as _;
 use defmt_or_log::trace;
 
 use crate::error::{CredentialError, CredentialErrorDetail};
@@ -123,6 +124,20 @@ struct CoseEncrypt0<'a> {
     encrypted: &'a [u8],
 }
 
+/// The `Encrypt0` object that feeds the AAD during the processing of a `COSE_Encrypt0`.
+#[derive(minicbor::Encode)]
+struct Encrypt0<'a> {
+    #[n(0)]
+    context: &'static str,
+    #[cbor(b(1), with = "minicbor::bytes")]
+    protected: &'a [u8],
+    #[cbor(b(2), with = "minicbor::bytes")]
+    external_aad: &'a [u8],
+}
+/// The maximal encoded size of an [`Encrypt0`], provided its protected data stays within the
+/// bounds of [`MAX_SUPPORTED_ENCRYPT_PROTECTED_LEN`].
+const AADSIZE: usize = 1 + 1 + 8 + 1 + MAX_SUPPORTED_ENCRYPT_PROTECTED_LEN + 1;
+
 impl CoseEncrypt0<'_> {
     /// Performs the common steps of processing the inner headers and building an AAD before
     /// passing the output on to an authority's `.decrypt_symmetric_token` method.
@@ -147,21 +162,11 @@ impl CoseEncrypt0<'_> {
         trace!("Protected decoded as header map: {:?}", protected);
         let headers = self.unprotected.updated_with(&protected);
 
-        #[derive(minicbor::Encode)]
-        struct Encrypt0<'a> {
-            #[n(0)]
-            context: &'static str,
-            #[cbor(b(1), with = "minicbor::bytes")]
-            protected: &'a [u8],
-            #[cbor(b(2), with = "minicbor::bytes")]
-            external_aad: &'a [u8],
-        }
         let aad = Encrypt0 {
             context: "Encrypt0",
             protected: self.protected,
             external_aad: &[],
         };
-        const AADSIZE: usize = 1 + 1 + 8 + 1 + MAX_SUPPORTED_ENCRYPT_PROTECTED_LEN + 1;
         let mut aad_encoded = heapless::Vec::<u8, AADSIZE>::new();
         minicbor::encode(&aad, minicbor_adapters::WriteToHeapless(&mut aad_encoded))
             .map_err(|_| CredentialErrorDetail::ConstraintExceeded)?;
@@ -203,6 +208,19 @@ struct CoseSign1<'a> {
 }
 
 type SignedCwt<'a> = CoseSign1<'a>;
+
+/// The `Signature1` object that feeds the AAD during the processing of a `COSE_Sign1`.
+#[derive(minicbor::Encode)]
+struct SigStructureForSignature1<'a> {
+    #[n(0)]
+    context: &'static str,
+    #[cbor(b(1), with = "minicbor::bytes")]
+    body_protected: &'a [u8],
+    #[cbor(b(2), with = "minicbor::bytes")]
+    external_aad: &'a [u8],
+    #[cbor(b(3), with = "minicbor::bytes")]
+    payload: &'a [u8],
+}
 
 /// A CWT Claims Set.
 ///
@@ -275,6 +293,15 @@ struct OscoreInputMaterial<'a> {
 }
 
 impl OscoreInputMaterial<'_> {
+    /// Produces an OSCORE context from the ACE OSCORE inputs.
+    ///
+    /// FIXME: When this errs and panics could need some clean-up: the same kind of error produces
+    /// a panic in some and an error in
+    ///
+    /// # Errors
+    ///
+    /// Produces an error if any used algorithm is not supported by libOSCORE's backend, or sizes
+    /// mismatch.
     fn derive(
         &self,
         nonce1: &[u8],
@@ -283,8 +310,10 @@ impl OscoreInputMaterial<'_> {
         recipient_id: &[u8],
     ) -> Result<liboscore::PrimitiveContext, CredentialError> {
         // We don't process the algorithm fields
-        let hkdf = liboscore::HkdfAlg::from_number(5).expect("Default algorithm is supported");
-        let aead = liboscore::AeadAlg::from_number(10).expect("Default algorithm is supported");
+        let hkdf = liboscore::HkdfAlg::from_number(5)
+            .map_err(|_| CredentialErrorDetail::UnsupportedAlgorithm)?;
+        let aead = liboscore::AeadAlg::from_number(10)
+            .map_err(|_| CredentialErrorDetail::UnsupportedAlgorithm)?;
 
         // This is the only really custom part of ACE-OSCORE; the rest is just passing around
         // inputs.
@@ -331,6 +360,12 @@ pub struct AceCborAuthzInfoResponse {
 }
 
 impl AceCborAuthzInfoResponse {
+    /// Renders the response into a CoAP message
+    ///
+    /// # Errors
+    ///
+    /// The implementation may fail like [any CoAP response
+    /// rendering][coap_handler::Handler::extract_request_data()].
     pub(crate) fn render<M: coap_message::MutableWritableMessage>(
         &self,
         message: &mut M,
@@ -341,7 +376,6 @@ impl AceCborAuthzInfoResponse {
             ..Default::default()
         };
 
-        use coap_message::Code;
         message.set_code(M::Code::new(coap_numbers::code::CHANGED)?);
 
         const { assert!(OWN_NONCE_LEN < 256) };
@@ -415,7 +449,7 @@ pub(crate) fn process_acecbor_authz_info<GC: crate::GeneralClaims>(
 
     let encrypt0: EncryptedCwt = minicbor::decode(access_token)?;
 
-    let mut buffer = Default::default();
+    let mut buffer = heapless::Vec::new();
     let (headers, aad_encoded, buffer) = encrypt0.prepare_decryption(&mut buffer)?;
 
     // Can't go through liboscore's decryption backend b/c that expects unprotect-in-place; doing
@@ -465,6 +499,10 @@ pub(crate) fn process_acecbor_authz_info<GC: crate::GeneralClaims>(
 ///
 /// This produces errors if the input (which is typically received from the network) is
 /// malformed or contains unsupported items.
+#[expect(
+    clippy::missing_panics_doc,
+    reason = "panic only happens when fixed-length array gets placed into larger array"
+)]
 pub(crate) fn process_edhoc_token<GeneralClaims>(
     ead3: &[u8],
     authorities: &impl crate::seccfg::ServerSecurityConfig<GeneralClaims = GeneralClaims>,
@@ -487,17 +525,6 @@ pub(crate) fn process_edhoc_token<GeneralClaims>(
         );
         let headers = sign1.unprotected.updated_with(&protected);
 
-        #[derive(minicbor::Encode)]
-        struct SigStructureForSignature1<'a> {
-            #[n(0)]
-            context: &'static str,
-            #[cbor(b(1), with = "minicbor::bytes")]
-            body_protected: &'a [u8],
-            #[cbor(b(2), with = "minicbor::bytes")]
-            external_aad: &'a [u8],
-            #[cbor(b(3), with = "minicbor::bytes")]
-            payload: &'a [u8],
-        }
         let aad = SigStructureForSignature1 {
             context: "Signature1",
             body_protected: sign1.protected,
