@@ -8,7 +8,9 @@ pub type ThreadFlags = u16;
 #[derive(Copy, Clone, PartialEq, Debug)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub enum WaitMode {
+    /// Wait for any of the specified thread flags.
     Any(ThreadFlags),
+    /// Wait for all of the specified thread flags.
     All(ThreadFlags),
 }
 

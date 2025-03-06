@@ -26,6 +26,7 @@
 #![feature(used_with_arg)]
 #![feature(negative_impls)]
 #![cfg_attr(target_arch = "xtensa", feature(asm_experimental_arch))]
+#![deny(missing_docs)]
 // Disable indexing lints for now, possible panics are documented or rely on internally-enforced
 // invariants
 #![allow(clippy::indexing_slicing)]
@@ -88,6 +89,7 @@ pub const SCHED_PRIO_LEVELS: usize = THREAD_COUNT;
 /// The maximum number of concurrent threads that can be created.
 pub const THREAD_COUNT: usize = 16;
 
+/// Number of processor cores.
 pub const CORE_COUNT: usize = {
     #[cfg(not(feature = "multi-core"))]
     const CORE_COUNT: usize = 1;
@@ -95,6 +97,7 @@ pub const CORE_COUNT: usize = {
     const CORE_COUNT: usize = smp::Chip::CORES as usize;
     CORE_COUNT
 };
+/// Stack size of the idle threads (in bytes).
 #[cfg(feature = "multi-core")]
 pub const IDLE_THREAD_STACK_SIZE: usize = smp::Chip::IDLE_THREAD_STACK_SIZE;
 
