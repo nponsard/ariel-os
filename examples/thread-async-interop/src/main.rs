@@ -21,7 +21,7 @@ async fn async_task() {
 
     let mut counter = 0u32;
     loop {
-        info!("async_task(): signalling, counter={}", counter);
+        info!("async_task(): signaling, counter={}", counter);
         SIGNAL.signal(counter);
         Timer::after(Duration::from_millis(100)).await;
         counter += 1;

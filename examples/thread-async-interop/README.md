@@ -21,25 +21,25 @@ In this directory, run
 
     INFO  main(): starting
     INFO  async_task(): starting
-    INFO  async_task(): signalling, counter=0
+    INFO  async_task(): signaling, counter=0
     INFO  main(): now=0ms threadtest() counter=0
-    INFO  async_task(): signalling, counter=1
+    INFO  async_task(): signaling, counter=1
     INFO  main(): now=100ms threadtest() counter=1
-    INFO  async_task(): signalling, counter=2
+    INFO  async_task(): signaling, counter=2
     INFO  main(): now=200ms threadtest() counter=2
-    INFO  async_task(): signalling, counter=3
+    INFO  async_task(): signaling, counter=3
     INFO  main(): now=300ms threadtest() counter=3
-    INFO  async_task(): signalling, counter=4
+    INFO  async_task(): signaling, counter=4
     INFO  main(): now=400ms threadtest() counter=4
-    INFO  async_task(): signalling, counter=5
+    INFO  async_task(): signaling, counter=5
     INFO  main(): now=500ms threadtest() counter=5
-    INFO  async_task(): signalling, counter=6
+    INFO  async_task(): signaling, counter=6
     INFO  main(): now=600ms threadtest() counter=6
-    INFO  async_task(): signalling, counter=7
+    INFO  async_task(): signaling, counter=7
     INFO  main(): now=700ms threadtest() counter=7
-    INFO  async_task(): signalling, counter=8
+    INFO  async_task(): signaling, counter=8
     INFO  main(): now=800ms threadtest() counter=8
-    INFO  async_task(): signalling, counter=9
+    INFO  async_task(): signaling, counter=9
     INFO  main(): now=900ms threadtest() counter=9
     INFO  main(): all good, exiting.
 
