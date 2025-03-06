@@ -95,8 +95,8 @@ cfg_if::cfg_if! {
 pub use net::NetworkStack;
 
 pub mod asynch;
+pub mod cell;
 pub mod delegate;
-pub mod sendcell;
 
 #[cfg(feature = "executor-thread")]
 pub mod thread_executor;
@@ -289,7 +289,7 @@ async fn init_task(mut peripherals: hal::OptionalPeripherals) {
         use embassy_net::StackResources;
         use static_cell::StaticCell;
 
-        use crate::sendcell::SendCell;
+        use crate::cell::SameExecutorCell;
 
         const MAX_CONCURRENT_SOCKETS: usize = ariel_os_utils::usize_from_env_or!(
             "CONFIG_NETWORK_MAX_CONCURRENT_SOCKETS",
@@ -320,7 +320,7 @@ async fn init_task(mut peripherals: hal::OptionalPeripherals) {
         spawner.spawn(net::net_task(runner)).unwrap();
 
         if crate::net::STACK
-            .init(SendCell::new(stack, spawner))
+            .init(SameExecutorCell::new(stack, spawner))
             .is_err()
         {
             unreachable!();

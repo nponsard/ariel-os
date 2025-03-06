@@ -4,7 +4,7 @@ use embassy_executor::Spawner;
 use embassy_sync::{blocking_mutex::raw::CriticalSectionRawMutex, signal::Signal};
 use portable_atomic::{AtomicBool, Ordering};
 
-use crate::sendcell::SendCell;
+use crate::cell::SameExecutorCell;
 
 /// [`Delegate`]s or lends an object to another task.
 ///
@@ -12,7 +12,7 @@ use crate::sendcell::SendCell;
 /// The other task can then call a closure on it. After that, the `&mut T` is returned
 /// to the original task.
 ///
-/// Under the hood, [`Delegate`] leverages [`SendCell`] to ensure the delegated
+/// Under the hood, [`Delegate`] leverages [`SameExecutorCell`] to ensure the delegated
 /// object stays on the same executor.
 ///
 /// # Example
@@ -38,7 +38,7 @@ use crate::sendcell::SendCell;
 // - Takes 28 B for each delegate (on arm), which seems too much.
 #[derive(Default)]
 pub struct Delegate<T> {
-    send: Signal<CriticalSectionRawMutex, SendCell<*mut T>>,
+    send: Signal<CriticalSectionRawMutex, SameExecutorCell<*mut T>>,
     reply: Signal<CriticalSectionRawMutex, ()>,
     was_exercised: AtomicBool,
 }
@@ -66,7 +66,7 @@ impl<T> Delegate<T> {
     pub async unsafe fn lend<'a, 'b: 'a>(&'a self, something: &'b mut T) {
         let spawner = Spawner::for_current_executor().await;
         self.send
-            .signal(SendCell::new(something as *mut T, spawner));
+            .signal(SameExecutorCell::new(something as *mut T, spawner));
 
         self.reply.wait().await
     }
@@ -85,7 +85,7 @@ impl<T> Delegate<T> {
         let data = self.send.wait().await;
         let spawner = Spawner::for_current_executor().await;
         // SAFETY:
-        // - SendCell guarantees that data `lend()`ed stays on the same executor,
+        // - SameExecutorCell guarantees that data `lend()`ed stays on the same executor,
         //   which is single-threaded
         // - `lend()` signals the raw pointer via `self.send`, but then waits for `self.reply` to be signaled.
         //   This function waits for the `self.send` signal, uses the dereferenced only inside the

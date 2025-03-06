@@ -18,7 +18,7 @@ mod udp_nal;
 mod stored;
 
 use ariel_os_debug::log::info;
-use ariel_os_embassy::sendcell::SendCell;
+use ariel_os_embassy::cell::SameExecutorCell;
 use coap_handler_implementations::ReportingHandlerBuilder;
 use embassy_net::udp::{PacketMetadata, UdpSocket};
 use embassy_sync::watch::Watch;
@@ -28,7 +28,7 @@ const CONCURRENT_REQUESTS: usize = 3;
 
 static CLIENT_READY: Watch<
     embassy_sync::blocking_mutex::raw::CriticalSectionRawMutex,
-    SendCell<&'static embedded_nal_coap::CoAPRuntimeClient<'static, CONCURRENT_REQUESTS>>,
+    SameExecutorCell<&'static embedded_nal_coap::CoAPRuntimeClient<'static, CONCURRENT_REQUESTS>>,
     1,
 > = Watch::new();
 
@@ -187,7 +187,7 @@ async fn coap_run_impl(handler: impl coap_handler::Handler + coap_handler::Repor
 
     CLIENT_READY
         .sender()
-        .send(SendCell::new_async(&*CLIENT.init(client)).await);
+        .send(SameExecutorCell::new_async(&*CLIENT.init(client)).await);
 
     server
         .run(
