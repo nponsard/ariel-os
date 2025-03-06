@@ -599,8 +599,11 @@ impl ConfigBuilder {
 /// [`AifValue`][crate::scope::AifValue]), a [`TimeConstraint`], and a flag for importance.
 #[derive(Debug)]
 pub struct ConfigBuilderClaims {
+    /// The scope of the claims (providing [`GeneralClaims::scope()`]).
     pub scope: crate::scope::UnionScope,
+    /// Time constraints on the claims (providing [`GeneralClaims::time_constraint()`]).
     pub time_constraint: crate::time::TimeConstraint,
+    /// Importance of the security context (providing [`GeneralClaims::is_important()`], see there).
     pub is_important: bool,
 }
 

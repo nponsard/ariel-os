@@ -160,8 +160,11 @@ impl Scope for AifValue {
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 #[derive(Debug, Clone)]
 pub enum UnionScope {
+    /// Contains an [`AifValue`].
     AifValue(AifValue),
+    /// Allows all requests.
     AllowAll,
+    /// Denies all requests.
     DenyAll,
 }
 
