@@ -13,6 +13,7 @@ const USIZE_BITS: usize = mem::size_of::<usize>() * 8;
 pub struct RunqueueId(u8);
 
 impl RunqueueId {
+    /// Wraps the given ID as a [`RunqueueId`].
     #[must_use]
     pub const fn new(value: u8) -> Self {
         Self(value)
@@ -25,11 +26,13 @@ impl From<RunqueueId> for usize {
     }
 }
 
+/// Identifier of a thread.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub struct ThreadId(u8);
 
 impl ThreadId {
+    /// Wraps the given ID as a [`ThreadId`].
     #[must_use]
     pub const fn new(value: u8) -> Self {
         Self(value)
@@ -64,6 +67,7 @@ pub struct RunQueue<const N_QUEUES: usize, const N_THREADS: usize> {
 }
 
 impl<const N_QUEUES: usize, const N_THREADS: usize> RunQueue<{ N_QUEUES }, { N_THREADS }> {
+    /// Returns a new [`RunQueue`].
     #[must_use]
     pub const fn new() -> RunQueue<{ N_QUEUES }, { N_THREADS }> {
         // unfortunately we cannot assert!() on N_QUEUES and N_THREADS,
