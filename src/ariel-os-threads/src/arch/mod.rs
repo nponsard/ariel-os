@@ -63,5 +63,5 @@ cfg_if::cfg_if! {
 pub type ThreadData = <Cpu as Arch>::ThreadData;
 
 pub fn schedule() {
-    Cpu::schedule()
+    Cpu::schedule();
 }

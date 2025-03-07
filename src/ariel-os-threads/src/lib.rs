@@ -27,9 +27,11 @@
 #![feature(negative_impls)]
 #![cfg_attr(target_arch = "xtensa", feature(asm_experimental_arch))]
 #![deny(missing_docs)]
+#![deny(clippy::pedantic)]
 // Disable indexing lints for now, possible panics are documented or rely on internally-enforced
 // invariants
 #![allow(clippy::indexing_slicing)]
+#![expect(clippy::cast_possible_truncation)]
 
 mod arch;
 mod autostart_thread;
@@ -235,7 +237,7 @@ impl Scheduler {
         &mut self.threads[usize::from(thread_id)]
     }
 
-    /// Returns an unused ThreadId / Thread slot.
+    /// Returns an unused [`ThreadId`] / Thread slot.
     fn get_unused(&mut self) -> Option<(&mut Thread, ThreadId)> {
         for i in 0..THREAD_COUNT {
             if self.threads[i].state == ThreadState::Invalid {
@@ -391,14 +393,14 @@ impl Scheduler {
     #[cfg(feature = "multi-core")]
     #[allow(dead_code, reason = "used in scheduler implementation")]
     fn add_current_thread_to_rq(&mut self) {
-        let (tid, prio) = match self.current() {
-            Some(&mut Thread {
-                tid,
-                prio,
-                state: ThreadState::Running,
-                ..
-            }) => (tid, prio),
-            _ => return,
+        let Some(&mut Thread {
+            tid,
+            prio,
+            state: ThreadState::Running,
+            ..
+        }) = self.current()
+        else {
+            return;
         };
         self.runqueue.add(tid, prio);
     }
@@ -557,7 +559,7 @@ unsafe impl<T: Sync + Sized> Arguable for &'static T {
         const {
             assert!(size_of::<*const T>() == size_of::<u32>());
         }
-        self as *const T as usize
+        core::ptr::from_ref::<T>(self) as usize
     }
 }
 
@@ -677,7 +679,7 @@ pub fn yield_same() {
 
         #[cfg(not(feature = "multi-core"))]
         if scheduler.runqueue.advance(prio) {
-            schedule()
+            schedule();
         }
 
         // On multi-core, the current thread is removed from the runqueue, and then
@@ -697,7 +699,7 @@ pub fn yield_same() {
                 scheduler.schedule_if_higher_prio(_tid, prio);
             }
         }
-    })
+    });
 }
 
 /// Suspends/ pauses the current thread's execution.
@@ -737,5 +739,5 @@ pub fn get_priority(thread_id: ThreadId) -> Option<RunqueueId> {
 ///
 /// This might trigger a context switch.
 pub fn set_priority(thread_id: ThreadId, prio: RunqueueId) {
-    SCHEDULER.with_mut(|mut scheduler| scheduler.set_priority(thread_id, prio))
+    SCHEDULER.with_mut(|mut scheduler| scheduler.set_priority(thread_id, prio));
 }

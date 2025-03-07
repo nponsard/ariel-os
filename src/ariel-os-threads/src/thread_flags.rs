@@ -23,7 +23,7 @@ pub enum WaitMode {
 ///
 /// Panics if `thread_id` is >= [`THREAD_COUNT`](crate::THREAD_COUNT).
 pub fn set(thread_id: ThreadId, mask: ThreadFlags) {
-    SCHEDULER.with_mut(|mut scheduler| scheduler.flag_set(thread_id, mask))
+    SCHEDULER.with_mut(|mut scheduler| scheduler.flag_set(thread_id, mask));
 }
 
 /// Waits until all flags in `mask` are set for the current thread.
@@ -105,10 +105,13 @@ impl Scheduler {
             ThreadState::FlagBlocked(WaitMode::Any(bits)) if thread.flags & bits != 0 => {}
             ThreadState::FlagBlocked(WaitMode::All(bits)) if thread.flags & bits == bits => {}
             _ => return,
-        };
+        }
         self.set_state(thread_id, ThreadState::Running);
     }
 
+    /// # Panics
+    ///
+    /// Panics if called outside a thread context.
     fn flag_wait_all(&mut self, mask: ThreadFlags) -> Option<ThreadFlags> {
         let thread = self.current().unwrap();
         if thread.flags & mask == mask {
@@ -121,6 +124,9 @@ impl Scheduler {
         }
     }
 
+    /// # Panics
+    ///
+    /// Panics if called outside a thread context.
     fn flag_wait_any(&mut self, mask: ThreadFlags) -> Option<ThreadFlags> {
         let thread = self.current().unwrap();
         if thread.flags & mask != 0 {
@@ -134,6 +140,9 @@ impl Scheduler {
         }
     }
 
+    /// # Panics
+    ///
+    /// Panics if called outside a thread context.
     fn flag_wait_one(&mut self, mask: ThreadFlags) -> Option<ThreadFlags> {
         let thread = self.current().unwrap();
         if thread.flags & mask != 0 {
