@@ -28,7 +28,7 @@ Guidelines](https://ariel-os.github.io/ariel-os/dev/docs/book/COC_reporting.html
 -   **Be friendly and patient.**
 -   **Be welcoming.** We strive to be a community that welcomes and supports
     people of all backgrounds and identities. This includes, but is not limited
-    to members of any race, ethnicity, culture, national origin, colour,
+    to members of any race, ethnicity, culture, national origin, color,
     immigration status, social and economic class, educational level, sex,
     sexual orientation, gender identity and expression, age, size, family
     status, political belief, religion, and mental and physical ability.
