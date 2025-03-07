@@ -37,15 +37,12 @@ impl ThreadList {
                 next = scheduler.thread_blocklist[usize::from(n)];
             }
             scheduler.thread_blocklist[usize::from(tid)] = next;
-            let inherit_priority = match curr {
-                Some(curr) => {
-                    scheduler.thread_blocklist[usize::from(curr)] = Some(tid);
-                    None
-                }
-                None => {
-                    self.head = Some(tid);
-                    Some(prio)
-                }
+            let inherit_priority = if let Some(curr) = curr {
+                scheduler.thread_blocklist[usize::from(curr)] = Some(tid);
+                None
+            } else {
+                self.head = Some(tid);
+                Some(prio)
             };
             scheduler.set_state(tid, state);
             inherit_priority

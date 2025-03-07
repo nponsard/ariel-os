@@ -63,7 +63,7 @@ impl Lock {
                     waiters.put_current(cs, ThreadState::LockBlocked);
                 }
             }
-        })
+        });
     }
 
     /// Get the lock (non-blocking).
@@ -96,11 +96,11 @@ impl Lock {
                 LockState::Unlocked => {}
                 LockState::Locked(waiters) => {
                     if waiters.pop(cs).is_none() {
-                        *state = LockState::Unlocked
+                        *state = LockState::Unlocked;
                     }
                 }
             }
-        })
+        });
     }
 }
 

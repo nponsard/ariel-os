@@ -48,7 +48,9 @@ impl<T: Copy + Send> Channel<T> {
                     let mut waiters = ThreadList::new();
                     waiters.put_current(
                         cs,
-                        crate::ThreadState::ChannelTxBlocked(something as *const T as usize),
+                        crate::ThreadState::ChannelTxBlocked(
+                            core::ptr::from_ref::<T>(something) as usize
+                        ),
                     );
                     *state = ChannelState::SendersWaiting(waiters);
                 }
@@ -70,11 +72,11 @@ impl<T: Copy + Send> Channel<T> {
                 ChannelState::SendersWaiting(waiters) => {
                     waiters.put_current(
                         cs,
-                        crate::ThreadState::ChannelTxBlocked(self as *const _ as usize),
+                        crate::ThreadState::ChannelTxBlocked(core::ptr::from_ref(self) as usize),
                     );
                 }
             }
-        })
+        });
     }
 
     /// Try to send on the channel (non-blocking).
