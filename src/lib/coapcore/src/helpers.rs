@@ -2,13 +2,13 @@
 
 /// An own identifier for a security context.
 ///
-/// This is used with EDHOC as C_I when in an initiator role, C_R when in a responder role, and
+/// This is used with EDHOC as `C_I` when in an initiator role, `C_R` when in a responder role, and
 /// recipient ID in OSCORE.
 ///
 /// This type represents any of the 48 efficient identifiers that use CBOR one-byte integer
 /// encodings (see RFC9528 Section 3.3.2), or equivalently the 1-byte long OSCORE identifiers
 ///
-/// Lakers supports a much larger value space for C_x, and coapcore processes larger values
+/// Lakers supports a much larger value space for `C_x`, and coapcore processes larger values
 /// selected by the peer -- but on its own, will select only those that fit in this type.
 // FIXME Could even limit to positive values if MAX_CONTEXTS < 24
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
@@ -30,6 +30,11 @@ impl COwn {
     /// Find a value of self that is not found in the iterator.
     ///
     /// This asserts that the iterator is (known to be) short enough that this will always succeed.
+    ///
+    /// # Panics
+    ///
+    /// Panics if the iterator produces (or even may produce, per its size hints) more items than
+    /// `GENERATABLE_VALUES`.
     pub(crate) fn not_in_iter(iterator: impl Iterator<Item = Self>) -> Self {
         // In theory, this would allow the compiler to see that the unreachable below is indeed
         // unreachable
@@ -57,10 +62,18 @@ impl COwn {
         // trailing_ones = n implies that bit 1<<n is a zero and thus COwn(n) is free
         let pos_to = seen_pos.trailing_ones();
         if pos_to < 24 {
+            #[expect(
+                clippy::cast_possible_truncation,
+                reason = "ensured by the GENERATABLE_VALUES check"
+            )]
             return Self(pos_to as u8);
         }
         let neg_to = seen_neg.trailing_ones();
         if neg_to < 24 {
+            #[expect(
+                clippy::cast_possible_truncation,
+                reason = "ensured by the GENERATABLE_VALUES check"
+            )]
             return Self(0x20 | neg_to as u8);
         }
         unreachable!("Iterator is not long enough to set this many bits.");

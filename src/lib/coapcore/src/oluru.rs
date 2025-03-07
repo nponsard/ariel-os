@@ -14,6 +14,7 @@
 //! to "large").
 #![forbid(unsafe_code)]
 #![expect(clippy::indexing_slicing, reason = "module is scheduled for overhaul")]
+#![expect(clippy::pedantic)]
 
 use arrayvec::ArrayVec;
 
@@ -120,6 +121,7 @@ pub struct OrderedPool<T: PriorityLevel, const N: usize, const L: usize> {
 
 impl<T: PriorityLevel, const N: usize, const L: usize> OrderedPool<T, N, L> {
     /// Create an empty cache.
+    #[must_use]
     pub const fn new() -> Self {
         assert!(N < u16::MAX as usize, "Capacity overflow");
         // Clipping levels to u16 because they may be stored if the implementation changes.
@@ -244,10 +246,7 @@ impl<T: PriorityLevel, const N: usize, const L: usize> OrderedPool<T, N, L> {
         {
             new_position -= 1;
         }
-        if new_position != position {
-            // Push our entry out right and in left in the front
-            self.sorted[new_position..=position].rotate_right(1);
-        } else {
+        if new_position == position {
             // Level may instead have increased
             while new_position < self.sorted.len() - 1
                 && self.entries[usize::from(self.sorted[new_position + 1])].level() < level
@@ -258,6 +257,9 @@ impl<T: PriorityLevel, const N: usize, const L: usize> OrderedPool<T, N, L> {
             if new_position != position {
                 self.sorted[position..=new_position].rotate_left(1);
             }
+        } else {
+            // Push our entry out right and in left in the front
+            self.sorted[new_position..=position].rotate_right(1);
         }
     }
 

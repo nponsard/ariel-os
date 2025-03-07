@@ -47,10 +47,17 @@
 //!
 //! **Warning**: At the Debug level, this module may show cryptographic key material. This will be
 //! revised once all components have been interop-tested.
+//!
+//! # Caveats
+//!
+//! Currently, this has hidden dependencies on a particular implementation of the [`coap-message`]
+//! provided (it needs to be a [`coap_message_implementations::inmemory_write::Message`]) by the
+//! stack. There are plans for removing this limitation by integrating deeper with libOSCORE.
 #![doc = document_features::document_features!(feature_label = r#"<span class="stab portability"><code>{feature}</code></span>"#)]
 #![no_std]
 #![cfg_attr(feature = "_nightly_docs", feature(doc_auto_cfg))]
-#![expect(clippy::pedantic)]
+#![deny(missing_docs)]
+#![deny(clippy::pedantic)]
 
 mod iana;
 

@@ -63,6 +63,11 @@ pub trait ServerSecurityConfig {
     /// The buffer is given as heapless buffer rather than an an
     /// [`aead::Buffer`](https://docs.rs/aead/latest/aead/trait.Buffer.html) because the latter is
     /// not on the latest heaples version in its released version.
+    ///
+    /// # Errors
+    ///
+    /// This produces errors if the input (which is typically received from the network) is
+    /// malformed or contains unsupported items.
     #[allow(
         unused_variables,
         reason = "Names are human visible part of API description"
@@ -82,12 +87,17 @@ pub trait ServerSecurityConfig {
     ///
     /// `signed_payload` is the payload part of the signed CWT; while it is part of `signed_data` and
     /// can be recovered from it, `signed_data` currently typically resides in a copied buffer
-    /// created for signature verification, and signed_payload is around inside the caller for
+    /// created for signature verification, and `signed_payload` is around inside the caller for
     /// longer. As common with signed data, it should only be parsed once the signature has been
     /// verified.
     ///
     /// Like [`Self::decrypt_symmetric_token()`], this conflates a few aspects, which is tolerated
     /// for the time being.
+    ///
+    /// # Errors
+    ///
+    /// This produces errors if the input (which is typically received from the network) is
+    /// malformed or contains unsupported items.
     #[allow(
         unused_variables,
         reason = "Names are human visible part of API description"
@@ -136,6 +146,12 @@ pub trait ServerSecurityConfig {
     ///
     /// The default (or any error) renderer produces a generic 4.01 Unauthorized in the handler;
     /// specifics can be useful in ACE scenarios to return a Request Creation Hint.
+    ///
+    /// # Errors
+    ///
+    /// The implementation may fail like [any CoAP response
+    /// rendering][coap_handler::Handler::extract_request_data()]. No error details are conveyed;
+    /// instead, the caller needs to produce a generic response.
     #[allow(
         unused_variables,
         reason = "Names are human visible part of API description"
@@ -211,16 +227,16 @@ impl ServerSecurityConfig for ConfigBuilder {
         use ccm::aead::AeadInPlace;
         use ccm::KeyInit;
 
+        pub type Aes256Ccm = ccm::Ccm<aes::Aes256, ccm::consts::U16, ccm::consts::U13>;
+        // FIXME: should be something Aes256Ccm::TagLength
+        const TAG_SIZE: usize = 16;
+        const NONCE_SIZE: usize = 13;
+
         let key = self.as_key_31.ok_or_else(|| {
             error!("Symmetrically encrypted token was sent, but no symmetric key is configured.");
             CredentialErrorDetail::KeyNotPresent
         })?;
 
-        // FIXME: should be something Aes256Ccm::TagLength
-        const TAG_SIZE: usize = 16;
-        const NONCE_SIZE: usize = 13;
-
-        pub type Aes256Ccm = ccm::Ccm<aes::Aes256, ccm::consts::U16, ccm::consts::U13>;
         let cipher = Aes256Ccm::new((&key).into());
 
         let nonce: &[u8; NONCE_SIZE] = headers
@@ -278,6 +294,8 @@ impl ServerSecurityConfig for ConfigBuilder {
         signature: &[u8],
         signed_payload: &'b [u8],
     ) -> Result<(Self::GeneralClaims, crate::ace::CwtClaimsSet<'b>), CredentialError> {
+        use p256::ecdsa::{signature::Verifier, VerifyingKey};
+
         if headers.alg != Some(-7) {
             // ES256
             return Err(CredentialErrorDetail::UnsupportedAlgorithm.into());
@@ -287,7 +305,6 @@ impl ServerSecurityConfig for ConfigBuilder {
             return Err(CredentialErrorDetail::KeyNotPresent.into());
         };
 
-        use p256::ecdsa::{signature::Verifier, VerifyingKey};
         let as_key = VerifyingKey::from_encoded_point(
             &p256::EncodedPoint::from_affine_coordinates(x.into(), y.into(), false),
         )
@@ -430,6 +447,7 @@ impl ConfigBuilder {
     /// Creates an empty server security configuration.
     ///
     /// Without any additional building steps, this is equivalent to [`DenyAll`].
+    #[must_use]
     pub fn new() -> Self {
         Self {
             as_key_31: None,
@@ -460,6 +478,7 @@ impl ConfigBuilder {
     ///
     /// Currently, keys are taken as byte sequence. With the expected flexibilization of crypto
     /// backends, this may later allow a more generic type that reflects secure element key slots.
+    #[must_use]
     pub fn with_aif_symmetric_as_aesccm256(self, key: [u8; 32]) -> Self {
         Self {
             as_key_31: Some(key),
@@ -480,6 +499,7 @@ impl ConfigBuilder {
     ///
     /// Same from [`Self::with_aif_symmetric_as_aesccm256`] apply, minus the considerations for
     /// secure key storage.
+    #[must_use]
     pub fn with_aif_asymmetric_es256(
         self,
         x: [u8; 32],
@@ -502,6 +522,7 @@ impl ConfigBuilder {
     /// Currently, this type just supports a single credential; it should therefore only be called
     /// once, and the latest value overwrites any earlier. (See
     /// [`Self::with_aif_symmetric_as_aesccm256`] for plans).
+    #[must_use]
     pub fn with_known_edhoc_credential(
         self,
         credential: lakers::Credential,
@@ -519,6 +540,7 @@ impl ConfigBuilder {
     ///
     /// When debug assertions are enabled, this panics if an own credential has already been
     /// configured.
+    #[must_use]
     pub fn with_own_edhoc_credential(
         self,
         credential: lakers::Credential,
@@ -540,6 +562,7 @@ impl ConfigBuilder {
     ///
     /// When debug assertions are enabled, this panics if an unauthenticated scope has already been
     /// configured.
+    #[must_use]
     pub fn allow_unauthenticated(self, scope: crate::scope::UnionScope) -> Self {
         debug_assert!(
             self.unauthenticated_scope.is_none(),
@@ -557,6 +580,7 @@ impl ConfigBuilder {
     ///
     /// When debug assertions are enabled, this panics if an unauthenticated scope has already been
     /// configured.
+    #[must_use]
     pub fn with_request_creation_hints(self, request_creation_hints: &'static [u8]) -> Self {
         debug_assert!(
             self.request_creation_hints.is_empty(),
@@ -575,8 +599,11 @@ impl ConfigBuilder {
 /// [`AifValue`][crate::scope::AifValue]), a [`TimeConstraint`], and a flag for importance.
 #[derive(Debug)]
 pub struct ConfigBuilderClaims {
+    /// The scope of the claims (providing [`GeneralClaims::scope()`]).
     pub scope: crate::scope::UnionScope,
+    /// Time constraints on the claims (providing [`GeneralClaims::time_constraint()`]).
     pub time_constraint: crate::time::TimeConstraint,
+    /// Importance of the security context (providing [`GeneralClaims::is_important()`], see there).
     pub is_important: bool,
 }
 

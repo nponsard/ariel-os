@@ -67,6 +67,12 @@ const AIF_SCOPE_MAX_LEN: usize = 64;
 pub struct AifValue([u8; AIF_SCOPE_MAX_LEN]);
 
 impl AifValue {
+    /// Ingests an AIF scope, verifying that it satisfies the constraints of this type.
+    ///
+    /// # Errors
+    ///
+    /// This produces errors if the input (which is typically received from the network) is
+    /// malformed or contains unsupported items.
     pub fn parse(bytes: &[u8]) -> Result<Self, InvalidScope> {
         let mut buffer = [0; AIF_SCOPE_MAX_LEN];
 
@@ -81,7 +87,7 @@ impl AifValue {
             .map_err(|_| InvalidScope)?
         {
             let (path, _mask) = item.map_err(|_| InvalidScope)?;
-            if !path.starts_with("/") {
+            if !path.starts_with('/') {
                 return Err(InvalidScope);
             }
         }
@@ -117,9 +123,7 @@ impl Scope for AifValue {
                 // Special case: For consistency should be a single empty option.
                 return true;
             }
-            if !path.starts_with("/") {
-                panic!("Invalid AIF");
-            }
+            assert!(path.starts_with('/'), "Invalid AIF");
             let mut remainder = &path[1..];
             while !remainder.is_empty() {
                 let (next_part, next_remainder) = match remainder.split_once('/') {
@@ -156,8 +160,11 @@ impl Scope for AifValue {
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 #[derive(Debug, Clone)]
 pub enum UnionScope {
+    /// Contains an [`AifValue`].
     AifValue(AifValue),
+    /// Allows all requests.
     AllowAll,
+    /// Denies all requests.
     DenyAll,
 }
 
