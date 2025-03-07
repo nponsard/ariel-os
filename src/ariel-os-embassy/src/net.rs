@@ -9,7 +9,7 @@
 use embassy_net::{Runner, Stack};
 use embassy_sync::once_lock::OnceLock;
 
-use crate::{sendcell::SendCell, NetworkDevice};
+use crate::{cell::SameExecutorCell, NetworkDevice};
 
 #[allow(dead_code)]
 pub(crate) const ETHERNET_MTU: usize = 1514;
@@ -19,7 +19,7 @@ pub(crate) const ETHERNET_MTU: usize = 1514;
 /// Required to create a UDP or TCP socket.
 pub type NetworkStack = Stack<'static>;
 
-pub(crate) static STACK: OnceLock<SendCell<NetworkStack>> = OnceLock::new();
+pub(crate) static STACK: OnceLock<SameExecutorCell<NetworkStack>> = OnceLock::new();
 
 /// Returns a new [`NetworkStack`].
 ///
