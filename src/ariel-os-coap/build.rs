@@ -13,7 +13,7 @@ struct Peer {
 #[derive(Debug, Deserialize)]
 #[serde(untagged)]
 enum Scope {
-    String(String),
+    KnownScope(KnownScope),
     Aif(std::collections::HashMap<String, Permission>),
 }
 
@@ -55,6 +55,12 @@ impl SinglePermission {
     }
 }
 
+#[derive(Deserialize, Debug)]
+#[serde(rename_all = "kebab-case")]
+enum KnownScope {
+    AllowAll,
+}
+
 fn main() {
     if !build::cargo_feature("coap-server-config-storage") {
         return;
@@ -87,7 +93,7 @@ fn main() {
         // just parsed enough that there is no CBOR parsing but credential and material point to
         // overlapping slices?
         let scope = match peer.scope {
-            Scope::String(s) if s == "allow-all" => {
+            Scope::KnownScope(KnownScope::AllowAll) => {
                 "coapcore::scope::UnionScope::AllowAll".to_string()
             }
             Scope::Aif(aif) => {
@@ -99,7 +105,6 @@ fn main() {
                 minicbor::encode(data, &mut bytes).unwrap();
                 format!("coapcore::scope::UnionScope::AifValue(coapcore::scope::AifValue::parse(&{bytes:?}).unwrap())")
             }
-            e => panic!("Scope configuration {e:?} is not recognized"),
         };
         write!(
             chain_once_per_kccs,
