@@ -87,7 +87,7 @@ pub trait DeviceId: Sized {
     /// See `ariel_os::identity::interface_eu48` for details.
     fn interface_eui48(&self, if_index: u32) -> Eui48 {
         // Not even trying to hash for privacy: Many CPU IDs just have 32 variable bits (eg. EFM32
-        // with a 32bit timstamp in a limited range, and a 32bit factory ID, or STM32's 96 bit
+        // with a 32bit timestamp in a limited range, and a 32bit factory ID, or STM32's 96 bit
         // containing lot and wafer numbers and coordinates), and all SHA256 hashes of 2^32
         // possibilities can just be calculated on a graphics card in an hour.
         //

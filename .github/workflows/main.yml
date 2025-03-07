@@ -330,7 +330,7 @@ jobs:
           args: format --check # Only check formatting for now
 
       - name: typos
-        uses: crate-ci/typos@v1.22.0
+        uses: crate-ci/typos@v1
 
       - name: Check the support matrix generation exit code
         run: ./doc/gen_support_matrix_html.rs generate doc/support_matrix.yml /dev/null
