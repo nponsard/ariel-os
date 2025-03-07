@@ -43,6 +43,10 @@ impl ServerSecurityConfig for StoredPolicy {
         }
         None
     }
+
+    fn nosec_authorization(&self) -> Option<Self::GeneralClaims> {
+        flash_peers::unauthenticated_scope().map(|scope| StoredClaims { scope })
+    }
 }
 
 /// Generates a private key and some credential matching it.
