@@ -1,0 +1,633 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   version="1.2"
+   viewBox="0 0 8536 8936.1553"
+   preserveAspectRatio="xMidYMid"
+   fill-rule="evenodd"
+   stroke-width="28.222"
+   stroke-linejoin="round"
+   xml:space="preserve"
+   id="svg5971"
+   width="650"
+   height="680"
+   sodipodi:docname="Ariel-HexaCube-brick (rounded) (small).svg"
+   inkscape:version="1.2.2 (b0a8486541, 2022-12-01)"
+   inkscape:export-filename="Ariel-HexaCube-brick (rounded) (small export).svg"
+   inkscape:export-xdpi="7.3102155"
+   inkscape:export-ydpi="7.3102155"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns:ooo="http://xml.openoffice.org/svg/export"><sodipodi:namedview
+   id="namedview126"
+   pagecolor="#ffffff"
+   bordercolor="#000000"
+   borderopacity="0.25"
+   inkscape:showpageshadow="2"
+   inkscape:pageopacity="0.0"
+   inkscape:pagecheckerboard="0"
+   inkscape:deskcolor="#d1d1d1"
+   showgrid="false"
+   inkscape:zoom="0.030790089"
+   inkscape:cx="4222.1378"
+   inkscape:cy="5423.8232"
+   inkscape:window-width="1920"
+   inkscape:window-height="1085"
+   inkscape:window-x="0"
+   inkscape:window-y="1112"
+   inkscape:window-maximized="1"
+   inkscape:current-layer="svg5971" />
+ <defs
+   id="presentation-animations"><clipPath
+     clipPathUnits="userSpaceOnUse"
+     id="clipPath3986"><ellipse
+       style="fill:#ffffff;stroke-width:27.1287"
+       id="ellipse3988"
+       cx="3851.9985"
+       cy="4339.9487"
+       rx="4338.8423"
+       ry="4268.0781" /></clipPath></defs>
+ <defs
+   class="TextShapeIndex"
+   id="defs5845" />
+ <defs
+   class="EmbeddedBulletChars"
+   id="defs5877" />
+ <defs
+   id="defs5924" />
+ 
+<g
+   id="layer1"
+   transform="translate(370.1806,102.5454)"
+   clip-path="url(#clipPath3986)"><g
+     style="fill-rule:evenodd;stroke-width:28.222;stroke-linejoin:round"
+     id="g13827"
+     transform="translate(-11227,-4063)"><g
+       class="Page"
+       id="g13683"
+       style="fill-rule:evenodd;stroke-width:28.222;stroke-linejoin:round">
+      <g
+   class="com.sun.star.drawing.CustomShape"
+   id="g13660">
+       <g
+   id="id6-7">
+        <rect
+   class="BoundingBox"
+   stroke="none"
+   fill="none"
+   x="11276"
+   y="4063"
+   width="7622"
+   height="8689"
+   id="rect13655" />
+        <path
+   fill="#d94b26"
+   stroke="none"
+   d="M 11276,10579 V 6235 l 3810,-2172 3811,2172 v 4344 l -3811,2172 z"
+   id="path13657" />
+       </g>
+      </g>
+      <g
+   class="com.sun.star.drawing.LineShape"
+   id="g13667">
+       <g
+   id="id7-5">
+        <rect
+   class="BoundingBox"
+   stroke="none"
+   fill="none"
+   x="11227"
+   y="6172"
+   width="1499"
+   height="915"
+   id="rect13662" />
+        <path
+   fill="none"
+   stroke="#eeeeee"
+   stroke-width="152"
+   stroke-linejoin="round"
+   stroke-linecap="round"
+   d="m 11303,6248 1346,762"
+   id="path13664" />
+       </g>
+      </g>
+      <g
+   class="com.sun.star.drawing.LineShape"
+   id="g13674">
+       <g
+   id="id8-3">
+        <rect
+   class="BoundingBox"
+   stroke="none"
+   fill="none"
+   x="17399"
+   y="6172"
+   width="1523"
+   height="1015"
+   id="rect13669" />
+        <path
+   fill="none"
+   stroke="#eeeeee"
+   stroke-width="152"
+   stroke-linejoin="round"
+   stroke-linecap="round"
+   d="m 17475,7110 1370,-862"
+   id="path13671" />
+       </g>
+      </g>
+      <g
+   class="com.sun.star.drawing.LineShape"
+   id="g13681">
+       <g
+   id="id9-8">
+        <rect
+   class="BoundingBox"
+   stroke="none"
+   fill="none"
+   x="14986"
+   y="11252"
+   width="153"
+   height="1525"
+   id="rect13676" />
+        <path
+   fill="none"
+   stroke="#eeeeee"
+   stroke-width="152"
+   stroke-linejoin="round"
+   stroke-linecap="round"
+   d="m 15062,11328 v 1372"
+   id="path13678" />
+       </g>
+      </g>
+     </g></g><g
+     style="fill-rule:evenodd;stroke-width:28.222;stroke-linejoin:round"
+     id="g21149"
+     transform="matrix(1.6132692,0,0,1.8298837,-20336.465,-10870.989)"><g
+       class="Page"
+       id="g20963"
+       style="fill-rule:evenodd;stroke-width:28.222;stroke-linejoin:round">
+      <g
+   ooo:text-adjust="center"
+   class="TextShape"
+   id="g20888">
+       <g
+   id="id6-0">
+        <rect
+   class="BoundingBox"
+   stroke="none"
+   fill="none"
+   x="13778"
+   y="7721"
+   width="1525"
+   height="1776"
+   id="rect20877" />
+        <text
+   class="SVGTextShape"
+   id="text20885"><tspan
+     class="TextParagraph"
+     id="tspan20883"><tspan
+       class="TextPosition"
+       x="14028"
+       y="8942"
+       id="tspan20881"><tspan
+         font-family="'URW Gothic', sans-serif"
+         font-size="1482px"
+         font-weight="400"
+         fill="#eeeeee"
+         stroke="none"
+         style="white-space:pre"
+         id="tspan20879">R</tspan></tspan></tspan></text>
+       </g>
+      </g>
+      <g
+   ooo:text-adjust="center"
+   class="TextShape"
+   id="g20901">
+       <g
+   id="id7-8">
+        <rect
+   class="BoundingBox"
+   stroke="none"
+   fill="none"
+   x="14678"
+   y="7721"
+   width="1525"
+   height="1777"
+   id="rect20890" />
+        <text
+   class="SVGTextShape"
+   id="text20898"><tspan
+     class="TextParagraph"
+     id="tspan20896"><tspan
+       class="TextPosition"
+       x="14928"
+       y="8942"
+       id="tspan20894"><tspan
+         font-family="'URW Gothic', sans-serif"
+         font-size="1482px"
+         font-weight="400"
+         fill="#eeeeee"
+         stroke="none"
+         style="white-space:pre"
+         id="tspan20892">i</tspan></tspan></tspan></text>
+       </g>
+      </g>
+      <g
+   ooo:text-adjust="center"
+   class="TextShape"
+   id="g20914">
+       <g
+   id="id8-5">
+        <rect
+   class="BoundingBox"
+   stroke="none"
+   fill="none"
+   x="14778"
+   y="7722"
+   width="1525"
+   height="1776"
+   id="rect20903" />
+        <text
+   class="SVGTextShape"
+   id="text20911"><tspan
+     class="TextParagraph"
+     id="tspan20909"><tspan
+       class="TextPosition"
+       x="15028"
+       y="8943"
+       id="tspan20907"><tspan
+         font-family="'URW Gothic', sans-serif"
+         font-size="1482px"
+         font-weight="400"
+         fill="#eeeeee"
+         stroke="none"
+         style="white-space:pre"
+         id="tspan20905">E</tspan></tspan></tspan></text>
+       </g>
+      </g>
+      <g
+   ooo:text-adjust="center"
+   class="TextShape"
+   id="g20927">
+       <g
+   id="id9-0">
+        <rect
+   class="BoundingBox"
+   stroke="none"
+   fill="none"
+   x="15545"
+   y="7722"
+   width="1525"
+   height="1777"
+   id="rect20916" />
+        <text
+   class="SVGTextShape"
+   id="text20924"><tspan
+     class="TextParagraph"
+     id="tspan20922"><tspan
+       class="TextPosition"
+       x="15795"
+       y="8943"
+       id="tspan20920"><tspan
+         font-family="'URW Gothic', sans-serif"
+         font-size="1482px"
+         font-weight="400"
+         fill="#eeeeee"
+         stroke="none"
+         style="white-space:pre"
+         id="tspan20918">L</tspan></tspan></tspan></text>
+       </g>
+      </g>
+      <g
+   class="com.sun.star.drawing.CustomShape"
+   id="g20934">
+       <g
+   id="id10">
+        <rect
+   class="BoundingBox"
+   stroke="none"
+   fill="none"
+   x="14124"
+   y="7720"
+   width="255"
+   height="1525"
+   id="rect20929" />
+        <path
+   fill="#d94b26"
+   stroke="none"
+   d="m 14251,9244 h -127 V 7720 h 254 v 1524 z"
+   id="path20931" />
+       </g>
+      </g>
+      <g
+   class="com.sun.star.drawing.CustomShape"
+   id="g20941">
+       <g
+   id="id11">
+        <rect
+   class="BoundingBox"
+   stroke="none"
+   fill="none"
+   x="15124"
+   y="7720"
+   width="171"
+   height="1525"
+   id="rect20936" />
+        <path
+   fill="#d94b26"
+   stroke="none"
+   d="m 15209,9244 h -85 V 7720 h 170 v 1524 z"
+   id="path20938" />
+       </g>
+      </g>
+      <g
+   ooo:text-adjust="center"
+   class="TextShape"
+   id="g20954">
+       <g
+   id="id12">
+        <rect
+   class="BoundingBox"
+   stroke="none"
+   fill="none"
+   x="13054"
+   y="7720"
+   width="1525"
+   height="1777"
+   id="rect20943" />
+        <text
+   class="SVGTextShape"
+   id="text20951"><tspan
+     class="TextParagraph"
+     id="tspan20949"><tspan
+       class="TextPosition"
+       x="13304"
+       y="8941"
+       id="tspan20947"><tspan
+         font-family="'URW Gothic', sans-serif"
+         font-size="1482px"
+         font-style="italic"
+         font-weight="400"
+         fill="#eeeeee"
+         stroke="none"
+         style="white-space:pre"
+         id="tspan20945">A</tspan></tspan></tspan></text>
+       </g>
+      </g>
+      <g
+   class="com.sun.star.drawing.CustomShape"
+   id="g20961">
+       <g
+   id="id13">
+        <rect
+   class="BoundingBox"
+   stroke="none"
+   fill="none"
+   x="15124"
+   y="7720"
+   width="171"
+   height="1525"
+   id="rect20956" />
+        <path
+   fill="#d94b26"
+   stroke="none"
+   d="m 15209,9244 h -85 V 7720 h 170 v 1524 z"
+   id="path20958" />
+       </g>
+      </g>
+     </g></g><g
+     style="fill-rule:evenodd;stroke-width:28.222;stroke-linejoin:round"
+     id="g21149-3"
+     transform="matrix(1.6132692,0,0,1.8298837,-20336.465,-10870.989)"><g
+       style="fill-rule:evenodd;stroke-width:28.222;stroke-linejoin:round"
+       id="g8720">
+      <g
+   class="TextShape"
+   id="g20888-6">
+       <g
+   id="id6-0-2">
+        <rect
+   class="BoundingBox"
+   stroke="none"
+   fill="none"
+   x="13778"
+   y="7721"
+   width="1525"
+   height="1776"
+   id="rect20877-9" />
+        <text
+   class="SVGTextShape"
+   id="text20885-1"><tspan
+     class="TextParagraph"
+     id="tspan20883-2"><tspan
+       class="TextPosition"
+       x="14028"
+       y="8942"
+       id="tspan20881-7"><tspan
+         font-family="'URW Gothic', sans-serif"
+         font-size="1482px"
+         font-weight="400"
+         fill="#eeeeee"
+         stroke="none"
+         style="white-space:pre"
+         id="tspan20879-0">R</tspan></tspan></tspan></text>
+       </g>
+      </g>
+      <g
+   ooo:text-adjust="center"
+   class="TextShape"
+   id="g20901-9">
+       <g
+   id="id7-8-3">
+        <rect
+   class="BoundingBox"
+   stroke="none"
+   fill="none"
+   x="14678"
+   y="7721"
+   width="1525"
+   height="1777"
+   id="rect20890-6" />
+        <text
+   class="SVGTextShape"
+   id="text20898-0"><tspan
+     class="TextParagraph"
+     id="tspan20896-6"><tspan
+       class="TextPosition"
+       x="14928"
+       y="8942"
+       id="tspan20894-2"><tspan
+         font-family="'URW Gothic', sans-serif"
+         font-size="1482px"
+         font-weight="400"
+         fill="#eeeeee"
+         stroke="none"
+         style="white-space:pre"
+         id="tspan20892-6">i</tspan></tspan></tspan></text>
+       </g>
+      </g>
+      <g
+   ooo:text-adjust="center"
+   class="TextShape"
+   id="g20914-1">
+       <g
+   id="id8-5-8">
+        <rect
+   class="BoundingBox"
+   stroke="none"
+   fill="none"
+   x="14778"
+   y="7722"
+   width="1525"
+   height="1776"
+   id="rect20903-7" />
+        <text
+   class="SVGTextShape"
+   id="text20911-9"><tspan
+     class="TextParagraph"
+     id="tspan20909-2"><tspan
+       class="TextPosition"
+       x="15028"
+       y="8943"
+       id="tspan20907-0"><tspan
+         font-family="'URW Gothic', sans-serif"
+         font-size="1482px"
+         font-weight="400"
+         fill="#eeeeee"
+         stroke="none"
+         style="white-space:pre"
+         id="tspan20905-2">E</tspan></tspan></tspan></text>
+       </g>
+      </g>
+      <g
+   ooo:text-adjust="center"
+   class="TextShape"
+   id="g20927-3">
+       <g
+   id="id9-0-7">
+        <rect
+   class="BoundingBox"
+   stroke="none"
+   fill="none"
+   x="15545"
+   y="7722"
+   width="1525"
+   height="1777"
+   id="rect20916-5" />
+        <text
+   class="SVGTextShape"
+   id="text20924-9"><tspan
+     class="TextParagraph"
+     id="tspan20922-2"><tspan
+       class="TextPosition"
+       x="15795"
+       y="8943"
+       id="tspan20920-2"><tspan
+         font-family="'URW Gothic', sans-serif"
+         font-size="1482px"
+         font-weight="400"
+         fill="#eeeeee"
+         stroke="none"
+         style="white-space:pre"
+         id="tspan20918-8">L</tspan></tspan></tspan></text>
+       </g>
+      </g>
+      <g
+   class="com.sun.star.drawing.CustomShape"
+   id="g20934-9">
+       <g
+   id="id10-7">
+        <rect
+   class="BoundingBox"
+   stroke="none"
+   fill="none"
+   x="14124"
+   y="7720"
+   width="255"
+   height="1525"
+   id="rect20929-3" />
+        <path
+   fill="#d94b26"
+   stroke="none"
+   d="m 14251,9244 h -127 V 7720 h 254 v 1524 z"
+   id="path20931-6" />
+       </g>
+      </g>
+      <g
+   class="com.sun.star.drawing.CustomShape"
+   id="g20941-1">
+       <g
+   id="id11-2">
+        <rect
+   class="BoundingBox"
+   stroke="none"
+   fill="none"
+   x="15124"
+   y="7720"
+   width="171"
+   height="1525"
+   id="rect20936-9" />
+        <path
+   fill="#d94b26"
+   stroke="none"
+   d="m 15209,9244 h -85 V 7720 h 170 v 1524 z"
+   id="path20938-3" />
+       </g>
+      </g>
+      <g
+   ooo:text-adjust="center"
+   class="TextShape"
+   id="g20954-1">
+       <g
+   id="id12-9">
+        <rect
+   class="BoundingBox"
+   stroke="none"
+   fill="none"
+   x="13054"
+   y="7720"
+   width="1525"
+   height="1777"
+   id="rect20943-4" />
+        <text
+   class="SVGTextShape"
+   id="text20951-7"><tspan
+     class="TextParagraph"
+     id="tspan20949-8"><tspan
+       class="TextPosition"
+       x="13304"
+       y="8941"
+       id="tspan20947-4"><tspan
+         font-family="'URW Gothic', sans-serif"
+         font-size="1482px"
+         font-style="italic"
+         font-weight="400"
+         fill="#eeeeee"
+         stroke="none"
+         style="white-space:pre"
+         id="tspan20945-5">A</tspan></tspan></tspan></text>
+       </g>
+      </g>
+      <g
+   class="com.sun.star.drawing.CustomShape"
+   id="g20961-0">
+       <g
+   id="id13-3">
+        <rect
+   class="BoundingBox"
+   stroke="none"
+   fill="none"
+   x="15124"
+   y="7720"
+   width="171"
+   height="1525"
+   id="rect20956-6" />
+        <path
+   fill="#d94b26"
+   stroke="none"
+   d="m 15209,9244 h -85 V 7720 h 170 v 1524 z"
+   id="path20958-1" />
+       </g>
+      </g>
+     </g></g></g></svg>
