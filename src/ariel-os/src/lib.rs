@@ -35,6 +35,9 @@ pub use ariel_os_coap as coap;
 pub use ariel_os_debug as debug;
 #[doc(inline)]
 pub use ariel_os_identity as identity;
+#[cfg(feature = "power")]
+#[doc(inline)]
+pub use ariel_os_power as power;
 #[cfg(feature = "random")]
 #[doc(inline)]
 pub use ariel_os_random as random;
