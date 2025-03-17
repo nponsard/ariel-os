@@ -1,6 +1,9 @@
 use embassy_stm32::{bind_interrupts, peripherals, usb, usb::Driver};
 
 bind_interrupts!(struct Irqs {
+    #[cfg(capability = "hw/stm32-usb")]
+    USB => usb::InterruptHandler<peripherals::USB>;
+    #[cfg(capability = "hw/stm32-usb-lp")]
     USB_LP => usb::InterruptHandler<peripherals::USB>;
 });
 
