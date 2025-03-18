@@ -149,6 +149,7 @@ dependencies = [
  "ariel-os-embassy",
  "ariel-os-identity",
  "ariel-os-macros",
+ "ariel-os-power",
  "ariel-os-random",
  "ariel-os-rt",
  "ariel-os-storage",
@@ -389,6 +390,14 @@ dependencies = [
  "ld-memory",
  "paste",
  "portable-atomic",
+]
+
+[[package]]
+name = "ariel-os-power"
+version = "0.1.0"
+dependencies = [
+ "cortex-m",
+ "esp-hal",
 ]
 
 [[package]]
@@ -2583,6 +2592,14 @@ dependencies = [
 
 [[package]]
 name = "example-log"
+version = "0.0.0"
+dependencies = [
+ "ariel-os",
+ "ariel-os-boards",
+]
+
+[[package]]
+name = "example-power"
 version = "0.0.0"
 dependencies = [
  "ariel-os",
