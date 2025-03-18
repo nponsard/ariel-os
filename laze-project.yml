@@ -292,6 +292,7 @@ contexts:
       - ?debug-console
       - ?esp-println
     provides:
+      - has_executor_single_thread_support
       - has_hwrng
     env:
       RUSTFLAGS:
@@ -1117,8 +1118,8 @@ modules:
 
   - name: executor-single-thread
     help: use Embassy executor within single "thread mode" thread
-    context:
-      - esp
+    selects:
+      - has_executor_single_thread_support
     provides_unique:
       - executor
     conflicts:
@@ -1127,6 +1128,10 @@ modules:
       global:
         FEATURES:
           - ariel-os/executor-single-thread
+
+  - name: has_executor_single_thread_support
+    selects:
+      - doc-only
 
   # Enabled for MCU families that provide a dedicated software interrupt (SWI),
   # and thus do not require to sacrifice another, arbitrarily-chosen peripheral
