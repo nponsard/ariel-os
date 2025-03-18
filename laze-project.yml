@@ -194,6 +194,8 @@ contexts:
 
   - name: nrf52
     parent: nrf
+    provides:
+      - has_storage_support
     env:
       CARGO_RUNNER:
         - ${SCRIPTS}/debug-openocd.sh
@@ -226,6 +228,8 @@ contexts:
 
   - name: nrf5340
     parent: nrf53
+    provides:
+      - has_storage_support
     selects:
       - cortex-m33f
     env:
@@ -244,6 +248,8 @@ contexts:
       - rp-link-arg
       - cortex-m0-plus
       - ?probe-rs
+    provides:
+      - has_storage_support
     env:
       PROBE_RS_CHIP: RP2040
       CARGO_RUNNER:
@@ -260,6 +266,8 @@ contexts:
     selects:
       - cortex-m33f
       - ?probe-rs
+    provides:
+      - has_storage_support
     env:
       PROBE_RS_CHIP: RP235x
       CARGO_RUNNER:
@@ -389,6 +397,7 @@ contexts:
       # TODO: also has a cortex-m4f
       - cortex-m7f
     provides:
+      - has_storage_support
       - has_swi
     env:
       PROBE_RS_CHIP: STM32H755ZITx
@@ -406,6 +415,7 @@ contexts:
     selects:
       - cortex-m4f
     provides:
+      - has_storage_support
       - has_swi
     env:
       PROBE_RS_CHIP: STM32WB55RGVx
@@ -828,19 +838,18 @@ modules:
           - ariel-os/network-config-static
 
   - name: sw/storage
-    context:
-      - rp2040
-      - rp235xa
-      - nrf52840
-      - nrf5340
-      - stm32h755zitx
-      - stm32wb55rgvx
+    selects:
+      - has_storage_support
     env:
       global:
         FEATURES:
           - ariel-os/storage
         RUSTFLAGS:
           - -Clink-arg=-Tstorage.x
+
+  - name: has_storage_support
+    selects:
+      - doc-only
 
   - name: sw/threading
     selects:
