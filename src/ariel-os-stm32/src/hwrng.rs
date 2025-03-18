@@ -4,14 +4,19 @@ use embassy_stm32::{bind_interrupts, peripherals, rng};
 #[cfg(not(any(capability = "hw/stm32-hash-rng", capability = "hw/stm32-rng")))]
 compile_error!("no stm32 RNG capability selected");
 
-#[cfg(capability = "hw/stm32-hash-rng")]
 bind_interrupts!(struct Irqs {
+    #[cfg(capability = "hw/stm32-aes-rng")]
+    AES_RNG => rng::InterruptHandler<peripherals::RNG>;
+    #[cfg(capability = "hw/stm32-aes-rng-lpuart1")]
+    AES_RNG_LPUART1 => rng::InterruptHandler<peripherals::RNG>;
+    #[cfg(capability = "hw/stm32-hash-rng")]
     HASH_RNG => rng::InterruptHandler<peripherals::RNG>;
-});
-
-#[cfg(capability = "hw/stm32-rng")]
-bind_interrupts!(struct Irqs {
+    #[cfg(capability = "hw/stm32-rng")]
     RNG => rng::InterruptHandler<peripherals::RNG>;
+    #[cfg(capability = "hw/stm32-rng-cryp")]
+    RNG_CRYP => rng::InterruptHandler<peripherals::RNG>;
+    #[cfg(capability = "hw/stm32-rng-lpuart1")]
+    RNG_LPUART1 => rng::InterruptHandler<peripherals::RNG>;
 });
 
 pub fn construct_rng(peripherals: &mut crate::OptionalPeripherals) {
