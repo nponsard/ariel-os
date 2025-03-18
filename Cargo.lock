@@ -396,6 +396,7 @@ dependencies = [
 name = "ariel-os-power"
 version = "0.1.0"
 dependencies = [
+ "cfg-if",
  "cortex-m",
  "esp-hal",
 ]
