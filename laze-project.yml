@@ -481,31 +481,55 @@ modules:
     selects:
       - cortex-m
       - thumbv6m-none-eabi
+    env:
+      global:
+        RUSTFLAGS:
+          - --cfg context=\"cortex-m0\"
 
   - name: cortex-m0-plus
     selects:
       - cortex-m
       - thumbv6m-none-eabi
+    env:
+      global:
+        RUSTFLAGS:
+          - --cfg context=\"cortex-m0-plus\"
 
   - name: cortex-m4
     selects:
       - cortex-m
       - thumbv7em-none-eabi
+    env:
+      global:
+        RUSTFLAGS:
+          - --cfg context=\"cortex-m4\"
 
   - name: cortex-m4f
     selects:
       - cortex-m
       - thumbv7em-none-eabi # actually eabihf, but ariel-os doesn't support hard float yet
+    env:
+      global:
+        RUSTFLAGS:
+          - --cfg context=\"cortex-m4f\"
 
   - name: cortex-m7f
     selects:
       - cortex-m
       - thumbv7em-none-eabi # actually eabihf, but ariel-os doesn't support hard float yet
+    env:
+      global:
+        RUSTFLAGS:
+          - --cfg context=\"cortex-m7f\"
 
   - name: cortex-m33f
     selects:
       - cortex-m
       - thumbv8m.main-none-eabi # actually eabihf, but ariel-os doesn't support hard float yet
+    env:
+      global:
+        RUSTFLAGS:
+          - --cfg context=\"cortex-m33f\"
 
   - name: xtensa
     env:

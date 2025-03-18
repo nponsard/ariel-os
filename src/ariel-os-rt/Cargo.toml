@@ -22,9 +22,12 @@ rustflags = "0.1"
 cortex-m = { workspace = true }
 cortex-m-rt = { workspace = true }
 
+# No CAS instructions on Cortex-M0+.
+[target.'cfg(context = "cortex-m0-plus")'.dependencies]
+portable-atomic = { workspace = true, features = ["critical-section"] }
+
 [target.'cfg(context = "rp")'.dependencies]
 embassy-rp = { workspace = true, optional = true }
-portable-atomic = { workspace = true, features = ["critical-section"] }
 
 [target.'cfg(context = "esp")'.dependencies]
 esp-hal = { workspace = true, default-features = false }
