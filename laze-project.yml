@@ -182,6 +182,8 @@ contexts:
     parent: nrf
     selects:
       - cortex-m0
+    provides:
+      - has_hwrng
 
   - name: bbc-microbit-base
     # this is a context, not a builder, to be used as parent by  "bbc-microbit" and
@@ -196,6 +198,7 @@ contexts:
   - name: nrf52
     parent: nrf
     provides:
+      - has_hwrng
       - has_storage_support
     env:
       CARGO_RUNNER:
@@ -240,6 +243,7 @@ contexts:
     help: Raspberry Pi Pico (2) MCU support (based on embassy-rp)
     parent: ariel-os
     provides:
+      - has_hwrng
       - has_swi
 
   - name: rp2040
@@ -285,6 +289,8 @@ contexts:
     selects:
       - ?debug-console
       - ?esp-println
+    provides:
+      - has_hwrng
     env:
       RUSTFLAGS:
         # linkall first
@@ -400,6 +406,7 @@ contexts:
       # TODO: also has a cortex-m4f
       - cortex-m7f
     provides:
+      - has_hwrng
       - has_storage_support
       - has_swi
     env:
@@ -418,6 +425,7 @@ contexts:
     selects:
       - cortex-m4f
     provides:
+      - has_hwrng
       - has_storage_support
       - has_swi
     env:
@@ -435,6 +443,7 @@ contexts:
     selects:
       - cortex-m33f
     provides:
+      - has_hwrng
       - has_swi
     env:
       PROBE_RS_CHIP: STM32WBA55CGUx
@@ -921,21 +930,16 @@ modules:
 
   - name: hwrng
     help: The board's peripherals are suitable for passing into ariel_os_random::construct_rng.
-    context:
-      # these are precisely those for which the hwrng feature of
-      # ariel-os-embassy builds, which would fail if the big if(context=...)
-      # doesn't have an entry in the cfg(feature = "hwrng") part of init_task
-      - esp
-      - nrf51
-      - nrf52
-      - rp
-      - stm32h755zitx
-      - stm32wb55rgvx
-      - stm32wba55cgux
+    selects:
+      - has_hwrng
     env:
       global:
         FEATURES:
           - ariel-os/hwrng
+
+  - name: has_hwrng
+    selects:
+      - doc-only
 
   - name: coap
     help: Basic support for the CoAP protocol.
