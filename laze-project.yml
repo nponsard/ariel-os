@@ -876,14 +876,18 @@ modules:
           - ariel-os/threading
 
   - name: wifi-cyw43
-    context:
-      - rpi-pico-w
+    selects:
+      - has_wifi_cyw43
     provides_unique:
       - network_device
     env:
       global:
         FEATURES:
           - ariel-os/wifi-cyw43
+
+  - name: has_wifi_cyw43
+    selects:
+      - doc-only
 
   - name: usb-ethernet
     provides_unique:
@@ -1359,6 +1363,7 @@ builders:
     parent: rpi-pico
     provides:
       - has_usb_device_port
+      - has_wifi_cyw43
 
   - name: rpi-pico2
     parent: rp235xa
