@@ -15,6 +15,7 @@ git-repository-url = "https://github.com/ariel-os/ariel-os"
 edit-url-template = "https://github.com/ariel-os/ariel-os/edit/main/book/{path}"
 
 [output.html.redirect]
+"/build_system.html" = "build-system.html"
 "/getting_started.html" = "getting-started.html"
 
 [preprocessor.cmdrun]
