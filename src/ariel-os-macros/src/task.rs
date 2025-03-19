@@ -24,8 +24,6 @@
 /// # Examples
 ///
 /// ```ignore
-/// use ariel_os::usb::UsbBuilderHook;
-///
 /// #[ariel_os::task(autostart, peripherals, usb_builder_hook)]
 /// async fn task(peripherals: /* your peripheral type */) {}
 /// ```
