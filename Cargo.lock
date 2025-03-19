@@ -2627,6 +2627,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "example-testing"
+version = "0.0.0"
+dependencies = [
+ "ariel-os",
+ "ariel-os-boards",
+ "embedded-test",
+]
+
+[[package]]
 name = "example-threading"
 version = "0.0.0"
 dependencies = [
@@ -5145,15 +5154,6 @@ dependencies = [
  "embedded-nal-coap",
  "heapless 0.8.0",
  "scroll-ring",
-]
-
-[[package]]
-name = "testing"
-version = "0.0.0"
-dependencies = [
- "ariel-os",
- "ariel-os-boards",
- "embedded-test",
 ]
 
 [[package]]
