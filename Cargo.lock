@@ -2616,6 +2616,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "example-storage"
+version = "0.0.0"
+dependencies = [
+ "ariel-os",
+ "ariel-os-boards",
+ "arrayvec",
+ "heapless 0.8.0",
+ "serde",
+]
+
+[[package]]
 name = "eyre"
 version = "0.6.12"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -4953,17 +4964,6 @@ checksum = "dc520f60f6653a32479a95b9180b33908f0cbbdf106609465ee7dea98f4f5b37"
 dependencies = [
  "cortex-m",
  "cortex-m-rt",
-]
-
-[[package]]
-name = "storage"
-version = "0.0.0"
-dependencies = [
- "ariel-os",
- "ariel-os-boards",
- "arrayvec",
- "heapless 0.8.0",
- "serde",
 ]
 
 [[package]]
