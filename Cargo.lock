@@ -2627,6 +2627,14 @@ dependencies = [
 ]
 
 [[package]]
+name = "example-threading"
+version = "0.0.0"
+dependencies = [
+ "ariel-os",
+ "ariel-os-boards",
+]
+
+[[package]]
 name = "eyre"
 version = "0.6.12"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -5204,14 +5212,6 @@ dependencies = [
  "ariel-os",
  "ariel-os-boards",
  "embassy-sync 0.6.2",
-]
-
-[[package]]
-name = "threading"
-version = "0.0.0"
-dependencies = [
- "ariel-os",
- "ariel-os-boards",
 ]
 
 [[package]]
