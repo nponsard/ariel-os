@@ -17,6 +17,7 @@ edit-url-template = "https://github.com/ariel-os/ariel-os/edit/main/book/{path}"
 [output.html.redirect]
 "/async_support.html" = "async-support.html"
 "/build_system.html" = "build-system.html"
+"/debug_console.html" = "debug-console.html"
 "/getting_started.html" = "getting-started.html"
 
 [preprocessor.cmdrun]
