@@ -2644,6 +2644,14 @@ dependencies = [
 ]
 
 [[package]]
+name = "example-usb-serial"
+version = "0.0.0"
+dependencies = [
+ "ariel-os",
+ "ariel-os-boards",
+]
+
+[[package]]
 name = "eyre"
 version = "0.6.12"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -5461,14 +5469,6 @@ dependencies = [
  "ariel-os-boards",
  "embassy-sync 0.6.2",
  "static_cell",
-]
-
-[[package]]
-name = "usb-serial"
-version = "0.0.0"
-dependencies = [
- "ariel-os",
- "ariel-os-boards",
 ]
 
 [[package]]

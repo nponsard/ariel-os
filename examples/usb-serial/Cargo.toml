@@ -1,5 +1,5 @@
 [package]
-name = "usb-serial"
+name = "example-usb-serial"
 license.workspace = true
 edition.workspace = true
 publish = false
