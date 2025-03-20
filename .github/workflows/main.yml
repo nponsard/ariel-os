@@ -262,10 +262,8 @@ jobs:
                     mdns,
                     net,
                     no-boards,
-                    power
                     random,
                     ariel-os-coap/doc,
-                    ariel-os-power/doc,
                     spi,
                     storage,
                     tcp,
