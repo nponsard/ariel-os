@@ -356,6 +356,9 @@ contexts:
       - cortex-m0-plus
     provides:
       - has_swi
+    disables:
+      # TODO: embedded-test currently hard-codes 16k for its thread
+      - embedded-test
     env:
       isr_stacksize_required_default: "1024"
       executor_stacksize_required_default: "3072"
