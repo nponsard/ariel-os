@@ -190,8 +190,10 @@ async fn init_task(mut peripherals: hal::OptionalPeripherals) {
     // Clock startup and entropy collection may lend themselves to parallelization, provided that
     // doesn't impact runtime RAM or flash use.
 
+    // Block on this Future to reduce the size of this startup task, which is statically
+    // allocated.
     #[cfg(feature = "storage")]
-    ariel_os_storage::init(&mut peripherals).await;
+    embassy_futures::block_on(ariel_os_storage::init(&mut peripherals));
 
     #[cfg(all(feature = "usb", context = "nrf"))]
     hal::usb::init();
