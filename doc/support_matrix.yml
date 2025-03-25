@@ -122,7 +122,7 @@ chips:
       gpio: supported
       debug_output: supported
       hwrng: supported
-      i2c_controller: needs_testing
+      i2c_controller: supported
       spi_main: supported
       logging: supported
       storage: supported
@@ -275,6 +275,15 @@ boards:
     chip: rp235xa
     support:
       user_usb: supported
+      ethernet_over_usb: supported
+
+  rpi-pico2-w:
+    name: Raspberry Pi Pico 2 W
+    url: https://web.archive.org/web/20250130144056/https://www.raspberrypi.com/products/raspberry-pi-pico-2/
+    chip: rp235xa
+    support:
+      user_usb: supported
+      wifi: supported
       ethernet_over_usb: supported
 
   espressif-esp32-c6-devkitc-1:
