@@ -107,7 +107,9 @@ fn main() {
                     .collect();
                 let mut bytes = vec![];
                 minicbor::encode(data, &mut bytes).unwrap();
-                format!("coapcore::scope::UnionScope::AifValue(coapcore::scope::AifValue::parse(&{bytes:?}).unwrap())")
+                format!(
+                    "coapcore::scope::UnionScope::AifValue(coapcore::scope::AifValue::parse(&{bytes:?}).unwrap())"
+                )
             }
         };
 
@@ -135,7 +137,9 @@ fn main() {
                 unauthenticated_scope = Some(format!("Some({scope})"));
             }
             _ => {
-                panic!("Every peer record needs to have either a `kccs: ...` or a `from: unauthenticated` key.")
+                panic!(
+                    "Every peer record needs to have either a `kccs: ...` or a `from: unauthenticated` key."
+                )
             }
         }
     }
