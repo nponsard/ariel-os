@@ -25,6 +25,8 @@ contexts:
       - ?hw/device-identity
       - ?lto
       - ?semihosting
+      - ?nightly
+      - ?stable
     env:
       RUSTFLAGS:
         - ${RUSTFLAGS_CONTEXTS}
@@ -331,7 +333,6 @@ contexts:
     selects:
       - xtensa
     env:
-      CARGO_TOOLCHAIN: +esp
       RUSTC_TARGET: xtensa-esp32-none-elf
       CARGO_TARGET_PREFIX: CARGO_TARGET_XTENSA_ESP32_NONE_ELF
       CC: xtensa-esp32-elf-gcc
@@ -380,7 +381,6 @@ contexts:
       - sw/benchmark
     provides_unique: [c-function-abort]
     env:
-      CARGO_TOOLCHAIN: +esp
       RUSTC_TARGET: xtensa-esp32s3-none-elf
       PROBE_RS_CHIP: esp32s3
       PROBE_RS_PROTOCOL: jtag
@@ -581,8 +581,12 @@ modules:
           - --cfg context=\"cortex-m33f\"
 
   - name: xtensa
+    conflicts:
+      # no xtensa in stable Rust
+      - stable
     env:
       global:
+        CARGO_TOOLCHAIN: +esp
         RUSTFLAGS:
           - --cfg context=\"xtensa\"
         CFLAGS:
@@ -643,6 +647,25 @@ modules:
       global:
         FEATURES:
           - ariel-os/debug-console
+
+  - name: stable
+    help: build with stable Rust
+    conflicts:
+      - nightly
+    env:
+      global:
+        CARGO_TOOLCHAIN: +stable
+        RUSTFLAGS:
+          - --cfg stable
+
+  - name: nightly
+    help: build with nightly Rust
+    conflicts:
+      - stable
+    env:
+      global:
+        RUSTFLAGS:
+          - --cfg nightly
 
   # This module should be hard-selected when an application *requires* debug
   # logging.
