@@ -405,7 +405,6 @@ contexts:
       isr_stacksize_required_default: "1024"
       executor_stacksize_required_default: "3072"
       PROBE_RS_CHIP: STM32C031C6Tx
-      PROBE_RS_PROTOCOL: swd
       CARGO_ENV:
         # This ISR is unused on a naked board. Configured here for testing.
         - CONFIG_SWI=USART2
@@ -418,7 +417,6 @@ contexts:
       - has_swi
     env:
       PROBE_RS_CHIP: STM32F401RETx
-      PROBE_RS_PROTOCOL: swd
       RUSTFLAGS:
         - --cfg capability=\"async-flash-driver\"
       CARGO_ENV:
@@ -436,7 +434,6 @@ contexts:
       - has_swi
     env:
       PROBE_RS_CHIP: STM32H755ZITx
-      PROBE_RS_PROTOCOL: swd
       RUSTFLAGS:
         - --cfg capability=\"hw/stm32-dual-core\"
         - --cfg capability=\"hw/stm32-hash-rng\"
@@ -455,7 +452,6 @@ contexts:
       - has_swi
     env:
       PROBE_RS_CHIP: STM32WB55RGVx
-      PROBE_RS_PROTOCOL: swd
       RUSTFLAGS:
         - --cfg capability=\"hw/stm32-rng\"
         - --cfg capability=\"hw/stm32-usb-lp\"
@@ -472,7 +468,6 @@ contexts:
       - has_swi
     env:
       PROBE_RS_CHIP: STM32WBA55CGUx
-      PROBE_RS_PROTOCOL: swd
       RUSTFLAGS:
         - --cfg capability=\"hw/stm32-rng\"
       CARGO_ENV:
