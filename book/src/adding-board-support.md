@@ -38,7 +38,7 @@ contexts:
     selects:
       - thumbv7em-none-eabi # actually eabihf, but ariel-os doesn't support hard float yet
     env:
-      PROBE_RS_CHIP: STM32F401RETx
+      PROBE_RS_CHIP: STM32F401RE
       PROBE_RS_PROTOCOL: swd
       RUSTFLAGS:
         - --cfg context=\"stm32f401retx\"
