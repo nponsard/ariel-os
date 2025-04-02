@@ -35,7 +35,7 @@ Example for the `st-nucleo-f401re` board:
 builders:
   # ...
   - name: st-nucleo-f401re
-    parent: stm32f401retx
+    parent: stm32f401re
 ```
 
 ## Adding Support for an MCU from a Supported MCU family
@@ -56,12 +56,12 @@ At least the following crates may need to be updated:
 - `ariel-os-storage`
 - `ariel-os-embassy`
 
-Example for the `stm32f401retx` MCU:
+Example for the `stm32f401re` MCU:
 
 ```yaml
 contexts:
   # ...
-  - name: stm32f401retx
+  - name: stm32f401re
     parent: stm32
     selects:
       - cortex-m4f
