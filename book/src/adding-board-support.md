@@ -43,7 +43,7 @@ builders:
 - In `laze-project.yml`:
   - Add a context for the MCU (if it does not already exist).
     - `parent`: The closest Embassy HAL's context.
-    - `selects`: A [rustc-target](#adding-support-for-a-processor-architecture) module.
+    - `selects`: A [rustc-target](#adding-support-for-a-processor-architecture) module or one of the `cortex-m*` modules if applicable.
 
 MCU-specific items inside Ariel OS crates are gated behind
 `#[cfg(context = $CONTEXT)]` attributes, where `$CONTEXT` is the [MCU's `laze
@@ -97,8 +97,6 @@ Example:
 modules:
   # ...
   - name: thumbv6m-none-eabi
-    selects:
-      - cortex-m
     env:
       global:
         RUSTC_TARGET: thumbv6m-none-eabi
