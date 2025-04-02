@@ -67,7 +67,7 @@ ariel_os::hal::define_peripherals!(Peripherals {
     spi_sck: PA5,
     spi_miso: PA6,
     spi_mosi: PA7,
-    spi_cs: PA4,
+    spi_cs: PB0,
 });
 
 // Side SPI of Arduino v3 connector
