@@ -8,6 +8,10 @@ Feel free to report anything that is unclear or missing!
 > This guide requires working on your own copy of Ariel OS.
 > You may want to fork the repository to easily upstream your changes later.
 
+> Unless documented in the User Guide, please expect the module and context names that are defined in the `laze-project.yml` file to change.
+> We're still figuring out a proper naming scheme.
+> You've been warned.
+
 ## Adding Support for a Board
 
 The more similar a board is to one that is already supported, the easier.
@@ -36,6 +40,11 @@ builders:
   # ...
   - name: st-nucleo-f401re
     parent: stm32f401re
+    provides:
+      - has_swi
+    env:
+      CARGO_ENV:
+        - CONFIG_SWI=USART2
 ```
 
 ## Adding Support for an MCU from a Supported MCU family
