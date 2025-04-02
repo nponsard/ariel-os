@@ -31,20 +31,6 @@ MCU-specific code can be re-used.
 Example for the `st-nucleo-f401re` board:
 
 ```yaml
-contexts:
-  # ...
-  - name: stm32f401retx
-    parent: stm32
-    selects:
-      - thumbv7em-none-eabi # actually eabihf, but ariel-os doesn't support hard float yet
-    env:
-      PROBE_RS_CHIP: STM32F401RE
-      PROBE_RS_PROTOCOL: swd
-      RUSTFLAGS:
-        - --cfg context=\"stm32f401retx\"
-      CARGO_ENV:
-        - CONFIG_SWI=USART2
-
 builders:
   # ...
   - name: st-nucleo-f401re
@@ -68,6 +54,24 @@ At least the following crates may need to be updated:
 - The Ariel OS HAL crate for the MCU family.
 - `ariel-os-storage`
 - `ariel-os-embassy`
+
+Example for the `stm32f401retx` MCU:
+
+```yaml
+contexts:
+  # ...
+  - name: stm32f401retx
+    parent: stm32
+    selects:
+      - cortex-m4f
+    env:
+      PROBE_RS_CHIP: STM32F401RE
+      PROBE_RS_PROTOCOL: swd
+      RUSTFLAGS:
+        - --cfg context=\"stm32f401retx\"
+      CARGO_ENV:
+        - CONFIG_SWI=USART2
+```
 
 ## Adding Support for an Embassy HAL/MCU family
 
