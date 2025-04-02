@@ -67,8 +67,6 @@ contexts:
       - cortex-m4f
     env:
       PROBE_RS_CHIP: STM32F401RE
-      RUSTFLAGS:
-        - --cfg context=\"stm32f401retx\"
       CARGO_ENV:
         - CONFIG_SWI=USART2
 ```
