@@ -21,6 +21,7 @@ It is usually best to copy and adapt an existing one.
   - Ensure there is a way to flash the board:
     - If the MCU is supported by probe-rs, specify `PROBE_RS_CHIP`
       and `PROBE_RS_PROTOCOL`.
+      `PROBE_RS_PROTOCOL` can be omitted to inherit the default value from the `ariel-os` laze context.
     - If the board is based on `esp`, it should inherit the espflash support.
     - If neither of these are supported, please open an issue.
   - Add a builder for the actual board that uses the context from above as `parent`.
@@ -66,7 +67,6 @@ contexts:
       - cortex-m4f
     env:
       PROBE_RS_CHIP: STM32F401RE
-      PROBE_RS_PROTOCOL: swd
       RUSTFLAGS:
         - --cfg context=\"stm32f401retx\"
       CARGO_ENV:
