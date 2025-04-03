@@ -76,8 +76,6 @@ contexts:
       - cortex-m4f
     env:
       PROBE_RS_CHIP: STM32F401RE
-      CARGO_ENV:
-        - CONFIG_SWI=USART2
 ```
 
 ## Adding Support for an Embassy HAL/MCU family
