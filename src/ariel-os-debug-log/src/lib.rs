@@ -11,8 +11,6 @@
 //! feature; please refer to the documentation of those crates for details on the supported syntax.
 
 #![cfg_attr(not(test), no_std)]
-// Required for nested macros with repetitions in the inner macro.
-#![feature(macro_metavar_expr)]
 #![feature(doc_auto_cfg)]
 #![deny(missing_docs)]
 #![deny(clippy::pedantic)]
@@ -47,137 +45,130 @@ pub mod log {
     pub use log::{debug, error, info, trace, warn};
 }
 
+// NOTE: log macros are defined within private modules so that `doc_auto_cfg` does not produce
+// "feature flairs" on them.
+// The macros are still exported even though they are defined "within" private modules.
 #[cfg(feature = "defmt")]
-macro_rules! define_logging_macros {
-    () => {
-        /// Logs a message at the trace level.
-        #[macro_export]
-        macro_rules! trace {
-            ($$($$arg:tt)*) => {{
-                use $crate::defmt::hidden::defmt;
-                defmt::trace!($$($$arg)*);
-            }};
-        }
+mod log_macros {
+    /// Logs a message at the trace level.
+    #[macro_export]
+    macro_rules! trace {
+        ($($arg:tt)*) => {{
+            use $crate::defmt::hidden::defmt;
+            defmt::trace!($($arg)*);
+        }};
+    }
 
-        /// Logs a message at the debug level.
-        #[macro_export]
-        macro_rules! debug {
-            ($$($$arg:tt)*) => {{
-                use $crate::defmt::hidden::defmt;
-                defmt::debug!($$($$arg)*);
-            }};
-        }
+    /// Logs a message at the debug level.
+    #[macro_export]
+    macro_rules! debug {
+        ($($arg:tt)*) => {{
+            use $crate::defmt::hidden::defmt;
+            defmt::debug!($($arg)*);
+        }};
+    }
 
-        /// Logs a message at the info level.
-        #[macro_export]
-        macro_rules! info {
-            ($$($$arg:tt)*) => {{
-                use $crate::defmt::hidden::defmt;
-                defmt::info!($$($$arg)*);
-            }};
-        }
+    /// Logs a message at the info level.
+    #[macro_export]
+    macro_rules! info {
+        ($($arg:tt)*) => {{
+            use $crate::defmt::hidden::defmt;
+            defmt::info!($($arg)*);
+        }};
+    }
 
-        /// Logs a message at the warn level.
-        #[macro_export]
-        macro_rules! warn {
-            ($$($$arg:tt)*) => {{
-                use $crate::defmt::hidden::defmt;
-                defmt::warn!($$($$arg)*);
-            }};
-        }
+    /// Logs a message at the warn level.
+    #[macro_export]
+    macro_rules! warn {
+        ($($arg:tt)*) => {{
+            use $crate::defmt::hidden::defmt;
+            defmt::warn!($($arg)*);
+        }};
+    }
 
-        /// Logs a message at the error level.
-        #[macro_export]
-        macro_rules! error {
-            ($$($$arg:tt)*) => {{
-                use $crate::defmt::hidden::defmt;
-                defmt::error!($$($$arg)*);
-            }};
-        }
+    /// Logs a message at the error level.
+    #[macro_export]
+    macro_rules! error {
+        ($($arg:tt)*) => {{
+            use $crate::defmt::hidden::defmt;
+            defmt::error!($($arg)*);
+        }};
     }
 }
 
 #[cfg(feature = "log")]
-macro_rules! define_logging_macros {
-    () => {
-        /// Logs a message at the trace level.
-        #[macro_export]
-        macro_rules! trace {
-            ($$($$arg:tt)*) => {{
-                $crate::log::trace!($$($$arg)*);
-            }};
-        }
+mod log_macros {
+    /// Logs a message at the trace level.
+    #[macro_export]
+    macro_rules! trace {
+        ($($arg:tt)*) => {{
+            $crate::log::trace!($($arg)*);
+        }};
+    }
 
-        /// Logs a message at the debug level.
-        #[macro_export]
-        macro_rules! debug {
-            ($$($$arg:tt)*) => {{
-                $crate::log::debug!($$($$arg)*);
-            }};
-        }
+    /// Logs a message at the debug level.
+    #[macro_export]
+    macro_rules! debug {
+        ($($arg:tt)*) => {{
+            $crate::log::debug!($($arg)*);
+        }};
+    }
 
-        /// Logs a message at the info level.
-        #[macro_export]
-        macro_rules! info {
-            ($$($$arg:tt)*) => {{
-                $crate::log::info!($$($$arg)*);
-            }};
-        }
+    /// Logs a message at the info level.
+    #[macro_export]
+    macro_rules! info {
+        ($($arg:tt)*) => {{
+            $crate::log::info!($($arg)*);
+        }};
+    }
 
-        /// Logs a message at the warn level.
-        #[macro_export]
-        macro_rules! warn {
-            ($$($$arg:tt)*) => {{
-                $crate::log::warn!($$($$arg)*);
-            }};
-        }
+    /// Logs a message at the warn level.
+    #[macro_export]
+    macro_rules! warn {
+        ($($arg:tt)*) => {{
+            $crate::log::warn!($($arg)*);
+        }};
+    }
 
-        /// Logs a message at the error level.
-        #[macro_export]
-        macro_rules! error {
-            ($$($$arg:tt)*) => {{
-                $crate::log::error!($$($$arg)*);
-            }};
-        }
+    /// Logs a message at the error level.
+    #[macro_export]
+    macro_rules! error {
+        ($($arg:tt)*) => {{
+            $crate::log::error!($($arg)*);
+        }};
     }
 }
 
 // Define no-op macros in case no facade is enabled.
 #[cfg(not(any(feature = "defmt", feature = "log")))]
-macro_rules! define_logging_macros {
-    () => {
-        /// Logs a message at the trace level.
-        #[macro_export]
-        macro_rules! trace {
-            ($$($$arg:tt)*) => {};
-        }
+mod log_macros {
+    /// Logs a message at the trace level.
+    #[macro_export]
+    macro_rules! trace {
+        ($($arg:tt)*) => {};
+    }
 
-        /// Logs a message at the debug level.
-        #[macro_export]
-        macro_rules! debug {
-            ($$($$arg:tt)*) => {};
-        }
+    /// Logs a message at the debug level.
+    #[macro_export]
+    macro_rules! debug {
+        ($($arg:tt)*) => {};
+    }
 
-        /// Logs a message at the info level.
-        #[macro_export]
-        macro_rules! info {
-            ($$($$arg:tt)*) => {};
-        }
+    /// Logs a message at the info level.
+    #[macro_export]
+    macro_rules! info {
+        ($($arg:tt)*) => {};
+    }
 
-        /// Logs a message at the warn level.
-        #[macro_export]
-        macro_rules! warn {
-            ($$($$arg:tt)*) => {};
-        }
+    /// Logs a message at the warn level.
+    #[macro_export]
+    macro_rules! warn {
+        ($($arg:tt)*) => {};
+    }
 
-        /// Logs a message at the error level.
-        #[macro_export]
-        macro_rules! error {
-            ($$($$arg:tt)*) => {};
-        }
-    };
+    /// Logs a message at the error level.
+    #[macro_export]
+    macro_rules! error {
+        ($($arg:tt)*) => {};
+    }
 }
-
-// NOTE: these nested macros are used so `doc_auto_cfg` doesn't produce "feature flairs" on the
-// logging macros.
-define_logging_macros!();
