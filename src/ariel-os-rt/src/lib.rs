@@ -63,10 +63,13 @@ mod isr_stack {
         CONFIG_ISR_STACKSIZE
     };
 
-    // SAFETY: a linker script inserts this section in RAM.
-    #[unsafe(link_section = ".isr_stack")]
-    #[used(linker)]
-    static ISR_STACK: [u8; ISR_STACKSIZE] = [0u8; ISR_STACKSIZE];
+    core::arch::global_asm!(
+        r#"
+        .section .isr_stack, "wa"
+        .skip {size}
+        "#,
+        size = const ISR_STACKSIZE
+    );
 }
 
 #[cfg(feature = "_panic-handler")]
