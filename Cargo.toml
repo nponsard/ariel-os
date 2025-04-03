@@ -126,7 +126,7 @@ ariel-os-utils = { path = "src/ariel-os-utils", default-features = false }
 
 const_panic = { version = "0.2.8", default-features = false }
 const-str = "0.6.0"
-defmt = { version = "0.3.7" }
+defmt = { version = "1.0.0" }
 document-features = "0.2.8"
 fugit = { version = "0.3.7", default-features = false }
 heapless = { version = "0.8.0", default-features = false }

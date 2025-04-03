@@ -178,7 +178,7 @@ version = "0.1.0"
 dependencies = [
  "cfg-if",
  "cortex-m",
- "defmt",
+ "defmt 1.0.1",
  "esp-hal",
 ]
 
@@ -245,7 +245,7 @@ dependencies = [
 name = "ariel-os-debug-log"
 version = "0.1.0"
 dependencies = [
- "defmt",
+ "defmt 1.0.1",
  "featurecomb",
  "log",
 ]
@@ -294,7 +294,7 @@ dependencies = [
  "ariel-os-buildinfo",
  "ariel-os-utils",
  "const-sha1",
- "defmt",
+ "defmt 1.0.1",
  "embassy-futures",
  "embassy-time",
  "embedded-hal 1.0.0",
@@ -313,7 +313,7 @@ dependencies = [
  "ariel-os-threads",
  "ariel-os-utils",
  "cfg-if",
- "defmt",
+ "defmt 1.0.1",
  "embassy-embedded-hal",
  "embassy-executor",
  "embassy-time",
@@ -382,7 +382,7 @@ dependencies = [
  "ariel-os-embassy-common",
  "ariel-os-random",
  "cfg-if",
- "defmt",
+ "defmt 1.0.1",
  "embassy-embedded-hal",
  "embassy-executor",
  "embassy-nrf",
@@ -422,7 +422,7 @@ dependencies = [
  "cfg-if",
  "cyw43",
  "cyw43-pio",
- "defmt",
+ "defmt 1.0.1",
  "embassy-embedded-hal",
  "embassy-executor",
  "embassy-net-driver-channel",
@@ -454,7 +454,7 @@ dependencies = [
 name = "ariel-os-runqueue"
 version = "0.1.0"
 dependencies = [
- "defmt",
+ "defmt 1.0.1",
  "hax-lib",
 ]
 
@@ -466,7 +466,7 @@ dependencies = [
  "ariel-os-random",
  "ariel-os-stm32-mapping",
  "cfg-if",
- "defmt",
+ "defmt 1.0.1",
  "embassy-embedded-hal",
  "embassy-executor",
  "embassy-stm32",
@@ -512,7 +512,7 @@ dependencies = [
  "cortex-m-rt",
  "cortex-m-semihosting",
  "critical-section",
- "defmt",
+ "defmt 1.0.1",
  "embassy-rp",
  "esp-hal",
  "linkme",
@@ -756,7 +756,7 @@ version = "0.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "d69c6b9d78fe4db539449fc8782dd2554fd4baee27f6e6dbf2e4757fcbc36139"
 dependencies = [
- "defmt",
+ "defmt 0.3.100",
  "embassy-sync 0.6.2",
  "embedded-io 0.6.1",
  "embedded-io-async",
@@ -1188,7 +1188,7 @@ dependencies = [
  "coap-message-implementations",
  "coap-message-utils",
  "coap-numbers",
- "defmt",
+ "defmt 1.0.1",
  "defmt-or-log",
  "document-features",
  "heapless 0.8.0",
@@ -1484,9 +1484,18 @@ checksum = "f578e8e2c440e7297e008bb5486a3a8a194775224bbc23729b0dbdfaeebf162e"
 
 [[package]]
 name = "defmt"
-version = "0.3.10"
+version = "0.3.100"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "86f6162c53f659f65d00619fe31f14556a6e9f8752ccc4a41bd177ffcf3d6130"
+checksum = "f0963443817029b2024136fc4dd07a5107eb8f977eaf18fcd1fdeb11306b64ad"
+dependencies = [
+ "defmt 1.0.1",
+]
+
+[[package]]
+name = "defmt"
+version = "1.0.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "548d977b6da32fa1d1fda2876453da1e7df63ad0304c8b3dae4dbe7b96f39b78"
 dependencies = [
  "bitflags 1.3.2",
  "defmt-macros",
@@ -1494,9 +1503,9 @@ dependencies = [
 
 [[package]]
 name = "defmt-macros"
-version = "0.4.0"
+version = "1.0.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "9d135dd939bad62d7490b0002602d35b358dce5fd9233a709d3c1ef467d4bde6"
+checksum = "3d4fc12a85bcf441cfe44344c4b72d58493178ce635338a3f3b78943aceb258e"
 dependencies = [
  "defmt-parser",
  "proc-macro-error2",
@@ -1511,7 +1520,7 @@ version = "0.2.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "8370630b4dee85ab47d9087813771c5c7fe88d24fdd48649bbdfe6089da4c53a"
 dependencies = [
- "defmt",
+ "defmt 0.3.100",
  "defmt-or-log-macros",
  "log",
 ]
@@ -1529,9 +1538,9 @@ dependencies = [
 
 [[package]]
 name = "defmt-parser"
-version = "0.4.1"
+version = "1.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "3983b127f13995e68c1e29071e5d115cd96f215ccb5e6812e3728cd6f92653b3"
+checksum = "10d60334b3b2e7c9d91ef8150abfb6fa4c1c39ebbcf4a81c2e346aad939fee3e"
 dependencies = [
  "thiserror 2.0.11",
 ]
@@ -1667,7 +1676,7 @@ name = "embassy-embedded-hal"
 version = "0.3.0"
 source = "git+https://github.com/ariel-os/embassy?branch=embassy-embedded-hal-v0.3.0%2Bariel-os#21147bdceb85f55e375973f30e47c17036063689"
 dependencies = [
- "defmt",
+ "defmt 0.3.100",
  "embassy-futures",
  "embassy-sync 0.6.2",
  "embassy-time",
@@ -1707,7 +1716,7 @@ version = "0.1.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "1f878075b9794c1e4ac788c95b728f26aa6366d32eeb10c7051389f898f7d067"
 dependencies = [
- "defmt",
+ "defmt 0.3.100",
 ]
 
 [[package]]
@@ -1717,7 +1726,7 @@ source = "git+https://github.com/ariel-os/embassy?branch=embassy-hal-internal-v0
 dependencies = [
  "cortex-m",
  "critical-section",
- "defmt",
+ "defmt 0.3.100",
  "num-traits",
 ]
 
@@ -1726,7 +1735,7 @@ name = "embassy-net"
 version = "0.6.0"
 source = "git+https://github.com/ariel-os/embassy?branch=embassy-net-v0.6.0%2Bariel-os#3d9f77ee05cdb18f1cd676233bcda9b6f7be3369"
 dependencies = [
- "defmt",
+ "defmt 0.3.100",
  "document-features",
  "embassy-net-driver",
  "embassy-sync 0.6.2",
@@ -1744,7 +1753,7 @@ version = "0.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "524eb3c489760508f71360112bca70f6e53173e6fe48fc5f0efd0f5ab217751d"
 dependencies = [
- "defmt",
+ "defmt 0.3.100",
 ]
 
 [[package]]
@@ -1768,7 +1777,7 @@ dependencies = [
  "cortex-m",
  "cortex-m-rt",
  "critical-section",
- "defmt",
+ "defmt 0.3.100",
  "document-features",
  "embassy-embedded-hal",
  "embassy-hal-internal",
@@ -1800,7 +1809,7 @@ dependencies = [
  "cortex-m",
  "cortex-m-rt",
  "critical-section",
- "defmt",
+ "defmt 0.3.100",
  "document-features",
  "embassy-embedded-hal",
  "embassy-futures",
@@ -1844,7 +1853,7 @@ dependencies = [
  "cortex-m",
  "cortex-m-rt",
  "critical-section",
- "defmt",
+ "defmt 0.3.100",
  "document-features",
  "embassy-embedded-hal",
  "embassy-futures",
@@ -1899,7 +1908,7 @@ checksum = "8d2c8cdff05a7a51ba0087489ea44b0b1d97a296ca6b1d6d1a33ea7423d34049"
 dependencies = [
  "cfg-if",
  "critical-section",
- "defmt",
+ "defmt 0.3.100",
  "embedded-io-async",
  "futures-sink",
  "futures-util",
@@ -1914,7 +1923,7 @@ checksum = "f820157f198ada183ad62e0a66f554c610cdcd1a9f27d4b316358103ced7a1f8"
 dependencies = [
  "cfg-if",
  "critical-section",
- "defmt",
+ "defmt 0.3.100",
  "document-features",
  "embassy-time-driver",
  "embedded-hal 0.2.7",
@@ -1948,7 +1957,7 @@ version = "0.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "6e651b9b7b47b514e6e6d1940a6e2e300891a2c33641917130643602a0cb6386"
 dependencies = [
- "defmt",
+ "defmt 0.3.100",
  "embassy-futures",
  "embassy-net-driver-channel",
  "embassy-sync 0.6.2",
@@ -1964,7 +1973,7 @@ version = "0.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "4fc247028eae04174b6635104a35b1ed336aabef4654f5e87a8f32327d231970"
 dependencies = [
- "defmt",
+ "defmt 0.3.100",
 ]
 
 [[package]]
@@ -1974,7 +1983,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "08e753b23799329780c7ac434264026d0422044d6649ed70a73441b14a6436d7"
 dependencies = [
  "critical-section",
- "defmt",
+ "defmt 0.3.100",
  "embassy-sync 0.6.2",
  "embassy-usb-driver",
 ]
@@ -2024,7 +2033,7 @@ version = "1.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "361a90feb7004eca4019fb28352a9465666b24f840f5c3cddf0ff13920590b89"
 dependencies = [
- "defmt",
+ "defmt 0.3.100",
 ]
 
 [[package]]
@@ -2058,7 +2067,7 @@ version = "0.6.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "edd0f118536f44f5ccd48bcb8b111bdc3de888b58c74639dfb034a357d0f206d"
 dependencies = [
- "defmt",
+ "defmt 0.3.100",
 ]
 
 [[package]]
@@ -2067,7 +2076,7 @@ version = "0.6.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "3ff09972d4073aa8c299395be75161d582e7629cd663171d62af73c8d50dba3f"
 dependencies = [
- "defmt",
+ "defmt 0.3.100",
  "embedded-io 0.6.1",
 ]
 
@@ -2304,7 +2313,7 @@ dependencies = [
  "cfg-if",
  "chrono",
  "critical-section",
- "defmt",
+ "defmt 0.3.100",
  "delegate",
  "document-features",
  "embassy-embedded-hal",
@@ -2405,7 +2414,7 @@ version = "0.13.0"
 source = "git+https://github.com/ariel-os/esp-hal?branch=v0.23.1%2Bariel-os-threads#aa8d1995fc06eb5e6d04a2022ecf3679b4929e63"
 dependencies = [
  "critical-section",
- "defmt",
+ "defmt 0.3.100",
  "esp-build",
  "log",
  "portable-atomic",
@@ -2442,7 +2451,7 @@ dependencies = [
  "bt-hci",
  "cfg-if",
  "critical-section",
- "defmt",
+ "defmt 0.3.100",
  "document-features",
  "embassy-net-driver",
  "embassy-sync 0.6.2",
@@ -2475,7 +2484,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "c6b5438361891c431970194a733415006fb3d00b6eb70b3dcb66fd58f04d9b39"
 dependencies = [
  "anyhow",
- "defmt",
+ "defmt 0.3.100",
  "log",
 ]
 
@@ -2486,7 +2495,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "19d3bff1d268a4b8d34b494c0e88466cd59a827bb330189773db299ff525ea13"
 dependencies = [
  "critical-section",
- "defmt",
+ "defmt 0.3.100",
  "vcell",
 ]
 
@@ -2497,7 +2506,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "0285be5b9dc4018d7f31fefe4c3d17f56461ef3ab46300ea1bf9d760968957f0"
 dependencies = [
  "critical-section",
- "defmt",
+ "defmt 0.3.100",
  "vcell",
 ]
 
@@ -2508,7 +2517,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "61655d48e45039dfac5ae769581fb50ea7f61dea3227b4b744a1a900d03fbbd4"
 dependencies = [
  "critical-section",
- "defmt",
+ "defmt 0.3.100",
  "vcell",
 ]
 
@@ -2519,7 +2528,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "fd38a7771b65cb640cc4a79324a6301ba4ac3bf2987caca5d3aa34492238fdb9"
 dependencies = [
  "critical-section",
- "defmt",
+ "defmt 0.3.100",
  "vcell",
 ]
 
@@ -2530,7 +2539,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "a05aafc25d8c68ce504d8025750fc37915a2fc7d2605be3d3b51f8886a43411a"
 dependencies = [
  "critical-section",
- "defmt",
+ "defmt 0.3.100",
  "vcell",
 ]
 
@@ -2541,7 +2550,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "0eb30ae371e72436629a70affedd1e3570829f16a3b718d6ec96508791d9da5e"
 dependencies = [
  "critical-section",
- "defmt",
+ "defmt 0.3.100",
  "vcell",
 ]
 
@@ -2552,7 +2561,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "9f0ab39d5ae3b61b3a83f5616a03220a7dc9c4d6e4ed16d2da73d50bf8d798d7"
 dependencies = [
  "critical-section",
- "defmt",
+ "defmt 0.3.100",
  "vcell",
 ]
 
@@ -2747,7 +2756,7 @@ version = "0.3.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "17186ad64927d5ac8f02c1e77ccefa08ccd9eaa314d5a4772278aa204a22f7e7"
 dependencies = [
- "defmt",
+ "defmt 0.3.100",
  "gcd",
 ]
 
@@ -3063,7 +3072,7 @@ version = "0.8.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "0bfb9eb618601c89945a70e254898da93b13be0388091d42117462b265bb3fad"
 dependencies = [
- "defmt",
+ "defmt 0.3.100",
  "hash32 0.3.1",
  "portable-atomic",
  "serde",
@@ -3481,7 +3490,7 @@ version = "0.8.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "d4ab384cc0352dbba965a745dcec1b6d5a87afafe8196416348902137e1b9c50"
 dependencies = [
- "defmt",
+ "defmt 0.3.100",
  "defmt-or-log",
  "lakers-shared",
 ]
@@ -4595,7 +4604,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "4235cd78091930e907d2a510adb0db1369e82668eafa338f109742fa0c83059d"
 dependencies = [
  "critical-section",
- "defmt",
+ "defmt 0.3.100",
  "portable-atomic",
  "ufmt-write",
 ]
@@ -4912,7 +4921,7 @@ dependencies = [
  "bitflags 1.3.2",
  "byteorder",
  "cfg-if",
- "defmt",
+ "defmt 0.3.100",
  "heapless 0.8.0",
  "managed",
 ]
@@ -5465,7 +5474,7 @@ version = "0.3.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "98816b1accafbb09085168b90f27e93d790b4bfa19d883466b5e53315b5f06a6"
 dependencies = [
- "defmt",
+ "defmt 0.3.100",
  "heapless 0.8.0",
  "portable-atomic",
 ]
@@ -5486,7 +5495,7 @@ version = "0.8.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "e6f291ab53d428685cc780f08a2eb9d5d6ff58622db2b36e239a4f715f1e184c"
 dependencies = [
- "defmt",
+ "defmt 0.3.100",
  "serde",
  "ssmarshal",
  "usb-device",
