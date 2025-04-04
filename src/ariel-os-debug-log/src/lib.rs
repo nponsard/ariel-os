@@ -48,6 +48,10 @@ pub mod log {
 // NOTE: log macros are defined within private modules so that `doc_auto_cfg` does not produce
 // "feature flairs" on them.
 // The macros are still exported even though they are defined "within" private modules.
+//
+// The `if true` conditionals ensure that the arguments are also valid under format_args!; this is
+// requires because a laze switch can just make the back-end switch over. The actual and the unused
+// formatting need to be in different branches to avoid trouble due to arguments being moved.
 #[cfg(feature = "defmt")]
 mod log_macros {
     /// Logs a message at the trace level.
@@ -55,7 +59,11 @@ mod log_macros {
     macro_rules! trace {
         ($($arg:tt)*) => {{
             use $crate::defmt::hidden::defmt;
-            defmt::trace!($($arg)*);
+            if true {
+                defmt::trace!($($arg)*);
+            } else {
+                drop(format_args!($($arg)*));
+            }
         }};
     }
 
@@ -64,7 +72,11 @@ mod log_macros {
     macro_rules! debug {
         ($($arg:tt)*) => {{
             use $crate::defmt::hidden::defmt;
-            defmt::debug!($($arg)*);
+            if true {
+                defmt::debug!($($arg)*);
+            } else {
+                drop(format_args!($($arg)*));
+            }
         }};
     }
 
@@ -73,7 +85,11 @@ mod log_macros {
     macro_rules! info {
         ($($arg:tt)*) => {{
             use $crate::defmt::hidden::defmt;
-            defmt::info!($($arg)*);
+            if true {
+                defmt::info!($($arg)*);
+            } else {
+                drop(format_args!($($arg)*));
+            }
         }};
     }
 
@@ -82,7 +98,11 @@ mod log_macros {
     macro_rules! warn {
         ($($arg:tt)*) => {{
             use $crate::defmt::hidden::defmt;
-            defmt::warn!($($arg)*);
+            if true {
+                defmt::warn!($($arg)*);
+            } else {
+                drop(format_args!($($arg)*));
+            }
         }};
     }
 
@@ -91,7 +111,11 @@ mod log_macros {
     macro_rules! error {
         ($($arg:tt)*) => {{
             use $crate::defmt::hidden::defmt;
-            defmt::error!($($arg)*);
+            if true {
+                defmt::error!($($arg)*);
+            } else {
+                drop(format_args!($($arg)*));
+            }
         }};
     }
 }
@@ -176,8 +200,8 @@ mod log_macros {
 /// A newtype around byte slices used for all of Ariel OS's logging facades that turns the bytes
 /// into some hex output.
 ///
-/// Its preferred output `00 11 22 33`, but log facades may also produce something like `[00, 11,
-/// 22, 33]` (eg. while that is cheaper on defmt).
+/// Its preferred output is `00 11 22 33`, but log facades may also produce something like `[00,
+/// 11, 22, 33]` (eg. while that is cheaper on defmt).
 ///
 /// Instead of writing some variation of `info!("Found bytes {:02x}", data)`, you can write
 /// `info!("Found bytes {}", Hex(data))`.
@@ -199,7 +223,7 @@ impl<T: AsRef<[u8]>> defmt::Format for Hex<T> {
 /// A newtype around byte slices used for all of Ariel OS's logging facades that prefers
 /// interpreting the data as CBOR.
 ///
-/// Its preferred outptu is CBOR Diagnostic Notation (EDN), but showing hex is also acceptable.
+/// Its preferred output is CBOR Diagnostic Notation (EDN), but showing hex is also acceptable.
 ///
 /// Instead of writing some variation of `info!("Found bytes {:cbor}", item)`, you can write
 /// `info!("Found bytes {}", Cbor(item))`.
