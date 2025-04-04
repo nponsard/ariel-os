@@ -4,10 +4,6 @@
 #![allow(incomplete_features)]
 // - const_generics
 
-// features
-// linkme
-#![feature(used_with_arg)]
-
 #[cfg(feature = "threading")]
 mod threading;
 
