@@ -242,14 +242,23 @@ contexts:
 
   - name: nrf91
     parent: nrf
+    selects:
+      - cortex-m33f
 
   - name: nrf9160
     parent: nrf91
     provides:
       - has_storage_support
-    selects:
-      - cortex-m33f
     env:
+      PROBE_RS_CHIP: nRF9160_xxAA
+
+  - name: nrf9151
+    parent: nrf91
+    provides:
+      - has_storage_support
+    env:
+      # FIXME: probe-rs does not support the nRF9151_xxAA yet, because there is
+      # no CMSIS-Pack available
       PROBE_RS_CHIP: nRF9160_xxAA
 
   - name: rp
@@ -1394,6 +1403,10 @@ builders:
   # TODO: there also is a companion nrf52840 on this board
   - name: nrf9160dk
     parent: nrf9160
+
+  # TODO: there also is a companion nrf5340 on this board
+  - name: nordic-thingy-91-x-nrf9151
+    parent: nrf9151
 
   - name: st-nucleo-f401re
     parent: stm32f401re

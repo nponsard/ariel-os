@@ -27,8 +27,16 @@ use ariel_os::{
 use embassy_sync::mutex::Mutex;
 use embedded_hal_async::spi::{Operation, SpiDevice as _};
 
-// WHO_AM_I register of the LIS3DH sensor
+// WHO_AM_I register of the sensor
+#[cfg(not(context = "nordic-thingy-91-x-nrf9151"))]
 const WHO_AM_I_REG_ADDR: u8 = 0x0f;
+#[cfg(context = "nordic-thingy-91-x-nrf9151")]
+const WHO_AM_I_REG_ADDR: u8 = 0x00;
+
+#[cfg(not(context = "nordic-thingy-91-x-nrf9151"))]
+const DEVICE_ID: u8 = 0x33;
+#[cfg(context = "nordic-thingy-91-x-nrf9151")]
+const DEVICE_ID: u8 = 0x24;
 
 pub static SPI_BUS: once_cell::sync::OnceCell<
     Mutex<embassy_sync::blocking_mutex::raw::CriticalSectionRawMutex, hal::spi::main::Spi>,
@@ -58,7 +66,7 @@ async fn main(peripherals: pins::Peripherals) {
     let cs_output = gpio::Output::new(peripherals.spi_cs, gpio::Level::High);
     let mut spi_device = SpiDevice::new(SPI_BUS.get().unwrap(), cs_output);
 
-    let mut id = [0];
+    let mut id = [0; 2];
     spi_device
         .transaction(&mut [
             Operation::Write(&[get_spi_read_command(WHO_AM_I_REG_ADDR)]),
@@ -67,9 +75,13 @@ async fn main(peripherals: pins::Peripherals) {
         .await
         .unwrap();
 
+    #[cfg(not(context = "nordic-thingy-91-x-nrf9151"))]
     let who_am_i = id[0];
-    info!("LIS3DH WHO_AM_I_COMMAND register value: 0x{:x}", who_am_i);
-    assert_eq!(who_am_i, 0x33);
+    #[cfg(context = "nordic-thingy-91-x-nrf9151")]
+    // Skip the leading dummy byte
+    let who_am_i = id[1];
+    info!("WHO_AM_I_COMMAND register value: 0x{:x}", who_am_i);
+    assert_eq!(who_am_i, DEVICE_ID);
 
     info!("Test passed!");
 

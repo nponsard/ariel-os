@@ -16,7 +16,7 @@ pub fn init(peripherals: &mut crate::OptionalPeripherals) {
         } else if #[cfg(context = "nrf5340")] {
             let _ = peripherals.SERIAL0.take().unwrap();
             let _ = peripherals.SERIAL1.take().unwrap();
-        } else if #[cfg(context = "nrf9160")] {
+        } else if #[cfg(context = "nrf91")] {
             let _ = peripherals.SERIAL0.take().unwrap();
             let _ = peripherals.SERIAL1.take().unwrap();
         } else {

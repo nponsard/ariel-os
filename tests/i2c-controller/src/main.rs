@@ -23,10 +23,22 @@ use ariel_os::{
 use embassy_sync::mutex::Mutex;
 use embedded_hal_async::i2c::I2c as _;
 
+#[cfg(not(context = "nordic-thingy-91-x-nrf9151"))]
 const TARGET_I2C_ADDR: u8 = 0x19;
+#[cfg(context = "nordic-thingy-91-x-nrf9151")]
+// Alternate address
+const TARGET_I2C_ADDR: u8 = 0x1d;
 
 // WHO_AM_I register of the sensor
+#[cfg(not(context = "nordic-thingy-91-x-nrf9151"))]
 const WHO_AM_I_REG_ADDR: u8 = 0x0f;
+#[cfg(context = "nordic-thingy-91-x-nrf9151")]
+const WHO_AM_I_REG_ADDR: u8 = 0x02;
+
+#[cfg(not(context = "nordic-thingy-91-x-nrf9151"))]
+const DEVICE_ID: u8 = 0x33;
+#[cfg(context = "nordic-thingy-91-x-nrf9151")]
+const DEVICE_ID: u8 = 0xf7;
 
 pub static I2C_BUS: once_cell::sync::OnceCell<
     Mutex<embassy_sync::blocking_mutex::raw::CriticalSectionRawMutex, hal::i2c::controller::I2c>,
@@ -52,7 +64,7 @@ async fn main(peripherals: pins::Peripherals) {
 
     let who_am_i = id[0];
     info!("WHO_AM_I_COMMAND register value: 0x{:x}", who_am_i);
-    assert_eq!(who_am_i, 0x33);
+    assert_eq!(who_am_i, DEVICE_ID);
 
     info!("Test passed!");
 

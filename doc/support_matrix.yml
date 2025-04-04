@@ -89,6 +89,21 @@ chips:
       storage: supported
       wifi: not_available
 
+  nrf9151:
+    name: nRF9151
+    support:
+      gpio: supported
+      debug_output: supported
+      hwrng:
+        status: not_currently_supported
+        comments:
+          - only available through the CryptoCell
+      i2c_controller: supported
+      spi_main: supported
+      logging: supported
+      storage: supported
+      wifi: not_available
+
   nrf9160:
     name: nRF9160
     support:
@@ -227,6 +242,15 @@ boards:
     support:
       user_usb: not_available
       ethernet_over_usb: not_available
+
+  nordic-thingy-91-x-nrf9151:
+    name: Nordic Thingy:91 X
+    url: https://web.archive.org/web/20250329185651/https://www.nordicsemi.com/Products/Development-hardware/Nordic-Thingy-91-X
+    chip: nrf9151
+    support:
+      user_usb: not_available
+      ethernet_over_usb: not_available
+      wifi: not_currently_supported
 
   nrf52840dk:
     name: nRF52840-DK
