@@ -10,6 +10,14 @@ ariel_os::hal::define_peripherals!(Peripherals {
     spi_cs: GPIO3,
 });
 
+#[cfg(context = "nordic-thingy-91-x-nrf9151")]
+ariel_os::hal::define_peripherals!(Peripherals {
+    spi_sck: P0_13,
+    spi_miso: P0_15,
+    spi_mosi: P0_14,
+    spi_cs: P0_10,
+});
+
 // Side SPI of Arduino v3 connector
 #[cfg(context = "nrf52840")]
 pub type SensorSpi = spi::main::SPI3;
@@ -22,7 +30,7 @@ ariel_os::hal::define_peripherals!(Peripherals {
 });
 
 // Side SPI of Arduino v3 connector
-#[cfg(any(context = "nrf5340", context = "nrf9160"))]
+#[cfg(any(context = "nrf5340", context = "nrf91"))]
 pub type SensorSpi = spi::main::SERIAL2;
 #[cfg(context = "nrf5340")]
 ariel_os::hal::define_peripherals!(Peripherals {
