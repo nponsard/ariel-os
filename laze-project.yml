@@ -1400,7 +1400,7 @@ builders:
         - CONFIG_SWI=USART2
 
   # TODO: there also is a companion nrf52840 on this board
-  - name: nrf9160dk
+  - name: nrf9160dk-nrf9160
     parent: nrf9160
 
   # TODO: there also is a companion nrf5340 on this board
