@@ -244,7 +244,7 @@ boards:
       user_usb: supported
       ethernet_over_usb: supported
 
-  nrf9160dk:
+  nrf9160dk-nrf9160:
     name: nRF9160-DK
     url: https://web.archive.org/web/20250311221943/https://www.nordicsemi.com/Products/Development-hardware/nrf9160-dk
     chip: nrf9160

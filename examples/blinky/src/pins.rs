@@ -12,7 +12,7 @@ ariel_os::hal::define_peripherals!(LedPeripherals { led: P0_13 });
 #[cfg(context = "nrf5340dk")]
 ariel_os::hal::define_peripherals!(LedPeripherals { led: P0_28 });
 
-#[cfg(context = "nrf9160dk")]
+#[cfg(context = "nrf9160dk-nrf9160")]
 ariel_os::hal::define_peripherals!(LedPeripherals { led: P0_02 });
 
 #[cfg(context = "particle-xenon")]
