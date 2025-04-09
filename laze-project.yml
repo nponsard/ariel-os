@@ -600,6 +600,8 @@ modules:
   - name: riscv
     env:
       global:
+        # riscv needs a bit more isr stack.
+        isr_stacksize_required_default: "4096"
         RUSTFLAGS:
           - --cfg context=\"riscv\"
           - -Clink-arg=-Tisr_stack.x
@@ -1088,6 +1090,8 @@ modules:
       - network_device
     env:
       global:
+        # esp-wifi needs a lot of ISR stack.
+        isr_stacksize_required_default: "65536"
         FEATURES:
           - ariel-os/wifi-esp
 
