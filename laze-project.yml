@@ -734,6 +734,8 @@ modules:
 
   - name: build_std
     context: ariel-os
+    conflicts:
+      - stable
     env:
       global:
         CARGO_ARGS:
