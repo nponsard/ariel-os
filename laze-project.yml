@@ -339,6 +339,9 @@ contexts:
   - name: esp-wroom-32
     parent: esp32
 
+  - name: esp32-c3-mini-1
+    parent: esp32c3
+
   - name: esp32c3
     parent: esp
     selects:
@@ -1377,6 +1380,9 @@ builders:
 
   - name: ai-c3
     parent: esp-c3-01m
+
+  - name: espressif-esp32-c3-lcdkit
+    parent: esp32-c3-mini-1
 
   - name: espressif-esp32-devkitc
     parent: esp-wroom-32
