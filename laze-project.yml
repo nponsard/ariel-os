@@ -325,8 +325,6 @@ contexts:
         - -Clink-arg=-Tlinkall.x
         # this might be needed for backtraces. it is needed for probe-rs.
         - -C force-frame-pointers
-      CARGO_ARGS:
-        - -Zbuild-std=core,alloc
 
   - name: esp32
     parent: esp
@@ -591,6 +589,8 @@ modules:
           - --cfg context=\"xtensa\"
         CFLAGS:
           - -mlongcalls
+        CARGO_ARGS:
+          - -Zbuild-std=core,alloc
         CARGO_PRESHELL:
           # ~/export-esp.sh is the common location, but espup install can
           # override it with its --export-file argument, which is done in CI;
