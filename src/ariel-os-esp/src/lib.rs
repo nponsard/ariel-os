@@ -2,8 +2,6 @@
 
 #![no_std]
 #![feature(doc_auto_cfg)]
-#![feature(impl_trait_in_assoc_type)]
-#![feature(type_alias_impl_trait)]
 #![deny(missing_docs)]
 
 #[cfg(all(feature = "threading", feature = "wifi"))]

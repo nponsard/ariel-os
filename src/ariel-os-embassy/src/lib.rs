@@ -1,7 +1,6 @@
 //! This module provides an opinionated integration of `embassy`.
 
 #![no_std]
-#![feature(impl_trait_in_assoc_type)]
 #![feature(doc_auto_cfg)]
 #![feature(negative_impls)]
 #![deny(clippy::pedantic)]
