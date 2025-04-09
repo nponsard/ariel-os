@@ -1263,8 +1263,9 @@ modules:
       - probe-rs
     tasks:
       test:
+        workdir: ${appdir}
         cmd:
-          - ${CARGO_ENV} ${CARGO} ${CARGO_TOOLCHAIN} ${CARGO_ARGS} -Z unstable-options -C${appdir} test ${FEATURES}
+          - ${CARGO_ENV} ${CARGO} ${CARGO_TOOLCHAIN} ${CARGO_ARGS} test ${FEATURES}
         build: false
 
     env:
