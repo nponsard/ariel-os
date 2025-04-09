@@ -69,6 +69,19 @@ impl Thread {
             stack_bottom: 0,
         }
     }
+
+    /// Paints a stack.
+    ///
+    /// # Safety
+    /// - must only be called before the stack is active (within `arch::setup_stack()`).
+    #[allow(dead_code, reason = "not used in all configurations")]
+    pub(crate) unsafe fn stack_paint_init(&mut self, sp: usize) {
+        unsafe {
+            for pos in self.stack_bottom..sp {
+                core::ptr::write_volatile(pos as *mut u8, 0xCC);
+            }
+        }
+    }
 }
 
 #[cfg(test)]
