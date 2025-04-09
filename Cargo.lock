@@ -364,7 +364,6 @@ name = "ariel-os-macros"
 version = "0.1.0"
 dependencies = [
  "ariel-os",
- "embassy-executor",
  "enum-iterator",
  "heapless 0.8.0",
  "proc-macro-crate",
