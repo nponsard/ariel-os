@@ -1344,6 +1344,9 @@ builders:
   - name: bbc-microbit-v2
     parent: nrf52833
 
+  - name: dfrobot-firebeetle2-esp32-c6
+    parent: esp32c6
+
   - name: particle-xenon
     parent: nrf52840
     provides:

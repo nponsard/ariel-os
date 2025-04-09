@@ -13,6 +13,12 @@ ariel_os::hal::define_peripherals!(Peripherals {
     btn1: P0_14
 });
 
+#[cfg(context = "dfrobot-firebeetle2-esp32-c6")]
+ariel_os::hal::define_peripherals!(LedPeripherals {
+    led1: GPIO15,
+    btn1: GPIO1
+});
+
 #[cfg(context = "nordic-thingy-91-x-nrf9151")]
 ariel_os::hal::define_peripherals!(Peripherals {
     led1: P0_29,
