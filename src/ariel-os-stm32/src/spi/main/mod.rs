@@ -22,6 +22,8 @@ const MAX_FREQUENCY: Kilohertz = Kilohertz::MHz(24);
 const MAX_FREQUENCY: Kilohertz = Kilohertz::MHz(21);
 #[cfg(context = "stm32h755zi")]
 const MAX_FREQUENCY: Kilohertz = Kilohertz::MHz(150);
+#[cfg(context = "stm32u083mc")]
+const MAX_FREQUENCY: Kilohertz = Kilohertz::MHz(32);
 #[cfg(context = "stm32wb55rg")]
 const MAX_FREQUENCY: Kilohertz = Kilohertz::MHz(32);
 
@@ -153,6 +155,11 @@ define_spi_drivers!(
    SPI4 => SPI4,
    SPI5 => SPI5,
    SPI6 => SPI6,
+);
+#[cfg(context = "stm32u083mc")]
+define_spi_drivers!(
+   SPI1 => SPI1,
+   // FIXME: the other two SPI peripherals share the same interrupt
 );
 #[cfg(context = "stm32wb55rg")]
 define_spi_drivers!(
