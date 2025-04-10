@@ -27,10 +27,10 @@ See the [Getting Started page][getting-started-mdbook] in the User Guide to get 
 
 ![Terminal screencast of compiling and flashing the hello-world example](./book/src/hello-world_render.svg)
 
-## Minimum Supported Rust Version (MSRV)
+## Minimum Supported Rust Version (MSRV) and Policy
 
-Ariel OS makes use of selected Rust unstable features. For the time being, it is
-recommended to use the nightly version pinned by [`rust-toolchain.toml`](rust-toolchain.toml).
+Ariel OS compiles with stable Rust version 1.85 and up.
+The MSRV can be increased in patch version updates.
 
 ## Security
 
