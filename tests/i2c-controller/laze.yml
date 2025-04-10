@@ -12,3 +12,4 @@ apps:
       - st-nucleo-c031c6
       - st-nucleo-h755zi-q
       - st-nucleo-wb55
+      - stm32u083c-dk
