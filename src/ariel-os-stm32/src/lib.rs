@@ -134,6 +134,27 @@ fn board_config(config: &mut Config) {
         config.rcc.mux.spi123sel = mux::Saisel::PLL1_Q; // Reset value
     }
 
+    #[cfg(context = "stm32u083mc")]
+    {
+        use embassy_stm32::rcc::*;
+
+        config.rcc.hsi48 = Some(Hsi48Config {
+            sync_from_usb: true,
+        }); // needed for USB
+        // No HSE fitted on the stm32u083c-dk board
+        config.rcc.hsi = true;
+        config.rcc.sys = Sysclk::PLL1_R;
+        config.rcc.pll = Some(Pll {
+            source: PllSource::HSI,
+            prediv: PllPreDiv::DIV1,
+            mul: PllMul::MUL7,
+            divp: None,
+            divq: None,
+            divr: Some(PllRDiv::DIV2), // sysclk 56Mhz
+        });
+        config.rcc.mux.clk48sel = mux::Clk48sel::HSI48;
+    }
+
     // mark used
     let _ = config;
 }
