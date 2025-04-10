@@ -644,10 +644,13 @@ modules:
       - stable
     env:
       global:
+        # xtensa needs a bit more isr stack.
+        isr_stacksize_required_default: "32768"
         CARGO_TOOLCHAIN: +esp
         RUSTFLAGS:
           - --cfg context=\"xtensa\"
           - --cfg nightly
+          - -Clink-arg=-Tisr_stack.x
         CFLAGS:
           - -mlongcalls
         CARGO_ARGS:
