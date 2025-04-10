@@ -1,8 +1,7 @@
 //! This module provides an opinionated integration of `embassy`.
 
 #![no_std]
-#![feature(doc_auto_cfg)]
-#![feature(negative_impls)]
+#![cfg_attr(nightly, feature(doc_auto_cfg))]
 #![deny(clippy::pedantic)]
 
 pub mod gpio;

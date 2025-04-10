@@ -1,7 +1,7 @@
 //! Items specific to the Raspberry Pi RP MCUs.
 
 #![no_std]
-#![feature(doc_auto_cfg)]
+#![cfg_attr(nightly, feature(doc_auto_cfg))]
 #![deny(missing_docs)]
 
 pub mod gpio;

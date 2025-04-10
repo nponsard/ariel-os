@@ -25,6 +25,8 @@ contexts:
       - ?hw/device-identity
       - ?lto
       - ?semihosting
+      - ?nightly
+      - ?stable
     env:
       RUSTFLAGS:
         - ${RUSTFLAGS_CONTEXTS}
@@ -323,15 +325,12 @@ contexts:
         - -Clink-arg=-Tlinkall.x
         # this might be needed for backtraces. it is needed for probe-rs.
         - -C force-frame-pointers
-      CARGO_ARGS:
-        - -Zbuild-std=core,alloc
 
   - name: esp32
     parent: esp
     selects:
       - xtensa
     env:
-      CARGO_TOOLCHAIN: +esp
       RUSTC_TARGET: xtensa-esp32-none-elf
       CARGO_TARGET_PREFIX: CARGO_TARGET_XTENSA_ESP32_NONE_ELF
       CC: xtensa-esp32-elf-gcc
@@ -383,7 +382,6 @@ contexts:
       - sw/benchmark
     provides_unique: [c-function-abort]
     env:
-      CARGO_TOOLCHAIN: +esp
       RUSTC_TARGET: xtensa-esp32s3-none-elf
       PROBE_RS_CHIP: esp32s3
       PROBE_RS_PROTOCOL: jtag
@@ -514,6 +512,8 @@ modules:
           - --cfg armv8m
 
   - name: cortex-m
+    selects:
+      - ?emit-stack-sizes
     env:
       global:
         OBJCOPY: arm-none-eabi-objcopy
@@ -525,9 +525,7 @@ modules:
           - -Clink-arg=-Teheap.x
           - -Clink-arg=-Tdevice.x
           - -Clink-arg=-Tisr_stack.x
-          - -Clink-arg=-Tkeep-stack-sizes.x
           - --cfg context=\"cortex-m\"
-          - -Z emit-stack-sizes
 
   - name: cortex-m0
     selects:
@@ -584,12 +582,18 @@ modules:
           - --cfg context=\"cortex-m33f\"
 
   - name: xtensa
+    conflicts:
+      # no xtensa in stable Rust
+      - stable
     env:
       global:
+        CARGO_TOOLCHAIN: +esp
         RUSTFLAGS:
           - --cfg context=\"xtensa\"
         CFLAGS:
           - -mlongcalls
+        CARGO_ARGS:
+          - -Zbuild-std=core,alloc
         CARGO_PRESHELL:
           # ~/export-esp.sh is the common location, but espup install can
           # override it with its --export-file argument, which is done in CI;
@@ -649,6 +653,34 @@ modules:
         FEATURES:
           - ariel-os/debug-console
 
+  - name: emit-stack-sizes
+    conflicts:
+      - stable
+    env:
+      global:
+        RUSTFLAGS:
+          - -Clink-arg=-Tkeep-stack-sizes.x
+          - -Z emit-stack-sizes
+
+  - name: stable
+    help: build with stable Rust
+    conflicts:
+      - nightly
+    env:
+      global:
+        CARGO_TOOLCHAIN: +stable
+        RUSTFLAGS:
+          - --cfg stable
+
+  - name: nightly
+    help: build with nightly Rust
+    conflicts:
+      - stable
+    env:
+      global:
+        RUSTFLAGS:
+          - --cfg nightly
+
   # This module should be hard-selected when an application *requires* debug
   # logging.
   - name: debug-logging-facade-default
@@ -707,6 +739,8 @@ modules:
 
   - name: build_std
     context: ariel-os
+    conflicts:
+      - stable
     env:
       global:
         CARGO_ARGS:
@@ -1236,8 +1270,9 @@ modules:
       - probe-rs
     tasks:
       test:
+        workdir: ${appdir}
         cmd:
-          - ${CARGO_ENV} ${CARGO} ${CARGO_TOOLCHAIN} ${CARGO_ARGS} -Z unstable-options -C${appdir} test ${FEATURES}
+          - ${CARGO_ENV} ${CARGO} ${CARGO_TOOLCHAIN} ${CARGO_ARGS} test ${FEATURES}
         build: false
 
     env:
