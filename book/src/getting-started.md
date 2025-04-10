@@ -46,6 +46,9 @@ It explains how to compile and run the `hello-word` example to verify your setup
     cargo install --locked probe-rs-tools
     ```
 
+   You might need to tweak permissions for non-admin access to connected
+   devices. Please consult the [probe-rs documentation][probe-rs-udev] for specifics.
+
 1. Clone the [Ariel OS repository][ariel-os-repo] and `cd` into it.
 
 1. Install the Rust targets:
@@ -130,3 +133,4 @@ See the [Build System page](./build-system.md) to learn more about laze and how 
 [ariel-os-hello-repo]: https://github.com/ariel-os/ariel-os-hello
 [laze-imports-book]: https://kaspar030.github.io/laze/dev/reference/imports.html
 [cargo-generate-repo]: https://github.com/cargo-generate/cargo-generate
+[probe-rs-udev]: https://probe.rs/docs/getting-started/probe-setup/#platform-specifics
