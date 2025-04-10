@@ -21,9 +21,13 @@ cfg_if::cfg_if! {
         mod cortexm;
         use cortexm as arch;
     }
-    else if #[cfg(context = "esp")] {
-        mod esp;
-        use esp as arch;
+    else if #[cfg(context = "xtensa")] {
+        mod xtensa;
+        use xtensa as arch;
+    }
+    else if #[cfg(context = "riscv")] {
+        mod riscv;
+        use riscv as arch;
     }
     else if #[cfg(context = "ariel-os")] {
         // When run with laze but the MCU family is not supported
