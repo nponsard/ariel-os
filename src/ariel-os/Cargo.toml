@@ -121,6 +121,8 @@ usb-ethernet = ["ariel-os-embassy/usb-ethernet"]
 wifi-cyw43 = ["ariel-os-embassy/wifi-cyw43"]
 # Selects Wi-Fi (on ESP chips).
 wifi-esp = ["ariel-os-embassy/wifi-esp"]
+# Selects STM32 Ethernet
+eth-stm32 = ["ariel-os-embassy/eth-stm32"]
 
 #! ## Development and debugging
 # Enables the debug console, required to use
