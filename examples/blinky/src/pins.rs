@@ -30,7 +30,7 @@ ariel_os::hal::define_peripherals!(LedPeripherals { led: PIN_25 });
 #[cfg(all(context = "rp", not(any(context = "rpi-pico", context = "rpi-pico2"))))]
 ariel_os::hal::define_peripherals!(LedPeripherals { led: PIN_1 });
 
-#[cfg(context = "esp")]
+#[cfg(all(context = "esp", not(context = "dfrobot-firebeetle2-esp32-c6")))]
 ariel_os::hal::define_peripherals!(LedPeripherals { led: GPIO0 });
 
 #[cfg(context = "st-nucleo-c031c6")]
