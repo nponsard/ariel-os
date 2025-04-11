@@ -94,11 +94,13 @@ contexts:
       PROBE_RS_PROTOCOL:
         start: --protocol=
 
-      # Executor / ISR stacksize helpers
+      # Executor / ISR stacksize and heapsize helpers
       executor_stacksize_required:
         joiner: ", "
       isr_stacksize_required:
         joiner: ", "
+      heapsize_required:
+        joiner: " + "
 
     rules:
       - name: LINK
@@ -667,9 +669,18 @@ modules:
 
   ## System functionality modules
   - name: alloc
+    help: Enables a heap, a global allocator and the `alloc` crate.
     context: ariel-os
     env:
       global:
+        # *Append* to this array to increase the heapsize. The sum of all entries will
+        # be used. By default, all unused memory is used for the heap, and the sum
+        # is used to check if the amount of heap is actually available.
+        # On esp, it always allocates the sum of `heapsize_required`, but at least 2KiB.
+        heapsize_required:
+          - "0"
+        CARGO_ENV:
+          - CONFIG_HEAPSIZE=$(${heapsize_required})
         FEATURES:
           - ariel-os/alloc
 
@@ -1182,6 +1193,7 @@ modules:
 
   - name: wifi-esp
     selects:
+      - alloc
       - riscv:
           - wifi-esp-xor-threads
     context:
@@ -1192,6 +1204,9 @@ modules:
       global:
         # esp-wifi needs a lot of ISR stack.
         isr_stacksize_required_default: "65536"
+        # esp-wifi needs 72KiB
+        heapsize_required:
+          - $(72*1024)
         FEATURES:
           - ariel-os/wifi-esp
 
