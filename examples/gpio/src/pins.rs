@@ -14,7 +14,7 @@ ariel_os::hal::define_peripherals!(Peripherals {
 });
 
 #[cfg(context = "dfrobot-firebeetle2-esp32-c6")]
-ariel_os::hal::define_peripherals!(LedPeripherals {
+ariel_os::hal::define_peripherals!(Peripherals {
     led1: GPIO15,
     btn1: GPIO1
 });
@@ -43,7 +43,7 @@ ariel_os::hal::define_peripherals!(Peripherals {
     btn1: PIN_2
 });
 
-#[cfg(context = "esp")]
+#[cfg(all(context = "esp", not(context = "dfrobot-firebeetle2-esp32-c6")))]
 ariel_os::hal::define_peripherals!(Peripherals {
     led1: GPIO0,
     btn1: GPIO1
