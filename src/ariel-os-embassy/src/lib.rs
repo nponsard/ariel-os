@@ -26,6 +26,9 @@ pub mod net;
 #[cfg(feature = "wifi")]
 mod wifi;
 
+#[cfg(feature = "eth")]
+mod eth;
+
 use ariel_os_debug::log::debug;
 
 use linkme::distributed_slice;
@@ -82,6 +85,8 @@ cfg_if::cfg_if! {
         use usb::ethernet::NetworkDevice;
     } else if #[cfg(feature = "wifi")] {
         use wifi::NetworkDevice;
+    } else if #[cfg(feature = "eth")] {
+        use eth::NetworkDevice;
     } else if #[cfg(context = "ariel-os")] {
         compile_error!("no backend for net is active");
     } else {
@@ -271,6 +276,11 @@ async fn init_task(mut peripherals: hal::OptionalPeripherals) {
         device
     };
 
+    debug!("Creating network device");
+
+    #[cfg(feature = "eth-stm32")]
+    let device = hal::eth::device(&mut peripherals);
+
     #[cfg(feature = "usb")]
     {
         for hook in usb::USB_BUILDER_HOOKS {
@@ -307,7 +317,12 @@ async fn init_task(mut peripherals: hal::OptionalPeripherals) {
 
         static RESOURCES: StaticCell<StackResources<MAX_CONCURRENT_SOCKETS>> = StaticCell::new();
 
-        #[cfg(not(any(feature = "usb-ethernet", feature = "wifi-cyw43", feature = "wifi-esp")))]
+        #[cfg(not(any(
+            feature = "usb-ethernet",
+            feature = "wifi-cyw43",
+            feature = "wifi-esp",
+            feature = "eth"
+        )))]
         // The creation of `device` is not organized in such a way that they could be put in a
         // cfg-if without larger refactoring; relying on unused variable lints to keep the
         // condition list up to date.

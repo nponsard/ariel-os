@@ -423,6 +423,17 @@ contexts:
       RUSTFLAGS:
         - --cfg capability=\"async-flash-driver\"
 
+  - name: stm32f767zi
+    parent: stm32
+    selects:
+      - cortex-m7f
+    provides:
+      - has_hwrng
+    env:
+      PROBE_RS_CHIP: STM32F767ZITx
+      RUSTFLAGS:
+        - --cfg capability=\"hw/stm32-rng\"
+
   - name: stm32h755zi
     parent: stm32
     selects:
@@ -943,6 +954,20 @@ modules:
           - ariel-os/wifi-cyw43
 
   - name: has_wifi_cyw43
+    selects:
+      - doc-only
+
+  - name: eth-stm32
+    selects:
+      - has_eth_stm32
+    provides_unique:
+      - network_device
+    env:
+      global:
+        FEATURES:
+          - ariel-os/eth-stm32
+
+  - name: has_eth_stm32
     selects:
       - doc-only
 
@@ -1475,6 +1500,16 @@ builders:
     parent: stm32f401re
     provides:
       - has_swi
+    env:
+      CARGO_ENV:
+        # This ISR is unused on a naked board. Configured here for testing.
+        - CONFIG_SWI=USART2
+
+  - name: st-nucleo-f767zi
+    parent: stm32f767zi
+    provides:
+      - has_swi
+      - has_eth_stm32
     env:
       CARGO_ENV:
         # This ISR is unused on a naked board. Configured here for testing.
