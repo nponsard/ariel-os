@@ -1518,6 +1518,7 @@ builders:
   - name: st-nucleo-h755zi-q
     parent: stm32h755zi
     provides:
+      - has_eth_stm32
       - has_swi
       - has_usb_device_port
     env:
