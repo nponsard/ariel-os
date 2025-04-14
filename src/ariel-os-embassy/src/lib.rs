@@ -276,8 +276,6 @@ async fn init_task(mut peripherals: hal::OptionalPeripherals) {
         device
     };
 
-    debug!("Creating network device");
-
     #[cfg(feature = "eth-stm32")]
     let device = hal::eth::device(&mut peripherals);
 
