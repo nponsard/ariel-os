@@ -217,6 +217,21 @@ chips:
           - unsupported heterogeneous flash organization
       wifi: not_available
 
+  stm32f411re:
+    name: STM32F411RE
+    support:
+      gpio: supported
+      debug_output: supported
+      hwrng: not_available
+      i2c_controller: needs_testing
+      spi_main: needs_testing
+      logging: supported
+      storage:
+        status: not_currently_supported
+        comments:
+          - unsupported heterogeneous flash organization
+      wifi: not_available
+
   stm32h755zi:
     name: STM32H755ZI
     support:
@@ -374,6 +389,15 @@ boards:
     name: ST NUCLEO-F401RE
     url: https://web.archive.org/web/20250115005425/https://www.st.com/en/evaluation-tools/nucleo-f401re.html
     chip: stm32f401re
+    support:
+      user_usb: not_available
+      wifi: not_available
+      ethernet_over_usb: not_available
+
+  st-nucleo-f411re:
+    name: ST NUCLEO-F411RE
+    url: https://web.archive.org/web/20250311221905/https://www.st.com/en/evaluation-tools/nucleo-f411re.html
+    chip: stm32f411re
     support:
       user_usb: not_available
       wifi: not_available
