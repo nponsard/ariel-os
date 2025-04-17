@@ -18,7 +18,7 @@ pub fn init(peripherals: &mut crate::OptionalPeripherals) {
     cfg_if::cfg_if! {
         if #[cfg(context = "stm32c031c6")] {
             take_all_i2c_peripherals!(I2C1);
-        } else if #[cfg(context = "stm32f401re")] {
+        } else if #[cfg(any(context = "stm32f401re", context = "stm32f411re"))] {
             take_all_i2c_peripherals!(I2C1, I2C2, I2C3);
         } else if #[cfg(context = "stm32h755zi")] {
             take_all_i2c_peripherals!(I2C1, I2C2, I2C3, I2C4);
