@@ -57,7 +57,7 @@ jobs:
 
       - name: Run sccache-cache
         if: steps.result-cache.outputs.cache-hit != 'true'
-        uses: mozilla-actions/sccache-action@v0.0.4
+        uses: mozilla-actions/sccache-action@v0.0.8
 
       - id: get_toolchain
         if: steps.result-cache.outputs.cache-hit != 'true'
