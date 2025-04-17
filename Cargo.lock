@@ -3161,6 +3161,7 @@ version = "0.0.0"
 dependencies = [
  "ariel-os",
  "ariel-os-boards",
+ "cfg-if",
  "embassy-sync 0.6.2",
  "embedded-hal 1.0.0",
  "embedded-hal-async",

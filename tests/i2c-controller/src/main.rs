@@ -20,22 +20,31 @@ use ariel_os::{
 use embassy_sync::mutex::Mutex;
 use embedded_hal_async::i2c::I2c as _;
 
-#[cfg(not(context = "nordic-thingy-91-x-nrf9151"))]
-const TARGET_I2C_ADDR: u8 = 0x19;
-#[cfg(context = "nordic-thingy-91-x-nrf9151")]
-// Alternate address
-const TARGET_I2C_ADDR: u8 = 0x1d;
+cfg_if::cfg_if! {
+    if #[cfg(context = "nordic-thingy-91-x-nrf9151")] {
+        // Alternate address
+        const TARGET_I2C_ADDR: u8 = 0x1d;
+    } else {
+        const TARGET_I2C_ADDR: u8 = 0x19;
+    }
+}
 
 // WHO_AM_I register of the sensor
-#[cfg(not(context = "nordic-thingy-91-x-nrf9151"))]
-const WHO_AM_I_REG_ADDR: u8 = 0x0f;
-#[cfg(context = "nordic-thingy-91-x-nrf9151")]
-const WHO_AM_I_REG_ADDR: u8 = 0x02;
+cfg_if::cfg_if! {
+    if #[cfg(context = "nordic-thingy-91-x-nrf9151")] {
+        const WHO_AM_I_REG_ADDR: u8 = 0x02;
+    } else {
+        const WHO_AM_I_REG_ADDR: u8 = 0x0f;
+    }
+}
 
-#[cfg(not(context = "nordic-thingy-91-x-nrf9151"))]
-const DEVICE_ID: u8 = 0x33;
-#[cfg(context = "nordic-thingy-91-x-nrf9151")]
-const DEVICE_ID: u8 = 0xf7;
+cfg_if::cfg_if! {
+    if #[cfg(context = "nordic-thingy-91-x-nrf9151")] {
+        const DEVICE_ID: u8 = 0xf7;
+    } else {
+        const DEVICE_ID: u8 = 0x33;
+    }
+}
 
 pub static I2C_BUS: once_cell::sync::OnceCell<
     Mutex<embassy_sync::blocking_mutex::raw::CriticalSectionRawMutex, hal::i2c::controller::I2c>,
