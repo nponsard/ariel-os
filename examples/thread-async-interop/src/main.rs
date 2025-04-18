@@ -6,7 +6,7 @@ use embassy_sync::{blocking_mutex::raw::CriticalSectionRawMutex, signal::Signal}
 use ariel_os::{
     asynch::{blocker, spawner},
     debug::{ExitCode, exit, log::*},
-    time::{Duration, Instant, Timer},
+    time::{Instant, Timer},
 };
 
 static SIGNAL: Signal<CriticalSectionRawMutex, u32> = Signal::new();
@@ -21,7 +21,7 @@ async fn async_task() {
     loop {
         info!("async_task(): signaling, counter={}", counter);
         SIGNAL.signal(counter);
-        Timer::after(Duration::from_millis(100)).await;
+        Timer::after_millis(100).await;
         counter += 1;
     }
 }
