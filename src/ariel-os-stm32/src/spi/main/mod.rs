@@ -20,6 +20,8 @@ use embassy_stm32::{
 const MAX_FREQUENCY: Kilohertz = Kilohertz::MHz(24);
 #[cfg(context = "stm32f401re")]
 const MAX_FREQUENCY: Kilohertz = Kilohertz::MHz(21);
+#[cfg(context = "stm32f411re")]
+const MAX_FREQUENCY: Kilohertz = Kilohertz::MHz(25);
 #[cfg(context = "stm32h755zi")]
 const MAX_FREQUENCY: Kilohertz = Kilohertz::MHz(150);
 #[cfg(context = "stm32u083mc")]
@@ -146,6 +148,14 @@ define_spi_drivers!(
    SPI1 => SPI1,
    SPI2 => SPI2,
    SPI3 => SPI3,
+);
+#[cfg(context = "stm32f411re")]
+define_spi_drivers!(
+   SPI1 => SPI1,
+   SPI2 => SPI2,
+   SPI3 => SPI3,
+   SPI4 => SPI4,
+   SPI5 => SPI5,
 );
 #[cfg(context = "stm32h755zi")]
 define_spi_drivers!(

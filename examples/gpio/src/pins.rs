@@ -55,7 +55,7 @@ ariel_os::hal::define_peripherals!(Peripherals {
     btn1: PC13
 });
 
-#[cfg(context = "st-nucleo-f401re")]
+#[cfg(any(context = "st-nucleo-f401re", context = "st-nucleo-f411re"))]
 ariel_os::hal::define_peripherals!(Peripherals {
     led1: PA5,
     btn1: PC13

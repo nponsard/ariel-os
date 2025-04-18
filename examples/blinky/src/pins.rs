@@ -36,7 +36,7 @@ ariel_os::hal::define_peripherals!(LedPeripherals { led: GPIO0 });
 #[cfg(context = "st-nucleo-c031c6")]
 ariel_os::hal::define_peripherals!(LedPeripherals { led: PA5 });
 
-#[cfg(context = "st-nucleo-f401re")]
+#[cfg(any(context = "st-nucleo-f401re", context = "st-nucleo-f411re"))]
 ariel_os::hal::define_peripherals!(LedPeripherals { led: PA5 });
 
 #[cfg(context = "st-nucleo-h755zi-q")]

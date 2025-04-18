@@ -38,6 +38,8 @@ pub fn init(peripherals: &mut crate::OptionalPeripherals) {
             take_all_spi_peripherals!(Peripherals, SPI1);
         } else if #[cfg(context = "stm32f401re")] {
             take_all_spi_peripherals!(Peripherals, SPI1, SPI2, SPI3);
+        } else if #[cfg(context = "stm32f411re")] {
+            take_all_spi_peripherals!(Peripherals, SPI1, SPI2, SPI3, SPI4, SPI5);
         } else if #[cfg(context = "stm32h755zi")] {
             take_all_spi_peripherals!(Peripherals, SPI1, SPI2, SPI3, SPI4, SPI5, SPI6);
         } else if #[cfg(context = "stm32u083mc")] {
