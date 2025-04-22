@@ -3,7 +3,8 @@
 //! Please use [`ariel_os::sensors`] instead for a high-level sensor abstraction that is
 //! HAL-agnostic.
 //!
-//! This example requires a LIS3DH/LSM303AGR sensor (3-axis accelerometer).
+//! This example requires an onboard sensor or an external LIS3DH/LSM303AGR sensor (3-axis
+//! accelerometer).
 #![no_main]
 #![no_std]
 
@@ -20,22 +21,38 @@ use ariel_os::{
 use embassy_sync::mutex::Mutex;
 use embedded_hal_async::i2c::I2c as _;
 
-#[cfg(not(context = "nordic-thingy-91-x-nrf9151"))]
-const TARGET_I2C_ADDR: u8 = 0x19;
-#[cfg(context = "nordic-thingy-91-x-nrf9151")]
-// Alternate address
-const TARGET_I2C_ADDR: u8 = 0x1d;
+cfg_if::cfg_if! {
+    if #[cfg(context = "nordic-thingy-91-x-nrf9151")] {
+        // Alternate address
+        const TARGET_I2C_ADDR: u8 = 0x1d;
+    } else if #[cfg(context = "stm32u083c-dk")] {
+        // STTS22H
+        const TARGET_I2C_ADDR: u8 = 0x3f;
+    } else {
+        const TARGET_I2C_ADDR: u8 = 0x19;
+    }
+}
 
 // WHO_AM_I register of the sensor
-#[cfg(not(context = "nordic-thingy-91-x-nrf9151"))]
-const WHO_AM_I_REG_ADDR: u8 = 0x0f;
-#[cfg(context = "nordic-thingy-91-x-nrf9151")]
-const WHO_AM_I_REG_ADDR: u8 = 0x02;
+cfg_if::cfg_if! {
+    if #[cfg(context = "nordic-thingy-91-x-nrf9151")] {
+        const WHO_AM_I_REG_ADDR: u8 = 0x02;
+    } else if #[cfg(context = "stm32u083c-dk")] {
+        const WHO_AM_I_REG_ADDR: u8 = 0x01;
+    } else {
+        const WHO_AM_I_REG_ADDR: u8 = 0x0f;
+    }
+}
 
-#[cfg(not(context = "nordic-thingy-91-x-nrf9151"))]
-const DEVICE_ID: u8 = 0x33;
-#[cfg(context = "nordic-thingy-91-x-nrf9151")]
-const DEVICE_ID: u8 = 0xf7;
+cfg_if::cfg_if! {
+    if #[cfg(context = "nordic-thingy-91-x-nrf9151")] {
+        const DEVICE_ID: u8 = 0xf7;
+    } else if #[cfg(context = "stm32u083c-dk")] {
+        const DEVICE_ID: u8 = 0xa0;
+    } else {
+        const DEVICE_ID: u8 = 0x33;
+    }
+}
 
 pub static I2C_BUS: once_cell::sync::OnceCell<
     Mutex<embassy_sync::blocking_mutex::raw::CriticalSectionRawMutex, hal::i2c::controller::I2c>,

@@ -8,6 +8,7 @@ repository.workspace = true
 workspace = true
 
 [dependencies]
+cfg-if = { workspace = true }
 embassy-sync = { workspace = true }
 embedded-hal = { workspace = true }
 embedded-hal-async = { workspace = true }
