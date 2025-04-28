@@ -714,6 +714,8 @@ modules:
       - stable
     env:
       global:
+        # this pins our nightly version
+        CARGO_TOOLCHAIN: +nightly-2025-02-25
         RUSTFLAGS:
           - --cfg nightly
 
