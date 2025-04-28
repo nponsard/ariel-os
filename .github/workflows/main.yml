@@ -238,6 +238,8 @@ jobs:
         uses: dtolnay/rust-toolchain@master
         with:
           toolchain: ${{ steps.get_toolchain.outputs.toolchain }}
+          targets: riscv32imac-unknown-none-elf
+          components: rust-src
 
       - name: rust cache
         uses: Swatinem/rust-cache@v2
