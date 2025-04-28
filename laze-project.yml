@@ -546,8 +546,6 @@ modules:
           - --cfg armv8m
 
   - name: cortex-m
-    selects:
-      - ?emit-stack-sizes
     env:
       global:
         OBJCOPY: arm-none-eabi-objcopy
