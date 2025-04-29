@@ -29,7 +29,6 @@ esp-println = { workspace = true, optional = true, features = [
   "auto",
   "colors",
   "critical-section",
-  "log",
 ] }
 
 [target.'cfg(context = "esp32")'.dependencies]
