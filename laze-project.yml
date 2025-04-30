@@ -25,8 +25,8 @@ contexts:
       - ?hw/device-identity
       - ?lto
       - ?semihosting
-      - ?nightly
       - ?stable
+      - ?nightly
     env:
       RUSTFLAGS:
         - ${RUSTFLAGS_CONTEXTS}
@@ -546,8 +546,6 @@ modules:
           - --cfg armv8m
 
   - name: cortex-m
-    selects:
-      - ?emit-stack-sizes
     env:
       global:
         OBJCOPY: arm-none-eabi-objcopy
@@ -702,7 +700,9 @@ modules:
       - nightly
     env:
       global:
-        CARGO_TOOLCHAIN: +stable
+        # Using the empty string here, as specifying "+stable" would make rustup
+        # choose the *latest* stable instead of the currently configured version.
+        CARGO_TOOLCHAIN: ""
         RUSTFLAGS:
           - --cfg stable
 
@@ -712,6 +712,8 @@ modules:
       - stable
     env:
       global:
+        # this pins our nightly version
+        CARGO_TOOLCHAIN: +nightly-2025-02-25
         RUSTFLAGS:
           - --cfg nightly
 
@@ -1373,15 +1375,15 @@ builders:
         build: false
         cmd:
           # If this starts doing anything else other than rustup and espup, update the book that currently claims this to be rustup only.
-          - rustup target add thumbv6m-none-eabi
-          - rustup target add thumbv7m-none-eabi
-          - rustup target add thumbv7em-none-eabi
-          - rustup target add thumbv7em-none-eabihf
-          - rustup target add thumbv8m.main-none-eabi
-          - rustup target add thumbv8m.main-none-eabihf
-          - rustup target add riscv32imc-unknown-none-elf
-          - rustup target add riscv32imac-unknown-none-elf
-          - rustup component add rust-src
+          - rustup ${CARGO_TOOLCHAIN} target add thumbv6m-none-eabi
+          - rustup ${CARGO_TOOLCHAIN} target add thumbv7m-none-eabi
+          - rustup ${CARGO_TOOLCHAIN} target add thumbv7em-none-eabi
+          - rustup ${CARGO_TOOLCHAIN} target add thumbv7em-none-eabihf
+          - rustup ${CARGO_TOOLCHAIN} target add thumbv8m.main-none-eabi
+          - rustup ${CARGO_TOOLCHAIN} target add thumbv8m.main-none-eabihf
+          - rustup ${CARGO_TOOLCHAIN} target add riscv32imc-unknown-none-elf
+          - rustup ${CARGO_TOOLCHAIN} target add riscv32imac-unknown-none-elf
+          - rustup ${CARGO_TOOLCHAIN} component add rust-src
           - if command -v espup >/dev/null; then espup update --targets=esp32,esp32s3; fi
 
       install-c2rust:

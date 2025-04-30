@@ -63,11 +63,21 @@ jobs:
         if: steps.result-cache.outputs.cache-hit != 'true'
         run: echo "toolchain=$(scripts/rust-toolchain.sh)" >> $GITHUB_OUTPUT
 
-      - name: Install toolchain
+      - name: Install nightly toolchain
         if: steps.result-cache.outputs.cache-hit != 'true'
         uses: dtolnay/rust-toolchain@master
         with:
           toolchain: ${{ steps.get_toolchain.outputs.toolchain }}
+          targets: riscv32imc-unknown-none-elf,riscv32imac-unknown-none-elf,thumbv6m-none-eabi,thumbv7m-none-eabi,thumbv7em-none-eabi,thumbv8m.main-none-eabi
+          # rust-src: Used for -Zbuild-std.
+          # rustfmt: Used by bindgen for liboscore
+          components: rust-src, rustfmt
+
+      - name: Install stable toolchain
+        if: steps.result-cache.outputs.cache-hit != 'true'
+        # configure MSRV here:
+        uses: dtolnay/rust-toolchain@1.85
+        with:
           targets: riscv32imc-unknown-none-elf,riscv32imac-unknown-none-elf,thumbv6m-none-eabi,thumbv7m-none-eabi,thumbv7em-none-eabi,thumbv8m.main-none-eabi
           # rust-src: Used for -Zbuild-std.
           # rustfmt: Used by bindgen for liboscore
@@ -109,6 +119,7 @@ jobs:
           laze --version
           arm-none-eabi-gcc --version
           clang --version
+          rustup show
           cat ${ESPUP_EXPORT_FILE:-~/export-esp.sh}
           (. ${ESPUP_EXPORT_FILE:-~/export-esp.sh}; xtensa-esp32s3-elf-gcc --version)
           set +x
@@ -122,12 +133,21 @@ jobs:
         run: |
           echo "LAZE_BUILDERS=ai-c3,espressif-esp32-devkitc,espressif-esp32-c6-devkitc-1,espressif-esp32-s3-devkitc-1,bbc-microbit-v2,nrf52840dk,nrf5340dk,rpi-pico,rpi-pico-w,st-nucleo-c031c6,st-nucleo-h755zi-q,st-nucleo-wb55" >> "$GITHUB_ENV"
 
-      - name: "ariel-os compilation test"
+      - name: "ariel-os compilation test (default toolchain)"
         if: steps.result-cache.outputs.cache-hit != 'true'
         run: |
           sccache --start-server || true # work around https://github.com/ninja-build/ninja/issues/2052
 
           CONFIG_WIFI_NETWORK='test' CONFIG_WIFI_PASSWORD='password' laze build --global --partition hash:${{ matrix.partition }}
+
+      # nightly build, nightly toolchain
+      # (disabling xtensa here as it gets built by the default toolchain build above)
+      - name: "ariel-os compilation test (nightly toolchain)"
+        if: github.event_name == 'schedule' && steps.result-cache.outputs.cache-hit != 'true'
+        run: |
+          sccache --start-server || true # work around https://github.com/ninja-build/ninja/issues/2052
+
+          CONFIG_WIFI_NETWORK='test' CONFIG_WIFI_PASSWORD='password' laze build --global --partition hash:${{ matrix.partition }} --select nightly --disable xtensa
 
   build-success:
     if: ${{ always() }}
