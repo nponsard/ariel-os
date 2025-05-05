@@ -223,8 +223,8 @@ chips:
       gpio: supported
       debug_output: supported
       hwrng: not_available
-      i2c_controller: needs_testing
-      spi_main: needs_testing
+      i2c_controller: supported
+      spi_main: supported
       logging: supported
       storage:
         status: not_currently_supported

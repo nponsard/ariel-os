@@ -100,3 +100,13 @@ ariel_os::hal::define_peripherals!(Peripherals {
     spi_mosi: PA7,
     spi_cs: PA4,
 });
+
+#[cfg(any(context = "stm32f401re", context = "stm32f411re"))]
+pub type SensorSpi = spi::main::SPI1;
+#[cfg(any(context = "st-nucleo-f401re", context = "st-nucleo-f411re"))]
+ariel_os::hal::define_peripherals!(Peripherals {
+    spi_sck: PA5,
+    spi_miso: PA6,
+    spi_mosi: PA7,
+    spi_cs: PB6,
+});
