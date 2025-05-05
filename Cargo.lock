@@ -2102,8 +2102,9 @@ dependencies = [
 
 [[package]]
 name = "embedded-test"
-version = "0.6.0"
-source = "git+https://github.com/ariel-os/embedded-test?branch=v0.6.0%2Bariel-os#0bd00083f845ea1d387f8181fb403dca6979e2ff"
+version = "0.6.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "457ea1f3ac1afe7e4855b61de3eabc32606679c0fc7ad0d0bf060e01c0c66b2a"
 dependencies = [
  "embassy-executor",
  "embedded-test-macros",
@@ -2115,8 +2116,9 @@ dependencies = [
 
 [[package]]
 name = "embedded-test-macros"
-version = "0.6.0"
-source = "git+https://github.com/ariel-os/embedded-test?branch=v0.6.0%2Bariel-os#0bd00083f845ea1d387f8181fb403dca6979e2ff"
+version = "0.6.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "832520ef06a9dd2970a9106f94aca45dc47b746d14dbecc0819a47a7b5c1b5be"
 dependencies = [
  "darling",
  "proc-macro2",
