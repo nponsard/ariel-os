@@ -140,6 +140,12 @@ jobs:
 
           CONFIG_WIFI_NETWORK='test' CONFIG_WIFI_PASSWORD='password' laze build --global --partition hash:${{ matrix.partition }}
 
+      # cleanup previous build artifacts. do in background (no need to wait).
+      - name: "cleanup stable build artifacts"
+        if: github.event_name == 'schedule' && steps.result-cache.outputs.cache-hit != 'true'
+        run: |
+          mv build build.tmp && rm -rf build.tmp &
+
       # nightly build, nightly toolchain
       # (disabling xtensa here as it gets built by the default toolchain build above)
       - name: "ariel-os compilation test (nightly toolchain)"
