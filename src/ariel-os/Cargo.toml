@@ -7,6 +7,18 @@ edition.workspace = true
 # This should be the Ariel OS MSRV.
 rust-version = "1.85"
 
+[package.metadata.release]
+# We're using this crate to mangle our workspace level `CHANGELOG.md`.
+# Apply these using `cargo +nightly release replace -p ariel-os [-x]`.
+pre-release-replacements = [
+  { file = "../../CHANGELOG.md", search = "\\(#(\\d+)\\)", replace = "([#$1](https://github.com/ariel-os/ariel-os/pull/$1))" },
+  { file = "../../CHANGELOG.md", search = "Unreleased", replace = "{{version}}" },
+  { file = "../../CHANGELOG.md", search = "\\.\\.\\.HEAD", replace = "...{{tag_name}}", exactly = 1 },
+  { file = "../../CHANGELOG.md", search = "ReleaseDate", replace = "{{date}}" },
+  { file = "../../CHANGELOG.md", search = "<!-- next-header -->", replace = "<!-- next-header -->\n\n## [Unreleased] - ReleaseDate", exactly = 1 },
+  { file = "../../CHANGELOG.md", search = "<!-- next-url -->", replace = "<!-- next-url -->\n[Unreleased]: https://github.com/ariel-os/ariel-os/compare/{{tag_name}}...HEAD", exactly = 1 },
+]
+
 [lints]
 workspace = true
 
