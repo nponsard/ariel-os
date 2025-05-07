@@ -979,6 +979,8 @@ modules:
       - network_device
     env:
       global:
+        executor_stacksize_required:
+          - "32768"
         FEATURES:
           - ariel-os/eth-stm32
 
