@@ -86,8 +86,8 @@ impl Multicore for Chip {
 
 impl<const SIZE: usize> StackLimits for Stack<SIZE> {
     fn limits(&self) -> (usize, usize) {
-        let bottom = self.mem.as_ptr() as usize;
-        let top = bottom + self.len();
-        (bottom, top)
+        let lowest = self.mem.as_ptr() as usize;
+        let highest = lowest + self.len();
+        (lowest, highest)
     }
 }

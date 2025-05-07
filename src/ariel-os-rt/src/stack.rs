@@ -25,11 +25,11 @@ use crate::arch::sp;
 ///
 /// The machinery for stack painting has a couple of assumptions:
 ///
-/// 1. It is safe for an active stack to *overwrite* unused stack space from its limit (bottom,
-///    including) to its stack pointer (not including) through raw pointers.
-/// 2. It is safe to *read* unused stack space below the raw stack pointer down to its limit (bottom).
+/// 1. It is safe for an active stack to *overwrite* unused stack space from its limit (lowest
+///    address, including) to its stack pointer (not including) through raw pointers.
+/// 2. It is safe to *read* unused stack space below the raw stack pointer down to its limit (lowest address).
 /// 3. The limits of an active stack never change.
-/// 4. It is fine to specify zero for both `bottom` and `top`, in which case usage data is invalid
+/// 4. It is fine to specify zero for both `lowest` and `highest`, in which case usage data is invalid
 ///    (always zero), but no unsafety arises.
 /// 5. `!Send + !Sync` keeps `Stack` on the stack it was created for.
 ///
@@ -40,11 +40,11 @@ use crate::arch::sp;
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub struct Stack {
     /// Lowest stack address
-    bottom: usize,
+    lowest: usize,
     /// Highest stack address
-    top: usize,
+    highest: usize,
 
-    /// Basically we need to ensure that `bottom` and `top` precisely correspond
+    /// Basically we need to ensure that `lowest` and `highest` precisely correspond
     /// to the currently active stack. `!Send+!Sync` ensures that the object will
     /// be sent to another thread (or ISR), which implies it stays on the same stack.
     _not_send: PhantomData<*const ()>,
@@ -60,11 +60,11 @@ impl Stack {
     pub fn get() -> Self {
         let sp = sp();
         let stack = crate::arch::stack();
-        if stack.size() > 0 {
-            assert!(stack.top >= stack.bottom);
+        if !stack.is_empty() {
+            assert!(stack.highest >= stack.lowest);
 
             // TODO: verify bounds (are they inclusive?)
-            assert!(stack.bottom <= sp && stack.top >= sp);
+            assert!(stack.lowest <= sp && stack.highest >= sp);
         }
         stack
     }
@@ -72,8 +72,8 @@ impl Stack {
     #[allow(dead_code, reason = "not always used due to conditional compilation")]
     pub(crate) const fn default() -> Self {
         Self {
-            bottom: 0,
-            top: 0,
+            lowest: 0,
+            highest: 0,
             _not_send: PhantomData,
         }
     }
@@ -81,8 +81,8 @@ impl Stack {
     #[allow(dead_code, reason = "not always used due to conditional compilation")]
     pub(crate) const fn new(lowest: usize, highest: usize) -> Self {
         Self {
-            bottom,
-            top,
+            lowest,
+            highest,
             _not_send: PhantomData,
         }
     }
@@ -90,7 +90,7 @@ impl Stack {
     /// Returns the total size of the current stack.
     #[must_use]
     pub fn size(&self) -> usize {
-        self.top - self.bottom
+        self.highest - self.lowest
     }
 
     /// Returns the amount of currently free stack space.
@@ -139,26 +139,26 @@ impl Stack {
     /// point to a bug.
     pub fn repaint(&self) {
         let sp = crate::arch::sp();
-        if self.size() == 0 {
+        if self.is_empty() {
             return;
         }
 
         // sanity check, should never happen with `Stack` being `!Send`.
         // (This assert would not catch the case where a thread stack is created
         // on another thread's stack. `!Send+!Sync` still prevents this.)
-        assert!(self.bottom <= sp && sp <= self.top);
+        assert!(self.lowest <= sp && sp <= self.highest);
 
         // Safety: `Stack` being `!Send+!Sync` should ensure that `repaint()` is only ever called
         // from the stack `self` was created on and belongs to. The assert above double-checks
         // this.
-        // Given that `bottom` doesn't change (which it never does in Ariel OS while a stack is
-        // in use), overwriting `bottom..sp` is safe on all our platforms, when `sp` points to the
+        // Given that `lowest` doesn't change (which it never does in Ariel OS while a stack is
+        // in use), overwriting `lowest..sp` is safe on all our platforms, when `sp` points to the
         // current stack frame's stack pointer.
         // This does not prevent this from being interrupted by an ISR, in which case
         // the stack is dirtied again, but that doesn't cause any unsafety and just
         // makes any following `used_max()` call include whatever the ISR wrote on this stack.
         unsafe {
-            for pos in self.bottom..sp {
+            for pos in self.lowest..sp {
                 write_volatile(pos as *mut u8, 0xCC);
             }
         }

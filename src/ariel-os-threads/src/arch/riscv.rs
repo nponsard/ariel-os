@@ -37,8 +37,8 @@ impl Arch for Cpu {
         thread.data.ra = cleanup as usize;
         thread.data.pc = func;
 
-        thread.stack_bottom = stack_start;
-        thread.stack_top = stack_pos;
+        thread.stack_lowest = stack_start;
+        thread.stack_highest = stack_pos;
 
         // Safety: This is the place to initialize stack painting.
         unsafe { thread.stack_paint_init(stack_pos) };

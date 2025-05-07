@@ -24,19 +24,19 @@ pub(crate) fn sp() -> usize {
 /// Returns a `Stack` handle for the currently active thread.
 pub(crate) fn stack() -> Stack {
     #[cfg(feature = "threading")]
-    let (bottom, top) = {
-        let (bottom, top) = crate::isr_stack::limits();
+    let (lowest, highest) = {
+        let (lowest, highest) = crate::isr_stack::limits();
         let sp = sp();
-        if !(bottom <= sp && top >= sp) {
+        if !(lowest <= sp && highest >= sp) {
             ariel_os_threads::current_stack_limits().unwrap()
         } else {
-            (bottom, top)
+            (lowest, highest)
         }
     };
 
     // When threading is disabled, the isr stack is used.
     #[cfg(not(feature = "threading"))]
-    let (bottom, top) = crate::isr_stack::limits();
+    let (lowest, highest) = crate::isr_stack::limits();
 
-    Stack::new(bottom, top)
+    Stack::new(lowest, highest)
 }

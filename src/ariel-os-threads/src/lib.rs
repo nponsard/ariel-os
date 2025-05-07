@@ -748,11 +748,11 @@ pub fn set_priority(thread_id: ThreadId, prio: RunqueueId) {
     SCHEDULER.with_mut(|mut scheduler| scheduler.set_priority(thread_id, prio));
 }
 
-/// Returns the current thread's stack limits (bottom, top).
+/// Returns the current thread's stack limits (lowest, highest).
 pub fn current_stack_limits() -> Option<(usize, usize)> {
     SCHEDULER.with_mut(|mut scheduler| {
         scheduler
             .current()
-            .map(|thread| (thread.stack_bottom, thread.stack_top))
+            .map(|thread| (thread.stack_lowest, thread.stack_highest))
     })
 }

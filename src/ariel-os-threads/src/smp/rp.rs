@@ -96,8 +96,8 @@ fn handle_fifo_token(token: u32) -> bool {
 
 impl<const SIZE: usize> StackLimits for Stack<SIZE> {
     fn limits(&self) -> (usize, usize) {
-        let bottom = self.mem.as_ptr() as usize;
-        let top = bottom + SIZE;
-        (bottom, top)
+        let lowest = self.mem.as_ptr() as usize;
+        let highest = lowest + SIZE;
+        (lowest, highest)
     }
 }

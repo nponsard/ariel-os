@@ -97,13 +97,13 @@ mod isr_stack {
     pub fn limits_core0() -> (usize, usize) {
         // ISR stack for core0 is defined via linker script.
         unsafe extern "C" {
-            static _stack_bottom: u32;
-            static _stack_start: u32;
+            static _stack_lowest: u32;
+            static _stack_highest: u32;
         }
 
-        let bottom = &raw const _stack_bottom as usize;
-        let top = &raw const _stack_start as usize;
-        (bottom, top)
+        let lowest = &raw const _stack_lowest as usize;
+        let highest = &raw const _stack_highest as usize;
+        (lowest, highest)
     }
 
     #[cfg(feature = "multi-core")]

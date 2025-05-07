@@ -212,7 +212,7 @@ pub fn init() {
 /// Returns a `Stack` handle for the currently active thread.
 pub(crate) fn stack() -> crate::stack::Stack {
     #[cfg(feature = "threading")]
-    let (bottom, top) = if cortex_m::register::control::read().spsel().is_psp() {
+    let (lowest, highest) = if cortex_m::register::control::read().spsel().is_psp() {
         // thread stack
         // Never panics when psp is active.
         ariel_os_threads::current_stack_limits().unwrap()
@@ -222,9 +222,9 @@ pub(crate) fn stack() -> crate::stack::Stack {
 
     // When threading is disabled, the isr stack is used.
     #[cfg(not(feature = "threading"))]
-    let (bottom, top) = crate::isr_stack::limits();
+    let (lowest, highest) = crate::isr_stack::limits();
 
-    Stack::new(bottom, top)
+    Stack::new(lowest, highest)
 }
 
 /// Returns the current `SP` register value

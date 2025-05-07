@@ -9,22 +9,22 @@ pub(crate) static STACK_TOP_CORE1: AtomicUsize = AtomicUsize::new(0);
 pub(crate) type StackType = <Chip as Multicore>::Stack;
 
 pub(crate) fn isr_stack_core1_set_limits(stack: &StackType) {
-    let (bottom, top) = stack.limits();
+    let (lowest, highest) = stack.limits();
 
-    // set bottom first so just in case both are read in between,
-    // the `bottom <= top` is invalid during that time, which is checked
+    // set lowest first so just in case both are read in between,
+    // the `lowest <= highest` is invalid during that time, which is checked
     // where needed.
-    STACK_BOTTOM_CORE1.store(bottom, Ordering::Release);
-    STACK_TOP_CORE1.store(top, Ordering::Release);
+    STACK_BOTTOM_CORE1.store(lowest, Ordering::Release);
+    STACK_TOP_CORE1.store(highest, Ordering::Release);
 }
 
-/// Returns the isr stack limits for the second core as `(bottom, top)`.
+/// Returns the isr stack limits for the second core as `(lowest, highest)`.
 pub fn isr_stack_core1_get_limits() -> (usize, usize) {
-    // read top first so that when this is called before `isr_stack_core1_set_limits()`,
-    // `bottom > top` -> invalid, which is checked elsewhere.
-    let top = STACK_TOP_CORE1.load(Ordering::Acquire);
-    let bottom = STACK_BOTTOM_CORE1.load(Ordering::Acquire);
-    (bottom, top)
+    // read `highest` first so that when this is called before `isr_stack_core1_set_limits()`,
+    // `lowest > highest` -> invalid, which is checked elsewhere.
+    let highest = STACK_TOP_CORE1.load(Ordering::Acquire);
+    let lowest = STACK_BOTTOM_CORE1.load(Ordering::Acquire);
+    (lowest, highest)
 }
 
 impl CoreId {
@@ -68,7 +68,7 @@ pub trait Multicore {
 }
 
 pub trait StackLimits {
-    /// Returns (bottom, top) of this stack.
+    /// Returns (lowest, highest) of this stack.
     fn limits(&self) -> (usize, usize) {
         (0, 0)
     }

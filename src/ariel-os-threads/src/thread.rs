@@ -26,9 +26,9 @@ pub struct Thread {
     pub core_affinity: crate::CoreAffinity,
 
     /// Lowest stack address
-    pub stack_bottom: usize,
+    pub stack_lowest: usize,
     /// Highest stack address
-    pub stack_top: usize,
+    pub stack_highest: usize,
 }
 
 /// Possible states of a thread
@@ -65,8 +65,8 @@ impl Thread {
             tid: ThreadId::new(0),
             #[cfg(feature = "core-affinity")]
             core_affinity: crate::CoreAffinity::no_affinity(),
-            stack_top: 0,
-            stack_bottom: 0,
+            stack_highest: 0,
+            stack_lowest: 0,
         }
     }
 
@@ -77,7 +77,7 @@ impl Thread {
     #[allow(dead_code, reason = "not used in all configurations")]
     pub(crate) unsafe fn stack_paint_init(&mut self, sp: usize) {
         unsafe {
-            for pos in self.stack_bottom..sp {
+            for pos in self.stack_lowest..sp {
                 core::ptr::write_volatile(pos as *mut u8, 0xCC);
             }
         }
