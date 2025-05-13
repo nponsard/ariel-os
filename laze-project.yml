@@ -177,6 +177,11 @@ contexts:
         cmd:
           - rust-objdump -S ${out}
 
+      info-boards:
+        build: false
+        cmd:
+          - echo ${builder}
+
   - name: nrf
     help: Nordic MCU support (based on embassy-nrf)
     parent: ariel-os
