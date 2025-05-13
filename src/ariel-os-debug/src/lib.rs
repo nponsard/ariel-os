@@ -103,6 +103,59 @@ mod backend {
     }
 }
 
+#[cfg(all(feature = "debug-console", feature = "uart"))]
+#[doc(hidden)]
+pub mod backend {
+    use embassy_sync::once_lock::OnceLock;
+
+    #[doc(hidden)]
+    pub enum Error {
+        Writing,
+    }
+
+    // Populated by a downstream crate.
+    // The function must print to a UART output.
+    #[doc(hidden)]
+    pub static DEBUG_UART_WRITE_FN: OnceLock<fn(&[u8]) -> Result<(), Error>> = OnceLock::new();
+
+    struct DebugUart;
+
+    impl core::fmt::Write for DebugUart {
+        fn write_str(&mut self, s: &str) -> core::fmt::Result {
+            let bytes = s.as_bytes();
+
+            if let Some(debug_uart_write_fn) = DEBUG_UART_WRITE_FN.try_get() {
+                // Panicking in this case would not be useful as (a) it is recoverable, we would
+                // just be dropping some debug output and (b) there would not be a output to print
+                // the panic on, as there can currently only be one backend at once.
+                let _ = debug_uart_write_fn(bytes);
+            }
+
+            Ok(())
+        }
+    }
+
+    pub fn init() {
+        crate::logger::init();
+    }
+
+    // Based on <https://blog.m-ou.se/format-args/>.
+    #[doc(hidden)]
+    pub fn _print(args: core::fmt::Arguments) {
+        use core::fmt::Write;
+
+        DebugUart.write_fmt(args).unwrap();
+    }
+
+    #[macro_export]
+    macro_rules! println {
+        ($($arg:tt)*) => {{
+            #[expect(clippy::used_underscore_items, reason = "consistency with std::println")]
+            $crate::backend::_print(format_args!("{}\n", format_args!($($arg)*)));
+        }};
+    }
+}
+
 #[cfg(not(feature = "debug-console"))]
 mod backend {
     #[doc(hidden)]
