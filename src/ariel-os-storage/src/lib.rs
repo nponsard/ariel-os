@@ -90,14 +90,9 @@ pub async fn init(p: &mut OptionalPeripherals) {
     embassy_time::block_for(embassy_time::Duration::from_millis(10));
 
     // Use a marker to ensure that this storage is initialized.
-    match get::<u8>(MARKER_KEY).await {
-        Ok(Some(val)) if val == MARKER_VALUE => {
-            // all good
-        }
-        _ => {
-            ariel_os_debug::log::info!("storage: initializing");
-            erase_all().await.unwrap();
-        }
+    if Ok(Some(MARKER_VALUE)) != get::<u8>(MARKER_KEY).await {
+        ariel_os_debug::log::info!("storage: initializing");
+        erase_all().await.unwrap();
     }
 }
 
