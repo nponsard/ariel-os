@@ -36,7 +36,7 @@ fn main() {
     let memory = Memory::new()
         .add_section(MemorySection::new("RAM", 0x20000000, ram * 1024))
         .add_section(
-            MemorySection::new("FLASH", 0x0, rom * 1024)
+            MemorySection::new("FLASH", 0x00000, rom * 1024)
                 .pagesize(4096)
                 .from_env_with_prefix(slot_prefix),
         );
