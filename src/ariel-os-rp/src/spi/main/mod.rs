@@ -49,7 +49,7 @@ ariel_os_embassy_common::impl_spi_from_frequency!();
 ariel_os_embassy_common::impl_spi_frequency_const_functions!(MAX_FREQUENCY);
 
 impl Frequency {
-    fn as_hz(&self) -> u32 {
+    fn as_hz(self) -> u32 {
         match self {
             Self::F(kilohertz) => kilohertz.to_Hz(),
         }
@@ -75,19 +75,19 @@ macro_rules! define_spi_drivers {
                     mosi_pin: impl Peripheral<P: MosiPin<peripherals::$peripheral>> + 'static,
                     config: Config,
                 ) -> Spi {
-                    let (pol, phase) = crate::spi::from_mode(config.mode);
-
-                    let mut spi_config = embassy_rp::spi::Config::default();
-                    spi_config.frequency = config.frequency.as_hz();
-                    spi_config.polarity = pol;
-                    spi_config.phase = phase;
-
                     // Make this struct a compile-time-enforced singleton: having multiple statics
                     // defined with the same name would result in a compile-time error.
                     paste::paste! {
                         #[allow(dead_code)]
                         static [<PREVENT_MULTIPLE_ $peripheral>]: () = ();
                     }
+
+                    let (pol, phase) = crate::spi::from_mode(config.mode);
+
+                    let mut spi_config = embassy_rp::spi::Config::default();
+                    spi_config.frequency = config.frequency.as_hz();
+                    spi_config.polarity = pol;
+                    spi_config.phase = phase;
 
                     // FIXME(safety): enforce that the init code indeed has run
                     // SAFETY: this struct being a singleton prevents us from stealing the
