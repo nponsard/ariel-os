@@ -11,6 +11,7 @@ use embassy_nrf::{
 
 /// I2C bus configuration.
 #[non_exhaustive]
+#[expect(clippy::struct_excessive_bools)]
 #[derive(Clone)]
 pub struct Config {
     /// The frequency at which the bus should operate.
@@ -194,16 +195,16 @@ macro_rules! define_i2c_drivers {
 
 // We cannot impl From because both types are external to this crate.
 fn from_error(err: embassy_nrf::twim::Error) -> ariel_os_embassy_common::i2c::controller::Error {
-    use embassy_nrf::twim::Error::*;
+    use embassy_nrf::twim::Error::{
+        AddressNack, BufferNotInRAM, DataNack, Overrun, Receive, RxBufferTooLong, Timeout,
+        Transmit, TxBufferTooLong,
+    };
 
     use ariel_os_embassy_common::i2c::controller::{Error, NoAcknowledgeSource};
 
+    #[expect(clippy::match_same_arms, reason = "non-exhaustive upstream enum")]
     match err {
-        TxBufferTooLong => Error::Other,
-        RxBufferTooLong => Error::Other,
-        Transmit => Error::Other,
-        Receive => Error::Other,
-        BufferNotInRAM => Error::Other,
+        TxBufferTooLong | RxBufferTooLong | Transmit | Receive | BufferNotInRAM => Error::Other,
         AddressNack => Error::NoAcknowledge(NoAcknowledgeSource::Address),
         DataNack => Error::NoAcknowledge(NoAcknowledgeSource::Data),
         Overrun => Error::Overrun,

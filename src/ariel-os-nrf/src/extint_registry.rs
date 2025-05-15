@@ -22,6 +22,9 @@ impl ExtIntRegistry {
         }
     }
 
+    /// # Errors
+    ///
+    /// Returns `Err(InterruptError::NoIntChannelAvailable)` if an interrupt channel is not available.
     pub fn use_interrupt_for_pin<PIN: Peripheral<P: Pin>>(
         &self,
         _pin: &mut PIN, // Require the caller to have the peripheral
