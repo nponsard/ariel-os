@@ -90,18 +90,18 @@ macro_rules! define_spi_drivers {
                     mosi_pin: impl Peripheral<P: MosiPin<peripherals::$peripheral>> + 'static,
                     config: Config,
                 ) -> Spi {
-                    let mut spi_config = embassy_stm32::spi::Config::default();
-                    spi_config.frequency = config.frequency.into();
-                    spi_config.mode = crate::spi::from_mode(config.mode);
-                    spi_config.bit_order = crate::spi::from_bit_order(config.bit_order);
-                    spi_config.miso_pull = gpio::Pull::None;
-
                     // Make this struct a compile-time-enforced singleton: having multiple statics
                     // defined with the same name would result in a compile-time error.
                     paste::paste! {
                         #[allow(dead_code)]
                         static [<PREVENT_MULTIPLE_ $peripheral>]: () = ();
                     }
+
+                    let mut spi_config = embassy_stm32::spi::Config::default();
+                    spi_config.frequency = config.frequency.into();
+                    spi_config.mode = crate::spi::from_mode(config.mode);
+                    spi_config.bit_order = crate::spi::from_bit_order(config.bit_order);
+                    spi_config.miso_pull = gpio::Pull::None;
 
                     // FIXME(safety): enforce that the init code indeed has run
                     // SAFETY: this struct being a singleton prevents us from stealing the

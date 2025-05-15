@@ -196,7 +196,9 @@ macro_rules! define_i2c_drivers {
 
 // We cannot impl From because both types are external to this crate.
 fn from_error(err: embassy_stm32::i2c::Error) -> ariel_os_embassy_common::i2c::controller::Error {
-    use embassy_stm32::i2c::Error::*;
+    use embassy_stm32::i2c::Error::{
+        Arbitration, Bus, Crc, Nack, Overrun, Timeout, ZeroLengthTransfer,
+    };
 
     use ariel_os_embassy_common::i2c::controller::{Error, NoAcknowledgeSource};
 
@@ -205,9 +207,8 @@ fn from_error(err: embassy_stm32::i2c::Error) -> ariel_os_embassy_common::i2c::c
         Arbitration => Error::ArbitrationLoss,
         Nack => Error::NoAcknowledge(NoAcknowledgeSource::Unknown),
         Timeout => Error::Timeout,
-        Crc => Error::Other,
+        Crc | ZeroLengthTransfer => Error::Other,
         Overrun => Error::Overrun,
-        ZeroLengthTransfer => Error::Other,
     }
 }
 
