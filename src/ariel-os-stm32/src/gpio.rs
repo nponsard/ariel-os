@@ -102,14 +102,12 @@ impl From<Speed> for embassy_stm32::gpio::Speed {
 
 impl ariel_os_embassy_common::gpio::FromSpeed for Speed {
     fn from(speed: ariel_os_embassy_common::gpio::Speed<Self>) -> Self {
-        use ariel_os_embassy_common::gpio::Speed::*;
-
         match speed {
-            Hal(speed) => speed,
-            Low => Self::Low,
-            Medium => Self::Medium,
-            High => Self::High,
-            VeryHigh => Self::VeryHigh,
+            ariel_os_embassy_common::gpio::Speed::Hal(speed) => speed,
+            ariel_os_embassy_common::gpio::Speed::Low => Self::Low,
+            ariel_os_embassy_common::gpio::Speed::Medium => Self::Medium,
+            ariel_os_embassy_common::gpio::Speed::High => Self::High,
+            ariel_os_embassy_common::gpio::Speed::VeryHigh => Self::VeryHigh,
         }
     }
 }

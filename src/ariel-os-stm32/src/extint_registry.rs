@@ -23,6 +23,7 @@ impl ExtIntRegistry {
         }
     }
 
+    #[expect(clippy::missing_panics_doc)]
     pub fn init(&self, peripherals: &mut OptionalPeripherals) {
         peripherals.EXTI0.take().unwrap();
         peripherals.EXTI1.take().unwrap();
@@ -46,6 +47,14 @@ impl ExtIntRegistry {
         // Do nothing else, just consume the peripherals: they are ours now!
     }
 
+    /// # Errors
+    ///
+    /// Returns `Err(InterruptError::IntChannelAlreadyUsed)` if the interrupt channel is already in
+    /// use.
+    ///
+    /// # Panics
+    ///
+    /// Will panic if the interrupt channels have not been captured during initialization.
     pub fn get_interrupt_channel_for_pin<P: Peripheral<P = T>, T: Pin>(
         &self,
         pin: P,
