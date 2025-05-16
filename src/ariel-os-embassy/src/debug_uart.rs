@@ -1,10 +1,20 @@
 #![deny(clippy::pedantic)]
 
+#[cfg(context = "nrf")]
 pub static DEBUG_UART: embassy_sync::once_lock::OnceLock<
     embassy_sync::mutex::Mutex<
         embassy_sync::blocking_mutex::raw::CriticalSectionRawMutex,
         embassy_nrf::uarte::Uarte<embassy_nrf::peripherals::UARTE0>,
         // embassy_stm32::usart::Uart<embassy_stm32::mode::Blocking>,
+    >,
+> = embassy_sync::once_lock::OnceLock::new();
+
+#[cfg(context = "stm32")]
+pub static DEBUG_UART: embassy_sync::once_lock::OnceLock<
+    embassy_sync::mutex::Mutex<
+        embassy_sync::blocking_mutex::raw::CriticalSectionRawMutex,
+        // embassy_nrf::uarte::Uarte<embassy_nrf::peripherals::UARTE0>,
+        embassy_stm32::usart::Uart<embassy_stm32::mode::Blocking>,
     >,
 > = embassy_sync::once_lock::OnceLock::new();
 
@@ -43,6 +53,20 @@ pub fn init(peripherals: &mut crate::hal::OptionalPeripherals) {
         .unwrap()
     };
 
+    #[cfg(context = "st-b-l475e-iot01a")]
+    let uart = {
+        let uart_rx = peripherals.PB7.take().unwrap();
+        let uart_tx = peripherals.PB6.take().unwrap();
+
+        embassy_stm32::usart::Uart::new_blocking(
+            peripherals.USART1.take().unwrap(),
+            uart_rx,
+            uart_tx,
+            embassy_stm32::usart::Config::default(),
+        )
+        .unwrap()
+    };
+
     let _ = DEBUG_UART.init(embassy_sync::mutex::Mutex::new(uart));
 
     let _ = ariel_os_debug::DEBUG_UART_WRITE_FN.init(write_debug_uart);
@@ -59,10 +83,19 @@ fn write_debug_uart(buffer: &[u8]) {
         // on the debug output before the driver is populated.
         if let Some(uart) = DEBUG_UART.try_get() {
             let mut uart = uart.lock().await;
+
+            #[cfg(context = "nrf")]
             uart.write(buffer).await.unwrap();
+            #[cfg(context = "stm32")]
+            uart.blocking_write(buffer).unwrap();
             // uart.write(buffer).unwrap();
+
             // TODO: is flushing needed here?
+            #[cfg(context = "nrf")]
             uart.flush().await.unwrap();
+
+            #[cfg(context = "stm32")]
+            uart.blocking_flush().unwrap();
             // uart.flush().unwrap();
         }
     });
