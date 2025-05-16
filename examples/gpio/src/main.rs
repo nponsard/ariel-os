@@ -4,12 +4,15 @@
 mod pins;
 
 use ariel_os::{
+    debug::log::info,
     gpio::{Input, Level, Output, Pull},
     time::Timer,
 };
 
 #[ariel_os::task(autostart, peripherals)]
 async fn blinky(peripherals: pins::Peripherals) {
+    info!("Starting blinky task");
+
     let mut led1 = Output::new(peripherals.led1, Level::Low);
 
     #[allow(unused_variables)]
@@ -25,12 +28,18 @@ async fn blinky(peripherals: pins::Peripherals) {
     #[cfg(context = "bbc-microbit-v2")]
     let _led_col1 = Output::new(peripherals.led_col1, Level::Low);
 
+    info!("Entering loop");
     loop {
         // Wait for the button being pressed or 300 ms, whichever comes first.
+        info!("Waiting for button");
+
         let _ =
             embassy_futures::select::select(btn1.wait_for_low(), Timer::after_millis(300)).await;
 
+        info!("Toggling LED");
         led1.toggle();
+        info!("Led toggled");
+
         Timer::after_millis(100).await;
     }
 }

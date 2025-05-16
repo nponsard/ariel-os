@@ -3,7 +3,7 @@
 
 use ariel_os::debug::{
     ExitCode, exit,
-    log::{Hex, defmt, info},
+    log::{Hex, info},
 };
 
 // Imports for using [`ariel_os::storage`]
@@ -13,7 +13,7 @@ use serde::{Deserialize, Serialize};
 /// Example object.
 ///
 /// The serde Serialize / Deserialize traits are required for storage
-#[derive(Serialize, Deserialize, Debug, defmt::Format)]
+#[derive(Serialize, Deserialize, Debug)]
 struct MyConfig {
     val_one: heapless::String<64>,
     val_two: u64,
