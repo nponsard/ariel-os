@@ -3,7 +3,6 @@
 #![no_std]
 #![cfg_attr(nightly, feature(doc_auto_cfg))]
 #![deny(missing_docs)]
-#![deny(clippy::pedantic)]
 
 pub mod gpio;
 

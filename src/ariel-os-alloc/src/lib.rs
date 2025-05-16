@@ -2,7 +2,6 @@
 
 #![no_std]
 #![deny(missing_docs)]
-#![deny(clippy::pedantic)]
 // required for tests:
 #![cfg_attr(test, no_main)]
 

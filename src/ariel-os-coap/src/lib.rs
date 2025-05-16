@@ -7,7 +7,6 @@
 //! implementations.
 #![no_std]
 #![deny(missing_docs)]
-#![deny(clippy::pedantic)]
 
 // Moving work from https://github.com/embassy-rs/embassy/pull/2519 in here for the time being
 mod udp_nal;

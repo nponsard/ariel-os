@@ -13,7 +13,6 @@
 #![cfg_attr(not(test), no_std)]
 #![cfg_attr(nightly, feature(doc_auto_cfg))]
 #![deny(missing_docs)]
-#![deny(clippy::pedantic)]
 
 #[featurecomb::comb]
 mod _featurecomb {}
