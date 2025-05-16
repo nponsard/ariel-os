@@ -6,7 +6,7 @@ fn main() {
         return;
     }
 
-    let (ram, rom) = if is_in_current_contexts(&["nrf52832"]) {
+    let (ram, flash) = if is_in_current_contexts(&["nrf52832"]) {
         (64, 256)
     } else if is_in_current_contexts(&["nrf52833"]) {
         (128, 512)
@@ -34,9 +34,9 @@ fn main() {
 
     // generate linker script
     let memory = Memory::new()
-        .add_section(MemorySection::new("RAM", 0x20000000, ram * 1024))
+        .add_section(MemorySection::new("RAM", 0x2000_0000, ram * 1024))
         .add_section(
-            MemorySection::new("FLASH", 0x0, rom * 1024)
+            MemorySection::new("FLASH", 0x0, flash * 1024)
                 .pagesize(4096)
                 .from_env_with_prefix(slot_prefix),
         );
