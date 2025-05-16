@@ -86,10 +86,17 @@ ariel_os::hal::define_peripherals!(Peripherals {
 pub type SensorSpi = spi::main::SPI1;
 #[cfg(context = "stm32l475vg")]
 ariel_os::hal::define_peripherals!(Peripherals {
+<<<<<<< HEAD
     spi_sck: PA5,  // Arduino D13
     spi_miso: PA6, // Arduino D12
     spi_mosi: PA7, // Arduino D11
     spi_cs: PA2,   // Arduion D10
+=======
+    spi_sck: PA5,  // arduino D13
+    spi_miso: PA6, // arduino D12
+    spi_mosi: PA7, // arduino D11
+    spi_cs: PA2,   // arduion D10
+>>>>>>> 988da585 (doc(st-b-l475e-iot01a): specify the pins in the examples and tests)
 });
 
 // Side SPI of Arduino v3 connector
