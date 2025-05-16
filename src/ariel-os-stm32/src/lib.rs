@@ -80,6 +80,7 @@ pub fn init() -> OptionalPeripherals {
 }
 
 // TODO: find better place for this
+#[allow(clippy::too_many_lines)]
 fn board_config(config: &mut Config) {
     #[cfg(context = "st-b-l475e-iot01a")]
     {
