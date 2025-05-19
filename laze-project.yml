@@ -425,6 +425,13 @@ contexts:
       executor_stacksize_required_default: "3072"
       PROBE_RS_CHIP: STM32C031C6
 
+  - name: stm32f303k8
+    parent: stm32
+    selects:
+      - cortex-m4f
+    env:
+      PROBE_RS_CHIP: STM32F303K8Tx
+
   - name: stm32f401re
     parent: stm32
     selects:
@@ -774,7 +781,7 @@ modules:
       global:
         RUSTFLAGS:
           - -Cembed-bitcode=yes
-          - -Clto=fat
+          - -Clto=yes
           - -Ccodegen-units=1
 
   - name: inline225
@@ -1517,6 +1524,15 @@ builders:
   # TODO: there also is a companion nrf5340 on this board
   - name: nordic-thingy-91-x-nrf9151
     parent: nrf9151
+
+  - name: st-nucleo-f303k8
+    parent: stm32f303k8
+    provides:
+      - has_swi
+    env:
+      CARGO_ENV:
+        # This ISR is unused on a naked board. Configured here for testing.
+        - CONFIG_SWI=USART3
 
   - name: st-nucleo-f401re
     parent: stm32f401re
