@@ -867,7 +867,7 @@ modules:
     help: use probe-rs as runner
     selects:
       - ?debug-console
-      - rtt-target
+      # - rtt-target
 
     env:
       global:
@@ -1546,14 +1546,7 @@ builders:
     parent: stm32l475vg
     provides:
       - has_swi
-<<<<<<< HEAD
       - has_usb_device_port
-=======
-      # USB port only used for OTG FS, need MSI clock to be calibrated
-      - has_usb_device_port
-
-
->>>>>>> c39e6576 (feat(boards): add support for ST B-L475E-IOT01A)
     env:
       CARGO_ENV:
         # This ISR is unused on a naked board. Configured here for testing.
