@@ -98,12 +98,12 @@ fn board_config(config: &mut Config) {
         config.rcc.hsi = true;
         config.rcc.msi = Some(MSIRange::RANGE48M);
         config.rcc.pll = Some(Pll {
-            source: PllSource::HSI,
-            prediv: PllPreDiv::DIV1,
+            source: PllSource::MSI,
+            prediv: PllPreDiv::DIV3, // 16 Mhz
             mul: PllMul::MUL10, // 160 MHz
             divp: None,
             divq: None,
-            divr: Some(PllRDiv::DIV2), // sysclk 80Mhz (16 / 1 * 10 / 2)
+            divr: Some(PllRDiv::DIV2), // sysclk 80Mhz (48 / 3  * 10 / 2)
         });
         config.rcc.sys = Sysclk::PLL1_R;
         // With a 32.768 kHz LSE, the MSI clock will be calibrated and considered accurate enough.
