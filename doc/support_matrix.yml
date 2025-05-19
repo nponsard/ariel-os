@@ -250,11 +250,11 @@ chips:
   stm32l475vg:
     name: STM32L475VG
     support:
-      gpio: supported
+      gpio: needs_testing
       debug_output: supported
-      hwrng: supported
-      i2c_controller: supported
-      spi_main: supported
+      hwrng: needs_testing
+      i2c_controller: needs_testing
+      spi_main: needs_testing
       logging: supported
       storage:
         status: supported_with_caveats
@@ -400,13 +400,11 @@ boards:
     chip: stm32l475vg
     support:
       user_usb:
-        status: supported_with_caveats
-        comments:
-          - Only OTG USB is available
+        status: needs_testing
       wifi:
-        status: not_available
+        status: not_currently_supported
         comments:
-          - An external wifi module is present on the board
+          - an external Wi-Fi module is present on the board
       ethernet_over_usb: not_available
 
   st-nucleo-c031c6:
