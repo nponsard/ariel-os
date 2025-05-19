@@ -250,19 +250,11 @@ chips:
   stm32l475vg:
     name: STM32L475VG
     support:
-<<<<<<< HEAD
       gpio: needs_testing
       debug_output: supported
       hwrng: supported
       i2c_controller: needs_testing
       spi_main: needs_testing
-=======
-      gpio: supported
-      debug_output: supported
-      hwrng: supported
-      i2c_controller: supported
-      spi_main: supported
->>>>>>> b228a5a7 (doc(st-b-l475e-iot01a): update the support matrix)
       logging: supported
       storage:
         status: supported_with_caveats
@@ -408,18 +400,11 @@ boards:
     chip: stm32l475vg
     support:
       user_usb:
-<<<<<<< HEAD
         status: needs_testing
       wifi:
         status: not_currently_supported
         comments:
           - an external Wi-Fi module is present on the board
-=======
-        status: supported_with_caveats
-        comments:
-          - Only OTG USB is supported
-      wifi: not_available # an external wifi module is present on the board
->>>>>>> b228a5a7 (doc(st-b-l475e-iot01a): update the support matrix)
       ethernet_over_usb: not_available
 
   st-nucleo-c031c6:
