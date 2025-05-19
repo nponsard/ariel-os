@@ -252,7 +252,7 @@ chips:
     support:
       gpio: needs_testing
       debug_output: supported
-      hwrng: needs_testing
+      hwrng: supported
       i2c_controller: needs_testing
       spi_main: needs_testing
       logging: supported
