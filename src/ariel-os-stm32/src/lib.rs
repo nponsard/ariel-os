@@ -80,7 +80,7 @@ pub fn init() -> OptionalPeripherals {
 }
 
 // TODO: find better place for this
-#[allow(clippy::too_many_lines)]
+#[expect(clippy::too_many_lines)]
 fn board_config(config: &mut Config) {
     #[cfg(context = "st-b-l475e-iot01a")]
     {
@@ -92,34 +92,23 @@ fn board_config(config: &mut Config) {
             lsi: false,
             lse: Some(LseConfig {
                 frequency: embassy_stm32::time::Hertz(32768),
-                mode: LseMode::Oscillator(LseDrive::Low),
+                mode: LseMode::Oscillator(LseDrive::MediumHigh),
             }),
         };
-        config.rcc.hsi = false;
-
-        config.rcc.msi = Some(MSIRange::RANGE8M);
+        config.rcc.hsi = true;
+        config.rcc.msi = Some(MSIRange::RANGE48M);
         config.rcc.pll = Some(Pll {
-            source: PllSource::MSI,
+            source: PllSource::HSI,
             prediv: PllPreDiv::DIV1,
-            mul: PllMul::MUL20, // 8 MHz MSI * 20 = 160 MHz
+            mul: PllMul::MUL10, // 160 MHz
             divp: None,
             divq: None,
-            divr: Some(PllRDiv::DIV2), // sysclk 80Mhz (8 / 1 * 20 / 2)
+            divr: Some(PllRDiv::DIV2), // sysclk 80Mhz (16 / 1 * 10 / 2)
         });
         config.rcc.sys = Sysclk::PLL1_R;
-
-        config.rcc.pllsai1 = Some(Pll {
-            source: PllSource::MSI,
-            prediv: PllPreDiv::DIV1,
-            mul: PllMul::MUL12, // 8 MHz MSI * 12 = 96 MHz
-            divp: None,
-            divq: Some(PllQDiv::DIV2), // USB 48 MHz (8 / 1 * 12 / 2)
-            divr: None,
-        });
-
         // With a 32.768 kHz LSE, the MSI clock will be calibrated and considered accurate enough
         // Embassy automatically enables MSIPLLEN if the LSE is configured.
-        config.rcc.mux.clk48sel = mux::Clk48sel::PLLSAI1_Q;
+        config.rcc.mux.clk48sel = mux::Clk48sel::MSI;
     }
 
     #[cfg(context = "st-nucleo-wb55")]
