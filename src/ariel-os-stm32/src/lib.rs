@@ -106,7 +106,7 @@ fn board_config(config: &mut Config) {
             divr: Some(PllRDiv::DIV2), // sysclk 80Mhz (16 / 1 * 10 / 2)
         });
         config.rcc.sys = Sysclk::PLL1_R;
-        // With a 32.768 kHz LSE, the MSI clock will be calibrated and considered accurate enough
+        // With a 32.768 kHz LSE, the MSI clock will be calibrated and considered accurate enough.
         // Embassy automatically enables MSIPLLEN if the LSE is configured.
         config.rcc.mux.clk48sel = mux::Clk48sel::MSI;
     }
