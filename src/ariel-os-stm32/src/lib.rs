@@ -95,7 +95,7 @@ fn board_config(config: &mut Config) {
                 mode: LseMode::Oscillator(LseDrive::MediumHigh),
             }),
         };
-        config.rcc.hsi = true;
+        config.rcc.hsi = false;
         config.rcc.msi = Some(MSIRange::RANGE48M);
         config.rcc.pll = Some(Pll {
             source: PllSource::MSI,
