@@ -25,6 +25,9 @@ contexts:
       - ?hw/device-identity
       - ?lto
       - ?semihosting
+
+      # Selecting default toolchain here. try xtensa, stable, nightly.
+      - ?xtensa
       - ?stable
       - ?nightly
     env:
@@ -626,14 +629,23 @@ modules:
           - --cfg context=\"cortex-m33f\"
 
   - name: xtensa
+    context:
+      - esp32
+      - esp32s3
+    provides_unique:
+      - cargo-toolchain
+      - nightly
     conflicts:
       # no xtensa in stable Rust
+      # this is implicit by `provides_unique: cargo-toolchain`, adding here for
+      # clarity
       - stable
     env:
       global:
         CARGO_TOOLCHAIN: +esp
         RUSTFLAGS:
           - --cfg context=\"xtensa\"
+          - --cfg nightly
         CFLAGS:
           - -mlongcalls
         CARGO_ARGS:
@@ -708,8 +720,8 @@ modules:
 
   - name: stable
     help: build with stable Rust
-    conflicts:
-      - nightly
+    provides_unique:
+      - cargo-toolchain
     env:
       global:
         # Using the empty string here, as specifying "+stable" would make rustup
@@ -720,8 +732,8 @@ modules:
 
   - name: nightly
     help: build with nightly Rust
-    conflicts:
-      - stable
+    provides_unique:
+      - cargo-toolchain
     env:
       global:
         # this pins our nightly version
