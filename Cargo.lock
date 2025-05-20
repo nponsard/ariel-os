@@ -167,6 +167,7 @@ dependencies = [
  "ariel-os",
  "ariel-os-boards",
  "ariel-os-debug",
+ "ariel-os-utils",
  "embedded-alloc",
  "embedded-test",
  "esp-alloc",
