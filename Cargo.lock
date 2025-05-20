@@ -1050,7 +1050,6 @@ dependencies = [
  "ariel-os",
  "ariel-os-boards",
  "coap-handler-implementations",
- "heapless 0.8.0",
  "riot-coap-handler-demos",
 ]
 
@@ -2562,7 +2561,6 @@ dependencies = [
  "coap-request",
  "coap-request-implementations",
  "embedded-nal-coap",
- "heapless 0.8.0",
 ]
 
 [[package]]
@@ -2576,7 +2574,6 @@ dependencies = [
  "coap-message",
  "coap-message-demos",
  "embassy-sync 0.6.2",
- "heapless 0.8.0",
 ]
 
 [[package]]
@@ -3135,7 +3132,6 @@ version = "0.0.0"
 dependencies = [
  "ariel-os",
  "ariel-os-boards",
- "heapless 0.8.0",
  "rand_core",
  "reqwless",
 ]
@@ -3147,7 +3143,6 @@ dependencies = [
  "ariel-os",
  "ariel-os-boards",
  "embassy-sync 0.6.2",
- "heapless 0.8.0",
  "picoserve",
  "serde",
 ]
@@ -5132,7 +5127,6 @@ dependencies = [
  "ariel-os",
  "ariel-os-boards",
  "embedded-io-async",
- "heapless 0.8.0",
 ]
 
 [[package]]
@@ -5185,7 +5179,6 @@ dependencies = [
  "embassy-futures",
  "embassy-sync 0.6.2",
  "embedded-nal-coap",
- "heapless 0.8.0",
  "scroll-ring",
 ]
 
@@ -5398,7 +5391,6 @@ version = "0.0.0"
 dependencies = [
  "ariel-os",
  "ariel-os-boards",
- "heapless 0.8.0",
 ]
 
 [[package]]
