@@ -50,6 +50,7 @@ contexts:
           CONFIG_EXECUTOR_STACKSIZE=${CONFIG_EXECUTOR_STACKSIZE}
           CONFIG_ISR_STACKSIZE=${CONFIG_ISR_STACKSIZE}
       PROFILE: release
+      PROFILE_DIR: $(if("${PROFILE}"=="dev", "debug", "${PROFILE}"))
       QEMU_SYSTEM_ARM: >-
         qemu-system-arm
         -machine ${QEMU_MACHINE}
@@ -107,8 +108,8 @@ contexts:
         always: true
         cmd: >-
           test "${SKIP_CARGO_BUILD}" = "1" && exit 0;
-          cd ${relpath} && ${CARGO_PRESHELL} ${CARGO_ENV} ${CARGO} ${CARGO_TOOLCHAIN} ${CARGO_ARGS} build --${PROFILE} ${FEATURES}
-          && cp ${relroot}/${build-dir}/bin/${builder}/cargo/${RUSTC_TARGET}/${PROFILE}/${app} ${relroot}/${out}
+          cd ${relpath} && ${CARGO_PRESHELL} ${CARGO_ENV} ${CARGO} ${CARGO_TOOLCHAIN} ${CARGO_ARGS} build --profile=${PROFILE} ${FEATURES}
+          && cp ${relroot}/${build-dir}/bin/${builder}/cargo/${RUSTC_TARGET}/${PROFILE_DIR}/${app} ${relroot}/${out}
           ${POST_LINK}
 
       - name: GIT_DOWNLOAD
@@ -130,7 +131,7 @@ contexts:
         build: false
         workdir: ${appdir}
         cmd:
-          - ${CARGO_PRESHELL} ${CARGO_ENV} ${CARGO} ${CARGO_TOOLCHAIN} ${CARGO_ARGS} run --${PROFILE} ${FEATURES}
+          - ${CARGO_PRESHELL} ${CARGO_ENV} ${CARGO} ${CARGO_TOOLCHAIN} ${CARGO_ARGS} run --profile=${PROFILE} ${FEATURES}
 
       clippy:
         build: false
@@ -147,7 +148,7 @@ contexts:
       debug:
         workdir: ${appdir}
         cmd:
-          - ${CARGO_PRESHELL} ${CARGO_ENV} ${CARGO} ${CARGO_TOOLCHAIN} ${CARGO_ARGS} run --${PROFILE} ${FEATURES}
+          - ${CARGO_PRESHELL} ${CARGO_ENV} ${CARGO} ${CARGO_TOOLCHAIN} ${CARGO_ARGS} run --profile=${PROFILE} ${FEATURES}
         build: false
         ignore_ctrl_c: true
 
@@ -160,7 +161,7 @@ contexts:
       bloat:
         workdir: ${appdir}
         cmd:
-          - ${CARGO_PRESHELL} ${CARGO_ENV} ${CARGO} ${CARGO_TOOLCHAIN} ${CARGO_ARGS} bloat --${PROFILE} ${FEATURES}
+          - ${CARGO_PRESHELL} ${CARGO_ENV} ${CARGO} ${CARGO_TOOLCHAIN} ${CARGO_ARGS} bloat --profile=${PROFILE} ${FEATURES}
         build: false
 
       tree:
