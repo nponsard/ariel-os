@@ -121,7 +121,7 @@ mod isr_stack {
     }
 }
 
-#[cfg(feature = "_panic-handler")]
+#[cfg(all(feature = "_panic-handler", not(feature = "_test")))]
 #[panic_handler]
 fn panic(_info: &core::panic::PanicInfo) -> ! {
     #[cfg(feature = "panic-printing")]
