@@ -93,6 +93,6 @@ mod tests {
         // `ThreadData` is arch-specific, and is replaced with a dummy value in tests; its size is
         // non-zero otherwise.
         assert_eq!(size_of::<ThreadData>(), 0);
-        assert_eq!(size_of::<Thread>(), size_of::<ThreadData>() + 24);
+        assert_eq!(size_of::<Thread>(), size_of::<ThreadData>() + 40);
     }
 }
