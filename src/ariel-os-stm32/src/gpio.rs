@@ -94,7 +94,10 @@ impl From<Speed> for embassy_stm32::gpio::Speed {
         match speed {
             Speed::Low => Self::Low,
             Speed::Medium => Self::Medium,
+            #[cfg(not(any(gpio_v1, syscfg_f0)))]
             Speed::High => Self::High,
+            #[cfg(any(gpio_v1, syscfg_f0))]
+            Speed::High => Self::VeryHigh,
             Speed::VeryHigh => Self::VeryHigh,
         }
     }
