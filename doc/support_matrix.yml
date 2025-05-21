@@ -202,6 +202,23 @@ chips:
       user_usb: not_available
       wifi: not_available
 
+  stm32f042k6:
+    name: STM32F042K6
+    support:
+      gpio: supported
+      debug_output: supported
+      ethernet_over_usb: not_available
+      hwrng: not_available
+      i2c_controller: supported
+      spi_main: supported
+      logging: supported
+      storage:
+        status: not_currently_supported
+        comments:
+          - would need to allocate some flash
+      user_usb: not_available
+      wifi: not_available
+
   stm32f401re:
     name: STM32F401RE
     support:
@@ -411,6 +428,12 @@ boards:
     name: ST NUCLEO-C031C6
     url: https://web.archive.org/web/20241114214921/https://www.st.com/en/evaluation-tools/nucleo-c031c6.html
     chip: stm32c031c6
+    support:
+
+  st-nucleo-f042k6:
+    name: ST NUCLEO-F042K6
+    url: https://web.archive.org/web/20241114214921/https://www.st.com/en/evaluation-tools/nucleo-f042k6.html
+    chip: stm32f042k6
     support:
 
   st-nucleo-f401re:
