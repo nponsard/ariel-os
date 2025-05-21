@@ -67,6 +67,22 @@ pub fn init(peripherals: &mut crate::hal::OptionalPeripherals) {
         .unwrap()
     };
 
+     #[cfg(context = "stm32u083c-dk")]
+
+    let uart = {
+        let uart_rx = peripherals.PA10.take().unwrap();
+        let uart_tx = peripherals.PA9.take().unwrap();
+
+        embassy_stm32::usart::Uart::new_blocking(
+            peripherals.USART1.take().unwrap(),
+            uart_rx,
+            uart_tx,
+            embassy_stm32::usart::Config::default(),
+        )
+        .unwrap()
+    };
+
+
     let _ = DEBUG_UART.init(embassy_sync::mutex::Mutex::new(uart));
 
     let _ = ariel_os_debug::DEBUG_UART_WRITE_FN.init(write_debug_uart);

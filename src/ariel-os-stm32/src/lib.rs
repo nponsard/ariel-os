@@ -36,6 +36,7 @@ pub mod usb;
 #[doc(hidden)]
 pub mod eth;
 
+use defmt::info;
 use embassy_stm32::Config;
 
 #[doc(hidden)]
@@ -70,6 +71,11 @@ pub fn init() -> OptionalPeripherals {
     let mut config = Config::default();
     board_config(&mut config);
 
+    info!("testing");
+
+    cortex_m::asm::delay(5_000_000);
+    // info!("setting up peripherals");
+
     #[cfg(not(capability = "hw/stm32-dual-core"))]
     let peripherals = embassy_stm32::init(config);
 
@@ -95,20 +101,21 @@ fn board_config(config: &mut Config) {
                 mode: LseMode::Oscillator(LseDrive::MediumHigh),
             }),
         };
-        config.rcc.hsi = false;
+        config.rcc.hsi = true;
         config.rcc.msi = Some(MSIRange::RANGE48M);
         config.rcc.pll = Some(Pll {
-            source: PllSource::MSI,
-            prediv: PllPreDiv::DIV3, // 16 Mhz
-            mul: PllMul::MUL10, // 160 MHz
+            source: PllSource::HSI,
+            prediv: PllPreDiv::DIV1, // 16 Mhz
+            mul: PllMul::MUL10,      // 160 MHz
             divp: None,
-            divq: None,
+            divq: Some(PllQDiv::DIV4),
             divr: Some(PllRDiv::DIV2), // sysclk 80Mhz (48 / 3  * 10 / 2)
         });
         config.rcc.sys = Sysclk::PLL1_R;
         // With a 32.768 kHz LSE, the MSI clock will be calibrated and considered accurate enough.
         // Embassy automatically enables MSIPLLEN if the LSE is configured.
-        config.rcc.mux.clk48sel = mux::Clk48sel::MSI;
+        config.rcc.mux.clk48sel = mux::Clk48sel::PLL1_Q;
+        config.rcc.mux.usart1sel = mux::Usart1sel::HSI;
     }
 
     #[cfg(context = "st-nucleo-wb55")]
@@ -193,21 +200,33 @@ fn board_config(config: &mut Config) {
     {
         use embassy_stm32::rcc::*;
 
-        config.rcc.hsi48 = Some(Hsi48Config {
-            sync_from_usb: true,
-        }); // needed for USB
+        // config.rcc.hsi48 = Some(Hsi48Config {
+        //     sync_from_usb: true,
+        // }); // needed for USB
         // No HSE fitted on the stm32u083c-dk board
+        // config.rcc.hsi = true;
+
+        config.rcc.ls = LsConfig {
+            rtc: RtcClockSource::LSE,
+            lsi: false,
+            lse: Some(LseConfig {
+                frequency: embassy_stm32::time::Hertz(32768),
+                mode: LseMode::Oscillator(LseDrive::MediumHigh),
+            }),
+        };
+
         config.rcc.hsi = true;
+        config.rcc.msi = Some(MSIRange::RANGE48M);
         config.rcc.sys = Sysclk::PLL1_R;
         config.rcc.pll = Some(Pll {
             source: PllSource::HSI,
             prediv: PllPreDiv::DIV1,
             mul: PllMul::MUL7,
             divp: None,
-            divq: None,
+            divq: Some(PllQDiv::DIV4),
             divr: Some(PllRDiv::DIV2), // sysclk 56Mhz
         });
-        config.rcc.mux.clk48sel = mux::Clk48sel::HSI48;
+        config.rcc.mux.clk48sel = mux::Clk48sel::MSI;
     }
 
     // mark used
