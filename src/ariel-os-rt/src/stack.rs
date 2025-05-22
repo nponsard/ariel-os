@@ -3,6 +3,9 @@ use core::{marker::PhantomData, ptr::write_volatile};
 
 use crate::arch::sp;
 
+/// Bytes that's used to pain stacks.
+const STACK_PAINT_COLOR: u8 = 0xCC;
+
 /// Struct representing the currently active stack.
 ///
 /// # Stack painting
@@ -21,21 +24,21 @@ use crate::arch::sp;
 /// In the current implementation, and assuming the stack data follows a uniform distribution, this
 /// is unlikely to result in an underestimation of more than one byte.
 ///
-/// # Note
-///
-/// The machinery for stack painting has a couple of assumptions:
-///
-/// 1. It is safe for an active stack to *overwrite* unused stack space from its limit (lowest
-///    address, including) to its stack pointer (not including) through raw pointers.
-/// 2. It is safe to *read* unused stack space below the raw stack pointer down to its limit (lowest address).
-/// 3. The limits of an active stack never change.
-/// 4. It is fine to specify zero for both `lowest` and `highest`, in which case usage data is invalid
-///    (always zero), but no unsafety arises.
-/// 5. `!Send + !Sync` keeps `Stack` on the stack it was created for.
-///
-/// Both 1. and 2. are the case on cortex-m, risc-v and xtensa, as an ISR could technically do so at any time
-///    anyways.
-/// 3. is true on Ariel.
+// # Note
+//
+// The machinery for stack painting has a couple of assumptions:
+//
+// 1. It is safe for an active stack to *overwrite* unused stack space from its limit (lowest
+//    address, including) to its stack pointer (not including) through raw pointers.
+// 2. It is safe to *read* unused stack space below the raw stack pointer down to its limit (lowest address).
+// 3. The limits of an active stack never change.
+// 4. It is fine to specify zero for both `lowest` and `highest`, in which case usage data is invalid
+//    (always zero), but no unsoundness arises.
+// 5. `!Send` keeps `Stack` on the stack it was created for.
+//
+// Both 1. and 2. are the case on Cortex-M, RISC-V and Xtensa, as an ISR could technically do so at any time
+//    anyways.
+// 3. is true on Ariel.
 #[derive(Debug)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub struct Stack {
@@ -45,7 +48,7 @@ pub struct Stack {
     highest: usize,
 
     /// Basically we need to ensure that `lowest` and `highest` precisely correspond
-    /// to the currently active stack. `!Send+!Sync` ensures that the object will
+    /// to the currently active stack. `!Send` ensures that the instance will not
     /// be sent to another thread (or ISR), which implies it stays on the same stack.
     _not_send: PhantomData<*const ()>,
 }
@@ -54,17 +57,16 @@ impl Stack {
     /// Gets a handle for the currently active stack.
     ///
     /// # Panics
-    /// - panics when the world is on fire (e.g., when the limits returned by
-    ///   the architecture dependent code don't make sense)
+    ///
+    /// Panics when the world is on fire (e.g., when the limits returned by
+    /// the architecture dependent code don't make sense).
     #[must_use]
     pub fn get() -> Self {
         let sp = sp();
         let stack = crate::arch::stack();
         if !stack.is_empty() {
             assert!(stack.highest >= stack.lowest);
-
-            // TODO: verify bounds (are they inclusive?)
-            assert!(stack.lowest <= sp && stack.highest >= sp);
+            assert!(stack.lowest <= sp && sp <= stack.highest);
         }
         stack
     }
@@ -135,7 +137,7 @@ impl Stack {
     ///
     /// # Panics
     ///
-    /// `repaint()` only panics if it's internal sanity checks fail, which would
+    /// Only panics if its internal sanity check fails, which would
     /// point to a bug.
     pub fn repaint(&self) {
         let sp = crate::arch::sp();
@@ -148,28 +150,30 @@ impl Stack {
         // on another thread's stack. `!Send+!Sync` still prevents this.)
         assert!(self.lowest <= sp && sp <= self.highest);
 
-        // Safety: `Stack` being `!Send+!Sync` should ensure that `repaint()` is only ever called
-        // from the stack `self` was created on and belongs to. The assert above double-checks
-        // this.
-        // Given that `lowest` doesn't change (which it never does in Ariel OS while a stack is
-        // in use), overwriting `lowest..sp` is safe on all our platforms, when `sp` points to the
-        // current stack frame's stack pointer.
-        // This does not prevent this from being interrupted by an ISR, in which case
-        // the stack is dirtied again, but that doesn't cause any unsafety and just
-        // makes any following `used_max()` call include whatever the ISR wrote on this stack.
-        unsafe {
-            for pos in self.lowest..sp {
-                write_volatile(pos as *mut u8, 0xCC);
+        for pos in self.lowest..sp {
+            // Safety: `Stack` being `!Send+!Sync` should ensure that `repaint()` is only ever called
+            // from the stack `self` was created on and belongs to. The assert above double-checks
+            // this.
+            // Given that `lowest` doesn't change (which it never does in Ariel OS while a stack is
+            // in use), overwriting `lowest..sp` is safe on all our platforms, when `sp` points to the
+            // current stack frame's stack pointer.
+            // This does not prevent this from being interrupted by an ISR, in which case
+            // the stack is dirtied again, but that doesn't cause any unsafety and just
+            // makes any following `used_max()` call include whatever the ISR wrote on this stack.
+            unsafe {
+                write_volatile(pos as *mut u8, STACK_PAINT_COLOR);
             }
         }
     }
 
-    /// Get this stack object's `highest` address
+    /// Returns this [`Stack`]'s `lowest` address.
+    #[must_use]
     pub fn highest(&self) -> usize {
         self.highest
     }
 
-    /// Get this stack object's `lowest` address
+    /// Returns this [`Stack`]'s `highest` address.
+    #[must_use]
     pub fn lowest(&self) -> usize {
         self.lowest
     }

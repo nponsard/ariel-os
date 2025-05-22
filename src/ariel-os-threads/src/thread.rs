@@ -25,9 +25,9 @@ pub struct Thread {
     #[cfg(feature = "core-affinity")]
     pub core_affinity: crate::CoreAffinity,
 
-    /// Lowest stack address
+    /// Lowest stack address.
     pub stack_lowest: usize,
-    /// Highest stack address
+    /// Highest stack address.
     pub stack_highest: usize,
 }
 
@@ -76,9 +76,13 @@ impl Thread {
     /// - must only be called before the stack is active (within `arch::setup_stack()`).
     #[allow(dead_code, reason = "not used in all configurations")]
     pub(crate) unsafe fn stack_paint_init(&mut self, sp: usize) {
-        unsafe {
-            for pos in self.stack_lowest..sp {
-                core::ptr::write_volatile(pos as *mut u8, 0xCC);
+        // Byte that's used to pain stacks.
+        const STACK_PAINT_COLOR: u8 = 0xCC;
+
+        for pos in self.stack_lowest..sp {
+            // SAFETY: Writing to the slice that was passed to `setup_stack()` is fine
+            unsafe {
+                core::ptr::write_volatile(pos as *mut u8, STACK_PAINT_COLOR);
             }
         }
     }
