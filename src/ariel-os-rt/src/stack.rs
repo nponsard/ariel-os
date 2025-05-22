@@ -164,6 +164,16 @@ impl Stack {
         }
     }
 
+    /// Get this stack object's `highest` address
+    pub fn highest(&self) -> usize {
+        self.highest
+    }
+
+    /// Get this stack object's `lowest` address
+    pub fn lowest(&self) -> usize {
+        self.lowest
+    }
+
     fn is_empty(&self) -> bool {
         self.lowest == self.highest
     }
