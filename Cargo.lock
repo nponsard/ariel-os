@@ -5951,8 +5951,3 @@ dependencies = [
  "quote",
  "syn 2.0.96",
 ]
-
-[[patch.unused]]
-name = "esp-storage"
-version = "0.4.0"
-source = "git+https://github.com/ariel-os/esp-hal?branch=v0.23.1%2Bariel-os-threads#aa8d1995fc06eb5e6d04a2022ecf3679b4929e63"

@@ -32,7 +32,6 @@ esp-hal = { git = "https://github.com/ariel-os/esp-hal", branch = "v0.23.1+ariel
 esp-hal-embassy = { git = "https://github.com/ariel-os/esp-hal", branch = "v0.23.1+ariel-os-threads" }
 esp-println = { git = "https://github.com/ariel-os/esp-hal", branch = "v0.23.1+ariel-os-threads" }
 esp-wifi = { git = "https://github.com/ariel-os/esp-hal", branch = "v0.23.1+ariel-os-threads" }
-esp-storage = { git = "https://github.com/ariel-os/esp-hal", branch = "v0.23.1+ariel-os-threads" }
 xtensa-lx-rt = { git = "https://github.com/ariel-os/esp-hal", branch = "v0.23.1+ariel-os-threads" }
 
 # patched to use portable-atomics <https://github.com/seanmonstar/try-lock/pull/11>
