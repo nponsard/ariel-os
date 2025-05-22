@@ -138,7 +138,7 @@ jobs:
         run: |
           sccache --start-server || true # work around https://github.com/ninja-build/ninja/issues/2052
 
-          CONFIG_WIFI_NETWORK='test' CONFIG_WIFI_PASSWORD='password' laze build --global --partition hash:${{ matrix.partition }}
+          CONFIG_WIFI_NETWORK='test' CONFIG_WIFI_PASSWORD='password' laze build -DCARGO_ARGS+='--locked' --global --partition hash:${{ matrix.partition }}
 
       # cleanup previous build artifacts. do in background (no need to wait).
       - name: "cleanup stable build artifacts"
@@ -153,7 +153,7 @@ jobs:
         run: |
           sccache --start-server || true # work around https://github.com/ninja-build/ninja/issues/2052
 
-          CONFIG_WIFI_NETWORK='test' CONFIG_WIFI_PASSWORD='password' laze build --global --partition hash:${{ matrix.partition }} --select nightly --disable xtensa
+          CONFIG_WIFI_NETWORK='test' CONFIG_WIFI_PASSWORD='password' laze build -DCARGO_ARGS+='--locked' --global --partition hash:${{ matrix.partition }} --select nightly --disable xtensa
 
   build-success:
     if: ${{ always() }}
