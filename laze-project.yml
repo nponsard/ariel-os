@@ -763,6 +763,8 @@ modules:
     conflicts:
       # disabling alloc until we have a usable use case
       - alloc
+      # embedded-test currently hard-codes a 16KiB stack for its thread
+      - embedded-test
       # disabling as the default stack sizes are too small for log (defmt works)
       - log
       # disabling until we do have a driver/stack combo that works
