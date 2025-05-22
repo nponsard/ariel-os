@@ -1046,6 +1046,23 @@ modules:
         FEATURES:
           - ariel-os/usb-ethernet
 
+  - name: ble
+    selects:
+      - hw/ble
+    env:
+      global:
+        FEATURES:
+          - ariel-os/ble
+
+  - name: hw/ble
+    help: provided if a device has a BLE capability
+    selects:
+      - has_ble
+    env:
+      global:
+        RUSTFLAGS:
+          - --cfg capability=\"hw/ble\"
+
   - name: usb
     selects:
       - hw/usb-device-port

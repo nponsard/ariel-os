@@ -105,6 +105,8 @@ wifi-esp = ["ariel-os-hal/wifi-esp", "net", "wifi"]
 eth = []
 eth-stm32 = ["ariel-os-hal/eth-stm32", "net", "eth"]
 
+ble = []
+
 threading = ["dep:ariel-os-threads", "ariel-os-hal/threading"]
 network-config-static = ["network-config-override"]
 network-config-override = []
