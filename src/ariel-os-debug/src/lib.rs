@@ -67,8 +67,8 @@ mod backend {
     #[cfg(not(feature = "defmt"))]
     pub use rtt_target::rprintln as println;
 
-    #[cfg(not(feature = "defmt"))]
-    pub use defmt::println;
+    #[cfg(feature = "defmt")]
+    pub use ariel_os_debug_log::println;
 
     #[doc(hidden)]
     pub fn init() {
@@ -84,11 +84,12 @@ mod backend {
 
         #[cfg(feature = "defmt")]
         {
-            use rtt_target::ChannelMode::{NoBlockSkip, NoBlockTrim};
+            use rtt_target::ChannelMode::NoBlockSkip;
+            const DEFMT_BUFFER_SIZE: usize = 1024;
             let channels = rtt_target::rtt_init! {
                 up: {
                     0: {
-                        size: 1024,
+                        size: DEFMT_BUFFER_SIZE,
                         mode: NoBlockSkip,
                         // probe-run autodetects whether defmt is in use based on this channel name
                         name: "defmt"
