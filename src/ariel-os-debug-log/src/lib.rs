@@ -117,6 +117,19 @@ mod log_macros {
             }
         }};
     }
+
+    /// Prints to the debug output, with a newline.
+    #[macro_export]
+    macro_rules! println {
+        ($($arg:tt)*) => {{
+            use $crate::defmt::hidden::defmt;
+            if true {
+                defmt::println!($($arg)*);
+            } else {
+                drop(format_args!($($arg)*));
+            }
+        }};
+    }
 }
 
 #[cfg(feature = "log")]

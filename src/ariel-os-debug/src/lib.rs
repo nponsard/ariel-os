@@ -64,7 +64,11 @@ pub fn exit(code: ExitCode) {
 
 #[cfg(all(feature = "debug-console", feature = "rtt-target"))]
 mod backend {
-    pub use rtt_target::{rprint as print, rprintln as println};
+    #[cfg(not(feature = "defmt"))]
+    pub use rtt_target::rprintln as println;
+
+    #[cfg(feature = "defmt")]
+    pub use ariel_os_debug_log::println;
 
     #[doc(hidden)]
     pub fn init() {
@@ -80,16 +84,12 @@ mod backend {
 
         #[cfg(feature = "defmt")]
         {
-            use rtt_target::ChannelMode::{NoBlockSkip, NoBlockTrim};
+            use rtt_target::ChannelMode::NoBlockSkip;
+            const DEFMT_BUFFER_SIZE: usize = 1024;
             let channels = rtt_target::rtt_init! {
                 up: {
                     0: {
-                        size: 1024,
-                        mode: NoBlockTrim,
-                        name: "Terminal"
-                    }
-                    1: {
-                        size: 1024,
+                        size: DEFMT_BUFFER_SIZE,
                         mode: NoBlockSkip,
                         // probe-run autodetects whether defmt is in use based on this channel name
                         name: "defmt"
@@ -97,15 +97,14 @@ mod backend {
                 }
             };
 
-            rtt_target::set_print_channel(channels.up.0);
-            rtt_target::set_defmt_channel(channels.up.1);
+            rtt_target::set_defmt_channel(channels.up.0);
         }
     }
 }
 
 #[cfg(all(feature = "debug-console", feature = "esp-println"))]
 mod backend {
-    pub use esp_println::{print, println};
+    pub use esp_println::println;
 
     #[doc(hidden)]
     pub fn init() {
@@ -122,17 +121,6 @@ mod backend {
     /// Prints to the debug output, with a newline.
     #[macro_export]
     macro_rules! println {
-        ($($arg:tt)*) => {{
-            let _ = ($($arg)*);
-            // Do nothing
-        }};
-    }
-
-    /// Prints to the debug output.
-    ///
-    /// Equivalent to the [`println!`] macro except that a newline is not printed at the end of the message.
-    #[macro_export]
-    macro_rules! print {
         ($($arg:tt)*) => {{
             let _ = ($($arg)*);
             // Do nothing
