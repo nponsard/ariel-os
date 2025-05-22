@@ -9,7 +9,7 @@ fn thread0() {
 }
 
 // `stacksize` and `priority` can be arbitrary expressions.
-#[ariel_os::thread(autostart, stacksize = 2048, priority = 2)]
+#[ariel_os::thread(autostart, stacksize = 512, priority = 2)]
 fn thread1() {
     info!("Hello from thread 1");
 }
