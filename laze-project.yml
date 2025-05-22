@@ -745,6 +745,20 @@ modules:
           - -Clink-arg=-Tkeep-stack-sizes.x
           - -Z emit-stack-sizes
 
+  - name: ram-tiny
+    help: This module marks boards with very little RAM (currently, <10KiB)
+    conflicts:
+      # disabling alloc until we have a usable use case
+      - alloc
+      # disabling as the default stack sizes are too small for log (defmt works)
+      - log
+      # disabling until we do have a driver/stack combo that works
+      - network
+    env:
+      global:
+        isr_stacksize_required_default: "512"
+        executor_stacksize_required_default: "512"
+
   - name: stable
     help: build with stable Rust
     provides_unique:

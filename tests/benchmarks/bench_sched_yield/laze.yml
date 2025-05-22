@@ -3,3 +3,5 @@ apps:
     selects:
       - sw/threading
       - sw/benchmark
+    conflicts:
+      - ram-tiny
