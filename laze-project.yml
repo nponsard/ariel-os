@@ -1068,14 +1068,14 @@ modules:
   - name: network
     selects:
       - network_device
-      - network-config-default
+      - network-config-ipv4-default
 
-  - name: network-config-default
+  - name: network-config-ipv4-default
     help: use default network configuration method
     selects:
       - ?network-config-ipv4-dhcp
       - ?network-config-ipv4-static
-      - network-config
+      - network-config-ipv4
 
   - name: network-config-dhcp
     help: "deprecated: use `network-config-ipv4-dhcp` instead"
@@ -1089,7 +1089,7 @@ modules:
       # Needed for aliasing.
       - network-config-dhcp
     provides_unique:
-      - network-config
+      - network-config-ipv4
 
   - name: network-config-static
     help: "deprecated: use `network-config-ipv4-static` instead"
@@ -1103,7 +1103,7 @@ modules:
       # Needed for aliasing.
       - network-config-static
     provides_unique:
-      - network-config
+      - network-config-ipv4
     env:
       global:
         FEATURES:
