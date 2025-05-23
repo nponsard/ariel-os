@@ -1074,7 +1074,7 @@ modules:
     help: use default network configuration method
     selects:
       - ?network-config-ipv4-dhcp
-      - ?network-config-static
+      - ?network-config-ipv4-static
       - network-config
 
   - name: network-config-dhcp
@@ -1092,9 +1092,16 @@ modules:
       - network-config
 
   - name: network-config-static
-    help: use static IP network configuration
+    help: "deprecated: use `network-config-ipv4-static` instead"
+    selects:
+      - network-config-ipv4-static
+
+  - name: network-config-ipv4-static
+    help: use static IPv4 network configuration
     selects:
       - network
+      # Needed for aliasing.
+      - network-config-static
     provides_unique:
       - network-config
     env:
