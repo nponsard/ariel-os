@@ -441,7 +441,7 @@ boards:
     name: ST NUCLEO-C031C6
     url: https://web.archive.org/web/20241114214921/https://www.st.com/en/evaluation-tools/nucleo-c031c6.html
     chip: stm32c031c6
-    tier: "1"
+    tier: "2"
     support:
 
   st-nucleo-f042k6:
@@ -454,7 +454,7 @@ boards:
     name: ST NUCLEO-F401RE
     url: https://web.archive.org/web/20250115005425/https://www.st.com/en/evaluation-tools/nucleo-f401re.html
     chip: stm32f401re
-    tier: "1"
+    tier: "2"
     support:
       user_usb: not_available
       wifi: not_available
@@ -474,7 +474,7 @@ boards:
     name: ST NUCLEO-H755ZI-Q
     url: https://web.archive.org/web/20240524105149/https://www.st.com/en/evaluation-tools/nucleo-h755zi-q.html
     chip: stm32h755zi
-    tier: "1"
+    tier: "2"
     support:
       user_usb: supported
       wifi: not_available
@@ -484,7 +484,7 @@ boards:
     name: ST NUCLEO-WB55RG
     url: https://web.archive.org/web/20240803070523/https://www.st.com/en/evaluation-tools/nucleo-wb55rg.html
     chip: stm32wb55rg
-    tier: "1"
+    tier: "2"
     support:
       user_usb: supported
       wifi: not_available
@@ -494,7 +494,7 @@ boards:
     name: STM32U083C-DK
     url: https://web.archive.org/web/20250119131656/https://www.st.com/en/evaluation-tools/stm32u083c-dk.html
     chip: stm32u083mc
-    tier: "1"
+    tier: "2"
     support:
       user_usb: supported
       wifi: not_available
