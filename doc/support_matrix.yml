@@ -325,7 +325,7 @@ boards:
     name: Nordic Thingy:91 X
     url: https://web.archive.org/web/20250329185651/https://www.nordicsemi.com/Products/Development-hardware/Nordic-Thingy-91-X
     chip: nrf9151
-    tier: "1"
+    tier: "2"
     support:
       user_usb: not_available
       ethernet_over_usb: not_available
@@ -353,7 +353,7 @@ boards:
     name: nRF9160-DK
     url: https://web.archive.org/web/20250311221943/https://www.nordicsemi.com/Products/Development-hardware/nrf9160-dk
     chip: nrf9160
-    tier: "1"
+    tier: "2"
     support:
       user_usb: not_available
       ethernet_over_usb: not_available
@@ -362,7 +362,7 @@ boards:
     name: Raspberry Pi Pico
     url: https://web.archive.org/web/20250101022830/https://www.raspberrypi.com/products/raspberry-pi-pico/
     chip: rp2040
-    tier: "1"
+    tier: "2"
     support:
       user_usb: supported
       ethernet_over_usb: supported
@@ -381,7 +381,7 @@ boards:
     name: Raspberry Pi Pico 2
     url: https://web.archive.org/web/20250130144056/https://www.raspberrypi.com/products/raspberry-pi-pico-2/
     chip: rp235xa
-    tier: "1"
+    tier: "2"
     support:
       user_usb: supported
       ethernet_over_usb: supported
@@ -427,7 +427,7 @@ boards:
     name: ST B-L475E-IOT01A
     url: https://web.archive.org/web/20250402084429/https://www.st.com/en/evaluation-tools/b-l475e-iot01a.html
     chip: stm32l475vg
-    tier: "1"
+    tier: "2"
     support:
       user_usb:
         status: supported
@@ -441,13 +441,14 @@ boards:
     name: ST NUCLEO-C031C6
     url: https://web.archive.org/web/20241114214921/https://www.st.com/en/evaluation-tools/nucleo-c031c6.html
     chip: stm32c031c6
-    tier: "2"
+    tier: "1"
     support:
 
   st-nucleo-f042k6:
     name: ST NUCLEO-F042K6
     url: https://web.archive.org/web/20241114214921/https://www.st.com/en/evaluation-tools/nucleo-f042k6.html
     chip: stm32f042k6
+    tier: "2"
     support:
 
   st-nucleo-f401re:
@@ -464,7 +465,7 @@ boards:
     name: ST NUCLEO-F411RE
     url: https://web.archive.org/web/20250311221905/https://www.st.com/en/evaluation-tools/nucleo-f411re.html
     chip: stm32f411re
-    tier: "1"
+    tier: "2"
     support:
       user_usb: not_available
       wifi: not_available
@@ -474,7 +475,7 @@ boards:
     name: ST NUCLEO-H755ZI-Q
     url: https://web.archive.org/web/20240524105149/https://www.st.com/en/evaluation-tools/nucleo-h755zi-q.html
     chip: stm32h755zi
-    tier: "2"
+    tier: "1"
     support:
       user_usb: supported
       wifi: not_available
@@ -484,7 +485,7 @@ boards:
     name: ST NUCLEO-WB55RG
     url: https://web.archive.org/web/20240803070523/https://www.st.com/en/evaluation-tools/nucleo-wb55rg.html
     chip: stm32wb55rg
-    tier: "2"
+    tier: "1"
     support:
       user_usb: supported
       wifi: not_available
@@ -494,7 +495,7 @@ boards:
     name: STM32U083C-DK
     url: https://web.archive.org/web/20250119131656/https://www.st.com/en/evaluation-tools/stm32u083c-dk.html
     chip: stm32u083mc
-    tier: "2"
+    tier: "1"
     support:
       user_usb: supported
       wifi: not_available
