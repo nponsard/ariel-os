@@ -36,6 +36,10 @@ pub mod storage;
 #[doc(hidden)]
 pub mod usb;
 
+#[cfg(feature = "ble")]
+#[doc(hidden)]
+pub mod ble;
+
 #[cfg(feature = "executor-interrupt")]
 #[doc(hidden)]
 pub use embassy_executor::InterruptExecutor as Executor;

@@ -1474,6 +1474,7 @@ builders:
     parent: nrf52840
     provides:
       - has_usb_device_port
+      - has_ble
 
   - name: dwm1001
     parent: nrf52832
