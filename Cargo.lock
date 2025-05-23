@@ -393,6 +393,7 @@ dependencies = [
  "nrf-sdc",
  "paste",
  "portable-atomic",
+ "static_cell",
 ]
 
 [[package]]

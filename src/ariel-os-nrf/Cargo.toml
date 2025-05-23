@@ -28,6 +28,8 @@ portable-atomic = { workspace = true }
 ariel-os-debug = { workspace = true }
 ariel-os-embassy-common = { workspace = true }
 ariel-os-random = { workspace = true, optional = true }
+static_cell = { workspace = true }
+
 
 nrf-mpsl = { git = "https://github.com/alexmoon/nrf-sdc.git", rev = "301030bd58eb6c8d6f34ca0565db7f2522dec114", optional = true }
 

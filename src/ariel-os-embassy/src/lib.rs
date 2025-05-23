@@ -211,6 +211,12 @@ async fn init_task(mut peripherals: hal::OptionalPeripherals) {
         task(spawner, &mut peripherals);
     }
 
+    #[cfg(feature = "ble")]
+    let mut ble_driver = {
+        let ble_peripherals = hal::ble::Peripherals::new(&mut peripherals);
+        hal::ble::driver(ble_peripherals)
+    };
+
     #[cfg(feature = "usb")]
     let mut usb_builder = {
         use static_cell::ConstStaticCell;

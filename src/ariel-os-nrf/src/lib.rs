@@ -6,6 +6,8 @@
 
 pub mod gpio;
 
+mod irqs;
+
 #[doc(hidden)]
 pub mod peripheral {
     pub use embassy_nrf::Peripheral;

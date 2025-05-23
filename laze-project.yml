@@ -1049,6 +1049,7 @@ modules:
   - name: ble
     selects:
       - hw/ble
+      - random # nrf_sdc needs a rng
     env:
       global:
         FEATURES:
