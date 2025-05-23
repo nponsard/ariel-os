@@ -209,8 +209,8 @@ chips:
       debug_output: supported
       ethernet_over_usb: not_available
       hwrng: not_available
-      i2c_controller: supported
-      spi_main: supported
+      i2c_controller: not_currently_supported
+      spi_main: not_currently_supported
       logging: supported
       storage:
         status: not_currently_supported
