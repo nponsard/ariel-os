@@ -22,6 +22,10 @@ rustflags = "0.1"
 cortex-m = { workspace = true }
 cortex-m-rt = { workspace = true }
 
+# No CAS instructions on Cortex-M0.
+[target.'cfg(context = "cortex-m0")'.dependencies]
+portable-atomic = { workspace = true, features = ["critical-section"] }
+
 # No CAS instructions on Cortex-M0+.
 [target.'cfg(context = "cortex-m0-plus")'.dependencies]
 portable-atomic = { workspace = true, features = ["critical-section"] }

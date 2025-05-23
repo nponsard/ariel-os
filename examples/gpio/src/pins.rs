@@ -61,6 +61,13 @@ ariel_os::hal::define_peripherals!(Peripherals {
     btn1: PC13
 });
 
+#[cfg(context = "st-nucleo-f042k6")]
+ariel_os::hal::define_peripherals!(Peripherals {
+    led1: PB3,
+    // Note: the board only has one physical button which is hardwired to NRST so this uses D2
+    btn1: PA12
+});
+
 #[cfg(any(context = "st-nucleo-f401re", context = "st-nucleo-f411re"))]
 ariel_os::hal::define_peripherals!(Peripherals {
     led1: PA5,

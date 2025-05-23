@@ -431,6 +431,19 @@ contexts:
       executor_stacksize_required_default: "3072"
       PROBE_RS_CHIP: STM32C031C6
 
+  - name: stm32f042k6
+    parent: stm32
+    selects:
+      - cortex-m0
+      - single-core
+      - ram-tiny
+    disables:
+      - semihosting
+    env:
+      isr_stacksize_required_default: "512"
+      executor_stacksize_required_default: "512"
+      PROBE_RS_CHIP: STM32F042K6
+
   - name: stm32f401re
     parent: stm32
     selects:
@@ -750,6 +763,8 @@ modules:
     conflicts:
       # disabling alloc until we have a usable use case
       - alloc
+      # embedded-test currently hard-codes a 16KiB stack for its thread
+      - embedded-test
       # disabling as the default stack sizes are too small for log (defmt works)
       - log
       # disabling until we do have a driver/stack combo that works
@@ -1561,6 +1576,15 @@ builders:
 
   - name: st-nucleo-c031c6
     parent: stm32c031c6
+    provides:
+      - has_swi
+    env:
+      CARGO_ENV:
+        # This ISR is unused on a naked board. Configured here for testing.
+        - CONFIG_SWI=USART2
+
+  - name: st-nucleo-f042k6
+    parent: stm32f042k6
     provides:
       - has_swi
     env:
