@@ -356,7 +356,7 @@ fn render_html(matrix: &schema::Matrix, board_support_tier: &SupportTier) -> Res
     let key_html = tmpl.render(context!(matrix => matrix, boards => boards)).unwrap();
 
     // NOTE: We may want to return the table and its key separately later
-    Ok(format!("Tier {} boards:\n{matrix_html}{key_html}\n", board_support_tier.to_string()))
+    Ok(format!("{matrix_html}{key_html}\n"))
 }
 
 #[derive(Debug, thiserror::Error, Diagnostic)]
