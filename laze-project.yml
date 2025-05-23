@@ -1073,14 +1073,21 @@ modules:
   - name: network-config-default
     help: use default network configuration method
     selects:
-      - ?network-config-dhcp
+      - ?network-config-ipv4-dhcp
       - ?network-config-static
       - network-config
 
   - name: network-config-dhcp
+    help: "deprecated: use `network-config-ipv4-dhcp` instead"
+    selects:
+      - network-config-ipv4-dhcp
+
+  - name: network-config-ipv4-dhcp
     help: use DHCPv4 for network configuration
     selects:
       - network
+      # Needed for aliasing.
+      - network-config-dhcp
     provides_unique:
       - network-config
 
