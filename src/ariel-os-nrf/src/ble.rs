@@ -1,10 +1,28 @@
 use crate::irqs::Irqs;
+use ariel_os_debug::log::debug;
+use embassy_executor::Spawner;
 use embassy_nrf::peripherals;
 use embassy_nrf::peripherals::RNG;
 use embassy_nrf::rng;
+use embassy_sync::once_lock::OnceLock;
+use nrf_sdc::SoftdeviceController;
 use nrf_sdc::mpsl::MultiprotocolServiceLayer;
 use nrf_sdc::{self as sdc, mpsl};
 use static_cell::StaticCell;
+use trouble_host::prelude::*;
+
+#[embassy_executor::task]
+async fn mpsl_task(mpsl: &'static MultiprotocolServiceLayer<'static>) -> ! {
+
+    debug!("Starting MPSL task");
+    mpsl.run().await
+}
+
+pub static STACK: OnceLock<Stack<'static, SoftdeviceController<'static>>> = OnceLock::new();
+
+pub async fn ble_stack() -> Host<'static, SoftdeviceController<'static>> {
+    STACK.get().await.build()
+}
 
 pub struct Peripherals {
     pub ppi_ch17: peripherals::PPI_CH17,
@@ -65,20 +83,17 @@ fn build_sdc<'d, const N: usize>(
     mpsl: &'d MultiprotocolServiceLayer,
     mem: &'d mut sdc::Mem<N>,
 ) -> Result<nrf_sdc::SoftdeviceController<'d>, nrf_sdc::Error> {
-    sdc::Builder::new()?
-        .support_adv()?
-        .support_peripheral()?
-        .peripheral_count(1)?
+    sdc::Builder::new().unwrap()
+        .support_adv().unwrap()
+        // .support_peripheral().unwrap()
+        // .peripheral_count(1).unwrap()
         .build(p, rng, mpsl, mem)
 }
 
-pub struct SoftdeviceController<'d, const N: usize> {
-    pub sdc: nrf_sdc::SoftdeviceController<'d>,
-    mem: sdc::Mem<N>,
-    rng: rng::Rng<'d, RNG>,
-}
-
-pub fn driver<'d>(p: Peripherals) -> nrf_sdc::SoftdeviceController<'d> {
+pub fn driver<'d>(
+    p: Peripherals,
+    spawner: &Spawner,
+) -> Stack<'static, SoftdeviceController<'static>> {
     let mpsl_p =
         mpsl::Peripherals::new(p.rtc0, p.timer0, p.temp, p.ppi_ch19, p.ppi_ch30, p.ppi_ch31);
     let lfclk_cfg = mpsl::raw::mpsl_clock_lfclk_cfg_t {
@@ -90,7 +105,7 @@ pub fn driver<'d>(p: Peripherals) -> nrf_sdc::SoftdeviceController<'d> {
     };
     static MPSL: StaticCell<MultiprotocolServiceLayer> = StaticCell::new();
     let mpsl = MPSL.init(mpsl::MultiprotocolServiceLayer::new(mpsl_p, Irqs, lfclk_cfg).unwrap());
-    // spawner.must_spawn(mpsl_task(&*mpsl));
+    spawner.must_spawn(mpsl_task(&*mpsl));
 
     let sdc_p = sdc::Peripherals::new(
         p.ppi_ch17, p.ppi_ch18, p.ppi_ch20, p.ppi_ch21, p.ppi_ch22, p.ppi_ch23, p.ppi_ch24,
@@ -101,9 +116,23 @@ pub fn driver<'d>(p: Peripherals) -> nrf_sdc::SoftdeviceController<'d> {
 
     let rng = RNG.init(embassy_nrf::rng::Rng::new(p.rng, Irqs));
 
-    static SDC_MEM: StaticCell<sdc::Mem<1112>> = StaticCell::new();
+    static SDC_MEM: StaticCell<sdc::Mem<1024>> = StaticCell::new();
 
-    let sdc_mem = SDC_MEM.init(sdc::Mem::<1112>::new());
+    let sdc_mem = SDC_MEM.init(sdc::Mem::<1024>::new());
 
-    build_sdc(sdc_p, rng, mpsl, sdc_mem).unwrap()
+    let sdc = build_sdc(sdc_p, rng, mpsl, sdc_mem).unwrap();
+
+    let address: Address = Address::random([0xff, 0x8f, 0x1a, 0x05, 0xe4, 0xff]);
+
+    debug!("BLE address set");
+
+    static HOST_RESOURCES: StaticCell<HostResources<1, 1, 27>> = StaticCell::new();
+
+    let resources = HOST_RESOURCES.init(HostResources::new());
+
+    static STACK_BUILDER: StaticCell<Stack<'static, SoftdeviceController<'static>>> =
+        StaticCell::new();
+
+    debug!("creating stack");
+    trouble_host::new(sdc, resources).set_random_address(address)
 }

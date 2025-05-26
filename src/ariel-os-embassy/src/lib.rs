@@ -19,6 +19,9 @@ pub mod spi;
 #[cfg(feature = "usb")]
 pub mod usb;
 
+#[cfg(feature = "ble")]
+pub mod ble;
+
 #[cfg(feature = "net")]
 pub mod net;
 
@@ -50,6 +53,8 @@ pub mod api {
         pub use embassy_time::{Delay, Duration, Instant, TICK_HZ, Timer};
     }
 
+    #[cfg(feature = "ble")]
+    pub use crate::ble;
     #[cfg(feature = "i2c")]
     pub use crate::i2c;
     #[cfg(feature = "net")]
@@ -205,6 +210,9 @@ async fn init_task(mut peripherals: hal::OptionalPeripherals) {
     #[cfg(feature = "usb")]
     let usb_peripherals = hal::usb::Peripherals::new(&mut peripherals);
 
+    #[cfg(feature = "ble")]
+    let ble_peripherals = hal::ble::Peripherals::new(&mut peripherals);
+
     // Tasks have to be started before driver initializations so that the tasks are able to
     // configure the drivers using hooks.
     for task in EMBASSY_TASKS {
@@ -212,10 +220,7 @@ async fn init_task(mut peripherals: hal::OptionalPeripherals) {
     }
 
     #[cfg(feature = "ble")]
-    let mut ble_driver = {
-        let ble_peripherals = hal::ble::Peripherals::new(&mut peripherals);
-        hal::ble::driver(ble_peripherals)
-    };
+    let mut ble_driver = hal::ble::driver(ble_peripherals, &spawner);
 
     #[cfg(feature = "usb")]
     let mut usb_builder = {
@@ -294,6 +299,11 @@ async fn init_task(mut peripherals: hal::OptionalPeripherals) {
         }
         let usb = usb_builder.build();
         spawner.spawn(usb::usb_task(usb)).unwrap();
+    }
+
+    #[cfg(feature = "ble")]
+    if hal::ble::STACK.init(ble_driver).is_err() {
+        unreachable!();
     }
 
     #[cfg(feature = "wifi-cyw43")]
