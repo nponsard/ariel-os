@@ -362,7 +362,7 @@ boards:
     name: Raspberry Pi Pico
     url: https://web.archive.org/web/20250101022830/https://www.raspberrypi.com/products/raspberry-pi-pico/
     chip: rp2040
-    tier: "2"
+    tier: "1"
     support:
       user_usb: supported
       ethernet_over_usb: supported
@@ -381,7 +381,7 @@ boards:
     name: Raspberry Pi Pico 2
     url: https://web.archive.org/web/20250130144056/https://www.raspberrypi.com/products/raspberry-pi-pico-2/
     chip: rp235xa
-    tier: "2"
+    tier: "1"
     support:
       user_usb: supported
       ethernet_over_usb: supported
@@ -448,7 +448,7 @@ boards:
     name: ST NUCLEO-F042K6
     url: https://web.archive.org/web/20241114214921/https://www.st.com/en/evaluation-tools/nucleo-f042k6.html
     chip: stm32f042k6
-    tier: "2"
+    tier: "3"
     support:
 
   st-nucleo-f401re:
@@ -465,7 +465,7 @@ boards:
     name: ST NUCLEO-F411RE
     url: https://web.archive.org/web/20250311221905/https://www.st.com/en/evaluation-tools/nucleo-f411re.html
     chip: stm32f411re
-    tier: "2"
+    tier: "3"
     support:
       user_usb: not_available
       wifi: not_available

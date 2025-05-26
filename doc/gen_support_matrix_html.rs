@@ -121,6 +121,7 @@ enum SubCommand {
 enum SupportTier {
     Tier1,
     Tier2,
+    Tier3,
 }
 
 impl argh::FromArgValue for SupportTier {
@@ -128,6 +129,7 @@ impl argh::FromArgValue for SupportTier {
         match value {
             "tier-1" | "1" => Ok(Self::Tier1),
             "tier-2" | "2" => Ok(Self::Tier2),
+            "tier-3" | "3" => Ok(Self::Tier3),
             _ => Err("invalid board support tier".to_string()),
         }
     }
@@ -138,6 +140,7 @@ impl ToString for SupportTier {
         match self {
             SupportTier::Tier1 => "1".to_string(),
             SupportTier::Tier2 => "2".to_string(),
+            SupportTier::Tier3 => "3".to_string(),
         }
     }
 }
@@ -146,7 +149,7 @@ impl ToString for SupportTier {
 #[argh(subcommand, name = "generate")]
 /// generate the HTML support matrix
 struct SubCommandGenerate {
-    /// board support tier (1 or 2)
+    /// board support tier (1, 2, or 3)
     #[argh(option)]
     tier: SupportTier,
     #[argh(positional)]
@@ -161,7 +164,7 @@ struct SubCommandGenerate {
 #[argh(subcommand, name = "check")]
 /// check that the generated HTML support matrix is up to date
 struct SubCommandCheck {
-    /// board support tier (1 or 2)
+    /// board support tier (1, 2 or 3)
     #[argh(option)]
     tier: SupportTier,
     #[argh(positional)]
