@@ -11,7 +11,9 @@ workspace = true
 ariel-os = { path = "../../src/ariel-os" }
 ariel-os-boards = { path = "../../src/ariel-os-boards" }
 
-bt-hci = { version = "0.2.0" }
+bt-hci = { git = "https://github.com/embassy-rs/bt-hci.git", rev = "3755da87d0ef8660c5f9d4694b928ad7f679299a" }
 embassy-futures = { version = "0.1.1" }
 embassy-time = { version = "0.4.0" }
 trouble-host = { workspace = true }
+embassy-sync = { workspace = true }
+static_cell = "2"

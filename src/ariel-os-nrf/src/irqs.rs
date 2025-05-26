@@ -12,23 +12,23 @@ bind_interrupts!(pub(crate) struct Irqs {
 
     CLOCK_POWER =>
     #[cfg(all(feature = "usb", context = "nrf52"))]
-    embassy_nrf::usb::vbus_detect::InterruptHandler,
-    #[cfg(feature = "ble")]
-    nrf_sdc::mpsl::ClockInterruptHandler
+    embassy_nrf::usb::vbus_detect::InterruptHandler
+    // #[cfg(feature = "ble")]
+    // nrf_sdc::mpsl::ClockInterruptHandler
     ;
 
     // SWI0 is used for the executor interrupt
-    #[cfg(all(feature = "ble", context = "nrf52"))]
-    EGU1_SWI1 => nrf_sdc::mpsl::LowPrioInterruptHandler;
-    #[cfg(all(feature = "ble", context = "nrf5340"))]
-    EGU1 => nrf_sdc::mpsl::LowPrioInterruptHandler;
+    // #[cfg(all(feature = "ble", context = "nrf52"))]
+    // EGU1_SWI1 => nrf_sdc::mpsl::LowPrioInterruptHandler;
+    // #[cfg(all(feature = "ble", context = "nrf5340"))]
+    // EGU1 => nrf_sdc::mpsl::LowPrioInterruptHandler;
 
-    #[cfg(feature = "ble")]
-    RADIO => nrf_sdc::mpsl::HighPrioInterruptHandler;
+    // #[cfg(feature = "ble")]
+    // RADIO => nrf_sdc::mpsl::HighPrioInterruptHandler;
 
-    #[cfg(feature = "ble")]
-    TIMER0 => nrf_sdc::mpsl::HighPrioInterruptHandler;
+    // #[cfg(feature = "ble")]
+    // TIMER0 => nrf_sdc::mpsl::HighPrioInterruptHandler;
 
-    #[cfg(feature = "ble")]
-    RTC0 => nrf_sdc::mpsl::HighPrioInterruptHandler;
+    // #[cfg(feature = "ble")]
+    // RTC0 => nrf_sdc::mpsl::HighPrioInterruptHandler;
 });

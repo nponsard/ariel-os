@@ -31,8 +31,12 @@ ariel-os-random = { workspace = true, optional = true }
 static_cell = { workspace = true }
 embassy-sync = { workspace = true }
 trouble-host = { workspace = true }
-
-nrf-mpsl = { git = "https://github.com/alexmoon/nrf-sdc.git", rev = "551a95436e999b4290b4a33383aa3d6747b63dd9", optional = true }
+embassy-time = { workspace = true }
+apache-nimble = { git = "https://github.com/benbrittain/apache-nimble-sys.git", branch = "master", features = [
+  "controller",
+  "nrf52840",
+  "port-layer-embassy",
+] }
 
 [target.'cfg(context = "nrf52832")'.dependencies]
 # Disable NFC support for now, as we do not support it yet.
@@ -45,10 +49,7 @@ embassy-nrf = { workspace = true, features = ["nfc-pins-as-gpio", "nrf52833"] }
 [target.'cfg(context = "nrf52840")'.dependencies]
 # Disable NFC support for now, as we do not support it yet.
 embassy-nrf = { workspace = true, features = ["nfc-pins-as-gpio", "nrf52840"] }
-nrf-sdc = { git = "https://github.com/alexmoon/nrf-sdc.git", rev = "551a95436e999b4290b4a33383aa3d6747b63dd9", features = [
-  "nrf52840",
-  "peripheral",
-], optional = true }
+
 
 [target.'cfg(context = "nrf5340")'.dependencies]
 # Disable NFC support for now, as we do not support it yet.
@@ -89,7 +90,7 @@ storage = ["dep:embassy-embedded-hal"]
 usb = []
 
 ## Enables BLE support.
-ble = ["nrf-sdc", "nrf-mpsl"]
+ble = []
 
 ## Enables defmt support.
 defmt = ["dep:defmt", "embassy-nrf/defmt"]

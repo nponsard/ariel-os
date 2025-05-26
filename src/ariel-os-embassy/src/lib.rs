@@ -222,6 +222,18 @@ async fn init_task(mut peripherals: hal::OptionalPeripherals) {
     #[cfg(feature = "ble")]
     let mut ble_driver = hal::ble::driver(ble_peripherals, &spawner);
 
+    #[cfg(feature = "ble")]
+    {
+        use crate::cell::SameExecutorCell;
+
+        if ble::STACK
+            .init(SameExecutorCell::new(ble_driver,spawner))
+            .is_err()
+        {
+            unreachable!();
+        }
+    }
+
     #[cfg(feature = "usb")]
     let mut usb_builder = {
         use static_cell::ConstStaticCell;
@@ -299,11 +311,6 @@ async fn init_task(mut peripherals: hal::OptionalPeripherals) {
         }
         let usb = usb_builder.build();
         spawner.spawn(usb::usb_task(usb)).unwrap();
-    }
-
-    #[cfg(feature = "ble")]
-    if hal::ble::STACK.init(ble_driver).is_err() {
-        unreachable!();
     }
 
     #[cfg(feature = "wifi-cyw43")]

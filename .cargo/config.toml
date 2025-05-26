@@ -6,3 +6,7 @@ features = ['all']
 
 # This is needed so the "include" statement above works.
 config-include = true
+
+
+[env]
+BINDGEN_EXTRA_CLANG_ARGS = "--sysroot=/usr/arm-none-eabi"

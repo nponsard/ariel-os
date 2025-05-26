@@ -43,6 +43,15 @@ ariel-os-random = { path = "../ariel-os-random", optional = true }
 ariel-os-storage = { workspace = true, optional = true }
 ariel-os-utils = { workspace = true }
 
+
+trouble-host = { workspace = true }
+
+apache-nimble = { git = "https://github.com/benbrittain/apache-nimble-sys.git", branch = "master", features = [
+  "controller",
+  "nrf52840",
+  "port-layer-embassy",
+] }
+
 heapless = "0.8.0"
 once_cell = { workspace = true }
 usbd-hid = { version = "0.8.2", optional = true }
