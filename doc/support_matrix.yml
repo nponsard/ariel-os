@@ -53,6 +53,18 @@ functionalities:
 
 # Encodes support status for each chip.
 chips:
+  nrf51822:
+    name: nRF51822
+    support:
+      gpio: supported
+      debug_output: supported
+      hwrng: not_currently_supported
+      i2c_controller: not_currently_supported
+      spi_main: not_currently_supported
+      logging: supported
+      storage: not_currently_supported
+      wifi: not_available
+
   nrf52832:
     name: nRF52832
     support:
