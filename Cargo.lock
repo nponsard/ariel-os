@@ -3872,6 +3872,7 @@ version = "0.1.0"
 source = "git+https://github.com/alexmoon/nrf-sdc.git?rev=551a95436e999b4290b4a33383aa3d6747b63dd9#551a95436e999b4290b4a33383aa3d6747b63dd9"
 dependencies = [
  "cortex-m",
+ "critical-section",
  "embassy-nrf",
  "embassy-sync 0.6.2",
  "embedded-io 0.6.1",

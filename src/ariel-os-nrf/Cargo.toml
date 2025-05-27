@@ -32,7 +32,10 @@ static_cell = { workspace = true }
 embassy-sync = { workspace = true }
 trouble-host = { workspace = true }
 
-nrf-mpsl = { git = "https://github.com/alexmoon/nrf-sdc.git", rev = "551a95436e999b4290b4a33383aa3d6747b63dd9", optional = true }
+nrf-mpsl = { git = "https://github.com/alexmoon/nrf-sdc.git", rev = "551a95436e999b4290b4a33383aa3d6747b63dd9", optional = true, features = [
+  "critical-section-impl",
+  "nrf52840",
+] }
 
 [target.'cfg(context = "nrf52832")'.dependencies]
 # Disable NFC support for now, as we do not support it yet.

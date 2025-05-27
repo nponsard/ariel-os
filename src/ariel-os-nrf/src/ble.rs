@@ -13,7 +13,6 @@ use trouble_host::prelude::*;
 
 #[embassy_executor::task]
 async fn mpsl_task(mpsl: &'static MultiprotocolServiceLayer<'static>) -> ! {
-
     debug!("Starting MPSL task");
     mpsl.run().await
 }
@@ -77,16 +76,30 @@ impl Peripherals {
     }
 }
 
+/// How many outgoing L2CAP buffers per link
+const L2CAP_TXQ: u8 = 20;
+
+/// How many incoming L2CAP buffers per link
+const L2CAP_RXQ: u8 = 20;
+
+const L2CAP_MTU: usize = 27;
+
 fn build_sdc<'d, const N: usize>(
     p: nrf_sdc::Peripherals<'d>,
     rng: &'d mut rng::Rng<RNG>,
     mpsl: &'d MultiprotocolServiceLayer,
     mem: &'d mut sdc::Mem<N>,
 ) -> Result<nrf_sdc::SoftdeviceController<'d>, nrf_sdc::Error> {
-    sdc::Builder::new().unwrap()
-        .support_adv().unwrap()
-        // .support_peripheral().unwrap()
-        // .peripheral_count(1).unwrap()
+    sdc::Builder::new()
+        .unwrap()
+        .support_adv()
+        .unwrap()
+        .support_peripheral()
+        .unwrap()
+        .peripheral_count(1)
+        .unwrap()
+        .buffer_cfg(L2CAP_MTU as u8, L2CAP_MTU as u8, L2CAP_TXQ, L2CAP_RXQ)
+        .unwrap()
         .build(p, rng, mpsl, mem)
 }
 
@@ -116,9 +129,9 @@ pub fn driver<'d>(
 
     let rng = RNG.init(embassy_nrf::rng::Rng::new(p.rng, Irqs));
 
-    static SDC_MEM: StaticCell<sdc::Mem<1024>> = StaticCell::new();
+    static SDC_MEM: StaticCell<sdc::Mem<8192>> = StaticCell::new();
 
-    let sdc_mem = SDC_MEM.init(sdc::Mem::<1024>::new());
+    let sdc_mem = SDC_MEM.init(sdc::Mem::<8192>::new());
 
     let sdc = build_sdc(sdc_p, rng, mpsl, sdc_mem).unwrap();
 
