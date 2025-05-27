@@ -392,12 +392,15 @@ dependencies = [
  "ariel-os-debug",
  "ariel-os-embassy-common",
  "ariel-os-random",
+ "ariel-os-threads",
  "cfg-if",
  "defmt 1.0.1",
  "embassy-embedded-hal",
  "embassy-executor",
+ "embassy-futures",
  "embassy-nrf",
  "embassy-sync 0.6.2",
+ "embassy-time",
  "embedded-hal-async",
  "ld-memory",
  "nrf-mpsl",
@@ -781,6 +784,18 @@ dependencies = [
  "futures-intrusive",
  "heapless 0.8.0",
  "uuid",
+]
+
+[[package]]
+name = "bt-hci"
+version = "0.2.0"
+source = "git+https://github.com/embassy-rs/bt-hci.git?rev=3755da87d0ef8660c5f9d4694b928ad7f679299a#3755da87d0ef8660c5f9d4694b928ad7f679299a"
+dependencies = [
+ "embassy-sync 0.6.2",
+ "embedded-io 0.6.1",
+ "embedded-io-async",
+ "futures-intrusive",
+ "heapless 0.8.0",
 ]
 
 [[package]]
@@ -2446,7 +2461,7 @@ name = "esp-wifi"
 version = "0.12.0"
 source = "git+https://github.com/ariel-os/esp-hal?branch=v0.23.1%2Bariel-os-threads#aa8d1995fc06eb5e6d04a2022ecf3679b4929e63"
 dependencies = [
- "bt-hci",
+ "bt-hci 0.2.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "cfg-if",
  "critical-section",
  "defmt 0.3.100",
@@ -2585,7 +2600,7 @@ version = "0.0.0"
 dependencies = [
  "ariel-os",
  "ariel-os-boards",
- "bt-hci",
+ "bt-hci 0.2.0 (git+https://github.com/embassy-rs/bt-hci.git?rev=3755da87d0ef8660c5f9d4694b928ad7f679299a)",
  "embassy-futures",
  "embassy-time",
  "trouble-host",
@@ -3905,7 +3920,7 @@ name = "nrf-sdc"
 version = "0.1.0"
 source = "git+https://github.com/alexmoon/nrf-sdc.git?rev=551a95436e999b4290b4a33383aa3d6747b63dd9#551a95436e999b4290b4a33383aa3d6747b63dd9"
 dependencies = [
- "bt-hci",
+ "bt-hci 0.2.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "critical-section",
  "embassy-hal-internal",
  "embassy-nrf",
@@ -5493,7 +5508,7 @@ version = "0.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "b31abacc7bd8bc686160f6de3347a3b7669ae4a31e4eef9a306466e97d297cea"
 dependencies = [
- "bt-hci",
+ "bt-hci 0.2.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "embassy-futures",
  "embassy-sync 0.6.2",
  "embassy-time",

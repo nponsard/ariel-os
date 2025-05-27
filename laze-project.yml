@@ -1050,6 +1050,7 @@ modules:
     selects:
       - hw/ble
       - random # nrf_sdc needs a rng
+      - sw/threading
     env:
       global:
         FEATURES:

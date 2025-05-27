@@ -4,3 +4,4 @@ use crate::cell::SameExecutorCell;
 
 
 pub use crate::hal::ble::ble_stack;
+pub use crate::hal::ble::run_example;

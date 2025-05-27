@@ -210,8 +210,8 @@ async fn init_task(mut peripherals: hal::OptionalPeripherals) {
     #[cfg(feature = "usb")]
     let usb_peripherals = hal::usb::Peripherals::new(&mut peripherals);
 
-    #[cfg(feature = "ble")]
-    let ble_peripherals = hal::ble::Peripherals::new(&mut peripherals);
+    // #[cfg(feature = "ble")]
+    // let ble_peripherals = hal::ble::Peripherals::new(&mut peripherals);
 
     // Tasks have to be started before driver initializations so that the tasks are able to
     // configure the drivers using hooks.
@@ -219,8 +219,9 @@ async fn init_task(mut peripherals: hal::OptionalPeripherals) {
         task(spawner, &mut peripherals);
     }
 
-    #[cfg(feature = "ble")]
-    let mut ble_driver = hal::ble::driver(ble_peripherals, &spawner);
+    // #[cfg(feature = "ble")]
+    // let mut ble_driver =
+    // hal::ble::driver(ble_peripherals);
 
     #[cfg(feature = "usb")]
     let mut usb_builder = {
@@ -301,10 +302,10 @@ async fn init_task(mut peripherals: hal::OptionalPeripherals) {
         spawner.spawn(usb::usb_task(usb)).unwrap();
     }
 
-    #[cfg(feature = "ble")]
-    if hal::ble::STACK.init(ble_driver).is_err() {
-        unreachable!();
-    }
+    // #[cfg(feature = "ble")]
+    // if hal::ble::STACK.init(ble_driver).is_err() {
+    //     unreachable!();
+    // }
 
     #[cfg(feature = "wifi-cyw43")]
     let (device, control) = {
@@ -368,6 +369,8 @@ async fn init_task(mut peripherals: hal::OptionalPeripherals) {
     {
         hal::cyw43::join(control).await;
     };
+
+    hal::ble::run_example(spawner, &mut peripherals).await;
 
     // mark used
     let _ = peripherals;
