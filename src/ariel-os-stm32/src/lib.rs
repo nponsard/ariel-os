@@ -220,6 +220,21 @@ fn board_config(config: &mut Config) {
         config.rcc.mux.clk48sel = mux::Clk48sel::HSI48;
     }
 
+    #[cfg(context = "stm32f042k6")]
+    {
+        use embassy_stm32::rcc::*;
+
+        config.rcc.hsi48 = Some(Hsi48Config {
+            sync_from_usb: true,
+        }); // needed for USB
+        config.rcc.sys = Sysclk::HSI48;
+        config.rcc.pll = Some(Pll {
+            src: PllSource::HSI48,
+            prediv: PllPreDiv::DIV2,
+            mul: PllMul::MUL2,
+        });
+    }
+
     // mark used
     let _ = config;
 }
