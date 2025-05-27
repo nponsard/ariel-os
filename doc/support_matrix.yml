@@ -343,6 +343,14 @@ chips:
 # Encodes support status for each board.
 # Boards inherit support statuses of their chip, but can also override them.
 boards:
+  bbc-microbit-v1:
+    name: BBC micro:bit V1
+    url: https://web.archive.org/web/20250109121140/https://microbit.org/get-started/features/overview/#original-micro:bit
+    chip: nrf51822
+    support:
+      user_usb: not_available
+      ethernet_over_usb: not_available
+
   bbc-microbit-v2:
     name: BBC micro:bit V2
     url: https://web.archive.org/web/20250109121140/https://microbit.org/new-microbit/
