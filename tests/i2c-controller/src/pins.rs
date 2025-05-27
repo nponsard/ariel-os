@@ -47,6 +47,14 @@ ariel_os::hal::define_peripherals!(Peripherals {
     i2c_scl: PB8,
 });
 
+#[cfg(context = "stm32f042k6")]
+pub type SensorI2c = i2c::controller::I2C1;
+#[cfg(context = "stm32f042k6")]
+ariel_os::hal::define_peripherals!(Peripherals {
+    i2c_sda: PB7,
+    i2c_scl: PB6,
+});
+
 #[cfg(context = "stm32h755zi")]
 pub type SensorI2c = i2c::controller::I2C1;
 #[cfg(context = "stm32h755zi")]
