@@ -69,9 +69,16 @@ usb = [
   "ariel-os-stm32/usb",
 ]
 
-ble = ["trouble-host", "static_cell", "bt-hci", "embedded-io", "embassy-sync"]
-ble-peripheral = []
-ble-central = []
+ble = [
+  "ariel-os-nrf/ble",
+  "trouble-host",
+  "static_cell",
+  "bt-hci",
+  "embedded-io",
+  "embassy-sync",
+]
+ble-peripheral = ["ariel-os-nrf/ble-peripheral"]
+ble-central = ["ariel-os-nrf/ble-central"]
 
 hwrng = [
   "ariel-os-esp/hwrng",
