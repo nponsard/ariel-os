@@ -53,6 +53,20 @@ functionalities:
 
 # Encodes support status for each chip.
 chips:
+  nrf52832:
+    name: nRF52832
+    support:
+      gpio: supported
+      debug_output: supported
+      hwrng: supported
+      i2c_controller: not_currently_supported
+      spi_main: not_currently_supported
+      logging: supported
+      storage: not_currently_supported
+      wifi: not_available
+      user_usb: not_available
+      ethernet_over_usb: not_available
+
   nrf52833:
     name: nRF52833
     support:
@@ -347,6 +361,13 @@ boards:
       user_usb: not_available
       ethernet_over_usb: not_available
       wifi: not_currently_supported
+
+  nrf52dk:
+    name: nRF52-DK
+    url: https://web.archive.org/web/20250311221943/https://www.nordicsemi.com/Products/Development-hardware/nRF52-DK
+    chip: nrf52832
+    tier: "2"
+    support:
 
   nrf52840dk:
     name: nRF52840-DK

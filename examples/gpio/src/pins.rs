@@ -37,6 +37,12 @@ ariel_os::hal::define_peripherals!(Peripherals {
     btn1: P0_06
 });
 
+#[cfg(context = "nrf52dk")]
+ariel_os::hal::define_peripherals!(Peripherals {
+    led1: P0_17,
+    btn1: P0_13
+});
+
 #[cfg(context = "rp")]
 ariel_os::hal::define_peripherals!(Peripherals {
     led1: PIN_1,
