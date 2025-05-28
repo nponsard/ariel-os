@@ -8,6 +8,7 @@ apps:
       - nrf52840dk
       - nrf5340dk
       - nrf9160dk-nrf9160
+      - nrf52dk
       - particle-xenon
       - rp
       - st-b-l475e-iot01a
