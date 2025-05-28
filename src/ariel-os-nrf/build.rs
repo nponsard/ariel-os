@@ -6,7 +6,7 @@ fn main() {
         return;
     }
 
-    let (ram, flash) = if is_in_current_contexts(&["nrf51822"]) {
+    let (ram, flash) = if is_in_current_contexts(&["nrf51822-xxaa"]) {
         (16, 256)
     } else if is_in_current_contexts(&["nrf52832"]) {
         (64, 256)

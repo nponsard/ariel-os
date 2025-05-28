@@ -205,7 +205,7 @@ contexts:
     provides:
       - has_hwrng
 
-  - name: nrf51822
+  - name: nrf51822-xxaa
     parent: nrf51
     env:
       PROBE_RS_CHIP: nrf51822_xxAA
@@ -1525,7 +1525,7 @@ builders:
       - periph_rtt
 
   - name: bbc-microbit-v1
-    parent: nrf51822
+    parent: nrf51822-xxaa
 
   - name: bbc-microbit-v2
     parent: nrf52833

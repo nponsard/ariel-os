@@ -53,8 +53,8 @@ functionalities:
 
 # Encodes support status for each chip.
 chips:
-  nrf51822:
-    name: nRF51822
+  nrf51822-xxaa:
+    name: nRF51822_xxAA
     support:
       gpio: supported
       debug_output: supported
@@ -358,7 +358,7 @@ boards:
   bbc-microbit-v1:
     name: BBC micro:bit V1
     url: https://web.archive.org/web/20250109121140/https://microbit.org/get-started/features/overview/#original-micro:bit
-    chip: nrf51822
+    chip: nrf51822-xxaa
     support:
       user_usb: not_available
       ethernet_over_usb: not_available
