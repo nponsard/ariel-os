@@ -359,6 +359,7 @@ boards:
     name: BBC micro:bit V1
     url: https://web.archive.org/web/20250109121140/https://microbit.org/get-started/features/overview/#original-micro:bit
     chip: nrf51822-xxaa
+    tier: "3"
     support:
       user_usb: not_available
       ethernet_over_usb: not_available
