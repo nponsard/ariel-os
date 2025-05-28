@@ -309,6 +309,23 @@ chips:
           - removing items not supported
       wifi: not_available
 
+  stm32wba55cg:
+    name: STM32WBA55CG
+    support:
+      gpio: supported
+      debug_output: supported
+      hwrng: supported
+      i2c_controller: not_currently_supported
+      spi_main: not_currently_supported
+      logging: supported
+      storage:
+        status: not_currently_supported
+        comments:
+          - removing items not supported
+      wifi: not_available
+      user_usb: not_available
+      ethernet_over_usb: not_available
+
 # Encodes support status for each board.
 # Boards inherit support statuses of their chip, but can also override them.
 boards:
@@ -490,6 +507,13 @@ boards:
       user_usb: supported
       wifi: not_available
       ethernet_over_usb: supported
+
+  st-nucleo-wba55:
+    name: ST NUCLEO-WBA55CG
+    url: https://web.archive.org/web/20240803070523/https://www.st.com/en/evaluation-tools/nucleo-wba55cg.html
+    chip: stm32wba55cg
+    tier: "3"
+    support:
 
   stm32u083c-dk:
     name: STM32U083C-DK
