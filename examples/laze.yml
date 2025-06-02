@@ -15,6 +15,7 @@ subdirs:
   - hello-world-threading
   - http-client
   - http-server
+  - i2c_scanner
   - log
   - minimal
   - power
