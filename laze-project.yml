@@ -205,6 +205,13 @@ contexts:
     provides:
       - has_hwrng
 
+  - name: nrf51822-xxaa
+    parent: nrf51
+    selects:
+      - ram-tiny
+    env:
+      PROBE_RS_CHIP: nrf51822_xxAA
+
   - name: bbc-microbit-base
     # this is a context, not a builder, to be used as parent by  "bbc-microbit" and
     # "bbc-microbit-qemu"
@@ -759,7 +766,7 @@ modules:
           - -Z emit-stack-sizes
 
   - name: ram-tiny
-    help: This module marks boards with very little RAM (currently, <10KiB)
+    help: This module marks boards with very little RAM (currently, <=16KiB)
     conflicts:
       # disabling alloc until we have a usable use case
       - alloc
@@ -1518,6 +1525,9 @@ builders:
 
     disables:
       - periph_rtt
+
+  - name: bbc-microbit-v1
+    parent: nrf51822-xxaa
 
   - name: bbc-microbit-v2
     parent: nrf52833
