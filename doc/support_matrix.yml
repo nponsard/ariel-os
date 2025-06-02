@@ -54,7 +54,7 @@ functionalities:
 # Encodes support status for each chip.
 chips:
   nrf51822-xxaa:
-    name: nRF51822_xxAA
+    name: nRF51822-xxAA
     support:
       gpio: supported
       debug_output: supported
