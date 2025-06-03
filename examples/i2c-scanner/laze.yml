@@ -1,6 +1,6 @@
 apps:
-  - name: i2c_scanner
+  - name: i2c-scanner
     context:
       # list of contexts that have an entry in `pins.rs`
-      - st-nucleo-f042k6
       - bbc-microbit-v2
+      - st-nucleo-f042k6
