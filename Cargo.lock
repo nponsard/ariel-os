@@ -3159,6 +3159,19 @@ dependencies = [
 ]
 
 [[package]]
+name = "i2c_scanner"
+version = "0.0.0"
+dependencies = [
+ "ariel-os",
+ "ariel-os-boards",
+ "cfg-if",
+ "embassy-sync 0.6.2",
+ "embedded-hal 1.0.0",
+ "embedded-hal-async",
+ "once_cell",
+]
+
+[[package]]
 name = "iana-time-zone"
 version = "0.1.61"
 source = "registry+https://github.com/rust-lang/crates.io-index"
