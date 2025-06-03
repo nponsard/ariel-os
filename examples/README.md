@@ -14,6 +14,7 @@ This directory contains example applications that showcase how to use Ariel OS.
 - [hello-world-threading/](./hello-world-threading): A classic, using a thread
 - [http-client/](./http-client): HTTP client example
 - [http-server/](./http-server): HTTP server example
+- [i2c-scanner/](./i2c-scanner): I2C bus scanner
 - [log](./log): Example demonstrating different log levels for printing feedback messages.
 - [minimal/](./minimal): Minimized to the max Ariel OS config
 - [power/](./power): Demonstrates power management functionality
