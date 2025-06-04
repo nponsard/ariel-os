@@ -351,6 +351,10 @@ impl ServerSecurityConfig for ConfigBuilder {
     }
 
     fn own_edhoc_credential(&self) -> Option<(lakers::Credential, lakers::BytesP256ElemLen)> {
+        #[expect(
+            clippy::clone_on_copy,
+            reason = "the type should not be clone, and will not be in future lakers versions"
+        )]
         self.own_edhoc_credential.clone()
     }
 
