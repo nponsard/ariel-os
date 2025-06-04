@@ -1,10 +1,7 @@
-use trouble_host::Controller;
-
 use ariel_os_embassy_common::ble::Config;
 
-pub async fn ble_stack() -> &'static trouble_host::Stack<'static, impl Controller> {
-    crate::hal::ble::ble_stack().await
-}
+// Must be async and return &trouble_host::Stack<'static, impl Controller>
+pub use crate::hal::ble::ble_stack;
 
 #[allow(dead_code, reason = "false positive during builds outside of laze")]
 pub(crate) fn config() -> Config {
