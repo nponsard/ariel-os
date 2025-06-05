@@ -351,7 +351,11 @@ impl ServerSecurityConfig for ConfigBuilder {
     }
 
     fn own_edhoc_credential(&self) -> Option<(lakers::Credential, lakers::BytesP256ElemLen)> {
-        self.own_edhoc_credential
+        #[expect(
+            clippy::clone_on_copy,
+            reason = "the type should not be clone, and will not be in future lakers versions"
+        )]
+        self.own_edhoc_credential.clone()
     }
 
     fn expand_id_cred_x(
@@ -371,7 +375,7 @@ impl ServerSecurityConfig for ConfigBuilder {
             trace!("Comparing to {=[u8]:02x}", credential.bytes.as_slice()); // :02x could be :cbor
             if id_cred_x.reference_only() {
                 // ad Ok: If our credential has no KID, it can't be recognized in this branch
-                if credential.by_kid() == Ok(id_cred_x) {
+                if credential.by_kid().as_ref() == Ok(&id_cred_x) {
                     debug!("Peer indicated use of the one preconfigured key by KID.");
                     #[expect(
                         clippy::clone_on_copy,
@@ -388,7 +392,7 @@ impl ServerSecurityConfig for ConfigBuilder {
                 }
             } else {
                 // ad Ok: This is always the case for CCSs, but inapplicable eg. for PSKs.
-                if credential.by_value() == Ok(id_cred_x) {
+                if credential.by_value().as_ref() == Ok(&id_cred_x) {
                     debug!("Peer indicated use of the one preconfigured credential by value.");
                     #[expect(
                         clippy::clone_on_copy,
@@ -408,7 +412,7 @@ impl ServerSecurityConfig for ConfigBuilder {
 
         if let Some(unauthorized_claims) = self.nosec_authorization() {
             trace!("Unauthenticated clients are generally accepted, evaluating credential.");
-            if let Some(credential_by_value) = id_cred_x.get_ccs() {
+            if let Some(credential_by_value) = id_cred_x.get_ccs().as_ref() {
                 debug!("The unauthorized client provided a usable credential by value.");
                 #[expect(clippy::clone_on_copy, reason = "Lakers items are overly copy happy")]
                 return Some((credential_by_value.clone(), unauthorized_claims));
