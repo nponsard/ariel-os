@@ -35,4 +35,4 @@ esp-wifi = { git = "https://github.com/ariel-os/esp-hal", branch = "v0.23.1+arie
 xtensa-lx-rt = { git = "https://github.com/ariel-os/esp-hal", branch = "v0.23.1+ariel-os-threads" }
 
 # patched to use portable-atomics <https://github.com/seanmonstar/try-lock/pull/11>
-try-lock = { git = "https://github.com/seanmonstar/try-lock", rev = "a1aadfac9840fe23672159c12af7272e44bc684c" }
+try-lock = { git = "https://github.com/seanmonstar/try-lock", rev = "45c39685b56a4dba1b71bdbbbe5f731c3c77dc50" }
