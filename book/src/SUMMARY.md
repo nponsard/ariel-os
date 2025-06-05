@@ -18,6 +18,7 @@
 - [Tooling](./tooling/index.md)
   - [CoAP](./tooling/coap.md)
   - [Ferrocene](./tooling/ferrocene.md)
+- [VSCode Configuration](./vscode-configuration.md)
 - [Glossary](./glossary.md)
 
 # Developer Guide
