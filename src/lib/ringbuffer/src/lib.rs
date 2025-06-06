@@ -27,7 +27,7 @@ where
         }
     }
 
-    pub const fn new_with(backing_array: &mut [MaybeUninit<T>]) -> RingBuffer<T> {
+    pub const fn new_with(backing_array: &mut [MaybeUninit<T>]) -> RingBuffer<'_, T> {
         RingBuffer {
             index: RingBufferIndex::new(backing_array.len() as u8),
             // this is basically MaybeUninit::slice_assume_init_mut().
