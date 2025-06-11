@@ -6,6 +6,7 @@ defaults:
 subdirs:
   - alloc
   - benchmark
+  - ble-advertiser
   - blinky
   - coap-client
   - coap-server

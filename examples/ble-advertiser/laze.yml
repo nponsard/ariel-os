@@ -1,0 +1,4 @@
+apps:
+  - name: ble-advertiser
+    selects:
+      - ble-peripheral
