@@ -45,7 +45,7 @@ This privilege is granted with some expectation of responsibility: team members 
 
 ### Contributors
 
-Anyone can contribute to the Ariel OS project, for example via comments on issues or pull requests, writing code or documentation etc. 
+Anyone can contribute to the Ariel OS project, for example via comments on issues or pull requests, writing code or documentation etc. For more explanation on how to contribute to this project, please have a look at our [contributing guide](https://github.com/ariel-os/ariel-os/blob/main/CONTRIBUTING.md). 
 
 
 ## Getting involved
