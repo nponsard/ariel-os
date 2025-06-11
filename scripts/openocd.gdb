@@ -1,3 +1,3 @@
-target extended-remote localhost:3333
+target extended-remote localhost:1337
 mon arm semihosting enable
 #load
