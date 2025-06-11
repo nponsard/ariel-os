@@ -2567,6 +2567,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "example-ble-advertise"
+version = "0.0.0"
+dependencies = [
+ "ariel-os",
+ "ariel-os-boards",
+ "embassy-futures",
+ "trouble-host",
+]
+
+[[package]]
 name = "example-coap-client"
 version = "0.0.0"
 dependencies = [
