@@ -24,6 +24,10 @@ pub mod peripheral {
 }
 
 #[doc(hidden)]
+#[cfg(feature = "ble")]
+pub mod ble;
+
+#[doc(hidden)]
 #[cfg(feature = "hwrng")]
 pub mod hwrng;
 
