@@ -755,6 +755,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "ble-scanner"
+version = "0.0.0"
+dependencies = [
+ "ariel-os",
+ "ariel-os-boards",
+ "embassy-futures",
+ "heapless 0.8.0",
+ "trouble-host",
+]
+
+[[package]]
 name = "blinky"
 version = "0.0.0"
 dependencies = [
