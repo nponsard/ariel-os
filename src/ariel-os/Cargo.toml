@@ -66,7 +66,7 @@ csprng = ["dep:ariel-os-random", "ariel-os-random?/csprng"]
 # Enables seeding the random number generator from hardware.
 hwrng = ["ariel-os-embassy/hwrng"]
 
-#! ## Network protocols and configuration
+#! ## Network protocols
 ## Enables support for TCP.
 tcp = ["ariel-os-embassy/tcp"]
 ## Enables support for UDP.
@@ -92,7 +92,7 @@ coap-server-config-unprotected = [
 # build system that knows who provides an abort and assert handler.
 liboscore-provide-abort = ["ariel-os-coap/liboscore-provide-abort"]
 liboscore-provide-assert = ["ariel-os-coap/liboscore-provide-assert"]
-## Selects static IP configuration.
+# Selects static IP configuration.
 network-config-static = ["ariel-os-embassy/network-config-static"]
 
 #! ## Serial communication
