@@ -76,10 +76,13 @@ usb = []
 ble = []
 
 ble-cyw43 = [
+  "dep:cyw43",
+  "dep:cyw43-pio",
+  "dep:embassy-net-driver-channel",
+  "dep:static_cell",
   "dep:trouble-host",
   "dep:bt-hci",
   "dep:embassy-sync",
-  "wifi-cyw43",
   "cyw43/bluetooth",
   "ble",
 ]

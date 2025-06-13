@@ -4,8 +4,7 @@
 )]
 mod rpi_pico_w;
 
-use ariel_os_debug::log::info;
-use cyw43::{Control, JoinOptions, Runner};
+use cyw43::{Control, Runner};
 use embassy_executor::Spawner;
 use embassy_rp::{
     gpio::{Level, Output},
@@ -16,6 +15,8 @@ use static_cell::StaticCell;
 
 #[cfg(feature = "ble-cyw43")]
 use bt_hci::controller::ExternalController;
+#[cfg(feature = "wifi")]
+use cyw43::JoinOptions;
 
 #[cfg(feature = "ble-cyw43")]
 use crate::ble;
@@ -34,7 +35,9 @@ const CHANNELS: usize = 1;
 // Safe default MTU value that should work everywhere.
 const MTU: usize = 27;
 
+#[cfg(feature = "wifi")]
 pub async fn join(mut control: cyw43::Control<'static>) {
+    use ariel_os_debug::log::info;
     loop {
         //control.join_open(WIFI_NETWORK).await;
         match control
