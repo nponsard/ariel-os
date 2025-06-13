@@ -19,20 +19,18 @@ use bt_hci::controller::ExternalController;
 use cyw43::JoinOptions;
 
 #[cfg(feature = "ble-cyw43")]
-use crate::ble;
+use crate::ble::{self, SLOTS};
 
 pub type NetworkDevice = cyw43::NetDriver<'static>;
 
-#[cfg(feature = "ble-cyw43")]
-const SLOTS: usize = 10;
-#[cfg(feature = "ble-cyw43")]
 // Max number of BLE connections supported.
+#[cfg(feature = "ble-cyw43")]
 const CONNS: usize = 1;
-#[cfg(feature = "ble-cyw43")]
 // Max number of L2CAP channels supported (not including GATT).
-const CHANNELS: usize = 1;
 #[cfg(feature = "ble-cyw43")]
+const CHANNELS: usize = 1;
 // Safe default MTU value that should work everywhere.
+#[cfg(feature = "ble-cyw43")]
 const MTU: usize = 27;
 
 #[cfg(feature = "wifi")]
@@ -66,8 +64,7 @@ async fn wifi_cyw43_task(runner: Runner<'static, Output<'static>, CywSpi>) -> ! 
 pub async fn device<'a, 'b: 'a>(
     peripherals: &'a mut crate::OptionalPeripherals,
     spawner: &Spawner,
-    #[cfg(feature = "ble-cyw43")]
-    config: ariel_os_embassy_common::ble::Config,
+    #[cfg(feature = "ble-cyw43")] config: ariel_os_embassy_common::ble::Config,
 ) -> (embassy_net_driver_channel::Device<'b, 1514>, Control<'b>) {
     let pins = rpi_pico_w::take_pins(peripherals);
 
@@ -106,10 +103,11 @@ pub async fn device<'a, 'b: 'a>(
     #[cfg(feature = "ble-cyw43")]
     let (net_device, mut control, runner) = {
         let (net_device, bt_device, control, runner) =
-        cyw43::new_with_bluetooth(STATE.init_with(|| cyw43::State::new()), pwr, spi, fw, btfw)
-        .await;
+            cyw43::new_with_bluetooth(STATE.init_with(|| cyw43::State::new()), pwr, spi, fw, btfw)
+                .await;
         let controller: ExternalController<_, SLOTS> = ExternalController::new(bt_device);
-        static HOST_RESOURCES: StaticCell<trouble_host::HostResources<CONNS, CHANNELS, MTU>> = StaticCell::new();
+        static HOST_RESOURCES: StaticCell<trouble_host::HostResources<CONNS, CHANNELS, MTU>> =
+            StaticCell::new();
         let resources = HOST_RESOURCES.init(trouble_host::HostResources::new());
         let stack = trouble_host::new(controller, resources).set_random_address(config.address);
         let _ = ble::STACK.init(stack);
