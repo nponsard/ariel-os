@@ -4,6 +4,7 @@ authors = [
   "Emmanuel Baccelli",
   "Christian Amsüss",
   "Elena Frank",
+  "Nils Ponsard",
 ]
 language = "en"
 src = "src"

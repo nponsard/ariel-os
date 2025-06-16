@@ -12,9 +12,19 @@ It is also recommended to use the the `Even Better TOML` exentsion to have TOML 
 
 ## Configuration for developing Ariel OS apps
 
-This is meant to be used on projects created using the `cargo-generate` command in the getting-started guide.
+This is meant to be used on projects created using the `cargo-generate` command in the getting-started guide. The configuration works by targetting one board, avoiding the linter to be confused about double declarations.
 
-The configuration works by targetting one board (avoids the linter to be confused about double declarations).
+You will need to have a nightly version of Rust installed, you can install the latest one using:
+
+```sh
+rustup toolchain install nightly
+```
+
+Then install configure the toolchain by running this at the root of your project:
+
+```sh
+laze build -D CARGO_TOOLCHAIN=+nightly install-toolchain
+```
 
 To generate/update your vscode configuration in `.vscode/settings.json`, run in the root of your project:
 
@@ -22,35 +32,12 @@ To generate/update your vscode configuration in `.vscode/settings.json`, run in 
 laze build -b <board> -d defmt vscode-config
 ```
 
-With `<board>` being the laze identifier of a board your application will run on.
+With `<board>` being the laze identifier of a board your application will run on (e.g. `nrf52840kd`).
 
 > There is currently an issue with defmt macros and rust-analyzer showing errors that don't appear while building.
 > Disabling defmt in the vscode configuration hides this problem while keeping all the features functional. Disabling defmt using `-d defmt` when generating the vscode configuration won't disable defmt during other build commands.
 
-If you get an error about the JSON file being malformated, you may have comments or trailing commas in your configuration, try removing the comments and trailing commas or deleting your `.vscode/settings.json` file (make a backup if you had a custom configuration).
-
-If you're targeti.ng a board that is not using the `esp` (the `esp` toolchain is used for the esp32-s3 boards), you will need a nightly version of the rust toolchain to be installed:
-
-```sh
-rustup toolchain install nightly
-```
-
-If you see an error similar to this one:
-
-```markdown
-can't find crate for `core`
-the `thumbv7em-none-eabi` target may not be installed
-```
-
-You will need to install the Rust target on the nightly toolchain with:
-
-```sh
-rustup target install <target> --toolchain nightly
-```
-
-For example here it would be `thumbv7em-none-eabi`.
-
-Once this is done you should have the rust-analyzer features working when you open a rust file in your project.
+If you get an error about the JSON file being malformated, you may have comments or trailing commas in your configuration, try removing them in `.vscode/settings.json`.
 
 ### Debugging
 
