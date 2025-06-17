@@ -73,7 +73,7 @@ storage = []
 usb = []
 
 ## Enables Bluetooth Low Energy support.
-ble = []
+ble = ["ariel-os-embassy-common/ble"]
 
 ble-cyw43 = [
   "dep:cyw43",
