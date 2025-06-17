@@ -27,7 +27,7 @@
 use core::{cell::RefCell, marker::PhantomData};
 
 use embassy_sync::once_lock::OnceLock;
-use rand_core::{RngCore, SeedableRng, TryRngCore};
+use rand_core::{RngCore, SeedableRng};
 
 /// A global RNG.
 // The Mutex<RefCell> can probably be simplified

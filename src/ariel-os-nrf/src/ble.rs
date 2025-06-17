@@ -9,14 +9,16 @@ use static_cell::StaticCell;
 use trouble_host::Stack;
 
 use ariel_os_debug::log::debug;
-use ariel_os_embassy_common::ble::MTU;
+use ariel_os_embassy_common::ble::{BlePacketPool, MTU};
 
 use crate::irqs::Irqs;
 
-static STACK: OnceLock<Stack<'static, SoftdeviceController<'static>>> = OnceLock::new();
+static STACK: OnceLock<SdcStack> = OnceLock::new();
 static MPSL: StaticCell<MultiprotocolServiceLayer> = StaticCell::new();
 static SDC_MEM: StaticCell<sdc::Mem<SDC_MEM_SIZE>> = StaticCell::new();
 static RNG: StaticCell<ariel_os_random::CryptoRngSend> = StaticCell::new();
+
+type SdcStack = Stack<'static, SoftdeviceController<'static>, BlePacketPool>;
 
 // Memory to allocate to the SoftDevice Controller (SDC).
 //
@@ -35,7 +37,7 @@ const L2CAP_TXQ: u8 = 20;
 // Size of the RX buffer (number of packets), minimum is 1, SoftDevice default is 2 (SDC_DEFAULT_RX_PACKET_COUNT).
 const L2CAP_RXQ: u8 = 20;
 
-pub async fn ble_stack() -> &'static Stack<'static, SoftdeviceController<'static>> {
+pub async fn ble_stack() -> &'static SdcStack {
     STACK.get().await
 }
 

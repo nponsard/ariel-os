@@ -305,6 +305,7 @@ dependencies = [
  "const-sha1",
  "defmt 1.0.1",
  "embassy-futures",
+ "embassy-sync 0.6.2",
  "embassy-time",
  "embedded-hal 1.0.0",
  "embedded-hal-async",
