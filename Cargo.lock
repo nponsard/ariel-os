@@ -1786,7 +1786,7 @@ dependencies = [
 [[package]]
 name = "embassy-rp"
 version = "0.4.0"
-source = "git+https://github.com/ariel-os/embassy?branch=embassy-rp-v0.4.0%2Bariel-os#dab783fcee77ed024728de37a2ea4cb26de7d01c"
+source = "git+https://github.com/ariel-os/embassy?branch=embassy-rp-v0.4.0%2Bariel-os%2Btrng-panic-fix#1dd58227a73efa8da2aef96aaccf17b8749b9f7b"
 dependencies = [
  "atomic-polyfill",
  "cfg-if",
