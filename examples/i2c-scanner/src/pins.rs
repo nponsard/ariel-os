@@ -1,4 +1,4 @@
-use ariel_os::hal::{i2c, peripherals};
+use ariel_os::hal::{self, i2c};
 
 #[cfg(context = "st-nucleo-f042k6")]
 pub type SensorI2c = i2c::controller::I2C1;

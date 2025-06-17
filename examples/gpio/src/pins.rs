@@ -1,4 +1,4 @@
-use ariel_os::hal::peripherals;
+use ariel_os::hal;
 
 #[cfg(context = "nrf52840dk")]
 ariel_os::hal::define_peripherals!(Peripherals {

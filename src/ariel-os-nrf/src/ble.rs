@@ -1,5 +1,5 @@
 use embassy_executor::Spawner;
-use embassy_nrf::peripherals;
+use embassy_nrf::{Peri, peripherals};
 use embassy_sync::once_lock::OnceLock;
 use nrf_sdc::{
     self as sdc, SoftdeviceController,
@@ -41,25 +41,25 @@ pub async fn ble_stack() -> &'static Stack<'static, SoftdeviceController<'static
 
 #[cfg(context = "nrf52")]
 pub struct Peripherals {
-    pub ppi_ch17: peripherals::PPI_CH17,
-    pub ppi_ch18: peripherals::PPI_CH18,
-    pub ppi_ch20: peripherals::PPI_CH20,
-    pub ppi_ch21: peripherals::PPI_CH21,
-    pub ppi_ch22: peripherals::PPI_CH22,
-    pub ppi_ch23: peripherals::PPI_CH23,
-    pub ppi_ch24: peripherals::PPI_CH24,
-    pub ppi_ch25: peripherals::PPI_CH25,
-    pub ppi_ch26: peripherals::PPI_CH26,
-    pub ppi_ch27: peripherals::PPI_CH27,
-    pub ppi_ch28: peripherals::PPI_CH28,
-    pub ppi_ch29: peripherals::PPI_CH29,
+    pub ppi_ch17: Peri<'static, peripherals::PPI_CH17>,
+    pub ppi_ch18: Peri<'static, peripherals::PPI_CH18>,
+    pub ppi_ch20: Peri<'static, peripherals::PPI_CH20>,
+    pub ppi_ch21: Peri<'static, peripherals::PPI_CH21>,
+    pub ppi_ch22: Peri<'static, peripherals::PPI_CH22>,
+    pub ppi_ch23: Peri<'static, peripherals::PPI_CH23>,
+    pub ppi_ch24: Peri<'static, peripherals::PPI_CH24>,
+    pub ppi_ch25: Peri<'static, peripherals::PPI_CH25>,
+    pub ppi_ch26: Peri<'static, peripherals::PPI_CH26>,
+    pub ppi_ch27: Peri<'static, peripherals::PPI_CH27>,
+    pub ppi_ch28: Peri<'static, peripherals::PPI_CH28>,
+    pub ppi_ch29: Peri<'static, peripherals::PPI_CH29>,
 
-    pub rtc0: peripherals::RTC0,
-    pub timer0: peripherals::TIMER0,
-    pub temp: peripherals::TEMP,
-    pub ppi_ch19: peripherals::PPI_CH19,
-    pub ppi_ch30: peripherals::PPI_CH30,
-    pub ppi_ch31: peripherals::PPI_CH31,
+    pub rtc0: Peri<'static, peripherals::RTC0>,
+    pub timer0: Peri<'static, peripherals::TIMER0>,
+    pub temp: Peri<'static, peripherals::TEMP>,
+    pub ppi_ch19: Peri<'static, peripherals::PPI_CH19>,
+    pub ppi_ch30: Peri<'static, peripherals::PPI_CH30>,
+    pub ppi_ch31: Peri<'static, peripherals::PPI_CH31>,
 }
 
 #[cfg(context = "nrf52")]
@@ -174,7 +174,7 @@ fn build_sdc<'d, const N: usize>(
     let builder = builder.central_count(1)?;
 
     #[allow(clippy::cast_possible_truncation)]
-    let builder = builder.buffer_cfg(MTU as u8, MTU as u8, L2CAP_TXQ, L2CAP_RXQ)?;
+    let builder = builder.buffer_cfg(MTU as u16, MTU as u16, L2CAP_TXQ, L2CAP_RXQ)?;
 
     builder.build(p, rng, mpsl, mem)
 }

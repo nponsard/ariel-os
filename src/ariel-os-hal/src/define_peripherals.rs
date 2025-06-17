@@ -9,7 +9,7 @@
 /// # Note
 ///
 /// The [`define_peripherals!`](crate::define_peripherals!) macro expects the
-/// `ariel_os::hal::peripherals` module to be in scope.
+/// `ariel_os::hal` module to be in scope.
 ///
 // Inspired by https://github.com/adamgreig/assign-resources/tree/94ad10e2729afdf0fd5a77cd12e68409a982f58a
 // under MIT license
@@ -30,13 +30,13 @@ macro_rules! define_peripherals {
         pub struct $peripherals {
             $(
                 $(#[$inner])*
-                pub $peripheral_name: peripherals::$peripheral_field
+                pub $peripheral_name: hal::peripheral::Peri<'static, hal::peripherals::$peripheral_field>
             ),*
         }
 
         $($(
             #[allow(missing_docs, non_camel_case_types)]
-            pub type $peripheral_alias = peripherals::$peripheral_field;
+            pub type $peripheral_alias = hal::peripherals::$peripheral_field;
         )?)*
 
         impl $crate::TakePeripherals<$peripherals> for &mut $crate::OptionalPeripherals {

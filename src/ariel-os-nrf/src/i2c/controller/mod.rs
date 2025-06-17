@@ -3,11 +3,12 @@
 use ariel_os_embassy_common::impl_async_i2c_for_driver_enum;
 
 use embassy_nrf::{
-    Peripheral, bind_interrupts,
+    Peri, bind_interrupts,
     gpio::Pin as GpioPin,
     peripherals,
     twim::{InterruptHandler, Twim},
 };
+use static_cell::ConstStaticCell;
 
 /// I2C bus configuration.
 #[non_exhaustive]
@@ -139,8 +140,8 @@ macro_rules! define_i2c_drivers {
                 #[expect(clippy::new_ret_no_self)]
                 #[must_use]
                 pub fn new(
-                    sda_pin: impl Peripheral<P: GpioPin> + 'static,
-                    scl_pin: impl Peripheral<P: GpioPin> + 'static,
+                    sda_pin: Peri<'static, impl GpioPin>,
+                    scl_pin: Peri<'static, impl GpioPin>,
                     config: Config,
                 ) -> I2c {
                     let mut twim_config = embassy_nrf::twim::Config::default();
@@ -163,6 +164,8 @@ macro_rules! define_i2c_drivers {
                         static [<PREVENT_MULTIPLE_ $peripheral>]: () = ();
                     }
 
+                    static RAM_BUFFER:  ConstStaticCell<[u8; 16]> = ConstStaticCell::new([0; 16]);
+
                     // FIXME(safety): enforce that the init code indeed has run
                     // SAFETY: this struct being a singleton prevents us from stealing the
                     // peripheral multiple times.
@@ -170,7 +173,7 @@ macro_rules! define_i2c_drivers {
 
                     // NOTE(hal): the I2C peripheral and driver do not have any built-in timeout,
                     // we implement it at a higher level, not in this HAL-specific module.
-                    let twim = Twim::new(twim_peripheral, Irqs, sda_pin, scl_pin, twim_config);
+                    let twim = Twim::new(twim_peripheral, Irqs, sda_pin, scl_pin, twim_config, RAM_BUFFER.take());
 
                     I2c::$peripheral(Self { twim })
                 }
@@ -196,15 +199,15 @@ macro_rules! define_i2c_drivers {
 // We cannot impl From because both types are external to this crate.
 fn from_error(err: embassy_nrf::twim::Error) -> ariel_os_embassy_common::i2c::controller::Error {
     use embassy_nrf::twim::Error::{
-        AddressNack, BufferNotInRAM, DataNack, Overrun, Receive, RxBufferTooLong, Timeout,
-        Transmit, TxBufferTooLong,
+        AddressNack, DataNack, Overrun, Receive, RxBufferTooLong, Timeout, Transmit,
+        TxBufferTooLong,
     };
 
     use ariel_os_embassy_common::i2c::controller::{Error, NoAcknowledgeSource};
 
     #[expect(clippy::match_same_arms, reason = "non-exhaustive upstream enum")]
     match err {
-        TxBufferTooLong | RxBufferTooLong | Transmit | Receive | BufferNotInRAM => Error::Other,
+        TxBufferTooLong | RxBufferTooLong | Transmit | Receive => Error::Other,
         AddressNack => Error::NoAcknowledge(NoAcknowledgeSource::Address),
         DataNack => Error::NoAcknowledge(NoAcknowledgeSource::Data),
         Overrun => Error::Overrun,

@@ -1,4 +1,4 @@
-use ariel_os::hal::peripherals;
+use ariel_os::hal;
 
 #[cfg(context = "bbc-microbit-v1")]
 ariel_os::hal::define_peripherals!(LedPeripherals {
