@@ -23,16 +23,6 @@ use crate::ble::{self, SLOTS};
 
 pub type NetworkDevice = cyw43::NetDriver<'static>;
 
-// Max number of BLE connections supported.
-#[cfg(feature = "ble-cyw43")]
-const CONNS: usize = 1;
-// Max number of L2CAP channels supported (not including GATT).
-#[cfg(feature = "ble-cyw43")]
-const CHANNELS: usize = 1;
-// Safe default MTU value that should work everywhere.
-#[cfg(feature = "ble-cyw43")]
-const MTU: usize = 27;
-
 #[cfg(feature = "wifi")]
 pub async fn join(mut control: cyw43::Control<'static>) {
     use ariel_os_debug::log::info;
@@ -106,9 +96,7 @@ pub async fn device<'a, 'b: 'a>(
             cyw43::new_with_bluetooth(STATE.init_with(|| cyw43::State::new()), pwr, spi, fw, btfw)
                 .await;
         let controller: ExternalController<_, SLOTS> = ExternalController::new(bt_device);
-        static HOST_RESOURCES: StaticCell<trouble_host::HostResources<CONNS, CHANNELS, MTU>> =
-            StaticCell::new();
-        let resources = HOST_RESOURCES.init(trouble_host::HostResources::new());
+        let resources = ariel_os_embassy_common::ble::get_ble_host_resources();
         let stack = trouble_host::new(controller, resources).set_random_address(config.address);
         let _ = ble::STACK.init(stack);
 
