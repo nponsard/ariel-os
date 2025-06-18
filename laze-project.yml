@@ -271,8 +271,9 @@ contexts:
     selects:
       - cortex-m33
     provides:
-    # Currently hard-faults.
-    # - has_storage_support
+      - has_hwrng
+      # Currently hard-faults.
+      # - has_storage_support
     disables:
       # USB peripheral available only on app core
       - usb
