@@ -84,6 +84,8 @@ ble-cyw43 = [
   "dep:bt-hci",
   "dep:embassy-sync",
   "cyw43/bluetooth",
+  "hwrng",
+  "ariel-os-random/csprng",
   "ble",
 ]
 ble-peripheral = ["ble-cyw43"]

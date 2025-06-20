@@ -97,7 +97,10 @@ pub async fn device<'a, 'b: 'a>(
                 .await;
         let controller: ExternalController<_, SLOTS> = ExternalController::new(bt_device);
         let resources = ariel_os_embassy_common::ble::get_ble_host_resources();
-        let stack = trouble_host::new(controller, resources).set_random_address(config.address);
+        let mut rng = ariel_os_random::crypto_rng();
+        let stack = trouble_host::new(controller, resources)
+            .set_random_generator_seed(&mut rng)
+            .set_random_address(config.address);
         let _ = ble::STACK.init(stack);
 
         (net_device, control, runner)
