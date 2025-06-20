@@ -3,7 +3,6 @@
 
 //! Adapted from the example in `trouble_host`
 
-use core::cell::RefCell;
 use embassy_futures::join::join;
 use heapless::Deque;
 use trouble_host::{
@@ -14,9 +13,24 @@ use trouble_host::{
 };
 
 use ariel_os::{
-    debug::log::info,
+    debug::log::{info,debug},
+    thread::sync::Mutex,
     time::{Duration, Timer},
 };
+
+static SEEN_QUEUE: Mutex<Deque<BdAddr, 128>> = Mutex::new(Deque::new());
+
+#[ariel_os::task(autostart)]
+async fn automatic_cleanup() {
+    loop {
+        Timer::after_secs(10).await;
+        {
+            let mut seen = SEEN_QUEUE.lock();
+            seen.clear();
+            debug!("Cleared seen addresses");
+        }
+    }
+}
 
 #[ariel_os::task(autostart)]
 async fn run_scanner() {
@@ -28,9 +42,7 @@ async fn run_scanner() {
         ..
     } = ariel_os::ble::ble_stack().await.build();
 
-    let printer = Printer {
-        seen: RefCell::new(Deque::new()),
-    };
+    let printer = Printer {};
     let mut scanner = Scanner::new(central);
     let _ = join(runner.run_with_handler(&printer), async {
         let config = ScanConfig::<'_> {
@@ -50,13 +62,11 @@ async fn run_scanner() {
     .await;
 }
 
-struct Printer {
-    seen: RefCell<Deque<BdAddr, 128>>,
-}
+struct Printer {}
 
 impl EventHandler for Printer {
     fn on_adv_reports(&self, mut it: LeAdvReportsIter<'_>) {
-        let mut seen = self.seen.borrow_mut();
+        let mut seen = SEEN_QUEUE.lock();
         while let Some(Ok(report)) = it.next() {
             if !seen.iter().any(|b| b.raw() == report.addr.raw()) {
                 info!("discovered: {:?}", report.addr);
