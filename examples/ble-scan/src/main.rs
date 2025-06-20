@@ -13,7 +13,7 @@ use trouble_host::{
 };
 
 use ariel_os::{
-    debug::log::{info,debug},
+    debug::log::{debug, info},
     thread::sync::Mutex,
     time::{Duration, Timer},
 };
@@ -24,11 +24,9 @@ static SEEN_QUEUE: Mutex<Deque<BdAddr, 128>> = Mutex::new(Deque::new());
 async fn automatic_cleanup() {
     loop {
         Timer::after_secs(10).await;
-        {
-            let mut seen = SEEN_QUEUE.lock();
-            seen.clear();
-            debug!("Cleared seen addresses");
-        }
+        // The lock should be dropped just after clearing the queue
+        SEEN_QUEUE.lock().clear();
+        debug!("Cleared seen addresses");
     }
 }
 
