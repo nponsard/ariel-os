@@ -6,7 +6,7 @@ pub fn construct_rng(peripherals: &mut crate::OptionalPeripherals) {
     cfg_if::cfg_if! {
         // The union of all contexts that wind up in a construct_rng should be synchronized
         // with laze-project.yml's hwrng module.
-        if #[cfg(any(context = "nrf51", context = "nrf52"))] {
+        if #[cfg(any(context = "nrf51", context = "nrf52", context = "nrf5340-net"))] {
             let rng = embassy_nrf::rng::Rng::new(
                 peripherals
                     .RNG
