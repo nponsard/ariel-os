@@ -37,8 +37,10 @@ const MARKER_VALUE: u8 = 0;
 /// which configures an offset between the linker flash address map and the
 /// flash driver address map.
 fn flash_range_from_linker() -> Range<u32> {
-    #[cfg(context = "nrf")]
+    #[cfg(all(context = "nrf", not(context = "nrf5340-net")))]
     const OFFSET: usize = 0x0;
+    #[cfg(context = "nrf5340-net")]
+    const OFFSET: usize = 0x0100_0000;
     #[cfg(context = "rp")]
     const OFFSET: usize = 0x1000_0000;
     #[cfg(context = "stm32")]

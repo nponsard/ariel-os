@@ -271,7 +271,11 @@ contexts:
     selects:
       - cortex-m33
     provides:
-      - has_storage_support
+    # Currently hard-faults.
+    # - has_storage_support
+    disables:
+      # USB peripheral available only on app core
+      - usb
     env:
       PROBE_RS_CHIP: nrf5340_xxAA
     help: nRF5340 Network Core support
@@ -1650,8 +1654,6 @@ builders:
 
   - name: nrf5340dk-net
     parent: nrf5340-net
-    provides:
-      - has_usb_device_port
 
   - name: st-nucleo-c031c6
     parent: stm32c031c6
