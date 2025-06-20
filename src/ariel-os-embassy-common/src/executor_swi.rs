@@ -36,7 +36,13 @@ macro_rules! executor_swi {
             //   (This macro just adds "only enable it after starting the executor" to the
             //   requirements of the unsafe interrupt starting; the safe start() function
             //    trusts the user to pass the right number.)
-            unsafe { crate::EXECUTOR.on_interrupt() }
+            #[expect(
+                clippy::crate_in_macro_def,
+                reason = "crate::EXECUTOR comes from downstream crates"
+            )]
+            unsafe {
+                crate::EXECUTOR.on_interrupt()
+            }
         }
     };
 }
