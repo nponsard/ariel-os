@@ -113,7 +113,7 @@ contexts:
         always: true
         cmd: >-
           test "${SKIP_CARGO_BUILD}" = "1" && exit 0;
-          cd ${relpath} && ${CARGO_PRESHELL} ${CARGO_ENV} ${CARGO} ${CARGO_TOOLCHAIN} ${CARGO_ARGS} build --profile=${PROFILE} ${FEATURES}
+          cd ${relpath} && ${CARGO_PRESHELL} ${CARGO_ENV} ${CARGO} ${CARGO_TOOLCHAIN} ${CARGO_ARGS} build --profile=${PROFILE} ${FEATURES} --
           && cp ${relroot}/${build-dir}/bin/${builder}/cargo/${RUSTC_TARGET}/${PROFILE_DIR}/${app} ${relroot}/${out}
           ${POST_LINK}
 
@@ -121,6 +121,11 @@ contexts:
         cmd: "D=$$(dirname ${out}); rm -rf $$D && git clone ${url} $$D -n && git -C $$D reset --hard ${commit} && touch ${out}"
 
     tasks:
+      objcopy:
+        workdir: ${appdir}
+        build: true
+        cmd:
+          - ${CARGO_PRESHELL} ${CARGO_ENV} ${CARGO} ${CARGO_TOOLCHAIN} ${CARGO_ARGS} objcopy --profile=${PROFILE} ${FEATURES} -- -O binary test.bin
       exec:
         build: false
         cmd:
@@ -481,6 +486,15 @@ contexts:
       - cortex-m4f
     env:
       PROBE_RS_CHIP: STM32F411RE
+
+  - name: stm32f730v8
+    parent: stm32
+    selects:
+      - cortex-m7f
+    # provides:
+    #   - has_hwrng
+    env:
+      PROBE_RS_CHIP: STM32F730V8
 
   - name: stm32f767zi
     parent: stm32
@@ -1681,6 +1695,9 @@ builders:
   # TODO: there also is a companion nrf5340 on this board
   - name: nordic-thingy-91-x-nrf9151
     parent: nrf9151
+
+  - name: numworks
+    parent: stm32f730v8
 
   - name: st-b-l475e-iot01a
     parent: stm32l475vg

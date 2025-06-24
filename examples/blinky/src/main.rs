@@ -10,6 +10,13 @@ use ariel_os::{
 
 #[ariel_os::task(autostart, peripherals)]
 async fn blinky(peripherals: pins::LedPeripherals) {
+    // unsafe{
+
+    //     core::arch::asm!(
+    //         "svc 36",
+    //     );
+    // }
+
     let mut led = Output::new(peripherals.led, Level::Low);
 
     // The micro:bit uses an LED matrix; pull the column line low.

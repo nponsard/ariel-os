@@ -22,3 +22,4 @@ apps:
       - st-nucleo-wba55
       - st-nucleo-f767zi
       - stm32u083c-dk
+      - numworks
