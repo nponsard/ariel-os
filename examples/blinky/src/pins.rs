@@ -69,5 +69,7 @@ ariel_os::hal::define_peripherals!(LedPeripherals { led: PB4 });
 #[cfg(context = "stm32u083c-dk")]
 ariel_os::hal::define_peripherals!(LedPeripherals { led: PA5 });
 
+
+// PB0 blue, PB1 green
 #[cfg(context = "numworks")]
-ariel_os::hal::define_peripherals!(LedPeripherals { led: PB4 });
+ariel_os::hal::define_peripherals!(LedPeripherals { led: PB0 });

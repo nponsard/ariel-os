@@ -11,6 +11,20 @@ It is based on Rust from the ground up
 and [supports hardware](https://ariel-os.github.io/ariel-os/dev/docs/book/hardware-functionality-support.html)
 based on 32-bit microcontroller architectures (Cortex-M, RISC-V, and Xtensa).
 
+
+## Numworks n0100 notes 
+
+Schematics: https://web.archive.org/web/20180918165714/https://www.numworks.com/resources/engineering/hardware/electrical/schematics/
+
+Parts: https://web.archive.org/web/20180918165714/https://www.numworks.com/resources/engineering/hardware/electrical/parts/
+
+### Build & flash using bootloader 
+
+```sh
+laze -C examples/blinky build -b numworks -s nightly objcopy 
+dfu-util -a 0 -s 0x08000000:leave -D examples/blinky/test.bin  
+```
+
 ## Goals and Design
 
 Ariel OS builds on top of existing projects from the Embedded Rust ecosystem, including [Embassy](https://github.com/embassy-rs/embassy), [esp-hal](https://github.com/esp-rs/esp-hal), [defmt](https://github.com/knurling-rs/defmt), [probe-rs](https://github.com/probe-rs/probe-rs), [sequential-storage](https://github.com/tweedegolf/sequential-storage), and [embedded-test](https://github.com/probe-rs/embedded-test).

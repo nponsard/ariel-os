@@ -82,23 +82,23 @@ pub fn init() -> OptionalPeripherals {
 // TODO: find better place for this
 #[expect(clippy::too_many_lines)]
 fn board_config(config: &mut Config) {
-    #[cfg(context = "numworks")]
-    {
-        use embassy_stm32::rcc::*;
+    // #[cfg(context = "numworks")]
+    // {
+    //     use embassy_stm32::rcc::*;
 
-        config.rcc.hse = Some(Hse {
-            freq: embassy_stm32::time::Hertz(8000000),
-            mode: HseMode::Bypass,
-        });
-        config.rcc.pll_src = PllSource::HSE;
-        config.rcc.pll = Some(Pll {
-            prediv: PllPreDiv::DIV4,
-            mul: PllMul::MUL216,
-            divp: Some(PllPDiv::DIV2),
-            divq: None,
-            divr: None,
-        });
-    }
+    //     config.rcc.hse = Some(Hse {
+    //         freq: embassy_stm32::time::Hertz(8000000),
+    //         mode: HseMode::Bypass,
+    //     });
+    //     config.rcc.pll_src = PllSource::HSE;
+    //     config.rcc.pll = Some(Pll {
+    //         prediv: PllPreDiv::DIV4,
+    //         mul: PllMul::MUL216,
+    //         divp: Some(PllPDiv::DIV2),
+    //         divq: None,
+    //         divr: None,
+    //     });
+    // }
 
     #[cfg(context = "st-b-l475e-iot01a")]
     {
