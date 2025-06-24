@@ -1,4 +1,4 @@
-laze_required_version: 0.1.33
+laze_required_version: 0.1.37
 
 contexts:
   # base context that all other contexts inherit from
@@ -124,64 +124,64 @@ contexts:
       exec:
         build: false
         cmd:
-          - ${CARGO_PRESHELL} ${CARGO_ENV}
+          - ${CARGO_PRESHELL} ${CARGO_ENV} $@
 
       cargo:
         workdir: ${relpath}
         cmd:
-          - ${CARGO_PRESHELL} ${CARGO_ENV} ${CARGO} ${CARGO_TOOLCHAIN} ${CARGO_ARGS}
+          - ${CARGO_PRESHELL} ${CARGO_ENV} ${CARGO} ${CARGO_TOOLCHAIN} ${CARGO_ARGS} $@
         build: false
 
       run:
         build: false
         workdir: ${appdir}
         cmd:
-          - ${CARGO_PRESHELL} ${CARGO_ENV} ${CARGO} ${CARGO_TOOLCHAIN} ${CARGO_ARGS} run --profile=${PROFILE} ${FEATURES}
+          - ${CARGO_PRESHELL} ${CARGO_ENV} ${CARGO} ${CARGO_TOOLCHAIN} ${CARGO_ARGS} run --profile=${PROFILE} ${FEATURES} $@
 
       clippy:
         build: false
         workdir: ${appdir}
         cmd:
-          - ${CARGO_PRESHELL} ${CARGO_ENV} ${CARGO} ${CARGO_TOOLCHAIN} ${CARGO_ARGS} clippy ${FEATURES}
+          - ${CARGO_PRESHELL} ${CARGO_ENV} ${CARGO} ${CARGO_TOOLCHAIN} ${CARGO_ARGS} clippy ${FEATURES} $@
 
       expand:
         build: false
         workdir: ${appdir}
         cmd:
-          - ${CARGO_PRESHELL} ${CARGO_ENV} ${CARGO} ${CARGO_TOOLCHAIN} ${CARGO_ARGS} expand ${FEATURES}
+          - ${CARGO_PRESHELL} ${CARGO_ENV} ${CARGO} ${CARGO_TOOLCHAIN} ${CARGO_ARGS} expand ${FEATURES} $@
 
       debug:
         workdir: ${appdir}
         cmd:
-          - ${CARGO_PRESHELL} ${CARGO_ENV} ${CARGO} ${CARGO_TOOLCHAIN} ${CARGO_ARGS} run --profile=${PROFILE} ${FEATURES}
+          - ${CARGO_PRESHELL} ${CARGO_ENV} ${CARGO} ${CARGO_TOOLCHAIN} ${CARGO_ARGS} run --profile=${PROFILE} ${FEATURES} $@
         build: false
         ignore_ctrl_c: true
 
       gdb:
         cmd:
-          - arm-none-eabi-gdb -ex "target extended-remote localhost:1337" ${out}
+          - arm-none-eabi-gdb -ex "target extended-remote localhost:1337" ${out} $@
         build: false
         ignore_ctrl_c: true
 
       bloat:
         workdir: ${appdir}
         cmd:
-          - ${CARGO_PRESHELL} ${CARGO_ENV} ${CARGO} ${CARGO_TOOLCHAIN} ${CARGO_ARGS} bloat --profile=${PROFILE} ${FEATURES}
+          - ${CARGO_PRESHELL} ${CARGO_ENV} ${CARGO} ${CARGO_TOOLCHAIN} ${CARGO_ARGS} bloat --profile=${PROFILE} ${FEATURES} $@
         build: false
 
       tree:
         workdir: ${appdir}
         cmd:
-          - ${CARGO_PRESHELL} ${CARGO_ENV} ${CARGO} ${CARGO_TOOLCHAIN} ${CARGO_ARGS} tree ${FEATURES}
+          - ${CARGO_PRESHELL} ${CARGO_ENV} ${CARGO} ${CARGO_TOOLCHAIN} ${CARGO_ARGS} tree ${FEATURES} $@
         build: false
 
       size:
         cmd:
-          - llvm-size ${out}
+          - llvm-size ${out} $@
 
       objdump:
         cmd:
-          - rust-objdump -S ${out}
+          - rust-objdump -S ${out} $@
 
       info-boards:
         build: false
@@ -329,7 +329,7 @@ contexts:
     tasks:
       debug-rs:
         cmd:
-          - probe-rs debug --chip ${PROBE_RS_CHIP} --exe ${out}
+          - probe-rs debug --chip ${PROBE_RS_CHIP} --exe ${out} $@
 
   - name: rp235xa
     parent: rp
@@ -348,7 +348,7 @@ contexts:
     tasks:
       flash:
         cmd:
-          - picotool load -u -v -x -t elf ${out}
+          - picotool load -u -v -x -t elf ${out} $@
 
   - name: esp
     parent: ariel-os
@@ -965,23 +965,23 @@ modules:
         help: Erases the whole chip including user data. Unlocks it if locked.
         build: false
         cmd:
-          - probe-rs erase --chip ${PROBE_RS_CHIP} --allow-erase-all
+          - probe-rs erase --chip ${PROBE_RS_CHIP} --allow-erase-all $@
 
       flash:
         help: Flashes the target using probe-rs
         cmd:
-          - probe-rs download --chip ${PROBE_RS_CHIP} ${out}
+          - probe-rs download --chip ${PROBE_RS_CHIP} ${out} $@
           - probe-rs reset --chip ${PROBE_RS_CHIP}
 
       debug:
         help: Starts a probe-rs gdb server
         cmd:
-          - probe-rs gdb --chip ${PROBE_RS_CHIP}
+          - probe-rs gdb --chip ${PROBE_RS_CHIP} $@
 
       reset:
         help: Resets the target
         cmd:
-          - probe-rs reset --chip ${PROBE_RS_CHIP}
+          - probe-rs reset --chip ${PROBE_RS_CHIP} $@
 
   - name: openocd
     tasks:
@@ -1471,7 +1471,7 @@ modules:
         build: false
         workdir: ${appdir}
         cmd:
-          - ${CARGO} test --features _test
+          - ${CARGO} test --features _test $@
 
   - name: embedded-test
     context: ariel-os
@@ -1484,7 +1484,7 @@ modules:
       test:
         workdir: ${appdir}
         cmd:
-          - ${CARGO_ENV} ${CARGO} ${CARGO_TOOLCHAIN} ${CARGO_ARGS} test ${FEATURES}
+          - ${CARGO_ENV} ${CARGO} ${CARGO_TOOLCHAIN} ${CARGO_ARGS} test ${FEATURES} $@
         build: false
 
     env:
@@ -1553,7 +1553,7 @@ builders:
         cmd:
           - echo "Installing c2rust..."
           - 'echo "WARNING: This uses *a lot* of memory!"'
-          - cargo install c2rust
+          - cargo install c2rust $@
 
   - name: nrf52dk
     parent: nrf52832
@@ -1590,7 +1590,7 @@ builders:
       qemu:
         build: true
         cmd:
-          - ${QEMU_SYSTEM_ARM} ${out}
+          - ${QEMU_SYSTEM_ARM} ${out} $@
 
     disables:
       - periph_rtt
