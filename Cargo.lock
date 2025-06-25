@@ -1528,11 +1528,11 @@ dependencies = [
 
 [[package]]
 name = "defmt-or-log"
-version = "0.2.1"
+version = "0.2.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8370630b4dee85ab47d9087813771c5c7fe88d24fdd48649bbdfe6089da4c53a"
+checksum = "4439fab1ae9faccf0f69cdf2671989ba40f246e178c7f87d6e4fd5270e53a979"
 dependencies = [
- "defmt 0.3.100",
+ "defmt 1.0.1",
  "defmt-or-log-macros",
  "log",
 ]
@@ -3718,9 +3718,9 @@ dependencies = [
 
 [[package]]
 name = "log"
-version = "0.4.25"
+version = "0.4.27"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "04cbf5b083de1c7e0222a7a51dbfdba1cbe1c6ab0b15e29fff3f6c077fd9cd9f"
+checksum = "13dc2df351e3202783a1fe0d44375f7295ffb4049267b0f3018346dc122a1d94"
 
 [[package]]
 name = "managed"
