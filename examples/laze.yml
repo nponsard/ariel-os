@@ -18,6 +18,7 @@ subdirs:
   - i2c-scanner
   - log
   - minimal
+  - modem
   - power
   - random
   - storage

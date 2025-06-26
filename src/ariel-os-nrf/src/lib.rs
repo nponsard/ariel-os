@@ -10,6 +10,8 @@ pub mod gpio;
 pub mod peripheral {
     pub use embassy_nrf::Peripheral;
 }
+/// TODO: feature-gate
+pub mod modem;
 
 #[cfg(feature = "external-interrupts")]
 #[doc(hidden)]

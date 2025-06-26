@@ -150,6 +150,8 @@ static_cell = { version = "2.1.1", default-features = false }
 trouble-host = "0.1"
 bt-hci = { version = "0.2.0" }
 
+nrf-modem = { version = "0.7.2" }
+
 [workspace.lints.rust]
 # rustc lints are documented here: https://doc.rust-lang.org/rustc/lints/listing/index.html
 private_interfaces = "deny"

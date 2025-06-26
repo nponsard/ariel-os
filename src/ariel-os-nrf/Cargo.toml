@@ -57,9 +57,14 @@ embassy-nrf = { workspace = true, features = ["nrf5340-net"] }
 
 [target.'cfg(context = "nrf9151")'.dependencies]
 embassy-nrf = { workspace = true, features = ["nrf9151-s"] }
+nrf-modem = { workspace = true, features = ["nrf9151"] }
+tinyrlibc = "0.5.0"
 
 [target.'cfg(context = "nrf9160")'.dependencies]
 embassy-nrf = { workspace = true, features = ["nrf9160-s"] }
+nrf-modem = { workspace = true, features = ["nrf9160"] }
+tinyrlibc = "0.5.0"
+
 
 [features]
 ## Enables GPIO interrupt support.
