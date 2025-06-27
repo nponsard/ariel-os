@@ -8,11 +8,14 @@ impl ariel_os_embassy_common::identity::DeviceId for DeviceId {
     fn get() -> Result<Self, core::convert::Infallible> {
         #[cfg(not(any(context = "nrf53", context = "nrf91")))]
         let ficr = embassy_nrf::pac::FICR;
-        #[cfg(any(context = "nrf53", context = "nrf91"))]
-        let ficr = embassy_nrf::pac::FICR.info();
+        // #[cfg(any(context = "nrf53", context = "nrf91"))]
+        // let ficr = embassy_nrf::pac::FICR.info();
 
-        let low = ficr.deviceid(0).read();
-        let high = ficr.deviceid(1).read();
+        // let low = ficr.deviceid(0).read();
+        // let high = ficr.deviceid(1).read();
+
+        let low: u8 = 0;
+        let high: u8 = 0;
         Ok(Self((u64::from(high) << u32::BITS) | u64::from(low)))
     }
 

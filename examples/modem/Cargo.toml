@@ -9,7 +9,7 @@ publish = false
 workspace = true
 
 [dependencies]
-ariel-os = { path = "../../src/ariel-os" }
+ariel-os = { path = "../../src/ariel-os", features = ["time"]}
 ariel-os-boards = { path = "../../src/ariel-os-boards" }
 nrf-modem = { workspace = true, features = ["nrf9151", "defmt", "modem-log", "modem-trace"] }
 tinyrlibc = "0.5.0"

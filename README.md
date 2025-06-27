@@ -11,6 +11,18 @@ It is based on Rust from the ground up
 and [supports hardware](https://ariel-os.github.io/ariel-os/dev/docs/book/hardware-functionality-support.html)
 based on 32-bit microcontroller architectures (Cortex-M, RISC-V, and Xtensa).
 
+## Thingy91x modem / NS mode notes
+
+- need to flash TFM: https://github.com/embassy-rs/embassy/blob/main/examples/nrf9151/ns/tfm.hex
+  ```sh
+  nrfutil device recover
+  nrfutil device erase
+  nrfutil device recover
+  nrfutil device program --firmware tfm.hex
+  ```
+- need to offset memory and ram https://github.com/embassy-rs/embassy/blob/main/examples/nrf9151/ns/memory.x
+- 
+
 ## Goals and Design
 
 Ariel OS builds on top of existing projects from the Embedded Rust ecosystem, including [Embassy](https://github.com/embassy-rs/embassy), [esp-hal](https://github.com/esp-rs/esp-hal), [defmt](https://github.com/knurling-rs/defmt), [probe-rs](https://github.com/probe-rs/probe-rs), [sequential-storage](https://github.com/tweedegolf/sequential-storage), and [embedded-test](https://github.com/probe-rs/embedded-test).

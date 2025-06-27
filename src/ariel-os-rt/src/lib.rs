@@ -118,6 +118,10 @@ mod isr_stack {
 
         // initial stack paint
         stack.repaint();
+        crate::debug!(
+            "ariel-os-rt: ISR stack free: {} bytes",
+            stack.free()
+        );
     }
 }
 

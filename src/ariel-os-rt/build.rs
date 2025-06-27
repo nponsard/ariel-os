@@ -85,7 +85,7 @@ fn write_memoryx() {
     }
     // TODO: modem context
     else if context("nrf9151"){
-        (4096,0x20008000, 0)
+        (4096,0x2000C568, 0x00008000)
     }
      else {
         (4096, 0x2000_0000, 0)
@@ -93,11 +93,10 @@ fn write_memoryx() {
 
     // generate linker script
     let memory = Memory::new()
-        .add_section(MemorySection::new("RAM", ram_base, ram * 1024))
+        .add_section(MemorySection::new("RAM", ram_base, 206*1024))
 
-        .add_section(MemorySection::new("MODEM", 0x20000000, 32 * 1024))
         .add_section(
-            MemorySection::new("FLASH", flash_base, flash * 1024)
+            MemorySection::new("FLASH", flash_base, 992*1024)
                 .pagesize(pagesize)
                 .from_env(),
         );
