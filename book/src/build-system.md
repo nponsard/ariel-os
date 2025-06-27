@@ -29,6 +29,7 @@ Tasks available in Ariel OS include:
 - `flash-erase-all`: Erases the entire flash memory, including user data. Unlocks it if locked.
 - `reset`: Reboots the target.
 - `tree`: Prints the application's `cargo tree`.
+- `vscode-config`: update rust-analyzer configuration for VSCode, see [vscode-configuration](./vscode-configuration.md)
 
 > As some tasks may trigger a rebuild, it is necessary to pass the same settings to related consecutive commands:
 `laze build -DFOO=1 flash` followed by `laze build -DFOO=other debug` might not
