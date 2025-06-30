@@ -681,7 +681,7 @@ modules:
   - name: cortex-m33f
     selects:
       - cortex-m
-      - thumbv8m.main-none-eabi # actually eabihf, but ariel-os doesn't support hard float yet
+      - thumbv8m.main-none-eabihf # actually eabihf, but ariel-os doesn't support hard float yet
     env:
       global:
         RUSTFLAGS:

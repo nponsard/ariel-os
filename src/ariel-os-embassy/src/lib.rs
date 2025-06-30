@@ -228,6 +228,8 @@ async fn init_task(mut peripherals: hal::OptionalPeripherals) {
         task(spawner, &mut peripherals);
     }
 
+    hal::modem::driver();
+
     #[cfg(feature = "ble")]
     {
         let config = ble::config();
