@@ -8,6 +8,9 @@ use ariel_os::{
     time::Timer,
 };
 
+use mipidsi::models::ILI9341Rgb666;
+use mipidsi::options::ColorOrder;
+
 #[ariel_os::task(autostart, peripherals)]
 async fn blinky(peripherals: pins::LedPeripherals) {
     // unsafe{
@@ -17,7 +20,11 @@ async fn blinky(peripherals: pins::LedPeripherals) {
     //     );
     // }
 
-    let mut led = Output::new(peripherals.led, Level::Low);
+    let mut led = Output::new(peripherals.lcd_light, Level::Low);
+    let mut lcd = Output::new(peripherals.lcd_pow_en, Level::Low);
+
+    lcd.set_high();
+
 
     // The micro:bit uses an LED matrix; pull the column line low.
     #[cfg(any(context = "bbc-microbit-v2", context = "bbc-microbit-v1"))]
