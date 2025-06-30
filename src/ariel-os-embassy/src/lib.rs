@@ -13,6 +13,8 @@ use ariel_os_embassy_common::executor_thread;
 #[cfg(feature = "debug-uart")]
 pub mod debug_uart;
 
+pub mod display;
+
 #[cfg(feature = "i2c")]
 pub mod i2c;
 
