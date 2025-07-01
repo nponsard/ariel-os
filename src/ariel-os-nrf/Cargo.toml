@@ -29,6 +29,11 @@ ariel-os-debug = { workspace = true }
 ariel-os-embassy-common = { workspace = true }
 ariel-os-random = { workspace = true, optional = true }
 ariel-os-rt = { workspace = true, features = ["memory-x"] }
+cortex-m = { workspace = true, features = [
+  "inline-asm",
+  "critical-section-single-core",
+] }
+
 
 [target.'cfg(context = "nrf51822-xxaa")'.dependencies]
 embassy-nrf = { workspace = true, features = ["nrf51"] }
@@ -56,8 +61,20 @@ embassy-nrf = { workspace = true, features = [
 embassy-nrf = { workspace = true, features = ["nrf5340-net"] }
 
 [target.'cfg(context = "nrf9151")'.dependencies]
-embassy-nrf = { workspace = true, features = ["nrf9120-ns"] }
-nrf-modem = { workspace = true, features = ["nrf9120"] }
+embassy-nrf = { workspace = true, features = [
+  "defmt",
+  "nrf9120-ns",
+  "time-driver-rtc1",
+  "gpiote",
+  "unstable-pac",
+  "time",
+] }
+nrf-modem = { workspace = true, features = [
+  "nrf9151",
+  "defmt",
+  "modem-log",
+  "modem-trace",
+] }
 tinyrlibc = "0.5.0"
 
 [target.'cfg(context = "nrf9160")'.dependencies]

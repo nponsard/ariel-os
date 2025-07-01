@@ -405,6 +405,7 @@ dependencies = [
  "ariel-os-random",
  "ariel-os-rt",
  "cfg-if",
+ "cortex-m",
  "defmt 1.0.1",
  "embassy-embedded-hal",
  "embassy-executor",
@@ -3850,6 +3851,7 @@ dependencies = [
  "ariel-os",
  "ariel-os-boards",
  "cc",
+ "cortex-m",
  "nrf-modem",
  "tinyrlibc",
 ]

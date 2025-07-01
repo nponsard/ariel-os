@@ -118,10 +118,7 @@ mod isr_stack {
 
         // initial stack paint
         stack.repaint();
-        crate::debug!(
-            "ariel-os-rt: ISR stack free: {} bytes",
-            stack.free()
-        );
+        crate::debug!("ariel-os-rt: ISR stack free: {} bytes", stack.free());
     }
 }
 
@@ -155,12 +152,14 @@ fn startup() -> ! {
 
     #[cfg(any(context = "cortex-m", context = "riscv", context = "xtensa"))]
     crate::isr_stack::init();
+    debug!("isr stack finished ");
 
     #[cfg(feature = "alloc")]
     // SAFETY: *this* is the only place alloc should be initialized.
     unsafe {
         ariel_os_alloc::init();
     }
+    debug!("after alloc ");
 
     #[cfg(test)]
     debug!("ariel_os_rt::startup() cfg(test)");
@@ -168,6 +167,7 @@ fn startup() -> ! {
     for f in INIT_FUNCS {
         f();
     }
+    debug!("after init funcs");
 
     #[cfg(feature = "threading")]
     {
@@ -177,8 +177,12 @@ fn startup() -> ! {
         }
     }
 
+    debug!("after threading ");
+
     #[cfg(feature = "executor-single-thread")]
     {
+        debug!("launching single thread ");
+
         unsafe extern "Rust" {
             fn __ariel_os_embassy_init() -> !;
         }

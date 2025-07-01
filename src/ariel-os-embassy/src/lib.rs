@@ -214,6 +214,8 @@ async fn init_task(mut peripherals: hal::OptionalPeripherals) {
     #[cfg(all(feature = "usb", context = "nrf"))]
     hal::usb::init();
 
+    hal::modem::driver().await;
+
     // Move out the peripherals required for drivers, so that tasks cannot mistakenly take them.
 
     #[cfg(feature = "ble")]
