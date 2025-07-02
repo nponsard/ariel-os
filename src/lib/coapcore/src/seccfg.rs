@@ -202,7 +202,7 @@ pub struct ConfigBuilder {
     as_key_31: Option<[u8; 32]>,
     /// Asymmetric key used when tokens are signed with ES256
     ///
-    /// Alogn with the key, this also holds the audience value of this RS (as signed tokens only
+    /// Along with the key, this also holds the audience value of this RS (as signed tokens only
     /// make sense when the same signing key is used with multiple recipients).
     as_key_neg7: Option<([u8; 32], [u8; 32], heapless::String<MAX_AUD_SIZE>)>,
     unauthenticated_scope: Option<crate::scope::UnionScope>,

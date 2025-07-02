@@ -100,7 +100,7 @@ impl Peripherals {
 /// Panics if initialization fails on one of the components, such as MPSL or SDC.
 #[expect(
     clippy::needless_pass_by_value,
-    reason = "keeping constitency with other initialization functions"
+    reason = "keeping consistency with other initialization functions"
 )]
 pub fn driver(p: Peripherals, spawner: Spawner, config: ariel_os_embassy_common::ble::Config) {
     debug!("Initializing nRF BLE driver");

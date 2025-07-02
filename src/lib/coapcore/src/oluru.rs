@@ -239,7 +239,7 @@ impl<T: PriorityLevel, const N: usize, const L: usize> OrderedPool<T, N, L> {
         debug_assert!(level < L, "Level exceeds limit L={L} in type");
         let mut new_position = position;
         // Common case: level stayed the same, but we move to front; also applicable when numeric
-        // level decrased
+        // level decreased
         while new_position
             .checked_sub(1)
             .is_some_and(|n| self.entries[usize::from(self.sorted[n])].level() >= level)
