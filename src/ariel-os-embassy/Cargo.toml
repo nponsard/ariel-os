@@ -118,7 +118,13 @@ wifi-esp = ["ariel-os-hal/wifi-esp", "net", "wifi"]
 eth = []
 eth-stm32 = ["ariel-os-hal/eth-stm32", "net", "eth"]
 
-ble = ["ariel-os-hal/ble", "dep:trouble-host", "ariel-os-embassy-common/ble"]
+ble = [
+  "ariel-os-hal/ble",
+  "dep:trouble-host",
+  "ariel-os-embassy-common/ble",
+  # Some HALs need hwrng to initialize the BLE stack.
+  "hwrng",
+]
 ble-peripheral = ["ble", "ariel-os-hal/ble-peripheral"]
 ble-central = ["ble", "ariel-os-hal/ble-central"]
 
