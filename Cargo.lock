@@ -492,6 +492,7 @@ dependencies = [
  "ariel-os-embassy-common",
  "ariel-os-random",
  "ariel-os-stm32-mapping",
+ "ariel-os-utils",
  "cfg-if",
  "defmt 1.0.1",
  "embassy-embedded-hal",

@@ -25,15 +25,15 @@ use embassy_sync::mutex::Mutex;
 use embedded_hal_async::spi::{Operation, SpiDevice as _};
 
 // WHO_AM_I register of the sensor
-#[cfg(not(context = "nordic-thingy-91-x-nrf9151"))]
+#[cfg(not(any(context = "nordic-thingy-91-x-nrf9151", context = "st-steval-mkboxpro")))]
 const WHO_AM_I_REG_ADDR: u8 = 0x0f;
-#[cfg(context = "nordic-thingy-91-x-nrf9151")]
-const WHO_AM_I_REG_ADDR: u8 = 0x00;
+#[cfg(any(context = "nordic-thingy-91-x-nrf9151", context = "st-steval-mkboxpro"))]
+use pins::WHO_AM_I_REG_ADDR;
 
-#[cfg(not(context = "nordic-thingy-91-x-nrf9151"))]
+#[cfg(not(any(context = "nordic-thingy-91-x-nrf9151", context = "st-steval-mkboxpro")))]
 const DEVICE_ID: u8 = 0x33;
-#[cfg(context = "nordic-thingy-91-x-nrf9151")]
-const DEVICE_ID: u8 = 0x24;
+#[cfg(any(context = "nordic-thingy-91-x-nrf9151", context = "st-steval-mkboxpro"))]
+use pins::DEVICE_ID;
 
 pub static SPI_BUS: once_cell::sync::OnceCell<
     Mutex<embassy_sync::blocking_mutex::raw::CriticalSectionRawMutex, hal::spi::main::Spi>,

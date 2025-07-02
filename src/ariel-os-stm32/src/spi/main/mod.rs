@@ -28,6 +28,10 @@ const MAX_FREQUENCY: Kilohertz = Kilohertz::MHz(150);
 const MAX_FREQUENCY: Kilohertz = Kilohertz::MHz(40);
 #[cfg(context = "stm32u083mc")]
 const MAX_FREQUENCY: Kilohertz = Kilohertz::MHz(32);
+// TODO: verify, datasheet says "Baud rate prescaler up to kernel frequency/2 or bypass from RCC in
+// master mode", core freq is 160MHz
+#[cfg(context = "stm32u585ai")]
+const MAX_FREQUENCY: Kilohertz = Kilohertz::MHz(80);
 #[cfg(context = "stm32wb55rg")]
 const MAX_FREQUENCY: Kilohertz = Kilohertz::MHz(32);
 
@@ -178,6 +182,12 @@ define_spi_drivers!(
 define_spi_drivers!(
    SPI1 => SPI1,
    // FIXME: the other two SPI peripherals share the same interrupt
+);
+#[cfg(context = "stm32u585ai")]
+define_spi_drivers!(
+   SPI1 => SPI1,
+   SPI2 => SPI2,
+   SPI3 => SPI3,
 );
 #[cfg(context = "stm32wb55rg")]
 define_spi_drivers!(
