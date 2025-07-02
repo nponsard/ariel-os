@@ -1,7 +1,7 @@
 //! UDP sockets usable through [`embedded_nal_async`]
 //!
 //! The full [`embedded_nal_async::UdpStack`] is *not* implemented at the moment: As its API allows
-//! arbitrary creation of movable sockets, embassy's [`udp::UdpSocket`] type could only be crated if
+//! arbitrary creation of movable sockets, embassy's [`udp::UdpSocket`] type could only be created if
 //! the NAL stack had a pre-allocated pool of sockets with their respective buffers. Nothing rules
 //! out such a type, but at the moment, only the bound or connected socket types are implemented
 //! with their own constructors from an embassy [`crate::Stack`] -- for many applications, those are
