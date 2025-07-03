@@ -7,7 +7,7 @@ It basically encodes the scheduling, as in, "which thread should be switched to 
 How to use
 ----------
 
-The crate is not supposed to be used on its own, but as dependendy of
+The crate is not supposed to be used on its own, but as dependency of
 [Ariel OS](https://github.com/ariel-os/ariel-os).
 
 Code layout
