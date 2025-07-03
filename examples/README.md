@@ -6,6 +6,8 @@ This directory contains example applications that showcase how to use Ariel OS.
 
 - [alloc/](./alloc): Demonstrates how to use an allocator
 - [benchmark/](./benchmark): How to use `benchmark()`
+- [ble-advertiser](./ble-advertiser/): Demonstrates how to advertise a BLE peripheral
+- [ble-scanner](./ble-scanner/): Demonstrates how to scan for BLE devices in central mode
 - [blinky/](./blinky): Demonstrates basic GPIO output usage
 - [coap-server](./coap-server) and [coap-client](./coap-client): Application level networking examples
 - [device-metadata/](./device-metadata): Retrieve metadata about the running device

@@ -745,6 +745,27 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "8f68f53c83ab957f72c32642f3868eec03eb974d1fb82e453128456482613d36"
 
 [[package]]
+name = "ble-advertiser"
+version = "0.0.0"
+dependencies = [
+ "ariel-os",
+ "ariel-os-boards",
+ "embassy-futures",
+ "trouble-host",
+]
+
+[[package]]
+name = "ble-scanner"
+version = "0.0.0"
+dependencies = [
+ "ariel-os",
+ "ariel-os-boards",
+ "embassy-futures",
+ "heapless 0.8.0",
+ "trouble-host",
+]
+
+[[package]]
 name = "blinky"
 version = "0.0.0"
 dependencies = [
