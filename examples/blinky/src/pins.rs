@@ -66,5 +66,8 @@ ariel_os::hal::define_peripherals!(LedPeripherals { led: PB5 });
 #[cfg(context = "st-nucleo-wba55")]
 ariel_os::hal::define_peripherals!(LedPeripherals { led: PB4 });
 
+#[cfg(context = "st-steval-mkboxpro")]
+ariel_os::hal::define_peripherals!(LedPeripherals { led: PF6 });
+
 #[cfg(context = "stm32u083c-dk")]
 ariel_os::hal::define_peripherals!(LedPeripherals { led: PA5 });
