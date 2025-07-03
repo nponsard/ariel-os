@@ -9,6 +9,7 @@ subdirs:
   - ble-advertiser
   - ble-scanner
   - blinky
+  - camera
   - coap-client
   - coap-server
   - device-metadata
