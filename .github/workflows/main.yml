@@ -390,7 +390,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: typos
-        uses: crate-ci/typos@v1.31.1
+        uses: crate-ci/typos@v1.34.0
 
       - name: Check the support matrix generation exit code
         run: |
