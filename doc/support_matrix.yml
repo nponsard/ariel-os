@@ -322,6 +322,18 @@ chips:
           - removing items not supported
       wifi: not_available
 
+  stm32u585ai:
+    name: STM32U585AI
+    support:
+      gpio: supported
+      debug_output: supported
+      hwrng: supported
+      i2c_controller: supported
+      spi_main: supported
+      logging: supported
+      storage: supported
+      wifi: not_available
+
   stm32wb55rg:
     name: STM32WB55RG
     support:
@@ -556,6 +568,19 @@ boards:
     chip: stm32wba55cg
     tier: "3"
     support:
+
+  st-steval-mkboxpro:
+    name: STEVAL-MKBOXPRO
+    url: https://web.archive.org/web/20250507145935/https://www.st.com/en/evaluation-tools/steval-mkboxpro.html
+    chip: stm32u585ai
+    tier: "2"
+    support:
+      user_usb: supported
+      wifi: not_available
+      ethernet_over_usb:
+        status: not_currently_supported
+        comments:
+          - does not enumerate
 
   stm32u083c-dk:
     name: STM32U083C-DK
