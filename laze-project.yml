@@ -1146,6 +1146,8 @@ modules:
 
   - name: has_nrf_ble
     help: Marks an incompatibility of nrf devices with the interrupt executor (MPSL crashing)
+    context:
+      - nrf52
     selects:
       - hwrng
     provides:
