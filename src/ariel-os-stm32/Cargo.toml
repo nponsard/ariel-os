@@ -26,6 +26,7 @@ embassy-stm32 = { workspace = true, default-features = false, features = [
 embedded-hal-async = { workspace = true }
 paste = { workspace = true }
 portable-atomic = { workspace = true }
+ariel-os-utils = { workspace = true }
 ariel-os-embassy-common = { workspace = true }
 ariel-os-random = { workspace = true, optional = true }
 static_cell = { workspace = true }
