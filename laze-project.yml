@@ -565,10 +565,6 @@ contexts:
     parent: stm32
     selects:
       - cortex-m33f
-    disables:
-      # for some reason, usb-ethernet doesn't enumerate. usb-serial seems to work
-      # fine.
-      - usb-ethernet
     provides:
       - has_hwrng
       - has_storage_support
