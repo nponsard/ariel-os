@@ -167,6 +167,7 @@ fn startup() -> ! {
 
     #[cfg(feature = "threading")]
     {
+        debug!("ariel_os_rt::startup() launching threading");
         // SAFETY: this function must not be called more than once
         unsafe {
             threading::start();

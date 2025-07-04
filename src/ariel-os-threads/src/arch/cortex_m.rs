@@ -1,4 +1,5 @@
 use crate::{Arch, SCHEDULER, Thread, cleanup};
+use ariel_os_debug::log::debug;
 use cfg_if::cfg_if;
 use core::{arch::global_asm, ptr::write_volatile};
 use cortex_m::peripheral::{SCB, scb::SystemHandler};
@@ -83,17 +84,22 @@ impl Arch for Cpu {
     /// Triggers a PendSV exception.
     #[inline(always)]
     fn schedule() {
+        debug!("ariel_os_rt::threading::schedule()");
         SCB::set_pendsv();
+        debug!("ariel_os_rt::threading::schedule() set PendSV");
         cortex_m::asm::isb();
     }
 
     #[inline(always)]
     fn start_threading() {
+        debug!("ariel_os_rt::threading::start_threading()");
         unsafe {
             // Make sure PendSV has a low priority.
             let mut p = cortex_m::Peripherals::steal();
             p.SCB.set_priority(SystemHandler::PendSV, 0xFF);
         }
+        debug!("ariel_os_rt::threading::start_threading() calling Cpu::schedule()");
+
         Self::schedule();
     }
 

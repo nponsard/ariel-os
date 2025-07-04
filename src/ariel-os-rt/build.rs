@@ -82,6 +82,8 @@ fn write_memoryx() {
 
     let (pagesize, ram_base, flash_base) = if context("nrf5340-net") {
         (2048, 0x2100_0000, 0x0100_0000)
+    } else if context("nrf9151") {
+        (4096, 0x2000_C568, 0x0000_8000)
     } else {
         (4096, 0x2000_0000, 0)
     };
