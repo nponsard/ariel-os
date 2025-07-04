@@ -103,6 +103,17 @@ ariel_os::hal::define_peripherals!(Peripherals {
     spi_cs: PA15,
 });
 
+// DIL24 pin 21/22
+#[cfg(context = "st-steval-mkboxpro")]
+pub type SensorSpi = spi::main::SPI3;
+#[cfg(context = "st-steval-mkboxpro")]
+ariel_os::hal::define_peripherals!(Peripherals {
+    spi_sck: PG9,
+    spi_miso: PG10,
+    spi_mosi: PB5,
+    spi_cs: PG12,
+});
+
 // Side SPI of Arduino v3 connector
 #[cfg(context = "stm32wb55rg")]
 pub type SensorSpi = spi::main::SPI1;

@@ -70,7 +70,8 @@ pub fn driver(peripherals: Peripherals) -> UsbDriver {
     // See https://embassy.dev/book/dev/faq.html#_the_usb_examples_are_not_working_on_my_board_is_there_anything_else_i_need_to_configure
     // for more information
     // NOTE(board-config)
-    config.vbus_detection = true;
+    config.vbus_detection =
+        ariel_os_utils::bool_from_env_or!("CONFIG_VBUS_DETECTION", true, "Enable vbus_detection");
 
     #[cfg(feature = "executor-interrupt")]
     {

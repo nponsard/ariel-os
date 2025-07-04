@@ -220,6 +220,41 @@ fn board_config(config: &mut Config) {
         config.rcc.mux.clk48sel = mux::Clk48sel::HSI48;
     }
 
+    #[cfg(context = "st-steval-mkboxpro")]
+    {
+        use embassy_stm32::rcc::*;
+
+        config.rcc.ls = LsConfig {
+            rtc: RtcClockSource::LSE,
+            lsi: true,
+            lse: Some(LseConfig {
+                peripherals_clocked: true,
+                frequency: embassy_stm32::time::Hertz(32768),
+                mode: LseMode::Oscillator(LseDrive::MediumHigh),
+            }),
+        };
+        config.rcc.hsi = true;
+        config.rcc.hsi48 = Some(Hsi48Config {
+            sync_from_usb: true,
+        }); // needed for USB
+        config.rcc.sys = Sysclk::PLL1_R;
+        config.rcc.hse = Some(Hse {
+            freq: embassy_stm32::time::Hertz(16_000_000),
+            mode: HseMode::Oscillator,
+        });
+        config.rcc.pll1 = Some(Pll {
+            source: PllSource::HSE,
+            prediv: PllPreDiv::DIV1,
+            mul: PllMul::MUL10,
+            divp: None,
+            divq: None,
+            divr: Some(PllDiv::DIV1), // sysclk 160Mhz (16 / 1 * 10 / 1)
+        });
+        config.rcc.sys = Sysclk::PLL1_R;
+        config.rcc.mux.iclksel = mux::Iclksel::HSI48;
+        config.rcc.voltage_range = VoltageScale::RANGE1;
+    }
+
     #[cfg(context = "stm32f042k6")]
     {
         use embassy_stm32::rcc::*;

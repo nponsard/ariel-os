@@ -17,6 +17,10 @@ ariel_os::hal::define_peripherals!(Peripherals {
     spi_mosi: P0_14,
     spi_cs: P0_10,
 });
+#[cfg(context = "nordic-thingy-91-x-nrf9151")]
+pub const WHO_AM_I_REG_ADDR: u8 = 0x00;
+#[cfg(context = "nordic-thingy-91-x-nrf9151")]
+pub const DEVICE_ID: u8 = 0x24;
 
 // Side SPI of Arduino v3 connector
 #[cfg(context = "nrf52840")]
@@ -100,6 +104,21 @@ ariel_os::hal::define_peripherals!(Peripherals {
     spi_mosi: PA7,
     spi_cs: PA15,
 });
+
+// Onboard LIS2DU12
+#[cfg(context = "st-steval-mkboxpro")]
+pub type SensorSpi = spi::main::SPI2;
+#[cfg(context = "st-steval-mkboxpro")]
+ariel_os::hal::define_peripherals!(Peripherals {
+    spi_sck: PI1,
+    spi_miso: PI2,
+    spi_mosi: PI3,
+    spi_cs: PI7,
+});
+#[cfg(context = "st-steval-mkboxpro")]
+pub const WHO_AM_I_REG_ADDR: u8 = 0x43;
+#[cfg(context = "st-steval-mkboxpro")]
+pub const DEVICE_ID: u8 = 0x45;
 
 // Side SPI of Arduino v3 connector
 #[cfg(context = "stm32wb55rg")]

@@ -31,6 +31,7 @@ macro_rules! define_env_with_default_macro {
 
 define_env_with_default_macro!(usize_from_env_or, parse_usize, "a usize");
 define_env_with_default_macro!(u8_from_env_or, parse_u8, "a u8");
+define_env_with_default_macro!(bool_from_env_or, parse_bool, "a bool");
 
 /// Reads a value at compile time from the given environment variable, with a default.
 ///

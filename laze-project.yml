@@ -459,6 +459,11 @@ contexts:
       - sw/benchmark
     env:
       OPENOCD_ARGS: foo
+    tasks:
+      flash-dfu:
+        cmd:
+          - llvm-objcopy -O binary ${out} ${out}.bin
+          - 'dfu-util -d 0483:df11 -a 0 -s 0x08000000:leave -D ${out}.bin || echo "... Note: dfu-util sometimes fails despite the upload being correct."'
 
   - name: stm32c031c6
     parent: stm32
@@ -555,6 +560,23 @@ contexts:
       RUSTFLAGS:
         - --cfg capability=\"hw/stm32-rng-cryp\"
         - --cfg capability=\"hw/stm32-usb-drd-fs\"
+
+  - name: stm32u585ai
+    parent: stm32
+    selects:
+      - cortex-m33f
+    disables:
+      # for some reason, usb-ethernet doesn't enumerate. usb-serial seems to work
+      # fine.
+      - usb-ethernet
+    provides:
+      - has_hwrng
+      - has_storage_support
+    env:
+      PROBE_RS_CHIP: STM32U585AI
+      RUSTFLAGS:
+        - --cfg capability=\"hw/stm32-rng\"
+        - --cfg capability=\"hw/stm32-usb-synopsis\"
 
   - name: stm32wb55rg
     parent: stm32
@@ -1781,6 +1803,18 @@ builders:
       CARGO_ENV:
         # This ISR is unused on a naked board. Configured here for testing.
         - CONFIG_SWI=LPUART1
+
+  - name: st-steval-mkboxpro
+    parent: stm32u585ai
+    provides:
+      - has_swi
+      - has_usb_device_port
+    env:
+      CARGO_ENV:
+        # This ISR is unused on the eval board.
+        - CONFIG_SWI=USART2
+        # This board needs to disable vbus_detection for USB to work.
+        - CONFIG_VBUS_DETECTION=false
 
   - name: stm32u083c-dk
     parent: stm32u083mc

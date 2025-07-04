@@ -104,3 +104,9 @@ ariel_os::hal::define_peripherals!(Peripherals {
     led1: PA5,
     btn1: PC2
 });
+
+#[cfg(context = "st-steval-mkboxpro")]
+ariel_os::hal::define_peripherals!(Peripherals {
+    led1: PF6,
+    btn1: PC13
+});
