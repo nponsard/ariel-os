@@ -1,5 +1,4 @@
 use crate::{Arch, SCHEDULER, Thread, cleanup};
-use cfg_if::cfg_if;
 use core::{arch::global_asm, ptr::write_volatile};
 use cortex_m::peripheral::{SCB, scb::SystemHandler};
 
@@ -8,6 +7,7 @@ compile_error!("no supported ARM variant selected");
 
 // Default EXC_RETURN value used for newly created threads when returning to
 // Thread mode. We know FPU hasn't been used because the thread hasn't run.
+#[cfg(any(armv7m_eabihf, armv8m_eabihf))]
 const EXC_RETURN_THREAD_NO_FPU: usize = 0xFFFFFFFD;
 
 pub struct Cpu;
@@ -209,7 +209,7 @@ macro_rules! define_pendsv_with_fpu {
 }
 
 #[cfg(any(armv7m, armv8m))]
-cfg_if! {
+cfg_if::cfg_if! {
     if #[cfg(armv7m_eabihf)] {
         define_pendsv_with_fpu!(".fpu fpv4-sp-d16");
     }
