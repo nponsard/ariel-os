@@ -146,7 +146,7 @@ mod thread {
         /// # Errors
         ///
         /// Returns an error when an unsupported parameter is found.
-        pub fn parse(&mut self, meta: &syn::meta::ParseNestedMeta) -> syn::Result<()> {
+        pub fn parse(&mut self, meta: &syn::meta::ParseNestedMeta<'_>) -> syn::Result<()> {
             if meta.path.is_ident("autostart") {
                 self.autostart = true;
                 return Ok(());

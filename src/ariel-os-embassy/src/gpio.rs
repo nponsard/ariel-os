@@ -135,31 +135,33 @@ impl embedded_hal::digital::ErrorType for IntEnabledInput {
 #[cfg(feature = "external-interrupts")]
 impl embedded_hal_async::digital::Wait for IntEnabledInput {
     async fn wait_for_high(&mut self) -> Result<(), Self::Error> {
-        <HalIntEnabledInput as embedded_hal_async::digital::Wait>::wait_for_high(&mut self.input)
-            .await
+        <HalIntEnabledInput<'_> as embedded_hal_async::digital::Wait>::wait_for_high(
+            &mut self.input,
+        )
+        .await
     }
 
     async fn wait_for_low(&mut self) -> Result<(), Self::Error> {
-        <HalIntEnabledInput as embedded_hal_async::digital::Wait>::wait_for_low(&mut self.input)
+        <HalIntEnabledInput<'_> as embedded_hal_async::digital::Wait>::wait_for_low(&mut self.input)
             .await
     }
 
     async fn wait_for_rising_edge(&mut self) -> Result<(), Self::Error> {
-        <HalIntEnabledInput as embedded_hal_async::digital::Wait>::wait_for_rising_edge(
+        <HalIntEnabledInput<'_> as embedded_hal_async::digital::Wait>::wait_for_rising_edge(
             &mut self.input,
         )
         .await
     }
 
     async fn wait_for_falling_edge(&mut self) -> Result<(), Self::Error> {
-        <HalIntEnabledInput as embedded_hal_async::digital::Wait>::wait_for_falling_edge(
+        <HalIntEnabledInput<'_> as embedded_hal_async::digital::Wait>::wait_for_falling_edge(
             &mut self.input,
         )
         .await
     }
 
     async fn wait_for_any_edge(&mut self) -> Result<(), Self::Error> {
-        <HalIntEnabledInput as embedded_hal_async::digital::Wait>::wait_for_any_edge(
+        <HalIntEnabledInput<'_> as embedded_hal_async::digital::Wait>::wait_for_any_edge(
             &mut self.input,
         )
         .await
@@ -170,11 +172,11 @@ macro_rules! impl_embedded_hal_input_trait {
     ($type:ident, $hal_type:ident) => {
         impl embedded_hal::digital::InputPin for $type {
             fn is_high(&mut self) -> Result<bool, Self::Error> {
-                <$hal_type as embedded_hal::digital::InputPin>::is_high(&mut self.input)
+                <$hal_type<'_> as embedded_hal::digital::InputPin>::is_high(&mut self.input)
             }
 
             fn is_low(&mut self) -> Result<bool, Self::Error> {
-                <$hal_type as embedded_hal::digital::InputPin>::is_low(&mut self.input)
+                <$hal_type<'_> as embedded_hal::digital::InputPin>::is_low(&mut self.input)
             }
         }
     };
@@ -467,11 +469,11 @@ macro_rules! impl_embedded_hal_output_traits {
 
         impl embedded_hal::digital::OutputPin for $type {
             fn set_high(&mut self) -> Result<(), Self::Error> {
-                <$hal_type as embedded_hal::digital::OutputPin>::set_high(&mut self.output)
+                <$hal_type<'_> as embedded_hal::digital::OutputPin>::set_high(&mut self.output)
             }
 
             fn set_low(&mut self) -> Result<(), Self::Error> {
-                <$hal_type as embedded_hal::digital::OutputPin>::set_low(&mut self.output)
+                <$hal_type<'_> as embedded_hal::digital::OutputPin>::set_low(&mut self.output)
             }
         }
 
@@ -482,11 +484,11 @@ macro_rules! impl_embedded_hal_output_traits {
         // - embassy-stm32
         impl StatefulOutputPin for $type {
             fn is_set_high(&mut self) -> Result<bool, Self::Error> {
-                <$hal_type as StatefulOutputPin>::is_set_high(&mut self.output)
+                <$hal_type<'_> as StatefulOutputPin>::is_set_high(&mut self.output)
             }
 
             fn is_set_low(&mut self) -> Result<bool, Self::Error> {
-                <$hal_type as StatefulOutputPin>::is_set_low(&mut self.output)
+                <$hal_type<'_> as StatefulOutputPin>::is_set_low(&mut self.output)
             }
         }
     };

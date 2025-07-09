@@ -14,7 +14,7 @@ use ariel_os_embassy_common::ble::MTU;
 use crate::irqs::Irqs;
 
 static STACK: OnceLock<Stack<'static, SoftdeviceController<'static>>> = OnceLock::new();
-static MPSL: StaticCell<MultiprotocolServiceLayer> = StaticCell::new();
+static MPSL: StaticCell<MultiprotocolServiceLayer<'_>> = StaticCell::new();
 static SDC_MEM: StaticCell<sdc::Mem<SDC_MEM_SIZE>> = StaticCell::new();
 static RNG: StaticCell<ariel_os_random::CryptoRngSend> = StaticCell::new();
 
@@ -157,7 +157,7 @@ async fn mpsl_task(mpsl: &'static MultiprotocolServiceLayer<'static>) -> ! {
 fn build_sdc<'d, const N: usize>(
     p: nrf_sdc::Peripherals<'d>,
     rng: &'d mut ariel_os_random::CryptoRngSend,
-    mpsl: &'d MultiprotocolServiceLayer,
+    mpsl: &'d MultiprotocolServiceLayer<'_>,
     mem: &'d mut sdc::Mem<N>,
 ) -> Result<nrf_sdc::SoftdeviceController<'d>, nrf_sdc::Error> {
     let builder = sdc::Builder::new()?;

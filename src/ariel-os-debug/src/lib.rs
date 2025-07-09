@@ -54,7 +54,7 @@ pub fn exit(code: ExitCode) {
 
 /// Prints the panic on the debug output in a consistent manner across loggers.
 #[doc(hidden)]
-pub fn print_panic(info: &core::panic::PanicInfo) {
+pub fn print_panic(info: &core::panic::PanicInfo<'_>) {
     // `location()`'s documentation currently states that it always returns `Some(_)`.
     // It is unclear what the panic formatting would be otherwise, because the std does not
     // currently handle the case where the location cannot be obtained.

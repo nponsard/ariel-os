@@ -37,7 +37,7 @@ impl LockState {
     /// # Panics
     ///
     /// Panics if called outside of a thread context.
-    fn locked_with_current(cs: CriticalSection) -> Self {
+    fn locked_with_current(cs: CriticalSection<'_>) -> Self {
         let (owner_id, owner_prio) = SCHEDULER.with_mut_cs(cs, |mut scheduler| {
             let current = scheduler
                 .current()
@@ -85,7 +85,7 @@ impl<T> Mutex<T> {
     /// # Panics
     ///
     /// Panics if called outside of a thread context.
-    pub fn lock(&self) -> MutexGuard<T> {
+    pub fn lock(&self) -> MutexGuard<'_, T> {
         critical_section::with(|cs| {
             // SAFETY: access to the state only happens in critical sections, so it's always unique.
             let state = unsafe { &mut *self.state.get() };
@@ -125,7 +125,7 @@ impl<T> Mutex<T> {
     ///
     /// If the mutex was unlocked, it will be locked and a [`MutexGuard`] is returned.
     /// If the mutex was locked `None` is returned.
-    pub fn try_lock(&self) -> Option<MutexGuard<T>> {
+    pub fn try_lock(&self) -> Option<MutexGuard<'_, T>> {
         critical_section::with(|cs| {
             // SAFETY: access to the state only happens in critical sections, so it's always unique.
             let state = unsafe { &mut *self.state.get() };

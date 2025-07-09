@@ -123,7 +123,7 @@ mod isr_stack {
 
 #[cfg(all(feature = "_panic-handler", not(feature = "_test")))]
 #[panic_handler]
-fn panic(_info: &core::panic::PanicInfo) -> ! {
+fn panic(_info: &core::panic::PanicInfo<'_>) -> ! {
     #[cfg(feature = "panic-printing")]
     ariel_os_debug::print_panic(_info);
 

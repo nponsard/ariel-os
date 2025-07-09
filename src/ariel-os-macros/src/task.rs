@@ -139,7 +139,7 @@ mod task {
 
     impl Attributes {
         #[allow(clippy::missing_errors_doc)]
-        pub fn parse(&mut self, attr: &syn::meta::ParseNestedMeta) -> syn::Result<()> {
+        pub fn parse(&mut self, attr: &syn::meta::ParseNestedMeta<'_>) -> syn::Result<()> {
             if attr.path.is_ident(AUTOSTART_PARAM) {
                 self.autostart = true;
                 return Ok(());
@@ -185,7 +185,7 @@ mod task {
 
         pub fn type_path(&self) -> proc_macro2::TokenStream {
             match self {
-                Self::UsbBuilder => quote::quote!{ usb::UsbBuilderHook },
+                Self::UsbBuilder => quote::quote! { usb::UsbBuilderHook },
             }
         }
 
@@ -232,7 +232,7 @@ mod task {
         let delegate_type = quote! {#ariel_os_crate::delegate::Delegate};
 
         let enabled_hooks = hooks.iter().filter(|hook| match hook.kind {
-            Hook::UsbBuilder => attrs.hooks.iter().any(|h| *h == Hook::UsbBuilder),
+            Hook::UsbBuilder => attrs.hooks.contains(&Hook::UsbBuilder),
         });
 
         // Instantiate a Delegate as a static and store a reference to it in the appropriate

@@ -104,7 +104,7 @@ mod config_macro {
         /// # Errors
         ///
         /// Returns an error when an unsupported parameter is found.
-        pub fn parse(&mut self, meta: &syn::meta::ParseNestedMeta) -> syn::Result<()> {
+        pub fn parse(&mut self, meta: &syn::meta::ParseNestedMeta<'_>) -> syn::Result<()> {
             use enum_iterator::all;
 
             for (config_name, kind) in all::<ConfigKind>().map(|c| (c.as_name(), c)) {

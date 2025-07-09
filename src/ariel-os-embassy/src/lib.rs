@@ -248,16 +248,14 @@ async fn init_task(mut peripherals: hal::OptionalPeripherals) {
         let usb_driver = hal::usb::driver(usb_peripherals);
 
         // Create embassy-usb DeviceBuilder using the driver and config.
-        let builder = usb::UsbBuilder::new(
+        usb::UsbBuilder::new(
             usb_driver,
             usb_config,
             CONFIG_DESC.take(),
             BOS_DESC.take(),
             MSOS_DESC.take(),
             CONTROL_BUF.take(),
-        );
-
-        builder
+        )
     };
 
     #[cfg(feature = "usb-ethernet")]
@@ -268,7 +266,7 @@ async fn init_task(mut peripherals: hal::OptionalPeripherals) {
         };
         use static_cell::StaticCell;
 
-        static CDC_ECM_STATE: StaticCell<CdcNcmState> = StaticCell::new();
+        static CDC_ECM_STATE: StaticCell<CdcNcmState<'_>> = StaticCell::new();
         static NET_STATE: StaticCell<NetState<{ net::ETHERNET_MTU }, 4, 4>> = StaticCell::new();
 
         // Host's MAC addr. This is the MAC the host "thinks" its USB-to-ethernet adapter has.

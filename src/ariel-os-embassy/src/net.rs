@@ -118,16 +118,16 @@ impl embassy_net::driver::Driver for DummyDriver {
 
     fn receive(
         &mut self,
-        _cx: &mut core::task::Context,
+        _cx: &mut core::task::Context<'_>,
     ) -> Option<(Self::RxToken<'_>, Self::TxToken<'_>)> {
         match self.0 {}
     }
 
-    fn transmit(&mut self, _cx: &mut core::task::Context) -> Option<Self::TxToken<'_>> {
+    fn transmit(&mut self, _cx: &mut core::task::Context<'_>) -> Option<Self::TxToken<'_>> {
         match self.0 {}
     }
 
-    fn link_state(&mut self, _cx: &mut core::task::Context) -> embassy_net::driver::LinkState {
+    fn link_state(&mut self, _cx: &mut core::task::Context<'_>) -> embassy_net::driver::LinkState {
         match self.0 {}
     }
 
