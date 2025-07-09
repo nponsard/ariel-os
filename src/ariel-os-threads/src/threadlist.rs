@@ -22,7 +22,11 @@ impl ThreadList {
     /// # Panics
     ///
     /// Panics if this is called outside of a thread context.
-    pub fn put_current(&mut self, cs: CriticalSection, state: ThreadState) -> Option<RunqueueId> {
+    pub fn put_current(
+        &mut self,
+        cs: CriticalSection<'_>,
+        state: ThreadState,
+    ) -> Option<RunqueueId> {
         SCHEDULER.with_mut_cs(cs, |mut scheduler| {
             let &mut Thread { tid, prio, .. } = scheduler
                 .current()
@@ -55,7 +59,7 @@ impl ThreadList {
     /// the scheduler.
     ///
     /// Returns the thread's [`ThreadId`] and its previous [`ThreadState`].
-    pub fn pop(&mut self, cs: CriticalSection) -> Option<(ThreadId, ThreadState)> {
+    pub fn pop(&mut self, cs: CriticalSection<'_>) -> Option<(ThreadId, ThreadState)> {
         let head = self.head?;
         SCHEDULER.with_mut_cs(cs, |mut scheduler| {
             self.head = scheduler.thread_blocklist[usize::from(head)].take();
@@ -65,7 +69,7 @@ impl ThreadList {
     }
 
     /// Determines if this [`ThreadList`] is empty.
-    pub fn is_empty(&self, _cs: CriticalSection) -> bool {
+    pub fn is_empty(&self, _cs: CriticalSection<'_>) -> bool {
         self.head.is_none()
     }
 }

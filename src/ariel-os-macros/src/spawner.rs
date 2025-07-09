@@ -33,7 +33,7 @@
 #[proc_macro_attribute]
 pub fn spawner(args: TokenStream, item: TokenStream) -> TokenStream {
     use quote::{format_ident, quote};
-    use syn::{spanned::Spanned, Error};
+    use syn::{Error, spanned::Spanned};
 
     #[allow(clippy::wildcard_imports)]
     use spawner::*;
@@ -114,7 +114,7 @@ mod spawner {
     impl Attributes {
         #[allow(clippy::missing_errors_doc)]
         #[allow(clippy::unnecessary_wraps)]
-        pub fn parse(&mut self, attr: &syn::meta::ParseNestedMeta) -> syn::Result<()> {
+        pub fn parse(&mut self, attr: &syn::meta::ParseNestedMeta<'_>) -> syn::Result<()> {
             if attr.path.is_ident(AUTOSTART_PARAM) {
                 self.autostart = true;
             } else if attr.path.is_ident(PERIPHERALS_PARAM) {

@@ -187,7 +187,11 @@ impl<const N_QUEUES: usize, const N_THREADS: usize> RunQueue<{ N_QUEUES }, { N_T
     ///
     /// The `start` is not included in the iterator.
     #[must_use]
-    pub fn iter_from(&self, start: ThreadId, rq: RunqueueId) -> RunQueueIter<N_QUEUES, N_THREADS> {
+    pub fn iter_from(
+        &self,
+        start: ThreadId,
+        rq: RunqueueId,
+    ) -> RunQueueIter<'_, N_QUEUES, N_THREADS> {
         RunQueueIter {
             prev: start.0,
             rq_head: self.queues.peek_head(rq.0),
