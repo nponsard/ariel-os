@@ -27,15 +27,15 @@ impl Arch for Cpu {
 
     /// On RISC-V (ESP32), the stack doesn't need to be set up with any register values since
     /// they are restored from the stored [`TrapFrame`].
-    fn setup_stack(thread: &mut Thread, stack: &mut [u8], func: usize, arg: usize) {
+    fn setup_stack(thread: &mut Thread, stack: &mut [u8], func: fn(), arg: Option<usize>) {
         let stack_start = stack.as_ptr() as usize;
         // 16 byte alignment.
         let stack_pos = (stack_start + stack.len()) & 0xFFFFFFE0;
         // Set up PC, SP, RA and first argument for function.
         thread.data.sp = stack_pos;
-        thread.data.a0 = arg;
+        thread.data.a0 = arg.unwrap_or_default();
         thread.data.ra = cleanup as usize;
-        thread.data.pc = func;
+        thread.data.pc = func as usize;
 
         thread.stack_lowest = stack_start;
         thread.stack_highest = stack_pos;

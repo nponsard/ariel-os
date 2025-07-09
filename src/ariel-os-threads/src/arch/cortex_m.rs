@@ -50,7 +50,7 @@ impl Arch for Cpu {
     /// |   PC    |
     /// |   PSR   |
     /// +---------+
-    fn setup_stack(thread: &mut Thread, stack: &mut [u8], func: usize, arg: usize) {
+    fn setup_stack(thread: &mut Thread, stack: &mut [u8], func: fn(), arg: Option<usize>) {
         let stack_start = stack.as_ptr() as usize;
 
         // 1. The stack starts at the highest address and grows downwards.
@@ -62,13 +62,13 @@ impl Arch for Cpu {
         let stack_pos = (stack_highest - 32) as *mut usize;
 
         unsafe {
-            write_volatile(stack_pos.offset(0), arg); // -> R0
+            write_volatile(stack_pos.offset(0), arg.unwrap_or_default()); // -> R0
             write_volatile(stack_pos.offset(1), 1); // -> R1
             write_volatile(stack_pos.offset(2), 2); // -> R2
             write_volatile(stack_pos.offset(3), 3); // -> R3
             write_volatile(stack_pos.offset(4), 12); // -> R12
             write_volatile(stack_pos.offset(5), cleanup as usize); // -> LR
-            write_volatile(stack_pos.offset(6), func); // -> PC
+            write_volatile(stack_pos.offset(6), func as usize); // -> PC
             write_volatile(stack_pos.offset(7), 0x01000000); // -> APSR
         }
 
