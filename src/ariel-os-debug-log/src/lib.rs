@@ -227,8 +227,8 @@ impl<T: AsRef<[u8]>> core::fmt::Display for Hex<T> {
 
 #[cfg(feature = "defmt")]
 impl<T: AsRef<[u8]>> defmt::Format for Hex<T> {
-    fn format(&self, f: defmt::Formatter) {
-        ::defmt::write!(f, "{=[u8]:02x}", self.0.as_ref())
+    fn format(&self, f: defmt::Formatter<'_>) {
+        ::defmt::write!(f, "{=[u8]:02x}", self.0.as_ref());
     }
 }
 
@@ -253,7 +253,7 @@ impl<T: AsRef<[u8]>> core::fmt::Display for Cbor<T> {
 
 #[cfg(feature = "defmt")]
 impl<T: AsRef<[u8]>> defmt::Format for Cbor<T> {
-    fn format(&self, f: defmt::Formatter) {
-        ::defmt::write!(f, "{=[u8]:cbor}", self.0.as_ref())
+    fn format(&self, f: defmt::Formatter<'_>) {
+        ::defmt::write!(f, "{=[u8]:cbor}", self.0.as_ref());
     }
 }
