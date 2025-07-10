@@ -112,6 +112,7 @@ jobs:
                 ble,
                 coap,
                 csprng,
+                defmt,
                 dns,
                 external-interrupts,
                 hwrng,
