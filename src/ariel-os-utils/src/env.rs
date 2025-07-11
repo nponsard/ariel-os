@@ -8,21 +8,24 @@ macro_rules! define_env_with_default_macro {
             // TODO: $$(,)? should be added to allow trailing commas if this gets re-exported
             // for users, but that requires the unstable `macro_metavar_expr` feature
             ($env_var:literal, $default:expr, $doc:literal) => {
-                if let Some(str_value) = option_env!($env_var) {
-                    if let Ok(value) = $crate::env::konst::primitive::$parse_fn_name(str_value) {
-                        value
+                const {
+                    if let Some(str_value) = option_env!($env_var) {
+                        if let Ok(value) = $crate::env::konst::primitive::$parse_fn_name(str_value)
+                        {
+                            value
+                        } else {
+                            $crate::env::const_panic::concat_panic!(
+                                "Could not parse environment variable `",
+                                $env_var,
+                                "=",
+                                str_value,
+                                "` as ",
+                                $output_type_name,
+                            );
+                        }
                     } else {
-                        $crate::env::const_panic::concat_panic!(
-                            "Could not parse environment variable `",
-                            $env_var,
-                            "=",
-                            str_value,
-                            "` as ",
-                            $output_type_name,
-                        );
+                        $default
                     }
-                } else {
-                    $default
                 }
             };
         }
@@ -47,10 +50,12 @@ define_env_with_default_macro!(bool_from_env_or, parse_bool, "a bool");
 macro_rules! str_from_env_or {
     // $doc is currently unused
     ($env_var:literal, $default:expr, $doc:literal $(,)?) => {
-        if let Some(str_value) = option_env!($env_var) {
-            str_value
-        } else {
-            $default
+        const {
+            if let Some(str_value) = option_env!($env_var) {
+                str_value
+            } else {
+                $default
+            }
         }
     };
 }
@@ -67,15 +72,17 @@ macro_rules! str_from_env_or {
 #[macro_export]
 macro_rules! str_from_env {
     ($env_var:literal, $doc:literal $(,)?) => {
-        if let Some(str_value) = option_env!($env_var) {
-            str_value
-        } else {
-            $crate::env::const_panic::concat_panic!(
-                "`",
-                $env_var,
-                "` environment variable was expected to provide the ",
-                $doc,
-            );
+        const {
+            if let Some(str_value) = option_env!($env_var) {
+                str_value
+            } else {
+                $crate::env::const_panic::concat_panic!(
+                    "`",
+                    $env_var,
+                    "` environment variable was expected to provide the ",
+                    $doc,
+                );
+            }
         }
     };
 }
@@ -96,15 +103,17 @@ pub(crate) use str_from_env;
 macro_rules! ipv4_addr_from_env {
     // $doc is currently unused
     ($env_var:literal, $doc:literal $(,)?) => {
-        if let Some(str_value) = option_env!($env_var) {
-            $crate::const_str::ip_addr!(v4, str_value)
-        } else {
-            $crate::env::const_panic::concat_panic!(
-                "`",
-                $env_var,
-                "` environment variable was expected to provide the ",
-                $doc,
-            );
+        const {
+            if let Some(str_value) = option_env!($env_var) {
+                $crate::const_str::ip_addr!(v4, str_value)
+            } else {
+                $crate::env::const_panic::concat_panic!(
+                    "`",
+                    $env_var,
+                    "` environment variable was expected to provide the ",
+                    $doc,
+                );
+            }
         }
     };
 }
@@ -124,12 +133,14 @@ macro_rules! ipv4_addr_from_env {
 macro_rules! ipv4_addr_from_env_or {
     // $doc is currently unused
     ($env_var:literal, $default:literal, $doc:literal $(,)?) => {{
-        let str_addr = if let Some(str_value) = option_env!($env_var) {
-            str_value
-        } else {
-            $default
-        };
-        $crate::const_str::ip_addr!(v4, str_addr)
+        const {
+            let str_addr = if let Some(str_value) = option_env!($env_var) {
+                str_value
+            } else {
+                $default
+            };
+            $crate::const_str::ip_addr!(v4, str_addr)
+        }
     }};
 }
 
@@ -147,15 +158,17 @@ macro_rules! ipv4_addr_from_env_or {
 macro_rules! ipv6_addr_from_env {
     // $doc is currently unused
     ($env_var:literal, $doc:literal $(,)?) => {
-        if let Some(str_value) = option_env!($env_var) {
-            $crate::const_str::ip_addr!(v6, str_value)
-        } else {
-            $crate::env::const_panic::concat_panic!(
-                "`",
-                $env_var,
-                "` environment variable was expected to provide the ",
-                $doc,
-            );
+        const {
+            if let Some(str_value) = option_env!($env_var) {
+                $crate::const_str::ip_addr!(v6, str_value)
+            } else {
+                $crate::env::const_panic::concat_panic!(
+                    "`",
+                    $env_var,
+                    "` environment variable was expected to provide the ",
+                    $doc,
+                );
+            }
         }
     };
 }
@@ -175,11 +188,13 @@ macro_rules! ipv6_addr_from_env {
 macro_rules! ipv6_addr_from_env_or {
     // $doc is currently unused
     ($env_var:literal, $default:literal, $doc:literal $(,)?) => {{
-        let str_addr = if let Some(str_value) = option_env!($env_var) {
-            str_value
-        } else {
-            $default
-        };
-        $crate::const_str::ip_addr!(v6, str_addr)
+        const {
+            let str_addr = if let Some(str_value) = option_env!($env_var) {
+                str_value
+            } else {
+                $default
+            };
+            $crate::const_str::ip_addr!(v6, str_addr)
+        }
     }};
 }
