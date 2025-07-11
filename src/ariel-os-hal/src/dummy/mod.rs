@@ -19,9 +19,7 @@ mod executor;
 pub mod gpio;
 
 #[doc(hidden)]
-pub mod peripheral {
-    pub use embassy_hal_internal::Peripheral;
-}
+pub mod peripheral;
 
 #[doc(hidden)]
 #[cfg(feature = "ble")]
@@ -36,11 +34,7 @@ pub mod hwrng;
 pub mod i2c;
 
 #[doc(hidden)]
-pub mod identity {
-    use ariel_os_embassy_common::identity;
-
-    pub type DeviceId = identity::NoDeviceId<identity::NotImplemented>;
-}
+pub mod identity;
 
 #[doc(hidden)]
 #[cfg(feature = "spi")]
@@ -55,22 +49,7 @@ pub mod storage;
 pub mod usb;
 
 pub use executor::{Executor, Spawner};
-
-#[doc(hidden)]
-/// Dummy type.
-///
-/// See the `OptionalPeripherals` type of your Embassy HAL crate instead.
-pub struct OptionalPeripherals;
-
-#[doc(hidden)]
-/// Dummy type.
-pub struct Peripherals;
-
-impl From<Peripherals> for OptionalPeripherals {
-    fn from(_peripherals: Peripherals) -> Self {
-        Self {}
-    }
-}
+pub use peripheral::{OptionalPeripherals, Peripheral};
 
 #[doc(hidden)]
 #[must_use]
