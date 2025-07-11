@@ -194,8 +194,8 @@ impl Scheduler {
     /// Returns `None` if there is no free thread slot.
     fn create(
         &mut self,
-        func: usize,
-        arg: usize,
+        func: fn(),
+        arg: Option<usize>,
         stack: &'static mut [u8],
         prio: RunqueueId,
         _core_affinity: Option<CoreAffinity>,
@@ -578,15 +578,28 @@ unsafe impl<T: Sync + Sized> Arguable for &'static T {
 /// # Panics
 ///
 /// Panics if more than [`THREAD_COUNT`] concurrent threads have been created.
-pub fn create<T: Arguable + Send>(
-    func: fn(arg: T),
+pub fn create<T>(
+    func: fn(T),
     arg: T,
     stack: &'static mut [u8],
     prio: u8,
     core_affinity: Option<CoreAffinity>,
-) -> ThreadId {
-    let arg = arg.into_arg();
-    unsafe { create_raw(func as usize, arg, stack, prio, core_affinity) }
+) -> ThreadId
+where
+    T: Arguable + Send,
+{
+    let arg = Some(arg.into_arg());
+
+    // Convert `fn(T)` into `fn()`, must go through *const().
+    let func = {
+        let func = func as *const ();
+        // SAFETY:
+        // https://doc.rust-lang.org/stable/std/primitive.fn.html#casting-to-and-from-integers
+        // "Transmuting between raw pointers and function pointers (i.e., two pointer types) is fine."
+        unsafe { core::mem::transmute::<*const (), fn()>(func) }
+    };
+
+    unsafe { create_raw(func, arg, stack, prio, core_affinity) }
 }
 
 /// Low-level function to create a thread without argument
@@ -600,7 +613,7 @@ pub fn create_noarg(
     prio: u8,
     core_affinity: Option<CoreAffinity>,
 ) -> ThreadId {
-    unsafe { create_raw(func as usize, 0, stack, prio, core_affinity) }
+    unsafe { create_raw(func, None, stack, prio, core_affinity) }
 }
 
 /// Creates a thread, low-level.
@@ -610,8 +623,8 @@ pub fn create_noarg(
 /// Only use when you know what you are doing.
 #[doc(hidden)]
 pub unsafe fn create_raw(
-    func: usize,
-    arg: usize,
+    func: fn(),
+    arg: Option<usize>,
     stack: &'static mut [u8],
     prio: u8,
     core_affinity: Option<CoreAffinity>,
