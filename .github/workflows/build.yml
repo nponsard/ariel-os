@@ -109,15 +109,15 @@ jobs:
           echo "${result}" >> $GITHUB_OUTPUT
 
       - name: Run sccache-cache
-        if: steps.result-cache.outputs.cache-hit != 'true'
+        if: steps.should-skip.outputs.result != 'true'
         uses: mozilla-actions/sccache-action@v0.0.8
 
       - id: get_toolchain
-        if: steps.result-cache.outputs.cache-hit != 'true'
+        if: steps.should-skip.outputs.result != 'true'
         run: echo "toolchain=$(scripts/rust-toolchain.sh)" >> $GITHUB_OUTPUT
 
       - name: Install nightly toolchain
-        if: steps.result-cache.outputs.cache-hit != 'true'
+        if: steps.should-skip.outputs.result != 'true'
         uses: dtolnay/rust-toolchain@master
         with:
           toolchain: ${{ steps.get_toolchain.outputs.toolchain }}
@@ -127,7 +127,7 @@ jobs:
           components: rust-src, rustfmt
 
       - name: Install stable toolchain
-        if: steps.result-cache.outputs.cache-hit != 'true'
+        if: steps.should-skip.outputs.result != 'true'
         # configure MSRV here:
         uses: dtolnay/rust-toolchain@1.85
         with:
@@ -137,7 +137,7 @@ jobs:
           components: rust-src, rustfmt
 
       - name: Install Rust for Xtensa
-        if: steps.result-cache.outputs.cache-hit != 'true'
+        if: steps.should-skip.outputs.result != 'true'
         # No tag yet after https://github.com/esp-rs/xtensa-toolchain/pull/38 (will probably be @v1.5.5)
         uses: esp-rs/xtensa-toolchain@main
         with:
@@ -147,19 +147,19 @@ jobs:
           export: false
 
       - name: rust cache
-        if: steps.result-cache.outputs.cache-hit != 'true'
+        if: steps.should-skip.outputs.result != 'true'
         uses: Swatinem/rust-cache@v2
         with:
           key: "${{ matrix.partition }}"
 
       - name: Install laze
         uses: taiki-e/install-action@v2
-        if: steps.result-cache.outputs.cache-hit != 'true'
+        if: steps.should-skip.outputs.result != 'true'
         with:
           tool: laze@0.1
 
       - name: "installing prerequisites"
-        if: steps.result-cache.outputs.cache-hit != 'true'
+        if: steps.should-skip.outputs.result != 'true'
         run: sudo apt-get install ninja-build gcc-arm-none-eabi gcc-riscv64-unknown-elf
 
       - name: "Show installed versions"
@@ -182,12 +182,12 @@ jobs:
           true
 
       - name: "limit build unless nightly build"
-        if: github.event_name != 'schedule' && steps.result-cache.outputs.cache-hit != 'true'
+        if: github.event_name != 'schedule' && steps.should-skip.outputs.result != 'true'
         run: |
           echo "LAZE_BUILDERS=ai-c3,espressif-esp32-devkitc,espressif-esp32-c6-devkitc-1,espressif-esp32-s3-devkitc-1,bbc-microbit-v2,nrf52840dk,nrf5340dk,rpi-pico,rpi-pico-w,st-nucleo-c031c6,st-nucleo-h755zi-q,st-nucleo-wb55" >> "$GITHUB_ENV"
 
       - name: "ariel-os compilation test (default toolchain)"
-        if: steps.result-cache.outputs.cache-hit != 'true'
+        if: steps.should-skip.outputs.result != 'true'
         run: |
           sccache --start-server || true # work around https://github.com/ninja-build/ninja/issues/2052
 
@@ -195,14 +195,14 @@ jobs:
 
       # cleanup previous build artifacts. do in background (no need to wait).
       - name: "cleanup stable build artifacts"
-        if: github.event_name == 'schedule' && steps.result-cache.outputs.cache-hit != 'true'
+        if: github.event_name == 'schedule' && steps.should-skip.outputs.result != 'true'
         run: |
           mv build build.tmp && rm -rf build.tmp &
 
       # nightly build, nightly toolchain
       # (disabling xtensa here as it gets built by the default toolchain build above)
       - name: "ariel-os compilation test (nightly toolchain)"
-        if: github.event_name == 'schedule' && steps.result-cache.outputs.cache-hit != 'true'
+        if: github.event_name == 'schedule' && steps.should-skip.outputs.result != 'true'
         run: |
           sccache --start-server || true # work around https://github.com/ninja-build/ninja/issues/2052
 
