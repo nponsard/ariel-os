@@ -99,6 +99,8 @@ pub(crate) use str_from_env;
 ///
 /// - Produces a compile-time error if the environment variable is not found.
 /// - Produces a compile-time error when [`option_env!`](option_env) does.
+/// - Produces a compile-time error when the environment variable cannot be parsed into an IPv4
+///   address.
 #[macro_export]
 macro_rules! ipv4_addr_from_env {
     // $doc is currently unused
@@ -128,7 +130,9 @@ macro_rules! ipv4_addr_from_env {
 ///
 /// # Errors
 ///
-/// Produces a compile-time error when [`option_env!`](option_env) does.
+/// - Produces a compile-time error when [`option_env!`](option_env) does.
+/// - Produces a compile-time error when the environment variable cannot be parsed into an IPv4
+///   address.
 #[macro_export]
 macro_rules! ipv4_addr_from_env_or {
     // $doc is currently unused
@@ -154,6 +158,8 @@ macro_rules! ipv4_addr_from_env_or {
 ///
 /// - Produces a compile-time error if the environment variable is not found.
 /// - Produces a compile-time error when [`option_env!`](option_env) does.
+/// - Produces a compile-time error when the environment variable cannot be parsed into an IPv6
+///   address.
 #[macro_export]
 macro_rules! ipv6_addr_from_env {
     // $doc is currently unused
@@ -183,7 +189,9 @@ macro_rules! ipv6_addr_from_env {
 ///
 /// # Errors
 ///
-/// Produces a compile-time error when [`option_env!`](option_env) does.
+/// - Produces a compile-time error when [`option_env!`](option_env) does.
+/// - Produces a compile-time error when the environment variable cannot be parsed into an IPv6
+///   address.
 #[macro_export]
 macro_rules! ipv6_addr_from_env_or {
     // $doc is currently unused
