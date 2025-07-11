@@ -6,6 +6,8 @@
 ///
 /// - `autostart`: (*mandatory*) autostart the thread.
 /// - `stacksize`: (*optional*) the size of the stack allocated to the thread (in bytes).
+/// - `affinity`: (*optional*) an `ariel_os::thread::CoreAffinity` instance allowing to pin the
+///   thread to specific cores.
 /// - `priority`: (*optional*) the thread's priority.
 /// - `no_wait`: (*optional*) don't wait for system initialization to be finished
 ///   before starting the thread.
