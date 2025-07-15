@@ -37,6 +37,7 @@ unsafe extern "C" {
     static _MODEM_length: u8;
 }
 
+// Workaround used in the nrf mdk: file system_nrf91.c , function SystemInit(), after `#if !defined(NRF_SKIP_UICR_HFXO_WORKAROUND)`
 fn uicr_hfxo_workaround() {
     let uicr = embassy_nrf::pac::UICR_S;
     let hfxocnt = uicr.hfxocnt().read().hfxocnt().to_bits();
@@ -151,8 +152,8 @@ pub async fn driver() {
         SystemMode {
             lte_support: true,
             lte_psm_support: true,
-            nbiot_support: false,
-            gnss_support: false,
+            nbiot_support: true,
+            gnss_support: true,
             preference: ConnectionPreference::None,
         },
         MemoryLayout {
@@ -164,6 +165,4 @@ pub async fn driver() {
     )
     .await
     .unwrap();
-    let response = nrf_modem::send_at::<64>("AT+CGMI").await.unwrap();
-    defmt::info!("Modem Manufacturer: {}", response.as_str());
 }

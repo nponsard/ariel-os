@@ -10,5 +10,6 @@ async fn main() {
     info!("Hello World!");
 
     let response = nrf_modem::send_at::<64>("AT+CGMI").await.unwrap();
+
     info!("Modem Manufacturer: {}", response.as_str());
 }
