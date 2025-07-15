@@ -195,7 +195,7 @@ pub use backend::*;
 #[doc(hidden)]
 #[cfg(feature = "log")]
 mod logger {
-    use log::{Level, LevelFilter, Metadata, Record};
+    use log::{LevelFilter, Metadata, Record};
 
     static LOGGER: DebugLogger = DebugLogger;
 
@@ -258,11 +258,11 @@ mod logger {
     struct DebugLogger;
 
     impl log::Log for DebugLogger {
-        fn enabled(&self, metadata: &Metadata) -> bool {
-            metadata.level() <= Level::Info
+        fn enabled(&self, metadata: &Metadata<'_>) -> bool {
+            metadata.level() <= MAX_LEVEL
         }
 
-        fn log(&self, record: &Record) {
+        fn log(&self, record: &Record<'_>) {
             if self.enabled(record.metadata()) {
                 crate::println!("[{}] {}", record.level(), record.args());
             }
