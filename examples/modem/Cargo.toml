@@ -1,0 +1,16 @@
+[package]
+name = "modem"
+license.workspace = true
+edition.workspace = true
+
+publish = false
+
+[lints]
+workspace = true
+
+[dependencies]
+ariel-os = { path = "../../src/ariel-os", features = ["time"] }
+ariel-os-boards = { path = "../../src/ariel-os-boards" }
+
+[build-dependencies]
+cc = "1.2.27"

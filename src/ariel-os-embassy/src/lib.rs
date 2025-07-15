@@ -72,6 +72,8 @@ pub mod api {
 pub mod reexports {
     #[cfg(feature = "ble")]
     pub use ariel_os_embassy_common::ble;
+    #[cfg(feature = "modem")]
+    pub use ariel_os_hal::modem::nrf_modem;
     #[cfg(feature = "net")]
     pub use embassy_net;
     #[cfg(feature = "time")]
@@ -232,6 +234,11 @@ async fn init_task(mut peripherals: hal::OptionalPeripherals) {
     {
         let config = ble::config();
         hal::ble::driver(ble_peripherals, spawner, config);
+    }
+
+    #[cfg(feature = "modem")]
+    {
+        hal::modem::driver().await;
     }
 
     #[cfg(feature = "usb")]

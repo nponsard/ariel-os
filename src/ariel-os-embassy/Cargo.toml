@@ -128,6 +128,8 @@ ble = [
 ble-peripheral = ["ble", "ariel-os-hal/ble-peripheral"]
 ble-central = ["ble", "ariel-os-hal/ble-central"]
 
+modem = ["ariel-os-hal/modem"]
+
 threading = ["dep:ariel-os-threads", "ariel-os-hal/threading"]
 network-config-static = ["network-config-override"]
 network-config-override = []

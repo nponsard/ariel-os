@@ -31,6 +31,10 @@ pub mod i2c;
 #[doc(hidden)]
 pub mod identity;
 
+#[cfg(feature = "modem")]
+#[doc(hidden)]
+pub mod modem;
+
 #[cfg(feature = "spi")]
 pub mod spi;
 
