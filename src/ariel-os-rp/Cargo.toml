@@ -76,15 +76,11 @@ usb = []
 ble = ["ariel-os-embassy-common/ble"]
 
 ble-cyw43 = [
-  "dep:cyw43",
-  "dep:cyw43-pio",
-  "dep:embassy-net-driver-channel",
-  "dep:static_cell",
   "dep:trouble-host",
   "dep:bt-hci",
   "dep:embassy-sync",
-  "cyw43/bluetooth",
-  "hwrng",
+  "_cyw43",
+  "cyw43?/bluetooth",
   "ariel-os-random/csprng",
   "ble",
 ]
@@ -92,21 +88,22 @@ ble-peripheral = ["ble-cyw43"]
 ble-central = ["ble-cyw43"]
 
 ## Enables defmt support.
-defmt = ["dep:defmt", "embassy-rp/defmt"]
+defmt = ["dep:defmt", "cyw43?/defmt", "embassy-rp/defmt"]
 
 ## Enables Wi-Fi support.
 wifi = []
 
 ## Enables support for the CYW43 Wi-Fi chip.
-wifi-cyw43 = [
-  "dep:cyw43",
-  "dep:cyw43-pio",
-  "dep:embassy-net-driver-channel",
-  "dep:static_cell",
-  "wifi",
-]
+wifi-cyw43 = ["_cyw43", "wifi"]
 
 ## Enables the interrupt executor.
 executor-interrupt = ["embassy-executor/executor-interrupt"]
 
 _test = ["embassy-rp/rp2040", "external-interrupts", "i2c", "spi"]
+
+_cyw43 = [
+  "dep:cyw43",
+  "dep:cyw43-pio",
+  "dep:embassy-net-driver-channel",
+  "dep:static_cell",
+]
