@@ -1,6 +1,6 @@
 #[cfg_attr(
     any(context = "rpi-pico-w", context = "rpi-pico2-w"),
-    path = "cyw43/rpi-pico-w.rs"
+    path = "cyw43/rpi_pico_w.rs"
 )]
 mod rpi_pico_w;
 
@@ -22,6 +22,8 @@ use cyw43::JoinOptions;
 use crate::ble::{self, SLOTS};
 
 pub type NetworkDevice = cyw43::NetDriver<'static>;
+
+static STATE: StaticCell<cyw43::State> = StaticCell::new();
 
 #[cfg(feature = "wifi")]
 pub async fn join(mut control: cyw43::Control<'static>) {
@@ -51,6 +53,9 @@ async fn wifi_cyw43_task(runner: Runner<'static, Output<'static>, CywSpi>) -> ! 
     runner.run().await
 }
 
+/// # Panics
+///
+/// Panics if we fail to launch the cyw43 runner task.
 pub async fn device<'a, 'b: 'a>(
     peripherals: &'a mut crate::OptionalPeripherals,
     spawner: &Spawner,
@@ -84,17 +89,14 @@ pub async fn device<'a, 'b: 'a>(
         pins.dma,
     );
 
-    static STATE: StaticCell<cyw43::State> = StaticCell::new();
-
     #[cfg(not(feature = "ble-cyw43"))]
     let (net_device, mut control, runner) =
-        cyw43::new(STATE.init_with(|| cyw43::State::new()), pwr, spi, fw).await;
+        cyw43::new(STATE.init_with(cyw43::State::new), pwr, spi, fw).await;
 
     #[cfg(feature = "ble-cyw43")]
     let (net_device, mut control, runner) = {
         let (net_device, bt_device, control, runner) =
-            cyw43::new_with_bluetooth(STATE.init_with(|| cyw43::State::new()), pwr, spi, fw, btfw)
-                .await;
+            cyw43::new_with_bluetooth(STATE.init_with(cyw43::State::new), pwr, spi, fw, btfw).await;
         let controller: ExternalController<_, SLOTS> = ExternalController::new(bt_device);
         let resources = ariel_os_embassy_common::ble::get_ble_host_resources();
         let mut rng = ariel_os_random::crypto_rng();
