@@ -8,11 +8,11 @@ use nrf_modem::SystemMode;
 #[ariel_os::task(autostart)]
 async fn main() {
     info!("waiting");
-    Timer::after_secs(10).await;
+    // Timer::after_secs(10).await;
 
     info!("Hello World!");
 
-    Timer::after_secs(10).await;
+    // Timer::after_secs(10).await;
 
     let a = nrf_modem::init(SystemMode {
         lte_support: true,

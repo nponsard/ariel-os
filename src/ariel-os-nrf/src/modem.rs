@@ -1,9 +1,11 @@
 use ariel_os_debug::log::info;
 use embassy_nrf::bind_interrupts;
+use embassy_nrf::interrupt::Interrupt;
+use embassy_nrf::interrupt::InterruptExt;
+use embassy_nrf::interrupt::Priority;
 use embassy_nrf::interrupt::typelevel;
 use embassy_nrf::peripherals;
 use tinyrlibc::*;
-
 #[doc(hidden)]
 pub struct InterruptHandler {
     _private: (),
@@ -11,6 +13,7 @@ pub struct InterruptHandler {
 
 impl typelevel::Handler<typelevel::IPC> for InterruptHandler {
     unsafe fn on_interrupt() {
+        info!("IPC interrupt triggered");
         nrf_modem::ipc_irq_handler();
     }
 }
@@ -21,6 +24,11 @@ bind_interrupts!(struct Irqs{
 
 #[doc(hidden)]
 pub fn driver() {
+    use cortex_m::peripheral::NVIC;
+    embassy_nrf::interrupt::IPC.set_priority(Priority::P3);
+    unsafe {
+        NVIC::unmask(Interrupt::IPC);
+    }
     const SPU_REGION_SIZE: u32 = 0x2000; // 8kb
     const RAM_START: u32 = 0x2000_0000; // 256kb
     let spu = embassy_nrf::pac::SPU;

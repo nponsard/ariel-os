@@ -92,10 +92,10 @@ fn write_memoryx() {
 
     // generate linker script
     let memory = Memory::new()
-        .add_section(MemorySection::new("RAM", 0x20008000, 224 * 1024))
-        .add_section(MemorySection::new("MODEM", 0x20000000, 32 * 1024))
+    .add_section(MemorySection::new("MODEM", 0x2000_0000, 32 * 1024))
+    .add_section(MemorySection::new("RAM", 0x2000_8000, 224 * 1024))
         .add_section(
-            MemorySection::new("FLASH", 0x00000000, 1024 * 1024)
+            MemorySection::new("FLASH", 0x0000_0000, 1024 * 1024)
                 .pagesize(pagesize)
                 .from_env(),
         );
