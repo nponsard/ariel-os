@@ -18,4 +18,6 @@ jobs:
         with:
           tool: committed
 
-      - run: committed --config committed.toml --commit-file <(echo "${{ github.event.pull_request.title }}")
+      - run: committed --config committed.toml --commit-file <(echo "${PR_TITLE}")
+        env:
+          PR_TITLE: ${{ github.event.pull_request.title }}
