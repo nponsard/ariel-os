@@ -28,7 +28,7 @@ It explains how to compile and run the `hello-word` example to verify your setup
    ```sh
    cargo install espup --locked
    espup install
-   cargo install espflash --locked
+   cargo install espflash@3.3.0 --locked
    ```
 
    There is no need to actively source the `~/export-esp.sh` file which `espup` produces:
