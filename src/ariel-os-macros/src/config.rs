@@ -9,11 +9,11 @@
 ///
 /// - The name of the driver the constant provides configuration for.
 ///
-/// | Driver    | Expected type                     | Cargo feature to enable   |
-/// | --------- | --------------------------------- | ------------------------- |
-// | `ble`     | `ariel_os::reexport::ble::Config` | `ble-config-override`     |
-/// | `network` | `embassy_net::Config`             | `network-config-override` |
-/// | `usb`     | `embassy_usb::Config`             | `override-usb-config`     |
+/// | Driver    | Expected type                      | Cargo feature to enable   |
+/// | --------- | ---------------------------------- | ------------------------- |
+// | `ble`     | `ariel_os::reexports::ble::Config` | `ble-config-override`     |
+/// | `network` | `embassy_net::Config`              | `network-config-override` |
+/// | `usb`     | `embassy_usb::Config`              | `override-usb-config`     |
 ///
 /// # Note
 ///
