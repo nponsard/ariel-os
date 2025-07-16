@@ -13,6 +13,9 @@ use ariel_os_embassy_common::executor_thread;
 #[cfg(feature = "debug-uart")]
 pub mod debug_uart;
 
+#[cfg(feature = "gps")]
+pub mod gps;
+
 #[cfg(feature = "i2c")]
 pub mod i2c;
 
