@@ -1,4 +1,4 @@
-use ariel_os_embassy_common::gps::Gps;
+use ariel_os_embassy_common::gps::{Config, GpsData};
 
 pub(crate) fn config() -> Config {
     #[cfg(not(feature = "gps-config-override"))]
@@ -13,3 +13,16 @@ pub(crate) fn config() -> Config {
         unsafe { __ariel_os_gps_config() }
     }
 }
+
+pub fn request_gps_fix() -> GpsData {
+    // TODO
+
+    GpsData {
+        position: None,
+        velocity: None,
+        datetime: None,
+    }
+}
+
+// TODO:
+// pub fn get_gps_stream()
