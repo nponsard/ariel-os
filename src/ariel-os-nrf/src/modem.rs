@@ -150,9 +150,9 @@ pub async fn driver() {
     }
     nrf_modem::init_with_custom_layout(
         SystemMode {
-            lte_support: true,
-            lte_psm_support: true,
-            nbiot_support: true,
+            lte_support: false,
+            lte_psm_support: false,
+            nbiot_support: false,
             gnss_support: true,
             preference: ConnectionPreference::None,
         },

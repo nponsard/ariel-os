@@ -69,7 +69,6 @@ embassy-nrf = { workspace = true, features = ["nrf9151-s"] }
 nrf-modem = { workspace = true, features = [
   "nrf9151",
   "modem-log",
-  "modem-trace",
 ], optional = true }
 
 [target.'cfg(context = "nrf9160")'.dependencies]
@@ -77,7 +76,6 @@ embassy-nrf = { workspace = true, features = ["nrf9160-s"] }
 nrf-modem = { workspace = true, features = [
   "nrf9160",
   "modem-log",
-  "modem-trace",
 ], optional = true }
 
 [features]
