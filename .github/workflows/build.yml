@@ -62,7 +62,7 @@ jobs:
               }
               const prLabels = pr.labels.map((label) => label.name);
               console.log(`The labels of PR #${prNumber} are ${prLabels}`);
-              const VALID_LABELS = ['ci-build:skip', 'ci-build:small'];
+              const VALID_LABELS = ['ci-build:full', 'ci-build:skip', 'ci-build:small'];
               const buildLabels = prLabels.filter((label) => VALID_LABELS.includes(label));
               if (buildLabels.length > 1) { throw 'Only one build label must be attached.'; }
               const buildLabel = buildLabels[0];
@@ -197,13 +197,21 @@ jobs:
       - name: "limit build unless nightly build"
         if: github.event_name != 'schedule' && steps.should-skip.outputs.result != 'true'
         run: |
-          echo "LAZE_BUILDERS=ai-c3,espressif-esp32-devkitc,espressif-esp32-c6-devkitc-1,espressif-esp32-s3-devkitc-1,bbc-microbit-v2,nrf52840dk,nrf5340dk,rpi-pico,rpi-pico-w,st-nucleo-c031c6,st-nucleo-h755zi-q,st-nucleo-wb55" >> "$GITHUB_ENV"
+          case '${{ needs.check-labels.outputs.label }}' in
+            'ci-build:full')
+              # Not setting `LAZE_BUILDERS` so that the build is not limited
+              ;;
+            'ci-build:small')
+              echo "LAZE_BUILDERS=ai-c3,espressif-esp32-devkitc,espressif-esp32-c6-devkitc-1,espressif-esp32-s3-devkitc-1,bbc-microbit-v2,nrf52840dk,nrf5340dk,rpi-pico,rpi-pico-w,st-nucleo-c031c6,st-nucleo-h755zi-q,st-nucleo-wb55" >> "$GITHUB_ENV"
+              ;;
+          esac
 
       - name: "ariel-os compilation test (default toolchain)"
         if: steps.should-skip.outputs.result != 'true'
         run: |
           sccache --start-server || true # work around https://github.com/ninja-build/ninja/issues/2052
 
+          echo "LAZE_BUILDERS=${LAZE_BUILDERS}"
           CONFIG_WIFI_NETWORK='test' CONFIG_WIFI_PASSWORD='password' laze build -DCARGO_ARGS+='--locked' --global --partition hash:${{ matrix.partition }}
 
       # cleanup previous build artifacts. do in background (no need to wait).
