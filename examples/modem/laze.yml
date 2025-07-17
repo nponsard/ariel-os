@@ -1,4 +1,0 @@
-apps:
-  - name: modem-example
-    selects:
-      - modem

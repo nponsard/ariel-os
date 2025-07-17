@@ -1197,31 +1197,35 @@ modules:
         FEATURES:
           - ariel-os/ble-central
 
-  - name: modem
+  - name: gps
     selects:
-      - hw/modem
+      - hw/gps
     env:
       global:
         FEATURES:
-          - ariel-os/modem
+          - ariel-os/gps
 
-  - name: hw/modem
-    help: provided if a device has a modem
+  - name: hw/gps
+    help: provided if a device has a gps receiver
     selects:
-      - has_modem
+      - has_gps
     env:
       global:
         RUSTFLAGS:
-          - --cfg capability=\"hw/modem\"
+          - --cfg capability=\"hw/gps\"
 
   - name: has_nrf_modem
     help: Marks an incompatibility of nrf devices with the interrupt executor
     context:
       - nrf91
     provides:
-      - has_modem
+      - has_gps
     conflicts:
       - executor-interrupt
+    env:
+      global:
+        FEATURES:
+          - ariel-os/modem
 
   - name: usb
     selects:

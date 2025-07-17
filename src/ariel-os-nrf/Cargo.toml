@@ -31,9 +31,13 @@ ariel-os-random = { workspace = true, optional = true }
 ariel-os-rt = { workspace = true, features = ["memory-x"] }
 static_cell = { workspace = true }
 embassy-sync = { workspace = true }
+embassy-time = { workspace = true, optional = true }
 trouble-host = { workspace = true, optional = true }
 cortex-m = { workspace = true }
 tinyrlibc = { workspace = true, optional = true }
+
+futures = { workspace = true, default-features = false, optional = true }
+
 
 [target.'cfg(context = "nrf51822-xxaa")'.dependencies]
 embassy-nrf = { workspace = true, features = ["nrf51"] }
@@ -110,6 +114,9 @@ ble = [
 ]
 ble-peripheral = ["ble", "nrf-sdc/peripheral"]
 ble-central = ["ble", "nrf-sdc/central"]
+
+## Enables GPS support.
+gps = ["dep:embassy-time", "dep:futures", "modem"]
 
 ## Enables modem support.
 modem = ["dep:nrf-modem", "dep:tinyrlibc"]

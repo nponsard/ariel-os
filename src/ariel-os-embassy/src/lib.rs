@@ -61,6 +61,8 @@ pub mod api {
 
     #[cfg(feature = "ble")]
     pub use crate::ble;
+    #[cfg(feature = "gps")]
+    pub use crate::gps;
     #[cfg(feature = "i2c")]
     pub use crate::i2c;
     #[cfg(feature = "net")]
@@ -242,6 +244,10 @@ async fn init_task(mut peripherals: hal::OptionalPeripherals) {
     #[cfg(feature = "modem")]
     {
         hal::modem::driver().await;
+    }
+    #[cfg(feature = "gps")]
+    {
+        gps::start_gps(spawner).await;
     }
 
     #[cfg(feature = "usb")]

@@ -1,5 +1,5 @@
 [package]
-name = "modem"
+name = "gps-read"
 license.workspace = true
 edition.workspace = true
 
@@ -11,7 +11,8 @@ workspace = true
 [dependencies]
 ariel-os = { path = "../../src/ariel-os", features = ["time"] }
 ariel-os-boards = { path = "../../src/ariel-os-boards" }
-futures = { version = "0.3.0", default-features = false }
+futures = { workspace = true, default-features = false }
+embassy-sync = { workspace = true }
 
 [build-dependencies]
 cc = "1.2.27"

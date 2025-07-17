@@ -296,6 +296,7 @@ dependencies = [
  "embedded-hal-async",
  "embedded-io 0.6.1",
  "embedded-io-async",
+ "futures",
  "heapless 0.8.0",
  "linkme",
  "once_cell",
@@ -429,7 +430,9 @@ dependencies = [
  "embassy-executor",
  "embassy-nrf",
  "embassy-sync 0.6.2",
+ "embassy-time",
  "embedded-hal-async",
+ "futures",
  "nrf-modem",
  "nrf-sdc",
  "paste",
@@ -2988,6 +2991,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "gps-read"
+version = "0.0.0"
+dependencies = [
+ "ariel-os",
+ "ariel-os-boards",
+ "cc",
+ "embassy-sync 0.6.2",
+ "futures",
+]
+
+[[package]]
 name = "grounded"
 version = "0.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3904,16 +3918,6 @@ name = "minimal-lexical"
 version = "0.2.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "68354c5c6bd36d73ff3feceb05efa59b6acb7626617f4962be322a825e61f79a"
-
-[[package]]
-name = "modem"
-version = "0.0.0"
-dependencies = [
- "ariel-os",
- "ariel-os-boards",
- "cc",
- "futures",
-]
 
 [[package]]
 name = "nb"

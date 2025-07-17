@@ -35,6 +35,10 @@ pub mod identity;
 #[doc(hidden)]
 pub mod modem;
 
+#[cfg(feature = "gps")]
+#[doc(hidden)]
+pub mod gps;
+
 #[cfg(feature = "spi")]
 pub mod spi;
 
