@@ -25,6 +25,10 @@
 /// Note: this expects the `interrupt` to be present (e.g., "used") and that it contains the ISR
 /// type.
 #[macro_export]
+#[expect(
+    clippy::crate_in_macro_def,
+    reason = "crate::EXECUTOR comes from downstream crates"
+)]
 macro_rules! executor_swi {
     ($swi:ident) => {
         pub use interrupt::$swi as SWI;
@@ -36,13 +40,7 @@ macro_rules! executor_swi {
             //   (This macro just adds "only enable it after starting the executor" to the
             //   requirements of the unsafe interrupt starting; the safe start() function
             //    trusts the user to pass the right number.)
-            #[expect(
-                clippy::crate_in_macro_def,
-                reason = "crate::EXECUTOR comes from downstream crates"
-            )]
-            unsafe {
-                crate::EXECUTOR.on_interrupt()
-            }
+            unsafe { crate::EXECUTOR.on_interrupt() }
         }
     };
 }
