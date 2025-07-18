@@ -62,7 +62,7 @@ jobs:
               }
               const prLabels = pr.labels.map((label) => label.name);
               console.log(`The labels of PR #${prNumber} are ${prLabels}`);
-              const VALID_LABELS = ['ci-build:esp', 'ci-build:full', 'ci-build:nrf', 'ci-build:rp', 'ci-build:skip', 'ci-build:small'];
+              const VALID_LABELS = ['ci-build:esp', 'ci-build:full', 'ci-build:native', 'ci-build:nrf', 'ci-build:rp', 'ci-build:skip', 'ci-build:small'];
               const buildLabels = prLabels.filter((label) => VALID_LABELS.includes(label));
               if (buildLabels.length > 1) { throw 'Only one build label must be attached.'; }
               const buildLabel = buildLabels[0];
@@ -203,6 +203,9 @@ jobs:
               ;;
             'ci-build:full')
               # Not setting `LAZE_BUILDERS` so that the build is not limited
+              ;;
+            'ci-build:native')
+              echo "LAZE_BUILDERS=native" >> "$GITHUB_ENV"
               ;;
             'ci-build:nrf')
               # Purely redundant boards are excluded for now.
