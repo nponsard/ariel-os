@@ -168,7 +168,7 @@ impl Scheduler {
     #[allow(clippy::unnecessary_wraps, reason = "only unnecessary in clippy path")]
     fn current_tid(&self) -> Option<ThreadId> {
         cfg_if::cfg_if! {
-            if #[cfg(context = "single-core")] {
+            if #[cfg(feature = "single-core")] {
                 self.current_thread
             }
             else if #[cfg(feature = "multi-core")] {
@@ -178,9 +178,8 @@ impl Scheduler {
                 ThreadData::ID.get()
             }
             else {
-                // makes clippy happy
                 let _ = self;
-                Some(ThreadId::new(0))
+                unreachable!();
             }
         }
     }
