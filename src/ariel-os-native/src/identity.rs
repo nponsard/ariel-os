@@ -13,7 +13,8 @@ pub struct DeviceId([u8; SHA256LEN]);
 impl ariel_os_embassy_common::identity::DeviceId for DeviceId {
     fn get() -> Result<Self, impl std::error::Error> {
         let mut hash = sha2::Sha256::new();
-        hash.update(b"Ariel OS device identity");
+        hash.update(ariel_os_buildinfo::OS_NAME);
+        hash.update(b"device identity");
         // We *could* decode the hex value, but why -- the format of that file is fixed anyway.
         hash.update(std::fs::read("/etc/machine-id")?);
         let hash = hash.finalize();
