@@ -62,7 +62,7 @@ jobs:
               }
               const prLabels = pr.labels.map((label) => label.name);
               console.log(`The labels of PR #${prNumber} are ${prLabels}`);
-              const VALID_LABELS = ['ci-build:full', 'ci-build:rp', 'ci-build:skip', 'ci-build:small'];
+              const VALID_LABELS = ['ci-build:esp', 'ci-build:full', 'ci-build:native', 'ci-build:nrf', 'ci-build:rp', 'ci-build:skip', 'ci-build:small', 'ci-build:stm32'];
               const buildLabels = prLabels.filter((label) => VALID_LABELS.includes(label));
               if (buildLabels.length > 1) { throw 'Only one build label must be attached.'; }
               const buildLabel = buildLabels[0];
@@ -198,14 +198,27 @@ jobs:
         if: github.event_name != 'schedule' && steps.should-skip.outputs.result != 'true'
         run: |
           case '${{ needs.check-labels.outputs.label }}' in
+            'ci-build:esp')
+              echo "LAZE_BUILDERS=ai-c3,espressif-esp32-c3-lcdkit,espressif-esp32-c6-devkitc-1,espressif-esp32-devkitc,espressif-esp32-s3-devkitc-1" >> "$GITHUB_ENV"
+              ;;
             'ci-build:full')
               # Not setting `LAZE_BUILDERS` so that the build is not limited
+              ;;
+            'ci-build:native')
+              echo "LAZE_BUILDERS=native" >> "$GITHUB_ENV"
+              ;;
+            'ci-build:nrf')
+              # Purely redundant boards are excluded for now.
+              echo "LAZE_BUILDERS=bbc-microbit-v1,bbc-microbit-v2,nordic-thingy-91-x-nrf9151,nrf52840dk,nrf52dk,nrf5340dk,nrf9160dk-nrf9160" >> "$GITHUB_ENV"
               ;;
             'ci-build:rp')
               echo "LAZE_BUILDERS=rpi-pico,rpi-pico2,rpi-pico2-w,rpi-pico-w" >> "$GITHUB_ENV"
               ;;
             'ci-build:small')
               echo "LAZE_BUILDERS=ai-c3,espressif-esp32-devkitc,espressif-esp32-c6-devkitc-1,espressif-esp32-s3-devkitc-1,bbc-microbit-v2,native,nrf52840dk,nrf5340dk,rpi-pico,rpi-pico-w,st-nucleo-c031c6,st-nucleo-h755zi-q,st-nucleo-wb55" >> "$GITHUB_ENV"
+              ;;
+            'ci-build:stm32')
+              echo "LAZE_BUILDERS=st-b-l475e-iot01a,st-steval-mkboxpro,st-nucleo-c031c6,st-nucleo-f042k6,st-nucleo-f401re,st-nucleo-f411re,st-nucleo-f767zi,st-nucleo-h755zi-q,st-nucleo-wb55,st-nucleo-wba55,stm32u083c-dk" >> "$GITHUB_ENV"
               ;;
           esac
 
