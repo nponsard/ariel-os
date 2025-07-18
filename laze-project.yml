@@ -1876,6 +1876,7 @@ builders:
       - infini-core
       - ?debug-console
     provides:
+      - has_hwrng
       - sw/benchmark
     disables:
       - semihosting
