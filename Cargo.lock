@@ -402,6 +402,7 @@ dependencies = [
 name = "ariel-os-native"
 version = "0.2.0"
 dependencies = [
+ "ariel-os-buildinfo",
  "ariel-os-debug",
  "ariel-os-embassy-common",
  "ariel-os-random",
@@ -412,6 +413,7 @@ dependencies = [
  "embassy-time",
  "embedded-hal-async",
  "rand",
+ "sha2",
 ]
 
 [[package]]
