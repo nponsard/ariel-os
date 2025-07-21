@@ -150,6 +150,8 @@ ble-esp = [
   "esp-radio/esp-alloc",
   "hwrng",
 ]
+ble-central = ["ble-esp"]
+ble-peripheral = ["ble-esp"]
 
 ## Enables Wi-Fi support.
 wifi = []

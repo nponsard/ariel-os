@@ -335,11 +335,13 @@ dependencies = [
  "ariel-os-rt",
  "ariel-os-threads",
  "ariel-os-utils",
+ "bt-hci",
  "cfg-if",
  "critical-section",
  "defmt 1.0.1",
  "embassy-embedded-hal",
  "embassy-executor",
+ "embassy-sync 0.7.2",
  "embassy-time",
  "embassy-time-driver",
  "embassy-time-queue-utils",
@@ -356,6 +358,7 @@ dependencies = [
  "fugit",
  "paste",
  "static_cell",
+ "trouble-host",
 ]
 
 [[package]]
