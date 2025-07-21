@@ -6,3 +6,7 @@ features = ['all']
 
 # This is needed so the "include" statement above works.
 config-include = true
+
+[unstable.git]
+shallow_index = true
+shallow_deps = true
