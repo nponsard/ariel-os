@@ -1725,7 +1725,7 @@ dependencies = [
 [[package]]
 name = "embassy-embedded-hal"
 version = "0.3.0"
-source = "git+https://github.com/ariel-os/embassy?branch=embassy-embedded-hal-v0.3.0%2Bariel-os#21147bdceb85f55e375973f30e47c17036063689"
+source = "git+https://github.com/ariel-os/embassy?rev=21147bdceb85f55e375973f30e47c17036063689#21147bdceb85f55e375973f30e47c17036063689"
 dependencies = [
  "defmt 0.3.100",
  "embassy-futures",
@@ -1741,7 +1741,7 @@ dependencies = [
 [[package]]
 name = "embassy-executor"
 version = "0.7.0"
-source = "git+https://github.com/ariel-os/embassy?branch=embassy-executor-v0.7.0%2B04.04.25%2Bariel-os#b552a87578479a92b3027bd208c712445499589c"
+source = "git+https://github.com/ariel-os/embassy?rev=b552a87578479a92b3027bd208c712445499589c#b552a87578479a92b3027bd208c712445499589c"
 dependencies = [
  "cortex-m",
  "critical-section",
@@ -1752,7 +1752,7 @@ dependencies = [
 [[package]]
 name = "embassy-executor-macros"
 version = "0.6.2"
-source = "git+https://github.com/ariel-os/embassy?branch=embassy-executor-macros-v0.6.2%2B04.04.25#1b08496e441cfd2b2e9660fe0cc589c3bc5f0824"
+source = "git+https://github.com/ariel-os/embassy?rev=1b08496e441cfd2b2e9660fe0cc589c3bc5f0824#1b08496e441cfd2b2e9660fe0cc589c3bc5f0824"
 dependencies = [
  "darling",
  "proc-macro2",
@@ -1772,7 +1772,7 @@ dependencies = [
 [[package]]
 name = "embassy-hal-internal"
 version = "0.2.0"
-source = "git+https://github.com/ariel-os/embassy?branch=embassy-hal-internal-v0.2.0%2Bariel-os#ed7d22c1881b64f9bdd2e69a5777b002279033a6"
+source = "git+https://github.com/ariel-os/embassy?rev=ed7d22c1881b64f9bdd2e69a5777b002279033a6#ed7d22c1881b64f9bdd2e69a5777b002279033a6"
 dependencies = [
  "cortex-m",
  "critical-section",
@@ -1783,7 +1783,7 @@ dependencies = [
 [[package]]
 name = "embassy-net"
 version = "0.6.0"
-source = "git+https://github.com/ariel-os/embassy?branch=embassy-net-v0.6.0%2Bariel-os#3d9f77ee05cdb18f1cd676233bcda9b6f7be3369"
+source = "git+https://github.com/ariel-os/embassy?rev=3d9f77ee05cdb18f1cd676233bcda9b6f7be3369#3d9f77ee05cdb18f1cd676233bcda9b6f7be3369"
 dependencies = [
  "defmt 0.3.100",
  "document-features",
@@ -1820,7 +1820,7 @@ dependencies = [
 [[package]]
 name = "embassy-nrf"
 version = "0.3.1"
-source = "git+https://github.com/ariel-os/embassy?branch=embassy-nrf-v0.3.1%2Bariel-os#1d258e63acc0a322ccea28786a4143115ba303b8"
+source = "git+https://github.com/ariel-os/embassy?rev=1d258e63acc0a322ccea28786a4143115ba303b8#1d258e63acc0a322ccea28786a4143115ba303b8"
 dependencies = [
  "bitflags 2.8.0",
  "cfg-if",
@@ -1852,7 +1852,7 @@ dependencies = [
 [[package]]
 name = "embassy-rp"
 version = "0.4.0"
-source = "git+https://github.com/ariel-os/embassy?branch=embassy-rp-v0.4.0%2Bariel-os%2Btrng-panic-fix#1dd58227a73efa8da2aef96aaccf17b8749b9f7b"
+source = "git+https://github.com/ariel-os/embassy?rev=1dd58227a73efa8da2aef96aaccf17b8749b9f7b#1dd58227a73efa8da2aef96aaccf17b8749b9f7b"
 dependencies = [
  "atomic-polyfill",
  "cfg-if",
@@ -1892,7 +1892,7 @@ dependencies = [
 [[package]]
 name = "embassy-stm32"
 version = "0.2.0"
-source = "git+https://github.com/ariel-os/embassy?branch=embassy-stm32-v0.2.0%2Bariel-os#90c8da09646d5fd97b7d416720688dcd3da1ecfb"
+source = "git+https://github.com/ariel-os/embassy?rev=90c8da09646d5fd97b7d416720688dcd3da1ecfb#90c8da09646d5fd97b7d416720688dcd3da1ecfb"
 dependencies = [
  "aligned",
  "bit_field",
@@ -1967,7 +1967,7 @@ dependencies = [
 [[package]]
 name = "embassy-time"
 version = "0.4.0"
-source = "git+https://github.com/ariel-os/embassy?branch=embassy-time-v0.4.0%2Bariel-os#f9b4c8132b07ef696668005846ee2240a8f57573"
+source = "git+https://github.com/ariel-os/embassy?rev=f9b4c8132b07ef696668005846ee2240a8f57573#f9b4c8132b07ef696668005846ee2240a8f57573"
 dependencies = [
  "cfg-if",
  "critical-section",
@@ -2184,7 +2184,7 @@ dependencies = [
 [[package]]
 name = "embedded-test"
 version = "0.6.2"
-source = "git+https://github.com/ariel-os/embedded-test?branch=v0.6.2%2Bariel-os#20642538eb4e6fa44b5f37723b07946c74b5c757"
+source = "git+https://github.com/ariel-os/embedded-test?rev=20642538eb4e6fa44b5f37723b07946c74b5c757#20642538eb4e6fa44b5f37723b07946c74b5c757"
 dependencies = [
  "embassy-executor",
  "embedded-test-macros",
@@ -2196,7 +2196,7 @@ dependencies = [
 [[package]]
 name = "embedded-test-macros"
 version = "0.6.1"
-source = "git+https://github.com/ariel-os/embedded-test?branch=v0.6.2%2Bariel-os#20642538eb4e6fa44b5f37723b07946c74b5c757"
+source = "git+https://github.com/ariel-os/embedded-test?rev=20642538eb4e6fa44b5f37723b07946c74b5c757#20642538eb4e6fa44b5f37723b07946c74b5c757"
 dependencies = [
  "darling",
  "proc-macro2",
@@ -2322,7 +2322,7 @@ dependencies = [
 [[package]]
 name = "esp-alloc"
 version = "0.6.0"
-source = "git+https://github.com/ariel-os/esp-hal?branch=v0.23.1%2Bariel-os-threads#aa8d1995fc06eb5e6d04a2022ecf3679b4929e63"
+source = "git+https://github.com/ariel-os/esp-hal?rev=aa8d1995fc06eb5e6d04a2022ecf3679b4929e63#aa8d1995fc06eb5e6d04a2022ecf3679b4929e63"
 dependencies = [
  "cfg-if",
  "critical-section",
@@ -2334,7 +2334,7 @@ dependencies = [
 [[package]]
 name = "esp-build"
 version = "0.2.0"
-source = "git+https://github.com/ariel-os/esp-hal?branch=v0.23.1%2Bariel-os-threads#aa8d1995fc06eb5e6d04a2022ecf3679b4929e63"
+source = "git+https://github.com/ariel-os/esp-hal?rev=aa8d1995fc06eb5e6d04a2022ecf3679b4929e63#aa8d1995fc06eb5e6d04a2022ecf3679b4929e63"
 dependencies = [
  "quote",
  "syn 2.0.96",
@@ -2344,7 +2344,7 @@ dependencies = [
 [[package]]
 name = "esp-config"
 version = "0.3.0"
-source = "git+https://github.com/ariel-os/esp-hal?branch=v0.23.1%2Bariel-os-threads#aa8d1995fc06eb5e6d04a2022ecf3679b4929e63"
+source = "git+https://github.com/ariel-os/esp-hal?rev=aa8d1995fc06eb5e6d04a2022ecf3679b4929e63#aa8d1995fc06eb5e6d04a2022ecf3679b4929e63"
 dependencies = [
  "document-features",
 ]
@@ -2352,7 +2352,7 @@ dependencies = [
 [[package]]
 name = "esp-hal"
 version = "0.23.1"
-source = "git+https://github.com/ariel-os/esp-hal?branch=v0.23.1%2Bariel-os-threads#aa8d1995fc06eb5e6d04a2022ecf3679b4929e63"
+source = "git+https://github.com/ariel-os/esp-hal?rev=aa8d1995fc06eb5e6d04a2022ecf3679b4929e63#aa8d1995fc06eb5e6d04a2022ecf3679b4929e63"
 dependencies = [
  "basic-toml",
  "bitfield 0.17.0",
@@ -2410,7 +2410,7 @@ dependencies = [
 [[package]]
 name = "esp-hal-embassy"
 version = "0.6.0"
-source = "git+https://github.com/ariel-os/esp-hal?branch=v0.23.1%2Bariel-os-threads#aa8d1995fc06eb5e6d04a2022ecf3679b4929e63"
+source = "git+https://github.com/ariel-os/esp-hal?rev=aa8d1995fc06eb5e6d04a2022ecf3679b4929e63#aa8d1995fc06eb5e6d04a2022ecf3679b4929e63"
 dependencies = [
  "critical-section",
  "document-features",
@@ -2432,7 +2432,7 @@ dependencies = [
 [[package]]
 name = "esp-hal-procmacros"
 version = "0.16.0"
-source = "git+https://github.com/ariel-os/esp-hal?branch=v0.23.1%2Bariel-os-threads#aa8d1995fc06eb5e6d04a2022ecf3679b4929e63"
+source = "git+https://github.com/ariel-os/esp-hal?rev=aa8d1995fc06eb5e6d04a2022ecf3679b4929e63#aa8d1995fc06eb5e6d04a2022ecf3679b4929e63"
 dependencies = [
  "darling",
  "document-features",
@@ -2448,7 +2448,7 @@ dependencies = [
 [[package]]
 name = "esp-metadata"
 version = "0.5.0"
-source = "git+https://github.com/ariel-os/esp-hal?branch=v0.23.1%2Bariel-os-threads#aa8d1995fc06eb5e6d04a2022ecf3679b4929e63"
+source = "git+https://github.com/ariel-os/esp-hal?rev=aa8d1995fc06eb5e6d04a2022ecf3679b4929e63#aa8d1995fc06eb5e6d04a2022ecf3679b4929e63"
 dependencies = [
  "anyhow",
  "basic-toml",
@@ -2459,7 +2459,7 @@ dependencies = [
 [[package]]
 name = "esp-println"
 version = "0.13.0"
-source = "git+https://github.com/ariel-os/esp-hal?branch=v0.23.1%2Bariel-os-threads#aa8d1995fc06eb5e6d04a2022ecf3679b4929e63"
+source = "git+https://github.com/ariel-os/esp-hal?rev=aa8d1995fc06eb5e6d04a2022ecf3679b4929e63#aa8d1995fc06eb5e6d04a2022ecf3679b4929e63"
 dependencies = [
  "critical-section",
  "defmt 0.3.100",
@@ -2471,7 +2471,7 @@ dependencies = [
 [[package]]
 name = "esp-riscv-rt"
 version = "0.9.1"
-source = "git+https://github.com/ariel-os/esp-hal?branch=v0.23.1%2Bariel-os-threads#aa8d1995fc06eb5e6d04a2022ecf3679b4929e63"
+source = "git+https://github.com/ariel-os/esp-hal?rev=aa8d1995fc06eb5e6d04a2022ecf3679b4929e63#aa8d1995fc06eb5e6d04a2022ecf3679b4929e63"
 dependencies = [
  "document-features",
  "riscv",
@@ -2494,7 +2494,7 @@ dependencies = [
 [[package]]
 name = "esp-wifi"
 version = "0.12.0"
-source = "git+https://github.com/ariel-os/esp-hal?branch=v0.23.1%2Bariel-os-threads#aa8d1995fc06eb5e6d04a2022ecf3679b4929e63"
+source = "git+https://github.com/ariel-os/esp-hal?rev=aa8d1995fc06eb5e6d04a2022ecf3679b4929e63#aa8d1995fc06eb5e6d04a2022ecf3679b4929e63"
 dependencies = [
  "bt-hci",
  "cfg-if",
@@ -6059,7 +6059,7 @@ checksum = "1e9df38ee2d2c3c5948ea468a8406ff0db0b29ae1ffde1bcf20ef305bcc95c51"
 [[package]]
 name = "xtensa-lx"
 version = "0.10.0"
-source = "git+https://github.com/ariel-os/esp-hal?branch=v0.23.1%2Bariel-os-threads#aa8d1995fc06eb5e6d04a2022ecf3679b4929e63"
+source = "git+https://github.com/ariel-os/esp-hal?rev=aa8d1995fc06eb5e6d04a2022ecf3679b4929e63#aa8d1995fc06eb5e6d04a2022ecf3679b4929e63"
 dependencies = [
  "critical-section",
  "document-features",
@@ -6068,7 +6068,7 @@ dependencies = [
 [[package]]
 name = "xtensa-lx-rt"
 version = "0.18.0"
-source = "git+https://github.com/ariel-os/esp-hal?branch=v0.23.1%2Bariel-os-threads#aa8d1995fc06eb5e6d04a2022ecf3679b4929e63"
+source = "git+https://github.com/ariel-os/esp-hal?rev=aa8d1995fc06eb5e6d04a2022ecf3679b4929e63#aa8d1995fc06eb5e6d04a2022ecf3679b4929e63"
 dependencies = [
  "anyhow",
  "document-features",
@@ -6085,7 +6085,7 @@ dependencies = [
 [[package]]
 name = "xtensa-lx-rt-proc-macros"
 version = "0.2.2"
-source = "git+https://github.com/ariel-os/esp-hal?branch=v0.23.1%2Bariel-os-threads#aa8d1995fc06eb5e6d04a2022ecf3679b4929e63"
+source = "git+https://github.com/ariel-os/esp-hal?rev=aa8d1995fc06eb5e6d04a2022ecf3679b4929e63#aa8d1995fc06eb5e6d04a2022ecf3679b4929e63"
 dependencies = [
  "darling",
  "proc-macro2",
