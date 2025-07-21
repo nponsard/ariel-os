@@ -4,6 +4,7 @@ on:
   pull_request:
     branches:
       - main
+  push:
   merge_group:
   schedule:
     # run every morning at 3:17am
