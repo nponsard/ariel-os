@@ -556,7 +556,12 @@ boards:
         status: not_currently_supported
         comments:
           - an external Wi-Fi module is present on the board
-      ethernet_over_usb: not_currently_supported
+      ethernet_over_usb:
+        status: not_currently_supported
+        comments:
+          - USB does not enumerate
+          - "See also: https://github.com/embassy-rs/embassy/issues/2376"
+          - "Workaround in: https://github.com/ariel-os/ariel-os/pull/1126"
 
   st-nucleo-c031c6:
     name: ST NUCLEO-C031C6
@@ -600,7 +605,12 @@ boards:
     support:
       user_usb: supported
       wifi: not_available
-      ethernet_over_usb: not_currently_supported
+      ethernet_over_usb:
+        status: not_currently_supported
+        comments:
+          - USB does not enumerate
+          - "See also: https://github.com/embassy-rs/embassy/issues/2376"
+          - "Workaround in: https://github.com/ariel-os/ariel-os/pull/1126"
 
   st-nucleo-wb55:
     name: ST NUCLEO-WB55RG
@@ -630,7 +640,9 @@ boards:
       ethernet_over_usb:
         status: not_currently_supported
         comments:
-          - does not enumerate
+          - USB does not enumerate
+          - "See also: https://github.com/embassy-rs/embassy/issues/2376"
+          - "Workaround in: https://github.com/ariel-os/ariel-os/pull/1126"
 
   stm32u083c-dk:
     name: STM32U083C-DK
