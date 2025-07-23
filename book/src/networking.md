@@ -15,7 +15,7 @@ Which link layer is used for networking is selected at compile time,
 through [laze modules][laze-modules-book].
 
 - `usb-ethernet`: Selects Ethernet-over-USB.
-- `wifi-cyw43`: Selects Wi-Fi using the CYW43 chip along an RP2040 MCU (e.g., on the Raspberry Pi Pico W).
+- `wifi-cyw43`: Selects Wi-Fi using the CYW43 chip along an RP2040 or RP235x MCU (e.g., on the Raspberry Pi Pico W or Pico 2 W).
 - `wifi-esp`: Selects Wi-Fi on an ESP32 MCU.
 
 ## Network Credentials
