@@ -14,6 +14,8 @@ mod udp_nal;
 #[cfg(feature = "coap-server-config-storage")]
 mod stored;
 
+use core::net::{Ipv6Addr, SocketAddr};
+
 use ariel_os_debug::log::info;
 use ariel_os_embassy::cell::SameExecutorCell;
 use coap_handler_implementations::ReportingHandlerBuilder;
@@ -142,7 +144,7 @@ async fn coap_run_impl(handler: impl coap_handler::Handler + coap_handler::Repor
 
     info!("Starting up CoAP server");
 
-    let local_any = "[::]:5683".parse().unwrap();
+    let local_any = SocketAddr::new(Ipv6Addr::UNSPECIFIED.into(), 5683);
     let mut unconnected = udp_nal::UnconnectedUdp::bind_multiple(socket, local_any)
         .await
         .unwrap();
