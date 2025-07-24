@@ -1552,9 +1552,13 @@ modules:
         export:
           - RUSTFLAGS
           - RUSTDOCFLAGS
+          - LLVM_PROFILE_FILE
         build: false
         workdir: ${appdir}
         cmd:
+          - echo $LLVM_PROFILE_FILE
+          - echo ${appdir}
+          - echo ${RUSTFLAGS}
           - ${CARGO} test --features _test $@
 
   - name: embedded-test
@@ -1637,6 +1641,13 @@ modules:
       global:
         CARGO_WRAPPER:
           - criticalup run
+  - name: coverage
+    env:
+      global:
+        RUSTFLAGS:
+          - "-C instrument-coverage"
+        LLVM_PROFILE_FILE:
+          - "${relroot}/${build-dir}/profile/%p-%m.profraw" # TODO: use absolute path, LLVM seems to have an issue with relative paths
 
 builders:
   # host builder (for housekeeping tasks)
