@@ -133,6 +133,11 @@ fn main() -> miette::Result<()> {
     let toolchain = toolchain[1..].to_string(); // Remove the leading '+' character
     extra_env.insert("RUSTUP_TOOLCHAIN".to_string(), Value::String(toolchain));
 
+    // Copy the RUSTFLAGS environment variable, without the target prefix
+    if let Ok(rustflags_env) = std::env::var("_RUSTFLAGS") {
+        extra_env.insert("RUSTFLAGS".to_string(), Value::String(rustflags_env));
+    }
+
     if !extra_env.is_empty() {
         settings_json.insert(
             "rust-analyzer.server.extraEnv".to_string(),

@@ -199,7 +199,7 @@ contexts:
           - CARGO_ARGS
           - CARGO_ENV
         cmd: # We have to obfuscate the variables to avoid cargo interpreting them since we're running a rust script
-          - _CARGO_TOOLCHAIN='${CARGO_TOOLCHAIN}' ${relroot}/${root}/scripts/vscode.rs
+          - _CARGO_TOOLCHAIN='${CARGO_TOOLCHAIN}' _RUSTFLAGS="${RUSTFLAGS}" ${relroot}/${root}/scripts/vscode.rs
 
   - name: nrf
     help: Nordic MCU support (based on embassy-nrf)
