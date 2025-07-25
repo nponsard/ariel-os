@@ -8,7 +8,6 @@
 // and https://bthome.io/format/#sensor-data
 // and https://www.iana.org/assignments/senml/senml.xhtml
 #[derive(Debug, Copy, Clone, PartialEq, Eq)]
-#[cfg_attr(feature = "defmt", derive(defmt::Format))]
 #[non_exhaustive]
 pub enum MeasurementUnit {
     /// [Acceleration *g*](https://en.wikipedia.org/wiki/G-force#Unit_and_measurement).
@@ -127,5 +126,14 @@ macro_rules! provide_unit_fmt {
 impl core::fmt::Display for MeasurementUnit {
     fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
         provide_unit_fmt!(self, f)
+    }
+}
+
+#[cfg(feature = "defmt")]
+impl defmt::Format for MeasurementUnit {
+    fn format(&self, f: defmt::Formatter<'_>) {
+        use defmt::write;
+
+        provide_unit_fmt!(self, f);
     }
 }
