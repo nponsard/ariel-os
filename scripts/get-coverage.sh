@@ -25,5 +25,5 @@ objects=$(cat build/profile/objects)
 
 ${profdata} merge -sparse build/profile/*.profraw -o build/profile/output.profdata  
 
-${cov} export ${objects} -Xdemangler=rustfilt -instr-profile=build/profile/output.profdata --ignore-filename-regex='/.cargo' --ignore-filename-regex='rustc/' --ignore-filename-regex='/.rustup' -format=lcov > build/profile/coverage.txt
-# ${cov} show ${objects} -Xdemangler=rustfilt -instr-profile=build/profile/output.profdata --ignore-filename-regex='/.cargo' --ignore-filename-regex='rustc/' --ignore-filename-regex='/.rustup' -format=html -output-dir build/profile_html
+${cov} export ${objects} -Xdemangler=rustfilt -instr-profile=build/profile/output.profdata --ignore-filename-regex='/.cargo' --ignore-filename-regex='rustc/' --ignore-filename-regex='/.rustup' --ignore-filename-regex='/target' -format=lcov > build/profile/coverage.txt
+# ${cov} show ${objects} -Xdemangler=rustfilt -instr-profile=build/profile/output.profdata --ignore-filename-regex='/.cargo' --ignore-filename-regex='rustc/' --ignore-filename-regex='/.rustup' --ignore-filename-regex='/target'  -format=html -output-dir build/profile_html
