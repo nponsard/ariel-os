@@ -7,7 +7,7 @@ laze -C examples/hello-world build -b native -s coverage run
 
 # add doctests to the objects
 
-for file in  target/debug/doctestbins/*/rust_out ;
+for file in target/debug/doctestbins/*/rust_out build/bin/native/cargo/x86_64-unknown-linux-gnu/release/hello-world ;
 do 
   if [ -f "$file" ]; then
     printf "%s %s " -object $file >> build/profile/objects;
