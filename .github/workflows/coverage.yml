@@ -28,6 +28,10 @@ jobs:
         with:
           toolchain: ${{ steps.get_toolchain.outputs.toolchain }}
           components: llvm-tools-preview
+      - name: Install rustfilt
+        uses: taiki-e/install-action@v2
+        with:
+          tool: rustfilt@0.2.1
 
       # - name: Install laze
       #   uses: taiki-e/install-action@v2
