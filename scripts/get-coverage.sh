@@ -2,8 +2,8 @@
 
 # See https://doc.rust-lang.org/rustc/instrument-coverage.html
 
-laze build -c -s nightly --builders host  --global -m --keep-going=0 -s coverage coverage 
-
+laze build -c -s nightly -DCARGO_ARGS+='--locked' --builders host  --global -m --keep-going=0 -s coverage coverage 
+laze -C examples/hello-world build -b native -s coverage run
 
 # add doctests to the objects
 
@@ -25,4 +25,5 @@ objects=$(cat build/profile/objects)
 
 ${profdata} merge -sparse build/profile/*.profraw -o build/profile/output.profdata  
 
-${cov} export ${objects} -Xdemangler=rustfilt -instr-profile=build/profile/output.profdata -format=lcov --ignore-filename-regex='/.cargo' --ignore-filename-regex='rustc/' --ignore-filename-regex='/.rustup' > build/profile/coverage.txt
+${cov} export ${objects} -Xdemangler=rustfilt -instr-profile=build/profile/output.profdata --ignore-filename-regex='/.cargo' --ignore-filename-regex='rustc/' --ignore-filename-regex='/.rustup' -format=lcov > build/profile/coverage.txt
+# ${cov} show ${objects} -Xdemangler=rustfilt -instr-profile=build/profile/output.profdata --ignore-filename-regex='/.cargo' --ignore-filename-regex='rustc/' --ignore-filename-regex='/.rustup' -format=html -output-dir build/profile_html
