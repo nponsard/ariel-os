@@ -2,8 +2,8 @@ name: Code Coverage Workflow
 
 on:
   push:
-    branches:
-      - main
+    # branches:
+    #   - main
   pull_request:
     branches:
       - main
@@ -53,3 +53,4 @@ jobs:
         with:
           files: ./build/profile/coverage.txt
           verbose: true
+          token: ${{ secrets.CODECOV_TOKEN }}
