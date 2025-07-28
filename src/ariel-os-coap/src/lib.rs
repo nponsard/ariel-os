@@ -45,7 +45,7 @@ mod demo_setup {
         hex!("72cc4761dbd4c78f758931aa589d348d1ef874a7e303ede2f140dcf3e6aa4aac");
 
     /// Scope usable by any client inside any demo device.
-    const UNAUTHENTICATED_SCOPE: cboritem::CborItem = cbor!([
+    const UNAUTHENTICATED_SCOPE: cboritem::CborItem<'_> = cbor!([
             ["/.well-known/core", 1],
             ["/poem", 1],
             ["/hello", 1],
@@ -54,7 +54,7 @@ mod demo_setup {
     ]);
 
     /// Scope usable by the the administrator of the demo device.
-    const ADMIN_SCOPE: cboritem::CborItem = cbor!([
+    const ADMIN_SCOPE: cboritem::CborItem<'_> = cbor!([
             ["/stdout", 17 / GET and FETCH /],
             ["/.well-known/core", 1],
             ["/poem", 1]

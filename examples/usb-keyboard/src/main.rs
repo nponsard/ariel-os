@@ -28,7 +28,7 @@ const HID_READER_BUFFER_SIZE: usize = 1;
 const HID_WRITER_BUFFER_SIZE: usize = 8;
 
 #[ariel_os::config(usb)]
-const USB_CONFIG: embassy_usb::Config = {
+const USB_CONFIG: embassy_usb::Config<'_> = {
     let mut config = embassy_usb::Config::new(0xc0de, 0xcafe);
     config.manufacturer = Some(ariel_os::buildinfo::OS_NAME);
     config.product = Some("HID keyboard example");
@@ -44,7 +44,7 @@ const USB_CONFIG: embassy_usb::Config = {
     config
 };
 
-static HID_STATE: StaticCell<hid::State> = StaticCell::new();
+static HID_STATE: StaticCell<hid::State<'_>> = StaticCell::new();
 
 #[ariel_os::task(autostart, peripherals, usb_builder_hook)]
 async fn usb_keyboard(button_peripherals: pins::Buttons) {
