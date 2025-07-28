@@ -2,7 +2,7 @@
 
 # See https://doc.rust-lang.org/rustc/instrument-coverage.html
 
-laze build -c -s nightly -DCARGO_ARGS+='--locked' --builders host  --global -m --keep-going=0 -s coverage coverage 
+laze build -s nightly -DCARGO_ARGS+='--locked' --builders host  --global -m --keep-going=0 -s coverage coverage 
 laze -C examples/hello-world build -b native -s coverage run
 
 # add doctests to the objects

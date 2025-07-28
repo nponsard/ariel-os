@@ -1654,7 +1654,7 @@ modules:
           - "${absroot}/${build-dir}/profile"
     tasks:
       coverage:
-        help: collects coverage of tests
+        help: collects coverage of host tests
         export:
           - RUSTFLAGS
           - RUSTDOCFLAGS
