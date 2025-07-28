@@ -15,7 +15,7 @@ use esp_hal::lcd_cam::{
     LcdCam,
     cam::{Camera, Config, RxEightBits},
 };
-use fugit::RateExtU32;
+use fugit::{HertzU32, MegahertzU32};
 #[ariel_os::task(autostart, peripherals)]
 async fn i2c_scanner(peripherals: pins::Peripherals) {
     let mut i2c_config = hal::i2c::controller::Config::default();
@@ -35,7 +35,7 @@ async fn i2c_scanner(peripherals: pins::Peripherals) {
     let lcd_cam = LcdCam::new(peripherals.lcd_cam);
 
     let mut config = Config::default();
-    config.frequency = 40.Mhz();
+    config.frequency = HertzU32::MHz(40);
 
     let camera = esp_hal::lcd_cam::cam::Camera::new(
         lcd_cam.cam,
@@ -58,7 +58,13 @@ async fn i2c_scanner(peripherals: pins::Peripherals) {
     .with_ctrl_pins(peripherals.dvp_vsync, peripherals.dvp_href);
     let dma_buf = dma_rx_stream_buffer!(64_000, 2000);
 
-    let transfer = camera.receive(dma_buf).unwrap();
+    let transfer = match camera.receive(dma_buf) {
+        Ok(transfer) => transfer,
+        Err(e) => {
+            info!("Failed to start camera transfer");
+            return;
+        }
+    };
 
     let (data, ends_with_eof) = transfer.peek_until_eof();
 
