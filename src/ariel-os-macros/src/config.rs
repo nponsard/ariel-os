@@ -105,9 +105,12 @@ mod config_macro {
         ///
         /// Returns an error when an unsupported parameter is found.
         pub fn parse(&mut self, meta: &syn::meta::ParseNestedMeta<'_>) -> syn::Result<()> {
-            use enum_iterator::all;
+            let variants = [
+                (ConfigKind::Network.as_name(), ConfigKind::Network),
+                (ConfigKind::Usb.as_name(), ConfigKind::Usb),
+            ];
 
-            for (config_name, kind) in all::<ConfigKind>().map(|c| (c.as_name(), c)) {
+            for (config_name, kind) in variants {
                 if meta.path.is_ident(config_name) {
                     self.check_only_one_kind(config_name);
                     self.kind = Some(kind);
@@ -115,10 +118,12 @@ mod config_macro {
                 }
             }
 
-            let supported_params = all::<ConfigKind>()
-                .map(|c| format!("`{}`", c.as_name()))
+            let supported_params = variants
+                .iter()
+                .map(|(name, _)| format!("`{name}`"))
                 .collect::<Vec<_>>()
                 .join(", ");
+
             Err(meta.error(format!(
                 "unsupported parameter ({supported_params} are supported)",
             )))
@@ -137,7 +142,7 @@ mod config_macro {
         }
     }
 
-    #[derive(Debug, enum_iterator::Sequence)]
+    #[derive(Debug, Clone, Copy)]
     pub enum ConfigKind {
         // Ble,
         Network,
@@ -145,7 +150,7 @@ mod config_macro {
     }
 
     impl ConfigKind {
-        pub fn as_name(&self) -> &'static str {
+        pub fn as_name(self) -> &'static str {
             match self {
                 // Self::Ble => "ble",
                 Self::Network => "network",
