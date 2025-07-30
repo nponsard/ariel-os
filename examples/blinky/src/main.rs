@@ -5,6 +5,7 @@ mod pins;
 
 use ariel_os::{
     gpio::{Level, Output},
+    debug::log::info,
     time::Timer,
 };
 
@@ -18,6 +19,7 @@ async fn blinky(peripherals: pins::LedPeripherals) {
 
     loop {
         led.toggle();
+        info!("LED toggled");
         Timer::after_millis(500).await;
     }
 }
