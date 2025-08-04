@@ -18,7 +18,7 @@ pub type NetworkDevice = WifiDevice<'static, WifiStaDevice>;
 // `EspWifiInitialization` from `crate::init()`.
 // Using a `once_cell::OnceCell` here for critical-section support, just to be
 // sure.
-pub static WIFI_INIT: OnceCell<EspWifiController> = OnceCell::new();
+pub static WIFI_INIT: OnceCell<EspWifiController<'_>> = OnceCell::new();
 
 pub fn init(peripherals: &mut crate::OptionalPeripherals, spawner: Spawner) -> NetworkDevice {
     let wifi = peripherals.WIFI.take().unwrap();

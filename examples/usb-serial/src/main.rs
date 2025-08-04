@@ -15,7 +15,7 @@ use embassy_usb::{
 const MAX_FULL_SPEED_PACKET_SIZE: u8 = 64;
 
 #[ariel_os::config(usb)]
-const USB_CONFIG: embassy_usb::Config = {
+const USB_CONFIG: embassy_usb::Config<'_> = {
     let mut config = embassy_usb::Config::new(0xc0de, 0xcafe);
     config.manufacturer = Some(ariel_os::buildinfo::OS_NAME);
     config.product = Some("USB serial example");
@@ -35,7 +35,7 @@ const USB_CONFIG: embassy_usb::Config = {
 async fn main() {
     info!("Hello World!");
 
-    static STATE: StaticCell<State> = StaticCell::new();
+    static STATE: StaticCell<State<'_>> = StaticCell::new();
 
     // Create and inject the USB class on the system USB builder.
     let mut class = USB_BUILDER_HOOK
