@@ -103,8 +103,11 @@ cfg_if::cfg_if! {
         use wifi::NetworkDevice;
     } else if #[cfg(feature = "eth")] {
         use eth::NetworkDevice;
+    } else if #[cfg(feature= "ltem-nrf-modem")] {
+        use crate::hal::ltem::NetworkDevice;
     } else if #[cfg(context = "ariel-os")] {
         compile_error!("no backend for net is active");
+
     } else {
         use net::DummyDriver as NetworkDevice;
     }
@@ -342,6 +345,9 @@ async fn init_task(mut peripherals: hal::OptionalPeripherals) {
     #[cfg(feature = "wifi-esp")]
     let device = hal::wifi::esp_wifi::init(&mut peripherals, spawner);
 
+    #[cfg(feature = "ltem-nrf-modem")]
+    let (device, control) = hal::ltem::init(spawner).await;
+
     #[cfg(feature = "net")]
     {
         use embassy_net::StackResources;
@@ -361,14 +367,18 @@ async fn init_task(mut peripherals: hal::OptionalPeripherals) {
             feature = "usb-ethernet",
             feature = "wifi-cyw43",
             feature = "wifi-esp",
-            feature = "eth"
+            feature = "eth",
+            feature = "ltem-nrf-modem"
         )))]
         // The creation of `device` is not organized in such a way that they could be put in a
         // cfg-if without larger refactoring; relying on unused variable lints to keep the
         // condition list up to date.
         let device: NetworkDevice = net::new_dummy();
 
+        #[cfg(not(feature = "ltem-nrf-modem"))]
         let config = net::config();
+        #[cfg(feature = "ltem-nrf-modem")]
+        let config = embassy_net::Config::default();
 
         let seed = net::unique_seed();
         debug!("Network stack seed: {:#x}", seed);
@@ -388,6 +398,21 @@ async fn init_task(mut peripherals: hal::OptionalPeripherals) {
             .is_err()
         {
             unreachable!();
+        }
+
+        // update the network stack with the device's configuration
+        #[cfg(feature = "ltem-nrf-modem")]
+        {
+            // let apn_config = hal::ltem::Config {
+            //     apn: b"iot.nat.es",
+            //     auth_prot: hal::ltem::AuthProt::Pap,
+            //     auth: Some((b"orange", b"orange")),
+            //     pin: None,
+            // };
+
+            spawner
+                .spawn(hal::ltem::control_task(control, None, stack))
+                .unwrap();
         }
     }
 
