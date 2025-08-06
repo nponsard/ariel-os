@@ -11,7 +11,7 @@ use nrf_modem::{ConnectionPreference, MemoryLayout, SystemMode};
 // need to make the symbols available so nrf_modem can link against them
 extern crate tinyrlibc as _;
 
-use ariel_os_debug::log::debug;
+use ariel_os_debug::log::{debug, info};
 
 #[cfg(feature = "executor-interrupt")]
 use cortex_m::interrupt::InterruptNumber;
@@ -154,4 +154,7 @@ pub async fn driver() {
     nrf_modem::init_with_custom_layout(system_mode, memory_layout)
         .await
         .unwrap();
+
+    let response = nrf_modem::send_at::<64>("AT+CPIN?").await.unwrap();
+    info!("Pin response: {}", response.as_str());
 }

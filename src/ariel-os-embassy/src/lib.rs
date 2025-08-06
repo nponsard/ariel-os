@@ -403,15 +403,15 @@ async fn init_task(mut peripherals: hal::OptionalPeripherals) {
         // update the network stack with the device's configuration
         #[cfg(feature = "ltem-nrf-modem")]
         {
-            // let apn_config = hal::ltem::Config {
-            //     apn: b"iot.nat.es",
-            //     auth_prot: hal::ltem::AuthProt::Pap,
-            //     auth: Some((b"orange", b"orange")),
-            //     pin: None,
-            // };
+            let apn_config = hal::ltem::Config {
+                apn: b"eapn1.net",
+                auth_prot: hal::ltem::AuthProt::Pap,
+                auth: Some((b"NordicSe", b"NordicSe")),
+                pin: None,
+            };
 
             spawner
-                .spawn(hal::ltem::control_task(control, None, stack))
+                .spawn(hal::ltem::control_task(control, Some(apn_config), stack))
                 .unwrap();
         }
     }
