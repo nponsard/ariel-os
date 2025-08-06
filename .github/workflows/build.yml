@@ -73,7 +73,7 @@ jobs:
 
   build:
     needs: check-labels
-    runs-on: ubuntu-24.04
+    runs-on: self-hosted
     if: ${{ needs.check-labels.outputs.label != 'ci-build:skip' }}
 
     env:
