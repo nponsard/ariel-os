@@ -81,6 +81,7 @@ jobs:
       RUSTC_WRAPPER: "sccache"
       ## sccache cache directory, mounted on each node
       SCCACHE_DIR: "/mnt/sccache"
+      SCCACHE_CACHE_SIZE: "300G"
       ## sccache configuration for GitHub Actions
       # SCCACHE_GHA_ENABLED: "true"
       ## sccache minio configuration
