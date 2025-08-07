@@ -157,25 +157,25 @@ jobs:
         if: steps.should-skip.outputs.result != 'true'
         run: echo "toolchain=$(scripts/rust-toolchain.sh)" >> $GITHUB_OUTPUT
 
-      - name: Install nightly toolchain
-        if: steps.should-skip.outputs.result != 'true'
-        uses: dtolnay/rust-toolchain@master
-        with:
-          toolchain: ${{ steps.get_toolchain.outputs.toolchain }}
-          targets: riscv32imc-unknown-none-elf,riscv32imac-unknown-none-elf,thumbv6m-none-eabi,thumbv7m-none-eabi,thumbv7em-none-eabi,thumbv7em-none-eabihf,thumbv8m.main-none-eabi,thumbv8m.main-none-eabihf
-          # rust-src: Used for -Zbuild-std.
-          # rustfmt: Used by bindgen for liboscore
-          components: rust-src, rustfmt
+      # - name: Install nightly toolchain
+      #   if: steps.should-skip.outputs.result != 'true'
+      #   uses: dtolnay/rust-toolchain@master
+      #   with:
+      #     toolchain: ${{ steps.get_toolchain.outputs.toolchain }}
+      #     targets: riscv32imc-unknown-none-elf,riscv32imac-unknown-none-elf,thumbv6m-none-eabi,thumbv7m-none-eabi,thumbv7em-none-eabi,thumbv7em-none-eabihf,thumbv8m.main-none-eabi,thumbv8m.main-none-eabihf
+      #     # rust-src: Used for -Zbuild-std.
+      #     # rustfmt: Used by bindgen for liboscore
+      #     components: rust-src, rustfmt
 
-      - name: Install stable toolchain
-        if: steps.should-skip.outputs.result != 'true'
-        # configure MSRV here:
-        uses: dtolnay/rust-toolchain@1.85
-        with:
-          targets: riscv32imc-unknown-none-elf,riscv32imac-unknown-none-elf,thumbv6m-none-eabi,thumbv7m-none-eabi,thumbv7em-none-eabi,thumbv7em-none-eabihf,thumbv8m.main-none-eabi,thumbv8m.main-none-eabihf
-          # rust-src: Used for -Zbuild-std.
-          # rustfmt: Used by bindgen for liboscore
-          components: rust-src, rustfmt
+      # - name: Install stable toolchain
+      #   if: steps.should-skip.outputs.result != 'true'
+      #   # configure MSRV here:
+      #   uses: dtolnay/rust-toolchain@1.85
+      #   with:
+      #     targets: riscv32imc-unknown-none-elf,riscv32imac-unknown-none-elf,thumbv6m-none-eabi,thumbv7m-none-eabi,thumbv7em-none-eabi,thumbv7em-none-eabihf,thumbv8m.main-none-eabi,thumbv8m.main-none-eabihf
+      #     # rust-src: Used for -Zbuild-std.
+      #     # rustfmt: Used by bindgen for liboscore
+      #     components: rust-src, rustfmt
 
       - name: Install Rust for Xtensa
         if: steps.should-skip.outputs.result != 'true' && (env.LAZE_BUILDERS == null || contains(env.LAZE_BUILDERS, 'esp32-s3'))
