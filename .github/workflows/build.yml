@@ -77,7 +77,11 @@ jobs:
     if: ${{ needs.check-labels.outputs.label != 'ci-build:skip' }}
 
     env:
-      SCCACHE_GHA_ENABLED: "true"
+      # SCCACHE_GHA_ENABLED: "true"
+      ## http://minio-sccache:9000/sccache
+      SCCACHE_BUCKET: "sccache"
+      SCCACHE_ENDPOINT: "minio-sccache:9000"
+      SCCACHE_REGION: "auto"
       RUSTC_WRAPPER: "sccache"
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       # clang-sys and thus bindgen is sensitive to multiple installed versions
@@ -149,9 +153,9 @@ jobs:
               ;;
           esac
 
-      - name: Run sccache-cache
-        if: steps.should-skip.outputs.result != 'true'
-        uses: mozilla-actions/sccache-action@v0.0.8
+      # - name: Run sccache-cache
+      #   if: steps.should-skip.outputs.result != 'true'
+      #   uses: mozilla-actions/sccache-action@v0.0.8
 
       - id: get_toolchain
         if: steps.should-skip.outputs.result != 'true'
@@ -177,31 +181,31 @@ jobs:
       #     # rustfmt: Used by bindgen for liboscore
       #     components: rust-src, rustfmt
 
-      - name: Install Rust for Xtensa
-        if: steps.should-skip.outputs.result != 'true' && (env.LAZE_BUILDERS == null || contains(env.LAZE_BUILDERS, 'esp32-s3'))
-        # No tag yet after https://github.com/esp-rs/xtensa-toolchain/pull/38 (will probably be @v1.5.5)
-        uses: esp-rs/xtensa-toolchain@main
-        with:
-          version: "1.85.0.0"
-          buildtargets: esp32s3
-          override: false
-          export: false
+      # - name: Install Rust for Xtensa
+      #   if: steps.should-skip.outputs.result != 'true' && (env.LAZE_BUILDERS == null || contains(env.LAZE_BUILDERS, 'esp32-s3'))
+      #   # No tag yet after https://github.com/esp-rs/xtensa-toolchain/pull/38 (will probably be @v1.5.5)
+      #   uses: esp-rs/xtensa-toolchain@main
+      #   with:
+      #     version: "1.85.0.0"
+      #     buildtargets: esp32s3
+      #     override: false
+      #     export: false
 
-      - name: rust cache
-        if: steps.should-skip.outputs.result != 'true'
-        uses: Swatinem/rust-cache@v2
-        with:
-          key: "${{ matrix.partition }}"
+      # - name: rust cache
+      #   if: steps.should-skip.outputs.result != 'true'
+      #   uses: Swatinem/rust-cache@v2
+      #   with:
+      #     key: "${{ matrix.partition }}"
 
-      - name: Install laze
-        uses: taiki-e/install-action@v2
-        if: steps.should-skip.outputs.result != 'true'
-        with:
-          tool: laze@0.1
+      # - name: Install laze
+      #   uses: taiki-e/install-action@v2
+      #   if: steps.should-skip.outputs.result != 'true'
+      #   with:
+      #     tool: laze@0.1
 
-      - name: "installing prerequisites"
-        if: steps.should-skip.outputs.result != 'true'
-        run: sudo apt-get update && sudo apt-get install -y ninja-build gcc-arm-none-eabi gcc-riscv64-unknown-elf
+      # - name: "installing prerequisites"
+      #   if: steps.should-skip.outputs.result != 'true'
+      #   run: sudo apt-get update && sudo apt-get install -y ninja-build gcc-arm-none-eabi gcc-riscv64-unknown-elf
 
       - name: "Show installed versions"
         run: |
