@@ -83,7 +83,10 @@ jobs:
       SCCACHE_ENDPOINT: "minio-sccache:9000"
       SCCACHE_REGION: "auto"
       RUSTC_WRAPPER: "sccache"
+      SCCACHE_S3_USE_SSL: "false"
+      SCCACHE_S3_NO_CREDENTIALS: "true"
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       # clang-sys and thus bindgen is sensitive to multiple installed versions
       # around, see eg. https://github.com/rust-lang/rust-bindgen/issues/2682
       #
