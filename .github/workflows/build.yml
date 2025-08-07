@@ -73,7 +73,7 @@ jobs:
 
   build:
     needs: check-labels
-    runs-on: self-hosted
+    runs-on: arc-runner-set
     if: ${{ needs.check-labels.outputs.label != 'ci-build:skip' }}
 
     env:
