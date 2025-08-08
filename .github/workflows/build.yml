@@ -131,6 +131,24 @@ jobs:
           path: .tree-hash
           key: success-${{ steps.get-tree-hash.outputs.hash }}-${{ matrix.partition }}-${{ github.event_name == 'schedule' && 'full' || needs.check-labels.outputs.label }}
 
+      - uses: tespkg/actions-cache@v1
+        with:
+          endpoint: minio-sccache:9000 # optional, default s3.amazonaws.com
+          insecure: true # optional, use http instead of https. default false
+          bucket: sccache # required
+          use-fallback: false # optional, use github actions cache fallback, default true
+          accessKey: ""
+          secretKey: ""
+
+          # actions/cache compatible properties: https://github.com/actions/cache
+          key: ${{ matrix.partition }}-build-${{ github.ref }}
+          path: |
+            build
+            target
+          restore-keys: |
+            ${{ matrix.partition }}-build-
+
+
       - name: Whether to skip next steps
         id: should-skip
         run: |
