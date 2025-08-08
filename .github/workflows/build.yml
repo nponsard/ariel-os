@@ -313,6 +313,9 @@ jobs:
           echo "LAZE_BUILDERS=${LAZE_BUILDERS}"
           CONFIG_WIFI_NETWORK='test' CONFIG_WIFI_PASSWORD='password' laze build -DCARGO_ARGS+='--locked' --global --partition hash:${{ matrix.partition }}
 
+      - name: show sccache stats
+        run: sccache --show-stats
+
       # cleanup previous build artifacts. do in background (no need to wait).
       - name: "cleanup stable build artifacts"
         # if: github.event_name == 'schedule' && steps.should-skip.outputs.result != 'true'
