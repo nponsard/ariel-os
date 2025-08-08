@@ -188,6 +188,7 @@ jobs:
           path: |
             build
             target
+            ~/.cargo
           restore-keys: |
             ${{ matrix.partition }}-build-
 
