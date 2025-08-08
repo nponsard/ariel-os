@@ -249,14 +249,14 @@ jobs:
 
       # cleanup previous build artifacts. do in background (no need to wait).
       - name: "cleanup stable build artifacts"
-        if: github.event_name == 'schedule' && steps.should-skip.outputs.result != 'true'
+        # if: github.event_name == 'schedule' && steps.should-skip.outputs.result != 'true'
         run: |
           mv build build.tmp && rm -rf build.tmp &
 
       # nightly build, nightly toolchain
       # (disabling xtensa here as it gets built by the default toolchain build above)
       - name: "ariel-os compilation test (nightly toolchain)"
-        if: github.event_name == 'schedule' && steps.should-skip.outputs.result != 'true'
+        # if: github.event_name == 'schedule' && steps.should-skip.outputs.result != 'true'
         run: |
           sccache --start-server || true # work around https://github.com/ninja-build/ninja/issues/2052
 
