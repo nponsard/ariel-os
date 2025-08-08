@@ -9,7 +9,7 @@ on:
   merge_group:
   schedule:
     # run every morning at 3:17am
-    - cron: '17 3 * * *'
+    - cron: "17 3 * * *"
 
 concurrency:
   group: ${{ github.head_ref || github.run_id }}-build
@@ -119,7 +119,29 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        partition: ["1/20", "2/20", "3/20", "4/20", "5/20", "6/20", "7/20", "8/20", "9/20", "10/20", "11/20", "12/20", "13/20", "14/20", "15/20", "16/20", "17/20", "18/20", "19/20", "20/20"]
+        partition:
+          [
+            "1/20",
+            "2/20",
+            "3/20",
+            "4/20",
+            "5/20",
+            "6/20",
+            "7/20",
+            "8/20",
+            "9/20",
+            "10/20",
+            "11/20",
+            "12/20",
+            "13/20",
+            "14/20",
+            "15/20",
+            "16/20",
+            "17/20",
+            "18/20",
+            "19/20",
+            "20/20",
+          ]
 
     steps:
       - name: Free up space
@@ -142,8 +164,8 @@ jobs:
       - name: Get git tree hash
         id: get-tree-hash
         run: |
-            git rev-parse HEAD^{tree} > .tree-hash
-            echo "hash=$(cat .tree-hash)" >> $GITHUB_OUTPUT
+          git rev-parse HEAD^{tree} > .tree-hash
+          echo "hash=$(cat .tree-hash)" >> $GITHUB_OUTPUT
 
       - uses: actions/cache@v4
         id: result-cache
@@ -153,10 +175,11 @@ jobs:
 
       - uses: tespkg/actions-cache@v1
         with:
-          endpoint: minio-sccache:9000 # optional, default s3.amazonaws.com
-          insecure: true # optional, use http instead of https. default false
-          bucket: sccache # required
-          use-fallback: false # optional, use github actions cache fallback, default true
+          endpoint: minio-sccache
+          port: 9000
+          insecure: true
+          bucket: sccache
+          use-fallback: false
           accessKey: ""
           secretKey: ""
 
@@ -167,7 +190,6 @@ jobs:
             target
           restore-keys: |
             ${{ matrix.partition }}-build-
-
 
       - name: Whether to skip next steps
         id: should-skip
