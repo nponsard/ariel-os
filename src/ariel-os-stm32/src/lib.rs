@@ -76,6 +76,8 @@ pub fn init() -> OptionalPeripherals {
     #[cfg(capability = "hw/stm32-dual-core")]
     let peripherals = embassy_stm32::init_primary(config, &SHARED_DATA);
 
+    enable_flash_cache();
+
     OptionalPeripherals::from(peripherals)
 }
 
@@ -293,4 +295,29 @@ fn board_config(config: &mut Config) {
 
     // mark used
     let _ = config;
+}
+
+fn enable_flash_cache() {
+    // F2 and F4 support these
+    #[cfg(any(context = "stm32f401re", context = "stm32f411re",))]
+    {
+        // reset the instruction cache
+        embassy_stm32::pac::FLASH
+            .acr()
+            .modify(|w| w.set_icrst(true));
+        // enable the instruction cache and prefetch
+        embassy_stm32::pac::FLASH.acr().modify(|w| w.set_icen(true));
+        embassy_stm32::pac::FLASH
+            .acr()
+            .modify(|w| w.set_prften(true));
+        // reset the data cache
+        embassy_stm32::pac::FLASH
+            .acr()
+            .modify(|w| w.set_dcrst(true));
+        embassy_stm32::pac::FLASH
+            .acr()
+            .modify(|w| w.set_dcrst(false));
+        // enable the data cache
+        embassy_stm32::pac::FLASH.acr().modify(|w| w.set_dcen(true));
+    }
 }
