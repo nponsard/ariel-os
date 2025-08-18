@@ -160,6 +160,11 @@ jobs:
             'ci-build:stm32')
               echo "LAZE_BUILDERS=st-b-l475e-iot01a,st-steval-mkboxpro,st-nucleo-c031c6,st-nucleo-f042k6,st-nucleo-f401re,st-nucleo-f411re,st-nucleo-f767zi,st-nucleo-h755zi-q,st-nucleo-wb55,st-nucleo-wba55,stm32u083c-dk" >> "$GITHUB_ENV"
               ;;
+            *)
+              # Can happen if `check-labels` finds no labels but still completes
+              # successfully because of a bug.
+              exit 1
+              ;;
           esac
 
       - name: Run sccache-cache
