@@ -55,6 +55,7 @@ jobs:
             for (const pr of items) {
               const prNumber = pr.number;
               const { data: commits } = await github.rest.pulls.listCommits({ owner: 'ariel-os', repo: 'ariel-os', pull_number: prNumber });
+              // TODO: handle pagination
               const tipCommitId = commits[commits.length - 1].sha;
               if (tipCommitId != commitId) {
                 console.log(`Wrong PR: tip is ${tipCommitId}`);
@@ -70,6 +71,8 @@ jobs:
               console.log(`The build label is ${buildLabel}`);
               return buildLabel;
             }
+            // This can happen because the API is paginated.
+            throw 'Did not find the PR; maybe it has more than 30 commits?';
 
   build:
     needs: check-labels
