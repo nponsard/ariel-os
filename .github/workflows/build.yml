@@ -173,24 +173,23 @@ jobs:
       #     path: .tree-hash
       #     key: success-${{ steps.get-tree-hash.outputs.hash }}-${{ matrix.partition }}-${{ github.event_name == 'schedule' && 'full' || needs.check-labels.outputs.label }}
 
-      # - uses: tespkg/actions-cache@v1
-      #   with:
-      #     endpoint: minio-sccache
-      #     port: 9000
-      #     insecure: true
-      #     bucket: sccache
-      #     use-fallback: false
-      #     accessKey: ""
-      #     secretKey: ""
+      - name: cache cargo registry
+        uses: tespkg/actions-cache@v1
+        with:
+          endpoint: minio-sccache
+          port: 9000
+          insecure: true
+          bucket: sccache
+          use-fallback: false
+          accessKey: ""
+          secretKey: ""
 
-      #     # actions/cache compatible properties: https://github.com/actions/cache
-      #     key: ${{ matrix.partition }}-build-${{ github.ref }}
-      #     path: |
-      #       build
-      #       target
-      #       ~/.cargo
-      #     restore-keys: |
-      #       ${{ matrix.partition }}-build-
+          # actions/cache compatible properties: https://github.com/actions/cache
+          key: ${{ matrix.partition }}-cargo-registry-build-${{ github.ref }}
+          path: |
+            /usr/local/cargo/
+          restore-keys: |
+            ${{ matrix.partition }}-cargo-registry-build-
 
       - name: Whether to skip next steps
         id: should-skip
