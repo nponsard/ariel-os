@@ -29,7 +29,6 @@ pub async fn control_task(
 
     control
         .run(|status| {
-            info!("Modem status: {:?}", status);
             stack.set_config_v4(status_to_config(status));
         })
         .await

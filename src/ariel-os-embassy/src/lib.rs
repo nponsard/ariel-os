@@ -411,7 +411,7 @@ async fn init_task(mut peripherals: hal::OptionalPeripherals) {
             };
 
             spawner
-                .spawn(hal::ltem::control_task(control, Some(apn_config), stack))
+                .spawn(hal::ltem::control_task(control, None, stack))
                 .unwrap();
         }
     }

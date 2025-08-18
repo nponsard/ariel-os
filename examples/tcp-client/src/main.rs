@@ -3,24 +3,31 @@
 
 // modification of https://github.com/embassy-rs/embassy/blob/main/examples/nrf9160/src/bin/modem_tcp_client.rs
 
+use ariel_os::gpio::Level;
+use ariel_os::gpio::Output;
 use ariel_os::time::Timer;
 use ariel_os::{debug::log::*, net, reexports::embassy_net, time::Duration};
 use core::str::FromStr;
 use embassy_net::tcp::TcpSocket;
 use embedded_io_async::Write;
+mod pins;
 
-#[ariel_os::task(autostart)]
-async fn tcp_echo() {
+#[ariel_os::task(autostart, peripherals)]
+async fn tcp_echo(peripherals: pins::LedPeripherals) {
     let stack = net::network_stack().await.unwrap();
+    let mut led = Output::new(peripherals.led, Level::Low);
 
     let mut rx_buffer = [0; 4096];
     let mut tx_buffer = [0; 4096];
     let mut buf = [0; 4096];
 
     info!("waiting for interface to come up...");
+    led.set_low();
     stack.wait_config_up().await;
 
     loop {
+        led.set_high();
+
         let mut socket = embassy_net::tcp::TcpSocket::new(stack, &mut rx_buffer, &mut tx_buffer);
         socket.set_timeout(Some(Duration::from_secs(10)));
 
@@ -42,6 +49,8 @@ async fn tcp_echo() {
             info!("txd: {}", core::str::from_utf8(msg).unwrap());
             Timer::after_secs(1).await;
         }
+        led.set_low();
+
         Timer::after_secs(4).await;
     }
 }
