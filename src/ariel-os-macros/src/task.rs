@@ -171,7 +171,7 @@ mod task {
         }
     }
 
-    #[derive(Debug, PartialEq, Eq, Hash, enum_iterator::Sequence)]
+    #[derive(Debug, PartialEq, Eq, Hash)]
     pub enum Hook {
         UsbBuilder,
     }
@@ -194,7 +194,9 @@ mod task {
         }
 
         fn format_list() -> String {
-            enum_iterator::all::<Self>()
+            let variants = [Hook::UsbBuilder];
+            variants
+                .iter()
                 .map(|h| format!("`{}`", h.param_name()))
                 .collect::<Vec<_>>()
                 .join(", ")
