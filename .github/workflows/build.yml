@@ -87,6 +87,7 @@ jobs:
     if: ${{ needs.check-labels.outputs.label != 'ci-build:skip' }}
 
     env:
+      CARGO_HOME: /home/runner/.cargo
       ## sccache configuration
       RUSTC_WRAPPER: "sccache"
 
@@ -187,7 +188,7 @@ jobs:
           # actions/cache compatible properties: https://github.com/actions/cache
           key: ${{ matrix.partition }}-cargo-registry-build-${{ github.ref }}
           path: |
-            /usr/local/cargo/
+            ~/.cargo/
           restore-keys: |
             ${{ matrix.partition }}-cargo-registry-build-
 
