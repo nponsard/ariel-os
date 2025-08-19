@@ -27,7 +27,7 @@ pub(crate) async fn init_gnss(spawner: Spawner) {
     crate::hal::gnss::init_gnss(spawner, sender, config).await;
 }
 
-/// Get an `embassy_sync::watch::Receiver` to get updates on GNSS data.
+/// Returns an [`embassy_sync::watch::Receiver`] to get updates on GNSS data.
 ///
 /// If there is too many receivers active, it will return `None`.
 ///
@@ -41,7 +41,7 @@ pub fn get_receiver<'a>() -> Option<GnssDataReceiver<'a>> {
     WATCH.receiver()
 }
 
-/// Request a GNSS fix.
+/// Requests a GNSS fix.
 ///
 /// In single shot operation, this function will return after a fix has been obtained or the timeout has expired.
 ///

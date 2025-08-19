@@ -49,7 +49,7 @@ impl Default for Config {
 #[derive(Debug, Clone)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub struct GnssPosition {
-    /// Latitude in degrees
+    /// Latitude in degrees.
     /// Positive values indicate north, negative values indicate south.
     pub latitude: f64,
     /// Longitude in degrees
@@ -75,7 +75,7 @@ pub struct GnssVelocity {
     pub vertical_speed: f64,
     /// Vertical speed accuracy in m/s
     pub vertical_speed_accuracy: f64,
-    /// Heading in degrees (0-360)
+    /// Heading in degrees (0–360)
     pub heading: f64,
     /// Heading accuracy in degrees
     pub heading_accuracy: f64,
