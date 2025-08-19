@@ -24,5 +24,6 @@
 # Developer Guide
 
 - [Adding Support for a Board](./adding-board-support.md)
+- [Development Processes](./development-processes.md)
 - [Coding Conventions](./coding-conventions.md)
 - [Code of Conduct](./CODE_OF_CONDUCT.md)

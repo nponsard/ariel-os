@@ -1,3 +1,5 @@
+# This workflow is documented in the Developer Guide, in the book.
+
 name: Build
 
 on:
