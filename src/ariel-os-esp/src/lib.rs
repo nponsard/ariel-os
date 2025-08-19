@@ -86,6 +86,31 @@ pub mod peripherals {
             pub type GPIO29 = esp_hal::gpio::GpioPin<29>;
             pub type GPIO30 = esp_hal::gpio::GpioPin<30>;
         }
+        else if #[cfg(context = "esp32s3")] {
+            pub type GPIO26 = esp_hal::gpio::GpioPin<26>;
+            pub type GPIO27 = esp_hal::gpio::GpioPin<27>;
+            pub type GPIO28 = esp_hal::gpio::GpioPin<28>;
+            pub type GPIO29 = esp_hal::gpio::GpioPin<29>;
+            pub type GPIO30 = esp_hal::gpio::GpioPin<30>;
+            pub type GPIO31 = esp_hal::gpio::GpioPin<31>;
+            pub type GPIO32 = esp_hal::gpio::GpioPin<32>;
+            pub type GPIO33 = esp_hal::gpio::GpioPin<33>;
+            pub type GPIO34 = esp_hal::gpio::GpioPin<34>;
+            pub type GPIO35 = esp_hal::gpio::GpioPin<35>;
+            pub type GPIO36 = esp_hal::gpio::GpioPin<36>;
+            pub type GPIO37 = esp_hal::gpio::GpioPin<37>;
+            pub type GPIO38 = esp_hal::gpio::GpioPin<38>;
+            pub type GPIO39 = esp_hal::gpio::GpioPin<39>;
+            pub type GPIO40 = esp_hal::gpio::GpioPin<40>;
+            pub type GPIO41 = esp_hal::gpio::GpioPin<41>;
+            pub type GPIO42 = esp_hal::gpio::GpioPin<42>;
+            pub type GPIO43 = esp_hal::gpio::GpioPin<43>;
+            pub type GPIO44 = esp_hal::gpio::GpioPin<44>;
+            pub type GPIO45 = esp_hal::gpio::GpioPin<45>;
+            pub type GPIO46 = esp_hal::gpio::GpioPin<46>;
+            pub type GPIO47 = esp_hal::gpio::GpioPin<47>;
+            pub type GPIO48 = esp_hal::gpio::GpioPin<48>;
+        }
         else if #[cfg(context = "esp32")] {
             pub type GPIO22 = esp_hal::gpio::GpioPin<22>;
             pub type GPIO23 = esp_hal::gpio::GpioPin<23>;
