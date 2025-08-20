@@ -50,7 +50,7 @@
 //!
 //! # Caveats
 //!
-//! Currently, this has hidden dependencies on a particular implementation of the [`coap-message`]
+//! Currently, this has hidden dependencies on a particular implementation of the [`coap_message`]
 //! provided (it needs to be a [`coap_message_implementations::inmemory_write::Message`]) by the
 //! stack. There are plans for removing this limitation by integrating deeper with libOSCORE.
 #![doc = document_features::document_features!(feature_label = r#"<span class="stab portability"><code>{feature}</code></span>"#)]
