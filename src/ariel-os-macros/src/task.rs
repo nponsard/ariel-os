@@ -129,7 +129,7 @@ mod task {
     pub const PERIPHERALS_PARAM: &str = "peripherals";
     pub const POOL_SIZE_PARAM: &str = "pool_size";
 
-    #[derive(Debug, Default)]
+    #[derive(Default)]
     pub struct Attributes {
         pub autostart: bool,
         pub peripherals: bool,
