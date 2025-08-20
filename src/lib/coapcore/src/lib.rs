@@ -36,7 +36,7 @@
 //! facility, representing a compromise between development and runtime complexity. Should
 //! benchmarks show this to be a significant factor in code size in applications that need error
 //! handling, more fine grained control can be implemented (eg. offering an option to make
-//! Debug2Format merely print the type name or even make it empty).
+//! [`Debug2Format`](defmt_or_log::Debug2Format) merely print the type name or even make it empty).
 //!
 //! This crate mainly logs on the trace, debug and error level; the latter provides details when an
 //! error is sent over the network and the details are not visible to the peer.
