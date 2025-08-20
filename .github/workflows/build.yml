@@ -56,7 +56,12 @@ jobs:
             // Would be incorrect if multiple PRs are open for exactly the same commit.
             for (const pr of items) {
               const prNumber = pr.number;
-              const { data: commits } = await github.rest.pulls.listCommits({ owner: 'ariel-os', repo: 'ariel-os', pull_number: prNumber });
+              const { data: commits } = await github.rest.pulls.listCommits({
+                owner: 'ariel-os',
+                repo: 'ariel-os',
+                pull_number: prNumber,
+                per_page: 100
+              });
               // TODO: handle pagination
               const tipCommitId = commits[commits.length - 1].sha;
               if (tipCommitId != commitId) {
