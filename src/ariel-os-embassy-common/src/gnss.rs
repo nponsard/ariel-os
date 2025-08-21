@@ -44,6 +44,8 @@ pub struct Config {
 }
 
 impl Config {
+    /// Creates a new `Config` with the specified operation mode.
+    #[must_use]
     pub const fn new(operation_mode: GnssOperationMode) -> Self {
         Self { operation_mode }
     }
