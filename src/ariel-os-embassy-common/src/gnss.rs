@@ -139,7 +139,7 @@ impl core::fmt::Display for GnssDateTime {
 /// Represents GNSS data that can be received from the GNSS module.
 ///
 /// A field can be `None` if the GNSS module did not provide that information.
-#[derive(Debug, Copy, Clone, Display)]
+#[derive(Debug, Copy, Clone)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub struct GnssData {
     /// The position data, if available.
