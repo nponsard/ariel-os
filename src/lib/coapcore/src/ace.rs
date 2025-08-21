@@ -369,6 +369,10 @@ impl AceCborAuthzInfoResponse {
     ///
     /// The implementation may fail like [any CoAP response
     /// rendering][coap_handler::Handler::extract_request_data()].
+    #[allow(
+        clippy::missing_panics_doc,
+        reason = "will never panic for any user input"
+    )]
     pub(crate) fn render<M: coap_message::MutableWritableMessage>(
         &self,
         message: &mut M,
