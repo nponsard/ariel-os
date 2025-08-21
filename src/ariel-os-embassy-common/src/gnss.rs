@@ -16,37 +16,41 @@ pub type GnssDataReceiver<'a> =
 pub type GnssDataSender<'a> = Sender<'a, CriticalSectionRawMutex, GnssData, MAX_WATCH_RECEIVERS>;
 
 /// Operation modes for the GNSS module.
-#[derive(Clone, Copy)]
+#[derive(Debug, Copy, Clone, Display)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub enum GnssOperationMode {
     /// Always keep the GNSS module active.
     Continuous,
-    /// Update the GNSS fix periodically.
-    Periodic(u16), // Period in seconds
-    /// Try to get a GNSS fix only when requested, you won't be able to get updates using `get_receiver`.
-    SingleShot(u16), // Timeout in seconds
+    /// Update the GNSS fix periodically. Period is defined in seconds.
+    Periodic(u16),
+    /// Try to get a GNSS fix only when requested, you won't be able to get updates using `get_receiver`. Timeout is defined in seconds.
+    SingleShot(u16),
 }
 
 /// Configuration for the GNSS.
 ///
 /// You can customize it using the `gnss-config-override` feature.
-#[derive(Clone, Copy)]
+#[derive(Debug, Copy, Clone, Display)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub struct Config {
     /// The mode of GNSS to use.
     pub operation_mode: GnssOperationMode,
 }
 
+impl Config {
+    pub const fn new(operation_mode: GnssOperationMode) -> Self {
+        Self { operation_mode }
+    }
+}
+
 impl Default for Config {
     fn default() -> Self {
-        Self {
-            operation_mode: GnssOperationMode::Continuous,
-        }
+        Config::new(GnssOperationMode::Continuous)
     }
 }
 
 /// Represents position data from GNSS.
-#[derive(Debug, Clone)]
+#[derive(Debug, Copy, Clone, Display)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub struct GnssPosition {
     /// Latitude in degrees.
@@ -64,7 +68,7 @@ pub struct GnssPosition {
 }
 
 /// Represents velocity data from GNSS.
-#[derive(Debug, Clone)]
+#[derive(Debug, Copy, Clone, Display)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub struct GnssVelocity {
     /// Speed in m/s
@@ -83,7 +87,7 @@ pub struct GnssVelocity {
 
 // Based on NMEA RMC message
 /// Represents date and time information from GNSS.
-#[derive(Debug, Clone)]
+#[derive(Debug, Copy, Clone, Display)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub struct GnssDateTime {
     /// Year
@@ -105,7 +109,7 @@ pub struct GnssDateTime {
 /// Represents GNSS data that can be received from the GNSS module.
 ///
 /// A field can be `None` if the GNSS module did not provide that information.
-#[derive(Debug, Clone)]
+#[derive(Debug, Copy, Clone, Display)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub struct GnssData {
     /// The position data, if available.

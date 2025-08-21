@@ -111,6 +111,7 @@ mod config_macro {
         /// Returns an error when an unsupported parameter is found.
         pub fn parse(&mut self, meta: &syn::meta::ParseNestedMeta<'_>) -> syn::Result<()> {
             let variants = [
+                // (ConfigKind::Gnss.as_name(), ConfigKind::Gnss),
                 (ConfigKind::Network.as_name(), ConfigKind::Network),
                 (ConfigKind::Usb.as_name(), ConfigKind::Usb),
             ];
