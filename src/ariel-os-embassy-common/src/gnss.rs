@@ -16,7 +16,7 @@ pub type GnssDataReceiver<'a> =
 pub type GnssDataSender<'a> = Sender<'a, CriticalSectionRawMutex, GnssData, MAX_WATCH_RECEIVERS>;
 
 /// Operation modes for the GNSS module.
-#[derive(Debug, Copy, Clone, Display)]
+#[derive(Debug, Copy, Clone, Eq, PartialEq)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub enum GnssOperationMode {
     /// Always keep the GNSS module active.
@@ -27,10 +27,16 @@ pub enum GnssOperationMode {
     SingleShot(u16),
 }
 
+impl core::fmt::Display for GnssOperationMode {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+        core::fmt::Debug::fmt(self, f)
+    }
+}
+
 /// Configuration for the GNSS.
 ///
 /// You can customize it using the `gnss-config-override` feature.
-#[derive(Debug, Copy, Clone, Display)]
+#[derive(Debug, Copy, Clone)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub struct Config {
     /// The mode of GNSS to use.
@@ -49,8 +55,14 @@ impl Default for Config {
     }
 }
 
+impl core::fmt::Display for Config {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+        core::fmt::Debug::fmt(self, f)
+    }
+}
+
 /// Represents position data from GNSS.
-#[derive(Debug, Copy, Clone, Display)]
+#[derive(Debug, Copy, Clone)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub struct GnssPosition {
     /// Latitude in degrees.
@@ -67,8 +79,14 @@ pub struct GnssPosition {
     pub altitude_accuracy: f64,
 }
 
+impl core::fmt::Display for GnssPosition {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+        core::fmt::Debug::fmt(self, f)
+    }
+}
+
 /// Represents velocity data from GNSS.
-#[derive(Debug, Copy, Clone, Display)]
+#[derive(Debug, Copy, Clone)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub struct GnssVelocity {
     /// Speed in m/s
@@ -85,9 +103,15 @@ pub struct GnssVelocity {
     pub heading_accuracy: f64,
 }
 
+impl core::fmt::Display for GnssVelocity {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+        core::fmt::Debug::fmt(self, f)
+    }
+}
+
 // Based on NMEA RMC message
 /// Represents date and time information from GNSS.
-#[derive(Debug, Copy, Clone, Display)]
+#[derive(Debug, Copy, Clone)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub struct GnssDateTime {
     /// Year
@@ -106,6 +130,12 @@ pub struct GnssDateTime {
     pub milliseconds: u16,
 }
 
+impl core::fmt::Display for GnssDateTime {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+        core::fmt::Debug::fmt(self, f)
+    }
+}
+
 /// Represents GNSS data that can be received from the GNSS module.
 ///
 /// A field can be `None` if the GNSS module did not provide that information.
@@ -120,4 +150,10 @@ pub struct GnssData {
     pub datetime: Option<GnssDateTime>,
     /// The time when the data was recorded (from start of the MCU).
     pub recorded_at: embassy_time::Instant,
+}
+
+impl core::fmt::Display for GnssData {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+        core::fmt::Debug::fmt(self, f)
+    }
 }
