@@ -1767,6 +1767,9 @@ builders:
     provides:
       - has_usb_device_port
 
+  - name: heltec-wifi-lora-32-v3
+    parent: esp32s3
+
   - name: nrf5340dk
     parent: nrf5340
     provides:

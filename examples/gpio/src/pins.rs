@@ -26,6 +26,12 @@ ariel_os::hal::define_peripherals!(Peripherals {
     btn1: GPIO1
 });
 
+#[cfg(context = "heltec-wifi-lora-32-v3")]
+ariel_os::hal::define_peripherals!(Peripherals {
+    led1: GPIO35,
+    btn1: GPIO0,
+});
+
 #[cfg(context = "nordic-thingy-91-x-nrf9151")]
 ariel_os::hal::define_peripherals!(Peripherals {
     led1: P0_29,
@@ -56,7 +62,13 @@ ariel_os::hal::define_peripherals!(Peripherals {
     btn1: PIN_2
 });
 
-#[cfg(all(context = "esp", not(context = "dfrobot-firebeetle2-esp32-c6")))]
+#[cfg(all(
+    context = "esp",
+    not(any(
+        context = "dfrobot-firebeetle2-esp32-c6",
+        context = "heltec-wifi-lora-32-v3",
+    ))
+))]
 ariel_os::hal::define_peripherals!(Peripherals {
     led1: GPIO0,
     btn1: GPIO1

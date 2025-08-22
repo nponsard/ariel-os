@@ -3,5 +3,6 @@ apps:
     context:
       # list of contexts that have an entry in `pins.rs`
       - bbc-microbit-v2
+      - heltec-wifi-lora-32-v3
       - st-nucleo-f042k6
       - st-steval-mkboxpro
