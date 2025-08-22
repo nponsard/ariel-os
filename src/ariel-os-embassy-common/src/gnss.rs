@@ -3,6 +3,10 @@ use embassy_sync::{
     blocking_mutex::raw::CriticalSectionRawMutex,
     watch::{Receiver, Sender, Watch},
 };
+use fixed::{
+    FixedI32,
+    types::extra::{U23, U24},
+};
 
 /// Maximum number of concurrent receivers for GNSS data.
 pub const MAX_WATCH_RECEIVERS: usize = 4;
@@ -65,20 +69,35 @@ impl core::fmt::Display for Config {
 
 /// Represents position data from GNSS.
 #[derive(Debug, Copy, Clone)]
-#[cfg_attr(feature = "defmt", derive(defmt::Format))]
+// #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub struct GnssPosition {
     /// Latitude in degrees.
     /// Positive values indicate north, negative values indicate south.
-    pub latitude: f64,
+    pub latitude: FixedI32<U24>, // 1 sign bit, 7 integer bits, 24 fractional bits
     /// Longitude in degrees
     /// Positive values indicate east, negative values indicate west.
-    pub longitude: f64,
+    pub longitude: FixedI32<U23>, // 1 sign bit, 8 integer bits, 23 fractional bits, this makes the difference between two consecutive values at the equator of 40,075,016.7/(360*2^23) ~= 0.013 meters
     /// Altitude in meters above sea level
-    pub altitude: f64,
+    pub altitude: f32,
     /// Accuracy of the position in meters
-    pub accuracy: f64,
+    pub accuracy: f32,
     /// Altitude accuracy in meters
-    pub altitude_accuracy: f64,
+    pub altitude_accuracy: f32,
+}
+
+#[cfg(feature = "defmt")]
+impl defmt::Format for GnssPosition {
+    fn format(&self, fmt: defmt::Formatter<'_>) {
+        defmt::write!(
+            fmt,
+            "GnssPosition {{ latitude: {}, longitude: {}, altitude: {}, accuracy: {}, altitude_accuracy: {} }}",
+            self.latitude.to_num::<f32>(),
+            self.longitude.to_num::<f32>(),
+            self.altitude,
+            self.accuracy,
+            self.altitude_accuracy
+        );
+    }
 }
 
 impl core::fmt::Display for GnssPosition {
@@ -92,17 +111,17 @@ impl core::fmt::Display for GnssPosition {
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub struct GnssVelocity {
     /// Speed in m/s
-    pub speed: f64,
+    pub speed: f32,
     /// Speed accuracy in m/s
-    pub speed_accuracy: f64,
+    pub speed_accuracy: f32,
     /// Vertical speed in m/s
-    pub vertical_speed: f64,
+    pub vertical_speed: f32,
     /// Vertical speed accuracy in m/s
-    pub vertical_speed_accuracy: f64,
+    pub vertical_speed_accuracy: f32,
     /// Heading in degrees (0–360)
-    pub heading: f64,
+    pub heading: f32,
     /// Heading accuracy in degrees
-    pub heading_accuracy: f64,
+    pub heading_accuracy: f32,
 }
 
 impl core::fmt::Display for GnssVelocity {
