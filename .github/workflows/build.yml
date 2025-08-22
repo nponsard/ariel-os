@@ -87,8 +87,6 @@ jobs:
     if: ${{ needs.check-labels.outputs.label != 'ci-build:skip' }}
 
     env:
-      SCCACHE_GHA_ENABLED: "true"
-      RUSTC_WRAPPER: "sccache"
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       # clang-sys and thus bindgen is sensitive to multiple installed versions
       # around, see eg. https://github.com/rust-lang/rust-bindgen/issues/2682
@@ -174,10 +172,6 @@ jobs:
               ;;
           esac
 
-      - name: Run sccache-cache
-        if: steps.should-skip.outputs.result != 'true'
-        uses: mozilla-actions/sccache-action@v0.0.8
-
       - id: get_toolchain
         if: steps.should-skip.outputs.result != 'true'
         run: echo "toolchain=$(scripts/rust-toolchain.sh)" >> $GITHUB_OUTPUT
@@ -250,8 +244,6 @@ jobs:
       - name: "ariel-os compilation test (default toolchain)"
         if: steps.should-skip.outputs.result != 'true'
         run: |
-          sccache --start-server || true # work around https://github.com/ninja-build/ninja/issues/2052
-
           echo "LAZE_BUILDERS=${LAZE_BUILDERS}"
           CONFIG_WIFI_NETWORK='test' CONFIG_WIFI_PASSWORD='password' laze build -DCARGO_ARGS+='--locked' --global --partition hash:${{ matrix.partition }}
 
@@ -266,8 +258,6 @@ jobs:
       - name: "ariel-os compilation test (nightly toolchain)"
         if: github.event_name == 'schedule' && steps.should-skip.outputs.result != 'true'
         run: |
-          sccache --start-server || true # work around https://github.com/ninja-build/ninja/issues/2052
-
           CONFIG_WIFI_NETWORK='test' CONFIG_WIFI_PASSWORD='password' laze build -DCARGO_ARGS+='--locked' --global --partition hash:${{ matrix.partition }} --select nightly --disable xtensa
 
   build-success:
