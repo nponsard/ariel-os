@@ -84,7 +84,8 @@ jobs:
   build:
     needs: check-labels
     runs-on: ubuntu-24.04
-    if: ${{ needs.check-labels.outputs.label != 'ci-build:skip' }}
+    # Ignore the PR labels in nightly builds.
+    if: ${{ github.event_name == 'schedule' || needs.check-labels.outputs.label != 'ci-build:skip' }}
 
     env:
       SCCACHE_GHA_ENABLED: "true"
