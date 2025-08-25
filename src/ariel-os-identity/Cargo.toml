@@ -1,15 +1,12 @@
 [package]
 name = "ariel-os-identity"
 version = "0.2.0"
-license.workspace = true
 edition.workspace = true
 repository.workspace = true
+license.workspace = true
 
 [lib]
 harness = false
-
-[lints]
-workspace = true
 
 [dependencies]
 ariel-os-embassy-common = { workspace = true }
@@ -23,3 +20,6 @@ embedded-test = { workspace = true }
 
 [features]
 _test = []
+
+[lints]
+workspace = true
