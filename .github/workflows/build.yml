@@ -47,39 +47,9 @@ jobs:
           result-encoding: string
           script: |
             const commitId = "${{ steps.get-commit-id.outputs.commit_id }}";
-            console.log(`Commit ID: ${commitId}`);
-            const { data: { items } } = await github.rest.search.issuesAndPullRequests({
-              q: `${commitId} type:pr`,
-            });
-            console.log(`Number of PRs containing commit ${commitId}: ${items.length}`);
-            // Find a PR where that commit is the tip of the PR's branch.
-            // Would be incorrect if multiple PRs are open for exactly the same commit.
-            for (const pr of items) {
-              const prNumber = pr.number;
-              const { data: commits } = await github.rest.pulls.listCommits({
-                owner: 'ariel-os',
-                repo: 'ariel-os',
-                pull_number: prNumber,
-                per_page: 100
-              });
-              // TODO: handle pagination
-              const tipCommitId = commits[commits.length - 1].sha;
-              if (tipCommitId != commitId) {
-                console.log(`Wrong PR: tip is ${tipCommitId}`);
-                continue;
-              }
-              const prLabels = pr.labels.map((label) => label.name);
-              console.log(`The labels of PR #${prNumber} are ${prLabels}`);
-              const VALID_LABELS = ['ci-build:esp', 'ci-build:full', 'ci-build:native', 'ci-build:nrf', 'ci-build:rp', 'ci-build:skip', 'ci-build:small', 'ci-build:stm32'];
-              const buildLabels = prLabels.filter((label) => VALID_LABELS.includes(label));
-              if (buildLabels.length > 1) { throw 'Only one build label must be attached.'; }
-              const buildLabel = buildLabels[0];
-              if (!buildLabel) { throw 'A build label must be attached'; }
-              console.log(`The build label is ${buildLabel}`);
-              return buildLabel;
-            }
-            // This can happen because the API is paginated.
-            throw 'Did not find the PR; maybe it has more than 30 commits?';
+
+
+            return 'ci-build:full';
 
   build:
     needs: check-labels
