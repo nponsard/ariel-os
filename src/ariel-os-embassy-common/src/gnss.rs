@@ -4,8 +4,8 @@ use embassy_sync::{
     watch::{Receiver, Sender, Watch},
 };
 use fixed::{
-    FixedI32,
-    types::extra::{U23, U24},
+    FixedI32, FixedU32,
+    types::extra::{U6, U8, U19, U20, U23, U24},
 };
 
 /// Maximum number of concurrent receivers for GNSS data.
@@ -78,11 +78,11 @@ pub struct GnssPosition {
     /// Positive values indicate east, negative values indicate west.
     pub longitude: FixedI32<U23>, // 1 sign bit, 8 integer bits, 23 fractional bits, this makes the difference between two consecutive values at the equator of 40,075,016.7/(360*2^23) ~= 0.013 meters
     /// Altitude in meters above sea level
-    pub altitude: f32,
+    pub altitude: FixedI32<U6>, // 1 sign bit, 25 integer bits, 6 fractional bits, this gives a maximum altitude of 33554 km, GPS statellites orbit at about 20,200 km. The difference between two consecutive values is 1/2^6 ~= 0.015625 meters
     /// Accuracy of the position in meters
-    pub accuracy: f32,
+    pub accuracy: FixedU32<U8>, // 24 integer bits, 8 fractional bits, range from around 0 to 16777215 meters, with a difference between two consecutive values of 1/2^8 ~= 0.0039 meters
     /// Altitude accuracy in meters
-    pub altitude_accuracy: f32,
+    pub altitude_accuracy: FixedU32<U8>,
 }
 
 #[cfg(feature = "defmt")]
@@ -93,9 +93,9 @@ impl defmt::Format for GnssPosition {
             "GnssPosition {{ latitude: {}, longitude: {}, altitude: {}, accuracy: {}, altitude_accuracy: {} }}",
             self.latitude.to_num::<f32>(),
             self.longitude.to_num::<f32>(),
-            self.altitude,
-            self.accuracy,
-            self.altitude_accuracy
+            self.altitude.to_num::<f32>(),
+            self.accuracy.to_num::<f32>(),
+            self.altitude_accuracy.to_num::<f32>()
         );
     }
 }
@@ -108,20 +108,35 @@ impl core::fmt::Display for GnssPosition {
 
 /// Represents velocity data from GNSS.
 #[derive(Debug, Copy, Clone)]
-#[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub struct GnssVelocity {
     /// Speed in m/s
-    pub speed: f32,
+    pub speed: FixedU32<U20>, // 12 integer bits, 20 fractional bits. Makes max speed of around 4095 m/s, 10 time the speed of sound. Difference between two consecutive values is 1/2^20 ~= 9.54e-7 m/s
     /// Speed accuracy in m/s
-    pub speed_accuracy: f32,
+    pub speed_accuracy: FixedU32<U20>,
     /// Vertical speed in m/s
-    pub vertical_speed: f32,
+    pub vertical_speed: FixedI32<U19>, // Vertical speed can be negative, losing some decimal precision (1.91e-6 m/s).
     /// Vertical speed accuracy in m/s
-    pub vertical_speed_accuracy: f32,
+    pub vertical_speed_accuracy: FixedU32<U19>,
     /// Heading in degrees (0–360)
-    pub heading: f32,
+    pub heading: FixedU32<U23>, // 9 integer bits, 24 fractional bits. Difference between two consecutive values is 1/2^23 ~= 1.19e-7 degrees
     /// Heading accuracy in degrees
-    pub heading_accuracy: f32,
+    pub heading_accuracy: FixedU32<U23>,
+}
+
+#[cfg(feature = "defmt")]
+impl defmt::Format for GnssVelocity {
+    fn format(&self, fmt: defmt::Formatter<'_>) {
+        defmt::write!(
+            fmt,
+            "GnssPosition {{ speed: {}, speed_accuracy: {}, vertical_speed: {}, vertical_speed_accuracy: {}, heading: {}, heading_accuracy: {} }}",
+            self.speed.to_num::<f32>(),
+            self.speed_accuracy.to_num::<f32>(),
+            self.vertical_speed.to_num::<f32>(),
+            self.vertical_speed_accuracy.to_num::<f32>(),
+            self.heading.to_num::<f32>(),
+            self.heading_accuracy.to_num::<f32>()
+        );
+    }
 }
 
 impl core::fmt::Display for GnssVelocity {
