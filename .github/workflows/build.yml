@@ -176,7 +176,7 @@ jobs:
       #     key: success-${{ steps.get-tree-hash.outputs.hash }}-${{ matrix.partition }}-${{ github.event_name == 'schedule' && 'full' || needs.check-labels.outputs.label }}
 
       - name: cache cargo registry
-        uses: tespkg/actions-cache@v1
+        uses: tespkg/actions-cache/restore@v1
         with:
           endpoint: minio-sccache
           port: 9000
@@ -187,9 +187,11 @@ jobs:
           secretKey: ""
 
           # actions/cache compatible properties: https://github.com/actions/cache
-          key: ${{ matrix.partition }}-cargo-registry-build-${{ github.ref }}
+          key: ${{ matrix.partition }}-nightly-build
           path: |
             ~/.cargo/
+            build/
+            target/
           restore-keys: |
             ${{ matrix.partition }}-cargo-registry-build-
 
@@ -331,6 +333,25 @@ jobs:
           sccache --start-server || true # work around https://github.com/ninja-build/ninja/issues/2052
 
           CONFIG_WIFI_NETWORK='test' CONFIG_WIFI_PASSWORD='password' laze build -DCARGO_ARGS+='--locked' --global --partition hash:${{ matrix.partition }} --select nightly --disable xtensa
+
+
+      - name: push nightly build cache
+        # if: github.event_name == 'schedule' && steps.should-skip.outputs.result != 'true'
+        uses: tespkg/actions-cache/save@v1
+        with:
+          endpoint: minio-sccache
+          port: 9000
+          insecure: true
+          bucket: sccache
+          use-fallback: false
+          accessKey: ""
+          secretKey: ""
+
+          key: ${{ matrix.partition }}-nightly-build
+          path: |
+            ~/.cargo/
+            build/
+            target/
 
       - name: show sccache stats
         run: sccache --show-stats
