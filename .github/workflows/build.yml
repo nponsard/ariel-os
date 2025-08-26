@@ -9,7 +9,7 @@ on:
   merge_group:
   schedule:
     # run every morning at 3:17am
-    - cron: '17 3 * * *'
+    - cron: "17 3 * * *"
 
 concurrency:
   group: ${{ github.head_ref || github.run_id }}-build
@@ -47,49 +47,38 @@ jobs:
           result-encoding: string
           script: |
             const commitId = "${{ steps.get-commit-id.outputs.commit_id }}";
-            console.log(`Commit ID: ${commitId}`);
-            const { data: { items } } = await github.rest.search.issuesAndPullRequests({
-              q: `${commitId} type:pr`,
-            });
-            console.log(`Number of PRs containing commit ${commitId}: ${items.length}`);
-            // Find a PR where that commit is the tip of the PR's branch.
-            // Would be incorrect if multiple PRs are open for exactly the same commit.
-            for (const pr of items) {
-              const prNumber = pr.number;
-              const { data: commits } = await github.rest.pulls.listCommits({
-                owner: 'ariel-os',
-                repo: 'ariel-os',
-                pull_number: prNumber,
-                per_page: 100
-              });
-              // TODO: handle pagination
-              const tipCommitId = commits[commits.length - 1].sha;
-              if (tipCommitId != commitId) {
-                console.log(`Wrong PR: tip is ${tipCommitId}`);
-                continue;
-              }
-              const prLabels = pr.labels.map((label) => label.name);
-              console.log(`The labels of PR #${prNumber} are ${prLabels}`);
-              const VALID_LABELS = ['ci-build:esp', 'ci-build:full', 'ci-build:native', 'ci-build:nrf', 'ci-build:rp', 'ci-build:skip', 'ci-build:small', 'ci-build:stm32'];
-              const buildLabels = prLabels.filter((label) => VALID_LABELS.includes(label));
-              if (buildLabels.length > 1) { throw 'Only one build label must be attached.'; }
-              const buildLabel = buildLabels[0];
-              if (!buildLabel) { throw 'A build label must be attached'; }
-              console.log(`The build label is ${buildLabel}`);
-              return buildLabel;
-            }
-            // This can happen because the API is paginated.
-            throw 'Did not find the PR; maybe it has more than 30 commits?';
+
+
+            return 'ci-build:full';
 
   build:
     needs: check-labels
-    runs-on: ubuntu-24.04
+    runs-on: arc-runner-set
     if: ${{ needs.check-labels.outputs.label != 'ci-build:skip' }}
 
     env:
-      SCCACHE_GHA_ENABLED: "true"
+
+      CARGO_HOME: /home/runner/.cargo
+      ## sccache configuration
       RUSTC_WRAPPER: "sccache"
+
+      ## sccache cache directory, mounted on each node
+      SCCACHE_DIR: "/mnt/sccache"
+      SCCACHE_CACHE_SIZE: "300G"
+
+      ## sccache configuration for GitHub Actions
+      # SCCACHE_GHA_ENABLED: "true"
+
+      ## sccache minio configuration
+      ## http://minio-sccache:9000/sccache
+      # SCCACHE_BUCKET: "sccache"
+      # SCCACHE_ENDPOINT: "minio-sccache:9000"
+      # SCCACHE_REGION: "auto"
+      # SCCACHE_S3_USE_SSL: "false"
+      # SCCACHE_S3_NO_CREDENTIALS: "true"
+
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       # clang-sys and thus bindgen is sensitive to multiple installed versions
       # around, see eg. https://github.com/rust-lang/rust-bindgen/issues/2682
       #
@@ -102,7 +91,29 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        partition: ["1/20", "2/20", "3/20", "4/20", "5/20", "6/20", "7/20", "8/20", "9/20", "10/20", "11/20", "12/20", "13/20", "14/20", "15/20", "16/20", "17/20", "18/20", "19/20", "20/20"]
+        partition:
+          [
+            "1/20",
+            "2/20",
+            "3/20",
+            "4/20",
+            "5/20",
+            "6/20",
+            "7/20",
+            "8/20",
+            "9/20",
+            "10/20",
+            "11/20",
+            "12/20",
+            "13/20",
+            "14/20",
+            "15/20",
+            "16/20",
+            "17/20",
+            "18/20",
+            "19/20",
+            "20/20",
+          ]
 
     steps:
       - name: Free up space
@@ -122,17 +133,37 @@ jobs:
       - name: Check out repository code
         uses: actions/checkout@v4
 
-      - name: Get git tree hash
-        id: get-tree-hash
-        run: |
-            git rev-parse HEAD^{tree} > .tree-hash
-            echo "hash=$(cat .tree-hash)" >> $GITHUB_OUTPUT
+      # - name: Get git tree hash
+      #   id: get-tree-hash
+      #   run: |
+      #     git rev-parse HEAD^{tree} > .tree-hash
+      #     echo "hash=$(cat .tree-hash)" >> $GITHUB_OUTPUT
 
-      - uses: actions/cache@v4
-        id: result-cache
+      # - uses: actions/cache@v4
+      #   id: result-cache
+      #   with:
+      #     path: .tree-hash
+      #     key: success-${{ steps.get-tree-hash.outputs.hash }}-${{ matrix.partition }}-${{ github.event_name == 'schedule' && 'full' || needs.check-labels.outputs.label }}
+
+      - name: cache cargo registry
+        uses: tespkg/actions-cache/restore@v1
         with:
-          path: .tree-hash
-          key: success-${{ steps.get-tree-hash.outputs.hash }}-${{ matrix.partition }}-${{ github.event_name == 'schedule' && 'full' || needs.check-labels.outputs.label }}
+          endpoint: minio-sccache
+          port: 9000
+          insecure: true
+          bucket: sccache
+          use-fallback: false
+          accessKey: ""
+          secretKey: ""
+
+          # actions/cache compatible properties: https://github.com/actions/cache
+          key: ${{ matrix.partition }}-nightly-build
+          path: |
+            ~/.cargo/
+            build/
+            target/
+          restore-keys: |
+            ${{ matrix.partition }}-cargo-registry-build-
 
       - name: Whether to skip next steps
         id: should-skip
@@ -174,59 +205,59 @@ jobs:
               ;;
           esac
 
-      - name: Run sccache-cache
-        if: steps.should-skip.outputs.result != 'true'
-        uses: mozilla-actions/sccache-action@v0.0.8
+      # - name: Run sccache-cache
+      #   if: steps.should-skip.outputs.result != 'true'
+      #   uses: mozilla-actions/sccache-action@v0.0.8
 
       - id: get_toolchain
         if: steps.should-skip.outputs.result != 'true'
         run: echo "toolchain=$(scripts/rust-toolchain.sh)" >> $GITHUB_OUTPUT
 
-      - name: Install nightly toolchain
-        if: steps.should-skip.outputs.result != 'true'
-        uses: dtolnay/rust-toolchain@master
-        with:
-          toolchain: ${{ steps.get_toolchain.outputs.toolchain }}
-          targets: riscv32imc-unknown-none-elf,riscv32imac-unknown-none-elf,thumbv6m-none-eabi,thumbv7m-none-eabi,thumbv7em-none-eabi,thumbv7em-none-eabihf,thumbv8m.main-none-eabi,thumbv8m.main-none-eabihf
-          # rust-src: Used for -Zbuild-std.
-          # rustfmt: Used by bindgen for liboscore
-          components: rust-src, rustfmt
+      # - name: Install nightly toolchain
+      #   if: steps.should-skip.outputs.result != 'true'
+      #   uses: dtolnay/rust-toolchain@master
+      #   with:
+      #     toolchain: ${{ steps.get_toolchain.outputs.toolchain }}
+      #     targets: riscv32imc-unknown-none-elf,riscv32imac-unknown-none-elf,thumbv6m-none-eabi,thumbv7m-none-eabi,thumbv7em-none-eabi,thumbv7em-none-eabihf,thumbv8m.main-none-eabi,thumbv8m.main-none-eabihf
+      #     # rust-src: Used for -Zbuild-std.
+      #     # rustfmt: Used by bindgen for liboscore
+      #     components: rust-src, rustfmt
 
-      - name: Install stable toolchain
-        if: steps.should-skip.outputs.result != 'true'
-        # configure MSRV here:
-        uses: dtolnay/rust-toolchain@1.85
-        with:
-          targets: riscv32imc-unknown-none-elf,riscv32imac-unknown-none-elf,thumbv6m-none-eabi,thumbv7m-none-eabi,thumbv7em-none-eabi,thumbv7em-none-eabihf,thumbv8m.main-none-eabi,thumbv8m.main-none-eabihf
-          # rust-src: Used for -Zbuild-std.
-          # rustfmt: Used by bindgen for liboscore
-          components: rust-src, rustfmt
+      # - name: Install stable toolchain
+      #   if: steps.should-skip.outputs.result != 'true'
+      #   # configure MSRV here:
+      #   uses: dtolnay/rust-toolchain@1.85
+      #   with:
+      #     targets: riscv32imc-unknown-none-elf,riscv32imac-unknown-none-elf,thumbv6m-none-eabi,thumbv7m-none-eabi,thumbv7em-none-eabi,thumbv7em-none-eabihf,thumbv8m.main-none-eabi,thumbv8m.main-none-eabihf
+      #     # rust-src: Used for -Zbuild-std.
+      #     # rustfmt: Used by bindgen for liboscore
+      #     components: rust-src, rustfmt
 
-      - name: Install Rust for Xtensa
-        if: steps.should-skip.outputs.result != 'true' && (env.LAZE_BUILDERS == null || contains(env.LAZE_BUILDERS, 'esp32-s3'))
-        # No tag yet after https://github.com/esp-rs/xtensa-toolchain/pull/38 (will probably be @v1.5.5)
-        uses: esp-rs/xtensa-toolchain@main
-        with:
-          version: "1.85.0.0"
-          buildtargets: esp32s3
-          override: false
-          export: false
+      # - name: Install Rust for Xtensa
+      #   if: steps.should-skip.outputs.result != 'true' && (env.LAZE_BUILDERS == null || contains(env.LAZE_BUILDERS, 'esp32-s3'))
+      #   # No tag yet after https://github.com/esp-rs/xtensa-toolchain/pull/38 (will probably be @v1.5.5)
+      #   uses: esp-rs/xtensa-toolchain@main
+      #   with:
+      #     version: "1.85.0.0"
+      #     buildtargets: esp32s3
+      #     override: false
+      #     export: false
 
-      - name: rust cache
-        if: steps.should-skip.outputs.result != 'true'
-        uses: Swatinem/rust-cache@v2
-        with:
-          key: "${{ matrix.partition }}"
+      # - name: rust cache
+      #   if: steps.should-skip.outputs.result != 'true'
+      #   uses: Swatinem/rust-cache@v2
+      #   with:
+      #     key: "${{ matrix.partition }}"
 
-      - name: Install laze
-        uses: taiki-e/install-action@v2
-        if: steps.should-skip.outputs.result != 'true'
-        with:
-          tool: laze@0.1
+      # - name: Install laze
+      #   uses: taiki-e/install-action@v2
+      #   if: steps.should-skip.outputs.result != 'true'
+      #   with:
+      #     tool: laze@0.1
 
-      - name: "installing prerequisites"
-        if: steps.should-skip.outputs.result != 'true'
-        run: sudo apt-get install ninja-build gcc-arm-none-eabi gcc-riscv64-unknown-elf
+      # - name: "installing prerequisites"
+      #   if: steps.should-skip.outputs.result != 'true'
+      #   run: sudo apt-get update && sudo apt-get install -y ninja-build gcc-arm-none-eabi gcc-riscv64-unknown-elf
 
       - name: "Show installed versions"
         run: |
@@ -255,21 +286,45 @@ jobs:
           echo "LAZE_BUILDERS=${LAZE_BUILDERS}"
           CONFIG_WIFI_NETWORK='test' CONFIG_WIFI_PASSWORD='password' laze build -DCARGO_ARGS+='--locked' --global --partition hash:${{ matrix.partition }}
 
+      - name: show sccache stats
+        run: sccache --show-stats
+
       # cleanup previous build artifacts. do in background (no need to wait).
       - name: "cleanup stable build artifacts"
-        if: github.event_name == 'schedule' && steps.should-skip.outputs.result != 'true'
+        # if: github.event_name == 'schedule' && steps.should-skip.outputs.result != 'true'
         run: |
           mv build build.tmp && rm -rf build.tmp &
 
       # nightly build, nightly toolchain
       # (disabling xtensa here as it gets built by the default toolchain build above)
       - name: "ariel-os compilation test (nightly toolchain)"
-        if: github.event_name == 'schedule' && steps.should-skip.outputs.result != 'true'
+        # if: github.event_name == 'schedule' && steps.should-skip.outputs.result != 'true'
         run: |
           sccache --start-server || true # work around https://github.com/ninja-build/ninja/issues/2052
 
           CONFIG_WIFI_NETWORK='test' CONFIG_WIFI_PASSWORD='password' laze build -DCARGO_ARGS+='--locked' --global --partition hash:${{ matrix.partition }} --select nightly --disable xtensa
 
+
+      - name: push nightly build cache
+        # if: github.event_name == 'schedule' && steps.should-skip.outputs.result != 'true'
+        uses: tespkg/actions-cache/save@v1
+        with:
+          endpoint: minio-sccache
+          port: 9000
+          insecure: true
+          bucket: sccache
+          use-fallback: false
+          accessKey: ""
+          secretKey: ""
+
+          key: ${{ matrix.partition }}-nightly-build
+          path: |
+            ~/.cargo/
+            build/
+            target/
+
+      - name: show sccache stats
+        run: sccache --show-stats
   build-success:
     if: ${{ always() }}
     runs-on: ubuntu-latest
