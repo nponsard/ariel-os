@@ -5297,12 +5297,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "target-triple"
-version = "0.1.4"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "1ac9aa371f599d22256307c24a9d748c041e548cbf599f35d890f9d365361790"
-
-[[package]]
 name = "tcp-echo"
 version = "0.0.0"
 dependencies = [
@@ -5579,17 +5573,17 @@ dependencies = [
 
 [[package]]
 name = "trybuild"
-version = "1.0.105"
+version = "1.0.89"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "1c9bf9513a2f4aeef5fdac8677d7d349c79fdbcc03b9c86da6e9d254f1e43be2"
+checksum = "9a9d3ba662913483d6722303f619e75ea10b7855b0f8e0d72799cf8621bb488f"
 dependencies = [
+ "basic-toml",
  "glob",
+ "once_cell",
  "serde",
  "serde_derive",
  "serde_json",
- "target-triple",
  "termcolor",
- "toml 0.8.22",
 ]
 
 [[package]]

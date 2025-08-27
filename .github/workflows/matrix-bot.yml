@@ -12,7 +12,7 @@ jobs:
       message_label: ${{ github.event.pull_request.draft && '✨ New draft PR' || '✨⏩ New PR' }}
     steps:
       - name: send message
-        uses: ariel-os/Matrix-Message@v0.0.4
+        uses: ariel-os/Matrix-Message@3c84df7ffc60ec4eb6431bd2a6cbc25ddc7999b3 # v0.0.4
         with:
           room_id: ${{ secrets.MATRIX_ROOM_ID }}
           access_token: ${{ secrets.MATRIX_ACCESS_TOKEN }}
@@ -26,7 +26,7 @@ jobs:
     continue-on-error: true
     steps:
       - name: send message
-        uses: ariel-os/Matrix-Message@v0.0.4
+        uses: ariel-os/Matrix-Message@3c84df7ffc60ec4eb6431bd2a6cbc25ddc7999b3 # v0.0.4
         with:
           room_id: ${{ secrets.MATRIX_ROOM_ID }}
           access_token: ${{ secrets.MATRIX_ACCESS_TOKEN }}
@@ -40,7 +40,7 @@ jobs:
     continue-on-error: true
     steps:
       - name: send message
-        uses: ariel-os/Matrix-Message@v0.0.4
+        uses: ariel-os/Matrix-Message@3c84df7ffc60ec4eb6431bd2a6cbc25ddc7999b3 # v0.0.4
         with:
           room_id: ${{ secrets.MATRIX_ROOM_ID }}
           access_token: ${{ secrets.MATRIX_ACCESS_TOKEN }}
@@ -54,7 +54,7 @@ jobs:
     continue-on-error: true
     steps:
       - name: send message
-        uses: ariel-os/Matrix-Message@v0.0.4
+        uses: ariel-os/Matrix-Message@3c84df7ffc60ec4eb6431bd2a6cbc25ddc7999b3 # v0.0.4
         with:
           room_id: ${{ secrets.MATRIX_ROOM_ID }}
           access_token: ${{ secrets.MATRIX_ACCESS_TOKEN }}
