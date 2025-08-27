@@ -550,6 +550,9 @@ contexts:
     parent: stm32
     selects:
       - cortex-m0-plus
+    disables:
+      # TODO: not enough RAM for HTTP examples
+      - network
     provides:
       - has_hwrng
       - has_storage_support
