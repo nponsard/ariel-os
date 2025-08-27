@@ -23,7 +23,7 @@ ariel-os = { workspace = true, features = [
   "usb-ethernet",
   "network-config-override",
 ] }
-trybuild = "1.0.89"
+trybuild = "=1.0.89"
 
 [lib]
 proc-macro = true

@@ -27,7 +27,7 @@ jobs:
       # Need to get two commits so we can get the PR's commit, not just the
       # merge commit.
       - name: Check out repository code
-        uses: actions/checkout@v4
+        uses: actions/checkout@08eba0b27e820071cde6df949e0beb9ba4906955 # v4
         with:
           fetch-depth: 2
 
@@ -42,7 +42,7 @@ jobs:
       # because that would not work for the merge queue.
       - name: "Get PR build labels through the commit hash of the pull request"
         id: get-pr-labels
-        uses: actions/github-script@v7
+        uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7
         with:
           result-encoding: string
           script: |
@@ -119,7 +119,7 @@ jobs:
             &
 
       - name: Check out repository code
-        uses: actions/checkout@v4
+        uses: actions/checkout@08eba0b27e820071cde6df949e0beb9ba4906955 # v4
 
       - name: Get git tree hash
         id: get-tree-hash
@@ -127,7 +127,7 @@ jobs:
             git rev-parse HEAD^{tree} > .tree-hash
             echo "hash=$(cat .tree-hash)" >> $GITHUB_OUTPUT
 
-      - uses: actions/cache@v4
+      - uses: actions/cache@0400d5f644dc74513175e3cd8d07132dd4860809 # v4
         id: result-cache
         with:
           path: .tree-hash
@@ -209,12 +209,12 @@ jobs:
 
       - name: rust cache
         if: steps.should-skip.outputs.result != 'true'
-        uses: Swatinem/rust-cache@v2
+        uses: Swatinem/rust-cache@98c8021b550208e191a6a3145459bfc9fb29c4c0 # v2
         with:
           key: "${{ matrix.partition }}"
 
       - name: Install laze
-        uses: taiki-e/install-action@v2
+        uses: taiki-e/install-action@c45072658c5d4b46c598b05c54f3d0b541f90bd3 # v2
         if: steps.should-skip.outputs.result != 'true'
         with:
           tool: laze@0.1
@@ -277,7 +277,7 @@ jobs:
 
       - name: Report nightly failure
         if: failure() && github.event_name == 'schedule' && github.repository == 'ariel-os/ariel-os'
-        uses: s3krit/matrix-message-action@v0.0.3
+        uses: s3krit/matrix-message-action@70ad3fb812ee0e45ff8999d6af11cafad11a6ecf # v0.0.3
         with:
           room_id: ${{ secrets.MATRIX_ROOM_ID }}
           access_token: ${{ secrets.MATRIX_ACCESS_TOKEN }}
