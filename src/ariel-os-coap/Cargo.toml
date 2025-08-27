@@ -50,7 +50,7 @@ serde_yml = "0.0.12"
 serde = "1"
 # "blessed" by Cargo basing its build script API on it <https://blog.rust-lang.org/inside-rust/2024/12/13/this-development-cycle-in-cargo-1.84.html#build-script-api>
 build-rs = "0.1.2"
-cbor-edn = "0.0.8"
+cbor-edn = "0.0.9"
 coap-numbers = "0.2"
 minicbor = { version = "0.26", features = ["std"] }
 
