@@ -1,0 +1,75 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:best-practices"
+  ],
+  "prConcurrentLimit": 10,
+  "prHourlyLimit": 2,
+  "env": {
+    // Forces Stable Cargo to accept unstable features
+    // https://doc.rust-lang.org/beta/unstable-book/compiler-environment-variables/RUSTC_BOOTSTRAP.html
+    // This doesn't affect how renovate finds dependencies but it allows it to correctly build the artifacts
+    // Otherwise we always a get a failure in CI so automerges wouldn't be possible
+    "RUSTC_BOOTSTRAP": "1"
+  },
+  // If no rules matches add ci-build:small label
+  "labels": ["ci-build:small"],
+  "packageRules": [
+    {
+      // Disable renovate for the packages we have patches for
+      "matchPackageNames": [
+        "embassy-embedded-hal",
+        "embassy-executor",
+        "embassy-executor-macros",
+        "embassy-hal-internal",
+        "embassy-nrf",
+        "embassy-net",
+        "embassy-rp",
+        "embassy-stm32",
+        "embassy-time",
+        "esp-alloc",
+        "esp-hal",
+        "esp-hal-embassy",
+        "esp-println",
+        "esp-wifi",
+        "xtensa-lx-rt",
+        "try-lock",
+        "embedded-test"
+      ],
+      "enabled": false
+    },
+    // Attach ci-build:native to changes relating to github-actions
+    {
+      "matchManagers": ["github-actions"],
+      "labels": ["ci-build:native"]
+    },
+    // Packages that contain nrf will get a ci-build:nrf label
+    {
+      "matchPackageNames" : [ "/^.*nrf.*/i" ],
+      "labels": ["ci-build:nrf"]
+    },
+    // Packages that start with esp- will get a ci-build:esp label
+    {
+      "matchPackageNames" : [ "/^esp-.*/i" ],
+      "labels": ["ci-build:esp"]
+    },
+    // Packages that contains stm32 will get a ci-build:stm32 label
+    {
+      "matchPackageNames" : [ "/^.*stm32.*/i" ],
+      "labels": ["ci-build:stm32"]
+    },
+    // Packages that end wuth -rp will get a ci-build:rp label
+    {
+      "matchPackageNames" : [ "/^.*-rp$/i" ],
+      "labels": ["ci-build:rp"]
+    }
+  ]
+  // TODO: uncomment once confident that renovates works properly
+  // "patch": {
+  //   "automerge": true
+  // }
+  // // automerge on Monday Mornings
+  // "automergeSchedule": [
+  //  "* 0-3 * * 1"
+  //]
+}
