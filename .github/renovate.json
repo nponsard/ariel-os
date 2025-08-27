@@ -38,11 +38,6 @@
       ],
       "enabled": false
     },
-    // Attach ci-build:native to changes relating to github-actions
-    {
-      "matchManagers": ["github-actions"],
-      "labels": ["ci-build:native"]
-    },
     // Packages that contain nrf will get a ci-build:nrf label
     {
       "matchPackageNames" : [ "/^.*nrf.*/i" ],
@@ -63,7 +58,9 @@
       "matchPackageNames" : [ "/^.*-rp$/i" ],
       "labels": ["ci-build:rp"]
     }
-  ]
+  ],
+  // Add a 'renovate' label to every PR for the matrix bot
+  "addLabels": ["renovate"]
   // TODO: uncomment once confident that renovates works properly
   // "patch": {
   //   "automerge": true
