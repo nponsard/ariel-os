@@ -57,6 +57,16 @@
     {
       "matchPackageNames" : [ "/^.*-rp$/i" ],
       "labels": ["ci-build:rp"]
+    },
+    // GHA updates skip build CI
+    {
+      "matchManagers": ["github-actions"],
+      "labels": ["ci-build:skip"]
+    },
+    // Nothing updates i.e. version/digest pinning and digest update also skip build CI
+    {
+      "matchUpdateTypes": ["pinDigest", "pin", "digest"],
+      "labels": ["ci-build:skip"]
     }
   ],
   // Add a 'renovate' label to every PR for the matrix bot
