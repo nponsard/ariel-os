@@ -34,7 +34,32 @@ macro_rules! define_env_with_default_macro {
 
 define_env_with_default_macro!(usize_from_env_or, parse_usize, "a usize");
 define_env_with_default_macro!(u8_from_env_or, parse_u8, "a u8");
-define_env_with_default_macro!(bool_from_env_or, parse_bool, "a bool");
+
+#[macro_export]
+macro_rules! bool_from_env_or {
+    // $doc is currently unused
+    ($env_var:literal, $default:expr, $doc:literal) => {
+        const {
+            if let Some(str_value) = option_env!($env_var) {
+                if let Ok(value) = $crate::env::konst::primitive::parse_bool(str_value)
+                {
+                    value
+                } else {
+                    $crate::env::const_panic::concat_panic!(
+                        "Could not parse environment variable `",
+                        $env_var,
+                        "=",
+                        str_value,
+                        "` as ",
+                        "a bool",
+                    );
+                }
+            } else {
+                $default
+            }
+        }
+    };
+}
 
 /// Reads a value at compile time from the given environment variable, with a default.
 ///
