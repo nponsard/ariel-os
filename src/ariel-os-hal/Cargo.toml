@@ -12,6 +12,10 @@ workspace = true
 ariel-os-embassy-common = { workspace = true }
 
 cfg-if.workspace = true
+const_panic.workspace = true
+
+embassy-embedded-hal = { workspace = true, optional = true }
+embassy-sync = { workspace = true, optional = true }
 
 embedded-hal = { workspace = true }
 embedded-hal-async = { workspace = true }
@@ -55,6 +59,9 @@ external-interrupts = [
 ]
 
 i2c = [
+  "dep:embassy-embedded-hal",
+  "dep:embassy-sync",
+
   "ariel-os-esp/i2c",
   "ariel-os-nrf/i2c",
   "ariel-os-rp/i2c",
