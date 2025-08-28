@@ -37,7 +37,7 @@ define_env_with_default_macro!(u8_from_env_or, u8, "a u8");
 #[macro_export]
 macro_rules! bool_from_env_or {
     // $doc is currently unused
-    ($env_var:literal, $default:expr, $doc:literal) => {
+    ($env_var:literal, $default:expr, $doc:literal $(,)?) => {
         const {
             if let Some(str_value) = option_env!($env_var) {
                 // Manual implementation of `bool::from_str()` because it is not `const` yet.
