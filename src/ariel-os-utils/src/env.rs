@@ -1,4 +1,4 @@
-pub use {const_panic, konst};
+pub use {const_panic, const_str};
 
 macro_rules! define_env_with_default_macro {
     ($macro_name:ident, $output_type:ident, $output_type_name:literal) => {
@@ -40,9 +40,11 @@ macro_rules! bool_from_env_or {
     ($env_var:literal, $default:expr, $doc:literal) => {
         const {
             if let Some(str_value) = option_env!($env_var) {
-                if let Ok(value) = $crate::env::konst::primitive::parse_bool(str_value)
-                {
-                    value
+                // Manual implementation of `bool::from_str()` because it is not `const` yet.
+                if $crate::const_str::equal!(str_value, "true") {
+                    true
+                } else if $crate::const_str::equal!(str_value, "false") {
+                    false
                 } else {
                     $crate::env::const_panic::concat_panic!(
                         "Could not parse environment variable `",
