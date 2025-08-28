@@ -31,10 +31,10 @@ pub enum Category {
     Color,
     /// Gyroscope.
     Gyroscope,
-    /// Humidity sensor.
-    Humidity,
-    /// Humidity & temperature sensor.
-    HumidityTemperature,
+    /// Relative humidity sensor.
+    RelativeHumidity,
+    /// Relative humidity & temperature sensor.
+    RelativeHumidityTemperature,
     /// Light sensor.
     Light,
     /// Magnetometer.

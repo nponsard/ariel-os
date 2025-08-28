@@ -18,8 +18,8 @@
 pub enum Label {
     /// Used for sensor drivers returning a single [`Sample`](crate::sensor::Sample).
     Main,
-    /// Humidity.
-    Humidity,
+    /// Relative humidity.
+    RelativeHumidity,
     /// Temperature.
     Temperature,
     /// X axis.
@@ -34,7 +34,7 @@ impl core::fmt::Display for Label {
     fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
         match self {
             Self::Main => write!(f, ""),
-            Self::Humidity => write!(f, "Humidity"),
+            Self::RelativeHumidity => write!(f, "Relative humidity"),
             Self::Temperature => write!(f, "Temperature"),
             Self::X => write!(f, "X"),
             Self::Y => write!(f, "Y"),
