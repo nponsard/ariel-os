@@ -1,7 +1,7 @@
-pub use {const_panic, konst};
+pub use {const_panic, const_str};
 
 macro_rules! define_env_with_default_macro {
-    ($macro_name:ident, $parse_fn_name:ident, $output_type_name:literal) => {
+    ($macro_name:ident, $output_type:ident, $output_type_name:literal) => {
         #[macro_export]
         macro_rules! $macro_name {
             // $doc is currently unused
@@ -10,8 +10,7 @@ macro_rules! define_env_with_default_macro {
             ($env_var:literal, $default:expr, $doc:literal) => {
                 const {
                     if let Some(str_value) = option_env!($env_var) {
-                        if let Ok(value) = $crate::env::konst::primitive::$parse_fn_name(str_value)
-                        {
+                        if let Ok(value) = $output_type::from_str_radix(str_value, 10) {
                             value
                         } else {
                             $crate::env::const_panic::concat_panic!(
@@ -32,9 +31,36 @@ macro_rules! define_env_with_default_macro {
     };
 }
 
-define_env_with_default_macro!(usize_from_env_or, parse_usize, "a usize");
-define_env_with_default_macro!(u8_from_env_or, parse_u8, "a u8");
-define_env_with_default_macro!(bool_from_env_or, parse_bool, "a bool");
+define_env_with_default_macro!(usize_from_env_or, usize, "a usize");
+define_env_with_default_macro!(u8_from_env_or, u8, "a u8");
+
+#[macro_export]
+macro_rules! bool_from_env_or {
+    // $doc is currently unused
+    ($env_var:literal, $default:expr, $doc:literal $(,)?) => {
+        const {
+            if let Some(str_value) = option_env!($env_var) {
+                // Manual implementation of `bool::from_str()` because it is not `const` yet.
+                if $crate::const_str::equal!(str_value, "true") {
+                    true
+                } else if $crate::const_str::equal!(str_value, "false") {
+                    false
+                } else {
+                    $crate::env::const_panic::concat_panic!(
+                        "Could not parse environment variable `",
+                        $env_var,
+                        "=",
+                        str_value,
+                        "` as ",
+                        "a bool",
+                    );
+                }
+            } else {
+                $default
+            }
+        }
+    };
+}
 
 /// Reads a value at compile time from the given environment variable, with a default.
 ///
