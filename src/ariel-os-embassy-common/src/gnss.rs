@@ -1,6 +1,6 @@
 //! Common types for GNSS functionality across different HALs.
 use core::fmt::Debug;
-
+use derive_builder::Builder;
 use embassy_sync::{
     blocking_mutex::raw::CriticalSectionRawMutex,
     watch::{Receiver, Sender, Watch},
@@ -698,15 +698,37 @@ impl core::fmt::Display for GnssDateTime {
 /// Represents GNSS data that can be received from the GNSS module.
 ///
 /// A field can be `None` if the GNSS module did not provide that information.
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Copy, Clone, Builder)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
+#[builder(no_std, build_fn(error(validation_error = false)))]
 pub struct GnssData {
     /// The position data, if available.
-    pub position: Option<GnssPosition>,
+    #[builder(setter(into, strip_option), default)]
+    position: Option<GnssPosition>,
     /// The velocity data, if available.
-    pub velocity: Option<GnssVelocity>,
+    #[builder(setter(into, strip_option), default)]
+    velocity: Option<GnssVelocity>,
     /// The date and time information, if available.
-    pub datetime: Option<GnssDateTime>,
+    #[builder(setter(into, strip_option), default)]
+    datetime: Option<GnssDateTime>,
+}
+
+impl GnssData {
+    /// Get the position data, if available.
+    #[must_use]
+    pub fn position(&self) -> Option<GnssPosition> {
+        self.position
+    }
+    /// Get the velocity data, if available.
+    #[must_use]
+    pub fn velocity(&self) -> Option<GnssVelocity> {
+        self.velocity
+    }
+    /// Get the date and time information, if available.
+    #[must_use]
+    pub fn datetime(&self) -> Option<GnssDateTime> {
+        self.datetime
+    }
 }
 
 impl core::fmt::Display for GnssData {

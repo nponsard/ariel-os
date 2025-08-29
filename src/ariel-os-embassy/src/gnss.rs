@@ -1,7 +1,7 @@
 use embassy_executor::Spawner;
 
 use ariel_os_embassy_common::gnss::{
-    Config, GnssData, GnssDataReceiver, GnssDataSender, GnssDataWatch, GnssOperationMode,
+    Config, GnssData, GnssDataBuilder, GnssDataReceiver, GnssDataSender, GnssDataWatch, GnssOperationMode
 };
 
 static WATCH: GnssDataWatch = GnssDataWatch::new();
@@ -56,11 +56,7 @@ pub async fn request_gnss_fix() -> GnssData {
         let mut receiver = WATCH.anon_receiver();
         receiver.try_get().unwrap_or(
             // If the watch is not set, return an empty GnssData
-            GnssData {
-                position: None,
-                velocity: None,
-                datetime: None,
-            },
+            GnssDataBuilder::default().build().unwrap(),
         )
     }
 }

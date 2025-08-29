@@ -21,6 +21,7 @@ const-sha1 = { version = "0.3.0", default-features = false }
 trouble-host = { workspace = true, optional = true }
 static_cell = { workspace = true, optional = true }
 embassy-sync = { workspace = true, optional = true }
+derive_builder = { workspace = true, optional = true, default-features = false }
 
 [features]
 ## Enables GPIO interrupt support.
@@ -40,4 +41,4 @@ _test = ["i2c", "spi", "external-interrupts"]
 
 ble = ["dep:static_cell", "dep:trouble-host"]
 
-gnss = ["dep:embassy-sync"]
+gnss = ["dep:derive_builder", "dep:embassy-sync"]
