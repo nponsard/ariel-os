@@ -406,7 +406,7 @@ jobs:
         uses: actions/checkout@08eba0b27e820071cde6df949e0beb9ba4906955 # v4
 
       - name: typos
-        uses: crate-ci/typos@a4c3e43aea0a9e9b9e6578d2731ebd9a27e8f6cd # v1.35.5
+        uses: crate-ci/typos@87d57f0e994b0e73e3efb34a953ae275b86b5971 # v1.35.6
 
       - name: Check the support matrix generation exit code
         run: |
