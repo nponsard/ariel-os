@@ -320,7 +320,6 @@ dependencies = [
  "embassy-time",
  "embedded-hal 1.0.0",
  "embedded-hal-async",
- "fixed",
  "fugit",
  "static_cell",
  "trouble-host",

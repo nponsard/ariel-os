@@ -54,14 +54,13 @@ pub async fn request_gnss_fix() -> GnssData {
     } else {
         // Get the latest value
         let mut receiver = WATCH.anon_receiver();
-        receiver.try_get().unwrap_or_else(|| {
+        receiver.try_get().unwrap_or(
             // If the watch is not set, return an empty GnssData
             GnssData {
                 position: None,
                 velocity: None,
                 datetime: None,
-                recorded_at: embassy_time::Instant::now(),
-            }
-        })
+            },
+        )
     }
 }

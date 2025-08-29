@@ -1,11 +1,9 @@
 //! Common types for GNSS functionality across different HALs.
+use core::fmt::Debug;
+
 use embassy_sync::{
     blocking_mutex::raw::CriticalSectionRawMutex,
     watch::{Receiver, Sender, Watch},
-};
-use fixed::{
-    FixedI32, FixedU32,
-    types::extra::{U6, U8, U19, U20, U23, U24},
 };
 
 /// Maximum number of concurrent receivers for GNSS data.
@@ -67,34 +65,57 @@ impl core::fmt::Display for Config {
     }
 }
 
+/// Trait for fixed-point numbers stored in 32-bit.
+///
+/// The underlying representation is expected to be u32 and to use the wrapping behavior when converting to signed types.
+///
+/// Conversion example:
+///
+///     let scale = 1 << TypeName::FRAC_BITS;
+///     if TypeName::SIGNED {
+///         let scaled = (value * scale as f32).round() as i32;
+///         TypeName::from_bits(scaled as u32)
+///     } else {
+///         let scaled = (value * scale as f32).round() as u32;
+///         TypeName::from_bits(scaled)
+///     }
 pub trait FixedPoint32 {
+    /// Number of fractional bits.
+    /// Max 31 for signed, max 32 for unsigned.
     const FRAC_BITS: u8;
+    /// Whether the fixed-point number is signed.
     const SIGNED: bool;
 
+    /// Create the fixed-point number from raw bits.
     fn from_bits(bits: u32) -> Self;
 
-    fn from_f32(value: f32) -> Self
-    where
-        Self: Sized,
-    {
-        let scale = 1 << Self::FRAC_BITS;
-        if Self::SIGNED {
-            let scaled = (value * scale as f32).round() as i32;
-            Self::from_bits(scaled as u32)
-        } else {
-            let scaled = (value * scale as f32).round() as u32;
-            Self::from_bits(scaled)
-        }
-    }
+    // fn from_f32(value: f32) -> Self
+    // where
+    //     Self: Sized,
+    // {
+    //     let scale = 1 << Self::FRAC_BITS;
+    //     if Self::SIGNED {
+    //         let scaled = (value * scale as f32).round() as i32;
+    //         Self::from_bits(scaled as u32)
+    //     } else {
+    //         let scaled = (value * scale as f32).round() as u32;
+    //         Self::from_bits(scaled)
+    //     }
+    // }
 
+    /// Get the raw bits of the fixed-point number.
     // Should be fine use `as u32` on signed types as well, as we only use the raw bits
     fn as_bits(&self) -> u32;
 
+    /// Get the big-endian byte representation of the fixed-point number.
     fn as_be_bytes(&self) -> [u8; 4] {
         self.as_bits().to_be_bytes()
     }
 
-    /// Possibly lossy conversion to f32
+    /// Lossy conversion to f32
+    #[allow(clippy::cast_precision_loss)]
+    // we actually want the wrapping behavior here
+    #[allow(clippy::cast_possible_wrap)]
     fn as_f32(&self) -> f32 {
         let scale = 1 << Self::FRAC_BITS;
         if Self::SIGNED {
@@ -104,13 +125,20 @@ pub trait FixedPoint32 {
         }
     }
 
+    /// Display the fixed-point number in decimal format.
+    /// This is to be used in the `Display` implementation.
+    ///
+    /// # Errors
+    ///
+    /// An error is returned if writing to the formatter fails.
+    #[allow(clippy::cast_possible_wrap)]
     fn display_format(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
         let integer_part = self.as_bits() >> Self::FRAC_BITS;
         let mut fractional_part = self.as_bits() & ((1 << Self::FRAC_BITS) - 1);
         if Self::SIGNED {
             write!(f, "{}", integer_part as i32)?;
         } else {
-            write!(f, "{}", integer_part)?;
+            write!(f, "{integer_part}")?;
         }
 
         if fractional_part == 0 {
@@ -122,7 +150,7 @@ pub trait FixedPoint32 {
             // Multiply by 10 to get the next decimal digit
             fractional_part *= 10;
             let digit = fractional_part >> Self::FRAC_BITS;
-            write!(f, "{}", digit)?;
+            write!(f, "{digit}")?;
             // Remove the integer part
             fractional_part &= (1 << Self::FRAC_BITS) - 1;
         }
@@ -130,47 +158,64 @@ pub trait FixedPoint32 {
     }
 }
 
+/// Trait for fixed-point numbers stored in 16-bit.
+/// The underlying representation is expected to be u32 and to use the wrapping behavior when converting to signed types.
+///
+/// Conversion example:
+///
+///     let scale = 1 << TypeName::FRAC_BITS;
+///     if TypeName::SIGNED {
+///         let scaled = (value * scale as f32).round() as i16;
+///         TypeName::from_bits(scaled as u16)
+///     } else {
+///         let scaled = (value * scale as f32).round() as u16;
+///         TypeName::from_bits(scaled)
+///     }
 pub trait FixedPoint16 {
+    /// Number of fractional bits.
+    /// Max 15 for signed, max 16 for unsigned.
     const FRAC_BITS: u8;
+    /// Whether the fixed-point number is signed.
     const SIGNED: bool;
 
+    /// Create the fixed-point number from raw bits.
     fn from_bits(bits: u16) -> Self;
 
-    fn from_f32(value: f32) -> Self {
-        let scale = 1 << Self::FRAC_BITS;
-        if Self::SIGNED {
-            let scaled = (value * scale as f32).round() as i32;
-            Self::from_bits(scaled as u32)
-        } else {
-            let scaled = (value * scale as f32).round() as u32;
-            Self::from_bits(scaled)
-        }
-    }
-
+    /// Get the raw bits of the fixed-point number.
     // Should be fine use `as u16` on signed types as well, as we only use the raw bits
     fn as_bits(&self) -> u16;
 
+    /// Get the big-endian byte representation of the fixed-point number.
     fn as_be_bytes(&self) -> [u8; 2] {
         self.as_bits().to_be_bytes()
     }
 
-    /// Possibly lossy conversion to f32
+    /// Lossless Conversion to f32
+    // we actually want the wrapping behavior here
+    #[allow(clippy::cast_possible_wrap)]
     fn as_f32(&self) -> f32 {
-        let scale = 1 << Self::FRAC_BITS;
+        let scale: u16 = 1 << Self::FRAC_BITS;
         if Self::SIGNED {
-            (self.as_bits() as i16) as f32 / scale as f32
+            f32::from(self.as_bits() as i16) / f32::from(scale)
         } else {
-            self.as_bits() as f32 / scale as f32
+            f32::from(self.as_bits()) / f32::from(scale)
         }
     }
 
+    /// Display the fixed-point number in decimal format.
+    /// This is to be used in the `Display` implementation.
+    ///
+    /// # Errors
+    ///
+    /// An error is returned if writing to the formatter fails.
+    #[allow(clippy::cast_possible_wrap)]
     fn display_format(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
         let integer_part = self.as_bits() >> Self::FRAC_BITS;
         let mut fractional_part = self.as_bits() & ((1 << Self::FRAC_BITS) - 1);
         if Self::SIGNED {
-            write!(f, "{}", integer_part as i32)?;
+            write!(f, "{}", integer_part as i16)?;
         } else {
-            write!(f, "{}", integer_part)?;
+            write!(f, "{integer_part}")?;
         }
 
         if fractional_part == 0 {
@@ -182,7 +227,7 @@ pub trait FixedPoint16 {
             // Multiply by 10 to get the next decimal digit
             fractional_part *= 10;
             let digit = fractional_part >> Self::FRAC_BITS;
-            write!(f, "{}", digit)?;
+            write!(f, "{digit}")?;
             // Remove the integer part
             fractional_part &= (1 << Self::FRAC_BITS) - 1;
         }
@@ -192,35 +237,24 @@ pub trait FixedPoint16 {
 
 /// Longitude in decimal degrees.
 /// Stored in fixed-point format.
+///
 /// To initialize this struct, you need to provide a fixed-point representation of the value.
 /// This fixed-point representation should have 23 fractional bits, be signed and stored in an i32.
 /// 1 sign bit, 8 integer bits, 23 fractional bits, this makes the difference between two consecutive values at the equator of 40,075,016.7/(360*2^23) ~= 0.013 meters
 /// Range from -180 to 180 degrees.
-///
-/// ## Conversion example
-///     let origin = -122.41943456;
-///     let fixed_origin = FixedI32::<U23>::from_num(origin);
-///     let manually_fixed: i32 = (origin * (1 << 23) as f64).round() as i32;
-///
-///     let lon = Longitude {
-///         inner: fixed_origin.to_bits(),
-///     };
-///     let lon2 = Longitude {
-///         inner: manually_fixed,
-///     };
-///
+#[derive(Copy, Clone)]
 pub struct Longitude {
-    inner: i32,
+    inner: u32,
 }
 impl FixedPoint32 for Longitude {
     const FRAC_BITS: u8 = 23;
     const SIGNED: bool = true;
 
     fn from_bits(bits: u32) -> Self {
-        Self { inner: bits as i32 }
+        Self { inner: bits }
     }
     fn as_bits(&self) -> u32 {
-        self.inner as u32
+        self.inner
     }
 }
 
@@ -230,51 +264,330 @@ impl core::fmt::Display for Longitude {
     }
 }
 
+impl Debug for Longitude {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+        write!(f, "Longitude({self})")
+    }
+}
+
+#[cfg(feature = "defmt")]
+impl defmt::Format for Longitude {
+    fn format(&self, fmt: defmt::Formatter<'_>) {
+        defmt::write!(fmt, "{}", self);
+    }
+}
+
 /// Latitude in decimal degrees
 /// Stored in fixed-point format.
+///
 /// To initialize this struct, you need to provide a fixed-point representation of the value.
 /// This fixed-point representation should have 23 fractional bits, be signed and stored in an i32.
 /// 1 sign bit, 8 integer bits, 23 fractional bits, this makes the difference between two consecutive values at the equator of 40,075,016.7/(360*2^23) ~= 0.013 meters
 /// Range from -90 to 90 degrees.
+#[derive(Copy, Clone)]
 pub struct Latitude {
-    inner: i32,
+    inner: u32,
 }
 
 impl FixedPoint32 for Latitude {
-    const FRAC_BITS: u32 = 23;
+    const FRAC_BITS: u8 = 23;
     const SIGNED: bool = true;
 
     fn as_bits(&self) -> u32 {
-        self.inner as u32
+        self.inner
     }
     fn from_bits(bits: u32) -> Self {
-        Self { inner: bits as i32 }
+        Self { inner: bits }
+    }
+}
+impl core::fmt::Display for Latitude {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+        self.display_format(f)
+    }
+}
+impl Debug for Latitude {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+        write!(f, "Latitude({self})")
+    }
+}
+#[cfg(feature = "defmt")]
+impl defmt::Format for Latitude {
+    fn format(&self, fmt: defmt::Formatter<'_>) {
+        defmt::write!(fmt, "{}", self);
     }
 }
 
 /// Altitude in meters above sea level.
 /// Stored in fixed-point format.
+///
 /// To initialize this struct, you need to provide a fixed-point representation of the value.
 /// This fixed-point representation should have 8 fractional bits, be signed and stored in an i32.
 /// 1 sign bit, 23 integer bits, 8 fractional bits, this gives a maximum altitude of ~8388 km. The difference between two consecutive values is 1/2^8 ~= 0.004 meters
+#[derive(Copy, Clone)]
 pub struct Altitude {
-    inner: i32,
+    inner: u32,
 }
 impl FixedPoint32 for Altitude {
-    const FRAC_BITS: u32 = 8;
+    const FRAC_BITS: u8 = 8;
     const SIGNED: bool = true;
 
+    #[allow(clippy::cast_sign_loss)]
     fn as_bits(&self) -> u32 {
-        self.inner as u32
+        self.inner
     }
+    // we actually want the wrapping behavior here
+    #[allow(clippy::cast_possible_wrap)]
     fn from_bits(bits: u32) -> Self {
-        Self { inner: bits as i32 }
+        Self { inner: bits }
+    }
+}
+impl core::fmt::Display for Altitude {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+        self.display_format(f)
+    }
+}
+impl Debug for Altitude {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+        write!(f, "Altitude({self})")
+    }
+}
+#[cfg(feature = "defmt")]
+impl defmt::Format for Altitude {
+    fn format(&self, fmt: defmt::Formatter<'_>) {
+        defmt::write!(fmt, "{}", self);
     }
 }
 
+/// Accuracy in meters.
+/// Stored in fixed-point format.
+///
+/// To initialize this struct, you need to provide a fixed-point representation of the value.
+/// This fixed-point representation should have 8 fractional bits, be unsigned and stored in an u16.
+/// 8 integer bits, 8 fractional bits, range from around 0 to 255 meters, with a difference between two consecutive values of 1/2^8 ~= 0.004 meters
+#[derive(Copy, Clone)]
+pub struct Accuracy {
+    inner: u16,
+}
+impl FixedPoint16 for Accuracy {
+    const FRAC_BITS: u8 = 8;
+    const SIGNED: bool = false;
+    fn as_bits(&self) -> u16 {
+        self.inner
+    }
+    fn from_bits(bits: u16) -> Self {
+        Self { inner: bits }
+    }
+}
+impl core::fmt::Display for Accuracy {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+        self.display_format(f)
+    }
+}
+impl Debug for Accuracy {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+        write!(f, "Accuracy({self})")
+    }
+}
+#[cfg(feature = "defmt")]
+impl defmt::Format for Accuracy {
+    fn format(&self, fmt: defmt::Formatter<'_>) {
+        defmt::write!(fmt, "{}", self);
+    }
+}
+
+/// Ground speed in m/s.
+/// Stored in fixed-point format.
+///
+/// To initialize this struct, you need to provide a fixed-point representation of the value.
+/// This fixed-point representation should have 6 fractional bits, be unsigned and stored in an u16.
+/// 10 integer bits, 6 fractional bits. Makes max speed of around 1023 m/s. Difference between two consecutive values is 1/2^6 ~= 0.0016 m/s or 0.057 km/h.
+#[derive(Copy, Clone)]
+pub struct GroundSpeed {
+    inner: u16,
+}
+impl FixedPoint16 for GroundSpeed {
+    const FRAC_BITS: u8 = 6;
+    const SIGNED: bool = false;
+    fn as_bits(&self) -> u16 {
+        self.inner
+    }
+    fn from_bits(bits: u16) -> Self {
+        Self { inner: bits }
+    }
+}
+
+impl core::fmt::Display for GroundSpeed {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+        self.display_format(f)
+    }
+}
+impl Debug for GroundSpeed {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+        write!(f, "GroundSpeed({self})")
+    }
+}
+#[cfg(feature = "defmt")]
+impl defmt::Format for GroundSpeed {
+    fn format(&self, fmt: defmt::Formatter<'_>) {
+        defmt::write!(fmt, "{}", self);
+    }
+}
+
+/// Speed accuracy in m/s.
+/// Stored in fixed-point format.
+///
+/// To initialize this struct, you need to provide a fixed-point representation of the value.
+/// This fixed-point representation should have 6 fractional bits, be unsigned and stored in an u16.
+/// 10 integer bits, 6 fractional bits. Makes max speed accuracy of around 1023 m/s. Difference between two consecutive values is 1/2^6 ~= 0.0016 m/s or 0.057 km/h.
+#[derive(Copy, Clone)]
+pub struct SpeedAccuracy {
+    inner: u16,
+}
+impl FixedPoint16 for SpeedAccuracy {
+    const FRAC_BITS: u8 = 6;
+    const SIGNED: bool = false;
+    fn as_bits(&self) -> u16 {
+        self.inner
+    }
+    fn from_bits(bits: u16) -> Self {
+        Self { inner: bits }
+    }
+}
+
+impl core::fmt::Display for SpeedAccuracy {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+        self.display_format(f)
+    }
+}
+
+impl Debug for SpeedAccuracy {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+        write!(f, "SpeedAccuracy({self})")
+    }
+}
+#[cfg(feature = "defmt")]
+impl defmt::Format for SpeedAccuracy {
+    fn format(&self, fmt: defmt::Formatter<'_>) {
+        defmt::write!(fmt, "{}", self);
+    }
+}
+
+/// Vertical speed in m/s.
+/// Stored in fixed-point format.
+///
+/// To initialize this struct, you need to provide a fixed-point representation of the value.
+/// This fixed-point representation should have 6 fractional bits, be signed and stored in an i16.
+/// 1 sign bit, 9 integer bits, 6 fractional bits. Makes max vertical speed of around 511 m/s. Difference between two consecutive values is 1/2^6 ~= 0.0016 m/s or 0.057 km/h.
+#[derive(Copy, Clone)]
+pub struct VerticalSpeed {
+    inner: u16,
+}
+impl FixedPoint16 for VerticalSpeed {
+    const FRAC_BITS: u8 = 6;
+    const SIGNED: bool = true;
+    fn as_bits(&self) -> u16 {
+        self.inner
+    }
+
+    // we actually want the wrapping behavior here
+    #[allow(clippy::cast_possible_wrap)]
+    fn from_bits(bits: u16) -> Self {
+        Self { inner: bits }
+    }
+}
+
+impl core::fmt::Display for VerticalSpeed {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+        self.display_format(f)
+    }
+}
+impl Debug for VerticalSpeed {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+        write!(f, "VerticalSpeed({self})")
+    }
+}
+#[cfg(feature = "defmt")]
+impl defmt::Format for VerticalSpeed {
+    fn format(&self, fmt: defmt::Formatter<'_>) {
+        defmt::write!(fmt, "{}", self);
+    }
+}
+
+/// Heading in degrees (0–360).
+/// Stored in fixed-point format.
+///
+/// To initialize this struct, you need to provide a fixed-point representation of the value.
+/// This fixed-point representation should have 7 fractional bits, be unsigned and stored in an u16.
+/// 9 integer bits, 7 fractional bits. Difference between two consecutive values is 1/2^7 ~= 0.008 degrees
+#[derive(Copy, Clone)]
+pub struct Heading {
+    inner: u16,
+}
+impl FixedPoint16 for Heading {
+    const FRAC_BITS: u8 = 7;
+    const SIGNED: bool = false;
+    fn as_bits(&self) -> u16 {
+        self.inner
+    }
+    fn from_bits(bits: u16) -> Self {
+        Self { inner: bits }
+    }
+}
+impl core::fmt::Display for Heading {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+        self.display_format(f)
+    }
+}
+impl Debug for Heading {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+        write!(f, "Heading({self})")
+    }
+}
+#[cfg(feature = "defmt")]
+impl defmt::Format for Heading {
+    fn format(&self, fmt: defmt::Formatter<'_>) {
+        defmt::write!(fmt, "{}", self);
+    }
+}
+/// Heading precision in degrees, maximum value is 360.
+/// Stored in fixed-point format.
+///
+/// To initialize this struct, you need to provide a fixed-point representation of the value.
+/// This fixed-point representation should have 7 fractional bits, be unsigned and stored in an u16.
+/// 9 integer bits, 7 fractional bits. Difference between two consecutive values is 1/2^7 ~= 0.008 degrees
+#[derive(Copy, Clone)]
+pub struct HeadingAccuracy {
+    inner: u16,
+}
+impl FixedPoint16 for HeadingAccuracy {
+    const FRAC_BITS: u8 = 7;
+    const SIGNED: bool = false;
+    fn as_bits(&self) -> u16 {
+        self.inner
+    }
+    fn from_bits(bits: u16) -> Self {
+        Self { inner: bits }
+    }
+}
+impl core::fmt::Display for HeadingAccuracy {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+        self.display_format(f)
+    }
+}
+impl Debug for HeadingAccuracy {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+        write!(f, "HeadingAccuracy({self})")
+    }
+}
+#[cfg(feature = "defmt")]
+impl defmt::Format for HeadingAccuracy {
+    fn format(&self, fmt: defmt::Formatter<'_>) {
+        defmt::write!(fmt, "{}", self);
+    }
+}
 /// Represents position data from GNSS.
 #[derive(Debug, Copy, Clone)]
-// #[cfg_attr(feature = "defmt", derive(defmt::Format))]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub struct GnssPosition {
     /// Longitude in decimal degrees
     /// Positive values indicate east, negative values indicate west.
@@ -285,74 +598,73 @@ pub struct GnssPosition {
     /// From -90 to 90
     pub latitude: Latitude,
     /// Altitude in meters above sea level
-    pub altitude: Altitude, // 1 sign bit, 23 integer bits, 8 fractional bits, this gives a maximum altitude of ~8388 km. The difference between two consecutive values is 1/2^8 ~= 0.004 meters
+    pub altitude: Altitude,
     /// Horizontal accuracy in meters, the calculation of this value depends on the GNSS module.
     /// An estimation from the HDOP can be done by multiplying the HDOP by the announced horizontal accuracy of the GNSS module.
     /// Value range between 0 and 255 meters.
-    pub accuracy: FixedU16<U8>, // 8 integer bits, 8 fractional bits, range from around 0 to 255 meters, with a difference between two consecutive values of 1/2^8 ~= 0.0039 meters
+    pub accuracy: Accuracy,
     /// Altitude accuracy in meters, the calculation of this value depends on the GNSS module.
     /// An estimation from the VDOP can be done by multiplying the VDOP by the announced vertical accuracy of the GNSS module.
     /// Value range between 0 and 255 meters.
-    pub altitude_accuracy: FixedU16<U8>,
-}
-
-#[cfg(feature = "defmt")]
-impl defmt::Format for GnssPosition {
-    fn format(&self, fmt: defmt::Formatter<'_>) {
-        defmt::write!(
-            fmt,
-            "GnssPosition {{ latitude: {}, longitude: {}, altitude: {}, accuracy: {}, altitude_accuracy: {} }}",
-            self.latitude.to_num::<f32>(),
-            self.longitude.to_num::<f32>(),
-            self.altitude.to_num::<f32>(),
-            self.accuracy.to_num::<f32>(),
-            self.altitude_accuracy.to_num::<f32>()
-        );
-    }
+    pub altitude_accuracy: Accuracy,
 }
 
 impl core::fmt::Display for GnssPosition {
     fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
-        core::fmt::Debug::fmt(self, f)
+        write!(
+            f,
+            "GnssPosition {{ longitude: {}, latitude: {}, altitude: {}, accuracy: {}, altitude_accuracy: {} }}",
+            self.longitude, self.latitude, self.altitude, self.accuracy, self.altitude_accuracy
+        )
     }
 }
 
 /// Represents velocity data from GNSS.
 #[derive(Debug, Copy, Clone)]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub struct GnssVelocity {
     /// Speed in m/s
-    pub speed: FixedU16<U6>, // 10 integer bits, 6 fractional bits. Makes max speed of around 1023 m/s. Difference between two consecutive values is 1/2^6 ~= 0.0016 m/s or 0.057 km/h
+    pub speed: GroundSpeed,
     /// Speed accuracy in m/s
-    pub speed_accuracy: FixedU16<U6>,
+    pub speed_accuracy: SpeedAccuracy,
     /// Vertical speed in m/s
-    pub vertical_speed: FixedI16<U6>, // Vertical speed can be negative
+    pub vertical_speed: VerticalSpeed, // Vertical speed can be negative
     /// Vertical speed accuracy in m/s
-    pub vertical_speed_accuracy: FixedU16<U6>,
+    pub vertical_speed_accuracy: SpeedAccuracy,
     /// Heading in degrees (0–360)
-    pub heading: FixedU16<U7>, // 9 integer bits, 7 fractional bits. Difference between two consecutive values is 1/2^7 ~= 0.008 degrees
+    pub heading: Heading,
     /// Heading accuracy in degrees
-    pub heading_accuracy: FixedU16<U7>,
+    pub heading_accuracy: HeadingAccuracy,
 }
 
-#[cfg(feature = "defmt")]
-impl defmt::Format for GnssVelocity {
-    fn format(&self, fmt: defmt::Formatter<'_>) {
-        defmt::write!(
-            fmt,
-            "GnssPosition {{ speed: {}, speed_accuracy: {}, vertical_speed: {}, vertical_speed_accuracy: {}, heading: {}, heading_accuracy: {} }}",
-            self.speed.to_num::<f32>(),
-            self.speed_accuracy.to_num::<f32>(),
-            self.vertical_speed.to_num::<f32>(),
-            self.vertical_speed_accuracy.to_num::<f32>(),
-            self.heading.to_num::<f32>(),
-            self.heading_accuracy.to_num::<f32>()
-        );
-    }
-}
+// #[cfg(feature = "defmt")]
+// impl defmt::Format for GnssVelocity {
+//     fn format(&self, fmt: defmt::Formatter<'_>) {
+//         defmt::write!(
+//             fmt,
+//             "GnssPosition {{ speed: {}, speed_accuracy: {}, vertical_speed: {}, vertical_speed_accuracy: {}, heading: {}, heading_accuracy: {} }}",
+//             self.speed.to_num::<f32>(),
+//             self.speed_accuracy.to_num::<f32>(),
+//             self.vertical_speed.to_num::<f32>(),
+//             self.vertical_speed_accuracy.to_num::<f32>(),
+//             self.heading.to_num::<f32>(),
+//             self.heading_accuracy.to_num::<f32>()
+//         );
+//     }
+// }
 
 impl core::fmt::Display for GnssVelocity {
     fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
-        core::fmt::Debug::fmt(self, f)
+        write!(
+            f,
+            "GnssVelocity {{ speed: {}, speed_accuracy: {}, vertical_speed: {}, vertical_speed_accuracy: {}, heading: {}, heading_accuracy: {} }}",
+            self.speed,
+            self.speed_accuracy,
+            self.vertical_speed,
+            self.vertical_speed_accuracy,
+            self.heading,
+            self.heading_accuracy
+        )
     }
 }
 
