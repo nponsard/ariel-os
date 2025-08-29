@@ -668,23 +668,12 @@ impl core::fmt::Display for GnssVelocity {
     }
 }
 
-// Based on NMEA RMC message
-/// Represents date and time information from GNSS. All fields are in UTC.
+/// Represents date and time information from GNSS.
 #[derive(Debug, Copy, Clone)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub struct GnssDateTime {
-    /// Year
-    pub year: u16,
-    /// Month (1-12)
-    pub month: u8,
-    /// Day of the month (1-31)
-    pub day: u8,
-    /// Hour (0-23)
-    pub hour: u8,
-    /// Minute (0-59)
-    pub minute: u8,
-    /// Second (0-59)
-    pub second: u8,
+    /// Seconds since Ariel epoch (2024-01-01T00:00:00Z)
+    pub seconds: u32,
     /// Milliseconds (0-999)
     pub milliseconds: u16,
 }
