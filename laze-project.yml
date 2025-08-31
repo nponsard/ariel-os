@@ -595,7 +595,7 @@ contexts:
       PROBE_RS_CHIP: STM32WBA55CG
       RUSTFLAGS:
         - --cfg capability=\"hw/stm32-rng\"
-  
+
   - name: stm32wle5jc
     parent: stm32
     selects:
@@ -607,7 +607,6 @@ contexts:
       PROBE_RS_CHIP: STM32WLE5JC
       RUSTFLAGS:
         - --cfg capability=\"hw/stm32-rng\"
-    
 
 modules:
   - name: thumbv6m-none-eabi
@@ -1912,7 +1911,7 @@ builders:
       CARGO_ENV:
         # This ISR is unused on a naked board. Configured here for testing.
         - CONFIG_SWI=USART2
-        
+
   - name: native
     parent: ariel-os
     selects:
