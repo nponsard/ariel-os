@@ -523,6 +523,13 @@ boards:
       user_usb: not_currently_supported
       ethernet_over_usb: not_currently_supported
 
+  seeedstudio-lora-e5-mini:
+    name: Seeed Studio LoRa-E5 mini
+    url: https://web.archive.org/web/20250802201959/https://wiki.seeedstudio.com/LoRa_E5_mini/
+    chip: stm32wle5jc
+    tier: "3"
+    support:
+
   st-b-l475e-iot01a:
     name: ST B-L475E-IOT01A
     url: https://web.archive.org/web/20250402084429/https://www.st.com/en/evaluation-tools/b-l475e-iot01a.html
@@ -623,13 +630,3 @@ boards:
         status: not_currently_supported
         comments:
           - not enough RAM
-
-  lora-e5-mini:
-    name: LoRa-E5-Mini
-    url: https://web.archive.org/web/20250804165553/https://www.st.com/en/microcontrollers-microprocessors/stm32wle5jc.html
-    chip: stm32wle5jc
-    tier: "3"
-    support:
-      user_usb: not_available
-      wifi: not_available
-      ethernet_over_usb: not_available
