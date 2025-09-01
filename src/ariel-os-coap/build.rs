@@ -69,14 +69,14 @@ enum KnownSource {
 }
 
 fn main() {
-    if !build::cargo_feature("coap-server-config-storage") {
+    if !build_rs::input::cargo_feature("coap-server-config-storage") {
         return;
     }
 
-    build::rerun_if_env_changed("PEERS_YML");
+    build_rs::output::rerun_if_env_changed("PEERS_YML");
     let peers_yml = std::path::PathBuf::from(std::env::var("PEERS_YML").unwrap());
 
-    build::rerun_if_changed(&peers_yml);
+    build_rs::output::rerun_if_changed(&peers_yml);
     let peers_file = std::fs::File::open(&peers_yml)
         .map_err(|e| {
             format!(
@@ -159,6 +159,6 @@ fn main() {
         }}
     ");
 
-    let peers_file = build::out_dir().join("peers.rs");
+    let peers_file = build_rs::input::out_dir().join("peers.rs");
     std::fs::write(peers_file, peers_data).unwrap();
 }
