@@ -366,6 +366,20 @@ chips:
       user_usb: not_available
       ethernet_over_usb: not_available
 
+  stm32wle5jc:
+    name: STM32WLE5JC
+    support:
+      gpio: supported
+      debug_output: supported
+      hwrng: supported
+      i2c_controller: not_currently_supported
+      spi_main: not_currently_supported
+      logging: supported
+      storage: supported
+      wifi: not_available
+      user_usb: not_available
+      ethernet_over_usb: not_available
+
 # Encodes support status for each board.
 # Boards inherit support statuses of their chip, but can also override them.
 boards:
@@ -508,6 +522,13 @@ boards:
     support:
       user_usb: not_currently_supported
       ethernet_over_usb: not_currently_supported
+
+  seeedstudio-lora-e5-mini:
+    name: Seeed Studio LoRa-E5 mini
+    url: https://web.archive.org/web/20250802201959/https://wiki.seeedstudio.com/LoRa_E5_mini/
+    chip: stm32wle5jc
+    tier: "3"
+    support:
 
   st-b-l475e-iot01a:
     name: ST B-L475E-IOT01A
