@@ -131,7 +131,7 @@ ariel-os-threads = { path = "src/ariel-os-threads" }
 ariel-os-utils = { path = "src/ariel-os-utils", default-features = false }
 
 const_panic = { version = "0.2.8", default-features = false }
-const-str = "0.6.0"
+const-str = "0.7.0"
 defmt = { version = "1.0.0" }
 document-features = "0.2.8"
 fugit = { version = "0.3.7", default-features = false }
