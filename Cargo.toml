@@ -167,7 +167,7 @@ unexpected_cfgs = "allow"
 
 [workspace.lints.clippy]
 # Clippy lints are documented here: https://rust-lang.github.io/rust-clippy/master/index.html
-collapsible_if = "allow"                     # We can remove this when we bump the MSRV to 1.89 or higher.
+collapsible_if = "allow" # We can remove this when we bump the MSRV to 1.89 or higher.
 indexing_slicing = "deny"
 missing_safety_doc = { level = "warn" }
 pedantic = { level = "warn", priority = -1 }

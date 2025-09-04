@@ -4,10 +4,10 @@ locale = "en-us"
 [default.extend-words]
 hax = "hax"
 hsi = "hsi"
-extint = "extint"     # External interrupt
+extint = "extint" # External interrupt
 synopsys = "synopsys" # Manufacturer name
-COSE = "COSE"         # A technology we use
-EDN = "EDN"           # EDN is the acronym of CBOR Diagnostic Notation
+COSE = "COSE" # A technology we use
+EDN = "EDN" # EDN is the acronym of CBOR Diagnostic Notation
 
 [files]
 extend-exclude = [
