@@ -42,7 +42,7 @@ jobs:
       # because that would not work for the merge queue.
       - name: "Get PR build labels through the commit hash of the pull request"
         id: get-pr-labels
-        uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7
+        uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8
         with:
           result-encoding: string
           script: |
