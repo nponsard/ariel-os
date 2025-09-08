@@ -27,7 +27,6 @@ pub mod reexports {
     //! Crate re-exports.
 
     // Used by macros provided by this crate.
-    pub use embassy_futures;
     pub use embassy_time;
     pub use embedded_hal_async;
 }
