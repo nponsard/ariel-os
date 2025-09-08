@@ -1,8 +1,11 @@
 [package]
 name = "ariel-os-sensors"
+# The sensor API is versioned separately from the rest of Ariel OS.
+# Introducing a breaking change fragments the ecosystem of sensor drivers.
 version = "0.1.0"
 license.workspace = true
 edition.workspace = true
+# This crate's MSRV is decoupled from Ariel OS's.
 rust-version = "1.85"
 repository.workspace = true
 
