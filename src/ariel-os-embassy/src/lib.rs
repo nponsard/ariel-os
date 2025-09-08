@@ -51,6 +51,24 @@ pub mod api {
     #[cfg(feature = "time")]
     pub mod time {
         //! Provides time-related facilities.
+        //!
+        //! **Note:** Even though some types from this module might be re-exports from third-party
+        //! crates (e.g., `embassy-time`), they are intended to be used "in a self-contained
+        //! way"—for instance, to sleep asynchronously:
+        //!
+        //! ```
+        //! # use ariel_os_embassy::api::time::{Duration, Timer};
+        //! # async fn example() {
+        //! Timer::after(Duration::from_secs(1)).await;
+        //! // or, equivalent but terser:
+        //! Timer::after_secs(1).await;
+        //! # }
+        //! ```
+        //!
+        //! Items from this module should *not* be passed as arguments to functions that expect
+        //! types from these third-party crates.
+        //! If such specific types are needed, please use those from `ariel_os::reexports` instead.
+
         // NOTE: we may want to re-export more items in the future, but not re-export the whole
         // crate.
         pub use embassy_time::{Delay, Duration, Instant, TICK_HZ, Timer};
