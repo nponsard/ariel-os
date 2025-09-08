@@ -86,11 +86,6 @@ jobs:
         with:
           tool: cargo-deny
 
-      - name: Install cargo-manifest-check
-        uses: taiki-e/install-action@57511bcdf8cdb0eab6448cb7fa632952d9f25742 # v2
-        with:
-          tool: cargo-manifest-check@0.2
-
       # Should run as soon as possible to avoid using unwanted crates
       # `--force`ing is required as the installed binary could have been
       # restored from cache.
@@ -103,10 +98,6 @@ jobs:
         run: cargo deny check advisories
         # Prevent sudden announcement of a new advisory from failing CI
         continue-on-error: true
-
-      # For now, only run cargo-manifest-check on ariel-os-identity.
-      - name: cargo-manifest-check
-        run: cargo manifest-check src/ariel-os-identity
 
       # TODO: we'll eventually want to check the whole workspace with --workspace
       # TODO: we'll eventually want to check relevant feature combinations
@@ -385,6 +376,22 @@ jobs:
 
       - name: Check toml formatting
         run: taplo fmt --check
+
+  cargo-manifest-check:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5
+
+      - name: Install cargo-manifest-check
+        uses: taiki-e/install-action@57511bcdf8cdb0eab6448cb7fa632952d9f25742 # v2
+        with:
+          tool: cargo-manifest-check@0.2
+
+      # For now, only run cargo-manifest-check on ariel-os-identity.
+      - name: cargo-manifest-check
+        run: cargo manifest-check src/ariel-os-identity
 
   lint-ruff:
     runs-on: ubuntu-latest
