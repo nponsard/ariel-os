@@ -224,7 +224,6 @@ dependencies = [
  "coap-numbers",
  "coapcore",
  "critical-section",
- "embassy-futures",
  "embassy-net",
  "embassy-sync 0.6.2",
  "embedded-io-async",
