@@ -48,6 +48,9 @@ resolver = "3"
 [workspace.package]
 license = "MIT OR Apache-2.0"
 edition = "2024"
+# This should be the Ariel OS MSRV.
+# Some crates may have a different MSRV.
+rust-version = "1.85"
 repository = "https://github.com/ariel-os/ariel-os"
 
 [workspace.dependencies]
