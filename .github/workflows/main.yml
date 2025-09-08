@@ -67,6 +67,13 @@ jobs:
       - name: Forbid version keys in manifests of tests and examples
         run: set +e; grep -r '^version\s*=\|^version\.workspace' --line-number examples tests; test $? -eq 1
 
+      # `find -exec` does not make it easy to fail with a non-zero code when the
+      # `exec`ed command fails.
+      - name: Check for missing `rust-version` keys in `ariel-os*` crates
+        run: |
+          find src -iwholename 'src/ariel-os*/Cargo.toml' -exec sh -c \
+            'grep -q --with-filename '^rust-version' "$0" || (echo "$0 is missing a rust-version key"; kill $PPID)' \{\} \;
+
       - id: get_toolchain
         run: echo "toolchain=$(scripts/rust-toolchain.sh)" >> $GITHUB_OUTPUT
 
