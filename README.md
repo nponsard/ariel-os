@@ -5,6 +5,7 @@
 [![Documentation][rustdoc-badge]][documentation-dev-rustdoc]
 [![Matrix][matrix-badge]][matrix-link]
 [![OpenSSF Best Practices][openssf-badge]][openssf-project-page]
+[![Mastodon][mastodon-badge]][mastodon-link]
 
 Ariel OS is an operating system for secure, memory-safe, low-power Internet of Things (IoT).
 It is based on Rust from the ground up
@@ -75,3 +76,5 @@ Thanks to all the people who already contributed!
 [hello-world-example]: https://github.com/ariel-os/ariel-os/tree/main/examples/hello-world
 [openssf-badge]: https://www.bestpractices.dev/projects/10610/badge
 [openssf-project-page]: https://www.bestpractices.dev/projects/10610
+[mastodon-badge]: https://img.shields.io/badge/social-Mastodon-informational.svg
+[mastodon-link]: https://floss.social/@ariel
