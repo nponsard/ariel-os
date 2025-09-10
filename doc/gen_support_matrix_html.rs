@@ -175,6 +175,25 @@ struct SubCommandCheck {
     output_file: PathBuf,
 }
 
+#[derive(Debug, Serialize)]
+struct BoardSupport {
+    chip: String,
+    chip_technical_name: String,
+    url: String,
+    technical_name: String,
+    name: String,
+    tier: String,
+    functionalities: Vec<FunctionalitySupport>,
+}
+
+#[derive(Debug, Serialize)]
+struct FunctionalitySupport {
+    icon: String,
+    description: String,
+    // TODO: add comments
+    // TODO: add the PR link
+}
+
 fn main() -> miette::Result<()> {
     let args: Args = argh::from_env();
 
@@ -264,24 +283,6 @@ fn validate_input(matrix: &schema::Matrix) -> Result<(), Error> {
 fn render_html(matrix: &schema::Matrix, board_support_tier: &SupportTier) -> Result<String, Error> {
     use minijinja::{Environment, context};
 
-    #[derive(Debug, Serialize)]
-    struct BoardSupport {
-        chip: String,
-        chip_technical_name: String,
-        url: String,
-        technical_name: String,
-        name: String,
-        tier: String,
-        functionalities: Vec<FunctionalitySupport>,
-    }
-
-    #[derive(Debug, Serialize)]
-    struct FunctionalitySupport {
-        icon: String,
-        description: String,
-        // TODO: add comments
-        // TODO: add the PR link
-    }
 
     let mut boards = matrix.boards.iter().map(|(board_technical_name, board_info)| {
         let board_name = &board_info.name;
