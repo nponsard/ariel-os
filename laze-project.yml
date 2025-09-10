@@ -1412,7 +1412,8 @@ modules:
     env:
       global:
         # esp-wifi needs a lot of ISR stack.
-        isr_stacksize_required: "32768"
+        isr_stacksize_required:
+          - "32768"
         # esp-wifi needs 72KiB
         heapsize_required:
           - $(72*1024)
