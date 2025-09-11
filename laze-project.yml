@@ -1510,7 +1510,7 @@ modules:
       - network_device
     env:
       global:
-        # esp-wifi needs a lot of ISR stack.
+        # esp-radio needs a lot of ISR stack.
         isr_stacksize_required:
           - "32768"
         # heap size is configured by the device
@@ -1520,7 +1520,7 @@ modules:
           - ariel-os/wifi-esp
 
   - name: wifi-esp-xor-threads
-    help: Helper module to conditionally make esp-wifi conflict with threads on esp32 riscv
+    help: Helper module to conditionally make esp-radio conflict with threads on esp32 riscv
     selects:
       - sw/threading:
           - wifi-with-threads-currently-broken-on-esp-riscv
