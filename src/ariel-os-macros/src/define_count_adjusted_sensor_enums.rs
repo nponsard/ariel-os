@@ -21,10 +21,14 @@ pub fn define_count_adjusted_sensor_enums(_item: TokenStream) -> TokenStream {
     let count = 3;
     #[cfg(feature = "max-sample-min-count-4")]
     let count = 4;
+    #[cfg(feature = "max-sample-min-count-5")]
+    let count = 5;
     #[cfg(feature = "max-sample-min-count-6")]
     let count = 6;
     #[cfg(feature = "max-sample-min-count-7")]
     let count = 7;
+    #[cfg(feature = "max-sample-min-count-8")]
+    let count = 8;
     #[cfg(feature = "max-sample-min-count-9")]
     let count = 9;
     #[cfg(feature = "max-sample-min-count-12")]
