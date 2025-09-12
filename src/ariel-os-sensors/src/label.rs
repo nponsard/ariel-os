@@ -32,6 +32,10 @@ pub enum Label {
     Heading,
     /// Temperature.
     Temperature,
+    /// Time elapsed since Ariel OS epoch (2024-01-01).
+    Time,
+    /// Time elapsed since last full second.
+    SecondFraction,
     /// Vertical speed.
     VerticalSpeed,
     /// X axis.
@@ -53,6 +57,8 @@ impl core::fmt::Display for Label {
             Self::RelativeHumidity => write!(f, "Relative humidity"),
             Self::Heading => write!(f, "Heading"),
             Self::Temperature => write!(f, "Temperature"),
+            Self::Time => write!(f, "Time"),
+            Self::SecondFraction => write!(f, "Second fraction"),
             Self::VerticalSpeed => write!(f, "Vertical speed"),
             Self::X => write!(f, "X"),
             Self::Y => write!(f, "Y"),
