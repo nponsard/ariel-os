@@ -89,7 +89,7 @@ pub enum Accuracy {
     /// ```
     SymmetricalError {
         /// Deviation around the bias value.
-        deviation: i8,
+        deviation: u8,
         /// Bias (mean accuracy error).
         bias: i8,
         /// Scaling of [`deviation`](Accuracy::SymmetricalError::deviation) and
