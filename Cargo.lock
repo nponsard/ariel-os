@@ -442,7 +442,6 @@ dependencies = [
  "embassy-sync 0.6.2",
  "embedded-hal-async",
  "embedded-io-async",
- "futures",
  "nrf-modem",
  "nrf-sdc",
  "paste",
