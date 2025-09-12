@@ -3017,12 +3017,7 @@ dependencies = [
  "ariel-os",
  "ariel-os-boards",
  "ariel-os-nrf91-gnss",
- "cfg-if",
- "embassy-sync 0.6.2",
- "embedded-hal 1.0.0",
- "embedded-hal-async",
  "linkme",
- "once_cell",
 ]
 
 [[package]]
