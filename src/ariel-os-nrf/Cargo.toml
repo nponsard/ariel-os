@@ -33,6 +33,7 @@ ariel-os-random = { workspace = true, optional = true }
 ariel-os-rt = { workspace = true, features = ["memory-x"] }
 static_cell = { workspace = true }
 embassy-sync = { workspace = true }
+embassy-time = { workspace = true, optional = true }
 trouble-host = { workspace = true, optional = true }
 cortex-m = { workspace = true, optional = true }
 tinyrlibc = { workspace = true, optional = true }

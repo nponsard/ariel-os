@@ -440,6 +440,7 @@ dependencies = [
  "embassy-executor",
  "embassy-nrf",
  "embassy-sync 0.6.2",
+ "embassy-time",
  "embedded-hal-async",
  "embedded-io-async",
  "nrf-modem",
