@@ -8,6 +8,7 @@ apps:
       - network
       - ?button-reading
     conflicts:
+      - ram-small
       # needs `feature(type_alias_impl_trait)`
       - stable
 
