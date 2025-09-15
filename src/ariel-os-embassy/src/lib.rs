@@ -279,7 +279,7 @@ async fn init_task(mut peripherals: hal::OptionalPeripherals) {
 
     #[cfg(feature = "usb-ethernet")]
     let device = {
-        use ariel_os_embassy_common::identity::DeviceId;
+        use ariel_os_embassy_common::identity::DeviceId as _;
         use embassy_usb::class::cdc_ncm::{
             CdcNcmClass, State as CdcNcmState, embassy_net::State as NetState,
         };

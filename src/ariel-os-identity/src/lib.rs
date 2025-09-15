@@ -42,7 +42,7 @@ pub use ariel_os_embassy_common::identity::Eui48;
 /// a faulty state might impede communication with an identity EEPROM) to erring unconditionally
 /// (where no device ID is present or implemented).
 pub fn device_id_bytes() -> Result<impl AsRef<[u8]>, impl core::error::Error> {
-    use ariel_os_embassy_common::identity::DeviceId;
+    use ariel_os_embassy_common::identity::DeviceId as _;
 
     ariel_os_hal::identity::DeviceId::get().map(|d| d.bytes())
 }
@@ -70,7 +70,7 @@ pub fn device_id_bytes() -> Result<impl AsRef<[u8]>, impl core::error::Error> {
 ///
 /// Same as in [`device_id_bytes()`].
 pub fn interface_eui48(if_index: u32) -> Result<Eui48, impl core::error::Error> {
-    use ariel_os_embassy_common::identity::DeviceId;
+    use ariel_os_embassy_common::identity::DeviceId as _;
 
     ariel_os_hal::identity::DeviceId::get().map(|d| d.interface_eui48(if_index))
 }

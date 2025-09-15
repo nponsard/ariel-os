@@ -59,6 +59,7 @@
 #![deny(missing_docs)]
 #![allow(clippy::too_many_lines)]
 #![allow(rust_2018_idioms)]
+#![expect(clippy::unused_trait_names)]
 
 mod iana;
 
