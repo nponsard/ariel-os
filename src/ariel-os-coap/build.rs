@@ -1,5 +1,5 @@
 use serde::Deserialize;
-use std::fmt::Write;
+use std::fmt::Write as _;
 
 /// Second-level item for deserializing a `peers.yml`
 ///

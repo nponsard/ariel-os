@@ -1,7 +1,7 @@
 use ariel_os_embassy_common::gpio::input::InterruptError;
 use embassy_stm32::{
     OptionalPeripherals, Peripheral,
-    exti::{AnyChannel, Channel},
+    exti::{AnyChannel, Channel as _},
     gpio::Pin,
     peripherals,
 };
