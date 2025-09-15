@@ -88,7 +88,7 @@ fn main() {
         })
         .expect("no peers.yml usable in specified location");
 
-    let peers: Vec<Peer> = serde_yml::from_reader(peers_file).expect("failed to parse peers.yml");
+    let peers: Vec<Peer> = serde_yaml::from_reader(peers_file).expect("failed to parse peers.yml");
 
     let mut unauthenticated_scope = None;
     let mut chain_once_per_kccs = String::new();

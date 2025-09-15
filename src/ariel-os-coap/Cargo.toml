@@ -46,7 +46,7 @@ hexlit = "0.5.5"
 embedded-io-async = { workspace = true }
 
 [build-dependencies]
-serde_yml = "0.0.12"
+serde_yaml = "0.9.34"
 serde = "1"
 # "blessed" by Cargo basing its build script API on it <https://blog.rust-lang.org/inside-rust/2024/12/13/this-development-cycle-in-cargo-1.84.html#build-script-api>
 build-rs = "0.3.0"
