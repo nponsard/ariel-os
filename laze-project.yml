@@ -551,9 +551,6 @@ contexts:
     selects:
       - cortex-m0-plus
       - ram-small
-    disables:
-      # TODO: not enough RAM for HTTP examples
-      - network
     provides:
       - has_hwrng
       - has_storage_support
