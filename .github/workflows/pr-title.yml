@@ -14,7 +14,7 @@ jobs:
           fetch-depth: 0
 
       - name: Install committed
-        uses: taiki-e/install-action@0c5db7f7f897c03b771660e91d065338615679f4 # v2
+        uses: taiki-e/install-action@849bd009f730a24e9db18262f4e9f062591dee39 # v2
         with:
           tool: committed
 
