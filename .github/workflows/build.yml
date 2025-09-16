@@ -103,6 +103,7 @@ jobs:
       # newest standard library. It may also need to be aligned with the clang
       # version which Xtensa provides.
       CLANG_PATH: /usr/bin/clang-18
+      CACHE_THING_LOCATION: /cache/cache-thing
 
     strategy:
       fail-fast: true
@@ -137,6 +138,9 @@ jobs:
 
       - name: Check out repository code
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5
+        with:
+          # we need to access the Main branch for the cache
+          fetch-depth: 0
 
       - name: Get git tree hash
         id: get-tree-hash
@@ -157,9 +161,16 @@ jobs:
           echo "${result}"
           echo "${result}" >> $GITHUB_OUTPUT
 
-      - name: restore nightly build cache
+      - name: "Download cache-thing"
+        if: steps.should-skip.outputs.result != 'true'
         run: |
-          tar -xf /cache/raw/${{ matrix.partition }}-nightly.tar.zstd -C $PWD || true
+          mkdir -p ~/.local/bin
+          curl -sSL https://github.com/nponsard/cache-thing/releases/download/0.2.0/cache-thing-0.2.0-x86_64-linux-musl -o ~/.local/bin/cache-thing
+          chmod +x ~/.local/bin/cache-thing
+      - name: "Restore cache"
+        if: steps.should-skip.outputs.result != 'true'
+        run: |
+          ~/.local/bin/cache-thing pull --prefix ${{ matrix.partition }} -f build -f /home/runner/.cargo --fallback-key nightly || true
 
       - name: "limit build unless nightly build"
         if: github.event_name != 'schedule' && steps.should-skip.outputs.result != 'true'
@@ -269,6 +280,11 @@ jobs:
           echo "LAZE_BUILDERS=${LAZE_BUILDERS}"
           CONFIG_WIFI_NETWORK='test' CONFIG_WIFI_PASSWORD='password' laze build -DCARGO_ARGS+='--locked' --global --partition hash:${{ matrix.partition }}
 
+      - name: "Save cache"
+        if: steps.should-skip.outputs.result != 'true'
+        run: |
+          ~/.local/bin/cache-thing push --prefix ${{ matrix.partition }} -f build -f /home/runner/.cargo
+
       # cleanup previous build artifacts. do in background (no need to wait).
       - name: "cleanup stable build artifacts"
         if: github.event_name == 'schedule' && steps.should-skip.outputs.result != 'true'
@@ -282,12 +298,11 @@ jobs:
         run: |
           CONFIG_WIFI_NETWORK='test' CONFIG_WIFI_PASSWORD='password' laze build -DCARGO_ARGS+='--locked' --global --partition hash:${{ matrix.partition }} --select nightly --disable xtensa
 
-
-      - name: save nightly build cache
-        if: github.event_name == 'schedule' && steps.should-skip.outputs.result != 'true'
+      - name: "Save nightly cache"
+        if: steps.should-skip.outputs.result != 'true' && github.event_name == 'schedule'
         run: |
-          mkdir -p /cache/raw/${{ matrix.partition }}
-          tar --zstd -cf /cache/raw/${{ matrix.partition }}-nightly.tar.zstd build ~/.cargo
+          ~/.local/bin/cache-thing push --prefix ${{ matrix.partition }} -f build -f /home/runner/.cargo --fixed-key nightly
+
 
       - name: show sccache stats
         if: runner.environment == 'self-hosted'
