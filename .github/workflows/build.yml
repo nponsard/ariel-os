@@ -167,6 +167,7 @@ jobs:
           mkdir -p ~/.local/bin
           curl -sSL https://github.com/nponsard/cache-thing/releases/download/0.2.0/cache-thing-0.2.0-x86_64-linux-musl -o ~/.local/bin/cache-thing
           chmod +x ~/.local/bin/cache-thing
+
       - name: "Restore cache"
         if: steps.should-skip.outputs.result != 'true'
         run: |
