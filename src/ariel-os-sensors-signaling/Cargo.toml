@@ -1,5 +1,5 @@
 [package]
-name = "ariel-os-sensors-utils"
+name = "ariel-os-sensors-signaling"
 # This crate is versioned separately from both `ariel-os` and
 # `ariel-os-sensors`.
 version = "0.1.0"
@@ -12,11 +12,7 @@ repository.workspace = true
 license.workspace = true
 
 [dependencies]
-ariel-os-sensors = { workspace = true }
 embassy-sync = { workspace = true }
-embassy-time = { workspace = true }
-portable-atomic = { workspace = true }
-ariel-os-sensors-signaling = { workspace = true }
 
 [features]
 _test = []

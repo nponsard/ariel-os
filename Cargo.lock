@@ -530,6 +530,7 @@ name = "ariel-os-sensors"
 version = "0.1.0"
 dependencies = [
  "ariel-os-macros",
+ "ariel-os-sensors-signaling",
  "defmt 1.0.1",
  "embassy-sync 0.6.2",
  "linkme",
@@ -537,10 +538,18 @@ dependencies = [
 ]
 
 [[package]]
+name = "ariel-os-sensors-signaling"
+version = "0.1.0"
+dependencies = [
+ "embassy-sync 0.6.2",
+]
+
+[[package]]
 name = "ariel-os-sensors-utils"
 version = "0.1.0"
 dependencies = [
  "ariel-os-sensors",
+ "ariel-os-sensors-signaling",
  "embassy-sync 0.6.2",
  "embassy-time",
  "portable-atomic",

@@ -15,6 +15,7 @@ defmt = { workspace = true, optional = true }
 embassy-sync = { workspace = true }
 linkme = { workspace = true }
 pin-project = { workspace = true }
+ariel-os-sensors-signaling = { workspace = true }
 
 [features]
 defmt = ["dep:defmt"]
