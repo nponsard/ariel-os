@@ -63,59 +63,98 @@ fn convert_to_samples(data: &nrf_modem::nrfxlib_sys::nrf_modem_gnss_pvt_data_fra
     let datetime = UtcDateTime::new(date, time);
 
     let seconds_since_epoch = (datetime - ARIEL_EPOCH).whole_seconds();
-
     Samples::V8([
         Sample::new(
             (data.latitude * 10_000_000f64) as i32,
-            Accuracy::SymmetricalError {
-                // Accuracy in meters, max value is 25,5. Need to watch out for overflows.
-                deviation: clamp_to_u8(data.accuracy * 10f32),
-                bias: 0,
-                scaling: -1,
+            if data.accuracy < 0.1 {
+                Accuracy::TemporarilyUnavailable
+            } else {
+                Accuracy::SymmetricalError {
+                    // Accuracy in meters, max value is 25,5. Need to watch out for overflows.
+                    deviation: clamp_to_u8(data.accuracy * 10f32),
+                    bias: 0,
+                    scaling: -1,
+                }
             },
         ),
         Sample::new(
             (data.longitude * 10_000_000f64) as i32,
-            Accuracy::SymmetricalError {
-                deviation: clamp_to_u8(data.accuracy * 10f32),
-                bias: 0,
-                scaling: -1,
+            if data.accuracy < 0.1 {
+                Accuracy::TemporarilyUnavailable
+            } else {
+                Accuracy::SymmetricalError {
+                    deviation: clamp_to_u8(data.accuracy * 10f32),
+                    bias: 0,
+                    scaling: -1,
+                }
             },
         ),
         Sample::new(
             (data.altitude * 100f32) as i32,
-            Accuracy::SymmetricalError {
-                deviation: clamp_to_u8(data.altitude_accuracy * 10f32),
-                bias: 0,
-                scaling: -1,
+            if data.accuracy < 0.1 {
+                Accuracy::TemporarilyUnavailable
+            } else {
+                Accuracy::SymmetricalError {
+                    deviation: clamp_to_u8(data.altitude_accuracy * 10f32),
+                    bias: 0,
+                    scaling: -1,
+                }
             },
         ),
         Sample::new(
             (data.speed * 1_000_000f32) as i32,
-            Accuracy::SymmetricalError {
-                deviation: clamp_to_u8(data.speed_accuracy * 10f32),
-                bias: 0,
-                scaling: -1,
+            if data.accuracy < 0.1 {
+                Accuracy::TemporarilyUnavailable
+            } else {
+                Accuracy::SymmetricalError {
+                    deviation: clamp_to_u8(data.speed_accuracy * 10f32),
+                    bias: 0,
+                    scaling: -1,
+                }
             },
         ),
         Sample::new(
             (data.vertical_speed * 1_000_000f32) as i32,
-            Accuracy::SymmetricalError {
-                deviation: clamp_to_u8(data.vertical_speed_accuracy * 10f32),
-                bias: 0,
-                scaling: -1,
+            if data.accuracy < 0.1 {
+                Accuracy::TemporarilyUnavailable
+            } else {
+                Accuracy::SymmetricalError {
+                    deviation: clamp_to_u8(data.vertical_speed_accuracy * 10f32),
+                    bias: 0,
+                    scaling: -1,
+                }
             },
         ),
         Sample::new(
             (data.heading * 1_000_000f32) as i32,
-            Accuracy::SymmetricalError {
-                deviation: clamp_to_u8(data.heading_accuracy),
-                bias: 0,
-                scaling: 0,
+            if data.accuracy < 0.1 {
+                Accuracy::TemporarilyUnavailable
+            } else {
+                Accuracy::SymmetricalError {
+                    deviation: clamp_to_u8(data.heading_accuracy),
+                    bias: 0,
+                    scaling: 0,
+                }
             },
         ),
-        Sample::new(seconds_since_epoch as i32, Accuracy::Unknown),
-        Sample::new(data.datetime.ms as i32, Accuracy::Unknown),
+        Sample::new(
+            seconds_since_epoch as i32,
+            // Default year if no GPS connection has been established yet.
+            if data.datetime.year == 1980 {
+                Accuracy::TemporarilyUnavailable
+            } else {
+                Accuracy::Unknown
+            },
+        ),
+        Sample::new(
+            data.datetime.ms as i32,
+            // Default year if no GPS connection has been established yet.
+            if data.datetime.year == 1980 {
+                Accuracy::TemporarilyUnavailable
+            } else {
+                Accuracy::Unknown
+            },
+        ),
     ])
 }
 
