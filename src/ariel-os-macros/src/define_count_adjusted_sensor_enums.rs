@@ -42,6 +42,17 @@ pub fn define_count_adjusted_sensor_enums(_item: TokenStream) -> TokenStream {
         }
     });
 
+    let reading_channels_from_impls = (1..=count)
+        .map(|i| {
+            let variant = variant_name(i);
+            quote! {
+                impl From<[ReadingChannel; #i]> for ReadingChannels {
+                    fn from(value: [ReadingChannel; #i]) -> Self {
+                        Self::#variant(value)
+                    }
+                }
+            }
+        });
     let reading_channels_variants = (1..=count).map(|i| {
         let variant = variant_name(i);
         quote! { #variant([ReadingChannel; #i]) }
@@ -91,7 +102,8 @@ pub fn define_count_adjusted_sensor_enums(_item: TokenStream) -> TokenStream {
         ///
         /// # Note
         ///
-        /// This type is automatically generated, the number of variants is automatically adjusted.
+        /// This type is automatically generated, the number of [`ReadingChannel`]s that can be
+        /// stored is automatically adjusted.
         #[derive(Debug, Copy, Clone)]
         pub enum ReadingChannels {
             #(
@@ -99,6 +111,8 @@ pub fn define_count_adjusted_sensor_enums(_item: TokenStream) -> TokenStream {
                 #reading_channels_variants
             ),*,
         }
+
+        #(#reading_channels_from_impls)*
 
         impl ReadingChannels {
             /// Returns an iterator over the underlying [`ReadingChannel`] items.
