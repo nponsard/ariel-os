@@ -49,7 +49,7 @@ pub fn define_count_adjusted_sensor_enums(_item: TokenStream) -> TokenStream {
             quote! {
                 impl From<[ReadingChannel; #i]> for ReadingChannels {
                     fn from(value: [ReadingChannel; #i]) -> Self {
-                        Self::#variant(value)
+                        Self { channels: InnerReadingChannels::#variant(value) }
                     }
                 }
             }
@@ -67,7 +67,7 @@ pub fn define_count_adjusted_sensor_enums(_item: TokenStream) -> TokenStream {
     let reading_channels_iter = (1..=count)
         .map(|i| {
             let variant = variant_name(i);
-            quote! { ReadingChannels::#variant(samples) => samples.iter().copied() }
+            quote! { InnerReadingChannels::#variant(samples) => samples.into_iter() }
         });
 
     let expanded = quote! {
@@ -112,11 +112,8 @@ pub fn define_count_adjusted_sensor_enums(_item: TokenStream) -> TokenStream {
         /// This type is automatically generated, the number of [`ReadingChannel`]s that can be
         /// stored is automatically adjusted.
         #[derive(Debug, Copy, Clone)]
-        pub enum ReadingChannels {
-            #(
-                #[doc(hidden)]
-                #reading_channels_variants
-            ),*,
+        pub struct ReadingChannels {
+            channels: InnerReadingChannels,
         }
 
         #(#reading_channels_from_impls)*
@@ -129,7 +126,7 @@ pub fn define_count_adjusted_sensor_enums(_item: TokenStream) -> TokenStream {
             /// [`Iterator::zip()`] can be useful to zip the returned iterator with the one
             /// obtained with [`Reading::samples()`].
             pub fn iter(&self) -> impl ExactSizeIterator<Item = ReadingChannel> + core::iter::FusedIterator + '_ {
-                match self {
+                match self.channels {
                     #(#reading_channels_iter),*
                 }
             }
@@ -143,6 +140,11 @@ pub fn define_count_adjusted_sensor_enums(_item: TokenStream) -> TokenStream {
                     unreachable!();
                 }
             }
+        }
+
+        #[derive(Debug, Copy, Clone)]
+        enum InnerReadingChannels {
+            #(#reading_channels_variants),*
         }
     };
 
