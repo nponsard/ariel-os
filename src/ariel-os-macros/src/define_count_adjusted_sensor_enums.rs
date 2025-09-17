@@ -17,6 +17,17 @@ pub fn define_count_adjusted_sensor_enums(_item: TokenStream) -> TokenStream {
         let variant = variant_name(i);
         quote! { #variant([Sample; #i]) }
     });
+    let samples_from_impls = (1..=count)
+        .map(|i| {
+            let variant = variant_name(i);
+            quote! {
+                impl From<[Sample; #i]> for Samples {
+                    fn from(value: [Sample; #i]) -> Self {
+                        Self::#variant(value)
+                    }
+                }
+            }
+        });
     let samples_first_sample = (1..=count).map(|i| {
         let variant = variant_name(i);
         quote! {
@@ -50,7 +61,8 @@ pub fn define_count_adjusted_sensor_enums(_item: TokenStream) -> TokenStream {
         ///
         /// # Note
         ///
-        /// This type is automatically generated, the number of variants is automatically adjusted.
+        /// This type is automatically generated, the number of [`Sample`]s that can be stored is
+        /// automatically adjusted.
         #[derive(Debug, Copy, Clone)]
         pub enum Samples {
             #(
@@ -58,6 +70,8 @@ pub fn define_count_adjusted_sensor_enums(_item: TokenStream) -> TokenStream {
                 #samples_variants
             ),*
         }
+
+        #(#samples_from_impls)*
 
         impl Reading for Samples {
             fn sample(&self) -> Sample {
