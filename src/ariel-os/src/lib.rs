@@ -8,7 +8,7 @@
 //! - ⚙️  The git repository is available on
 //!   [GitHub](https://github.com/ariel-os/ariel-os).
 //! - ✨ [Examples](https://github.com/ariel-os/ariel-os/tree/main/examples)
-//!   demonstrates various features of Ariel OS.
+//!   demonstrate various features of Ariel OS.
 //! - 🧪 A set of [test cases](https://github.com/ariel-os/ariel-os/tree/main/tests)
 //!   further verifies the capabilities of Ariel OS.
 //! - 🚧 The [roadmap](https://github.com/ariel-os/ariel-os/issues/242)
