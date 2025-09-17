@@ -29,6 +29,23 @@ See the [Getting Started page][getting-started-mdbook] in the User Guide to get 
 
 ![Terminal screencast of compiling and flashing the hello-world example](./book/src/hello-world_render.svg)
 
+## Documentation
+
+Multiple resources are available to learn Ariel OS:
+
+- 📔 Extensive documentation for Ariel OS can be found in the
+  [book](https://ariel-os.github.io/ariel-os/dev/docs/book/).
+- 🛠️ Reference documentation for Ariel OS can be found in the
+  [API documentation](https://ariel-os.github.io/ariel-os/dev/docs/api/ariel_os/).
+- ⚙️  The git repository is available on
+  [GitHub](https://github.com/ariel-os/ariel-os).
+- ✨ [Examples](https://github.com/ariel-os/ariel-os/tree/main/examples)
+  demonstrate various features of Ariel OS.
+- 🧪 A set of [test cases](https://github.com/ariel-os/ariel-os/tree/main/tests)
+  further verifies the capabilities of Ariel OS.
+- 🚧 The [roadmap](https://github.com/ariel-os/ariel-os/issues/242)
+  shows the planned features for Ariel OS.
+
 ## Minimum Supported Rust Version (MSRV) and Policy
 
 Ariel OS compiles with stable Rust version 1.85 and up.
