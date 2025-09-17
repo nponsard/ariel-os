@@ -1,5 +1,14 @@
 use crate::sensor::ReadingChannel;
 
+/// Errors returned when trying to interpret a sample.
+#[derive(Debug, Copy, Clone, PartialEq, Eq)]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
+#[non_exhaustive]
+pub enum SampleError {
+    /// The channel is not available at the moment (e.g., part of the sensor is not ready yet).
+    TemporarilyUnavailable,
+}
+
 #[expect(clippy::doc_markdown)]
 /// Represents a value obtained from a sensor device, along with its accuracy.
 ///
@@ -45,9 +54,17 @@ impl Sample {
     }
 
     /// Returns the sample value.
-    #[must_use]
-    pub fn value(&self) -> i32 {
-        self.value
+    ///
+    /// # Errors
+    ///
+    /// [`SampleError`] is returned in case of error.
+    pub fn value(&self) -> Result<i32, SampleError> {
+        match self.accuracy {
+            Accuracy::ChannelTemporarilyUnavailable => Err(SampleError::TemporarilyUnavailable),
+            Accuracy::NoError | Accuracy::Unknown | Accuracy::SymmetricalError { .. } => {
+                Ok(self.value)
+            }
+        }
     }
 
     /// Returns the measurement accuracy.
@@ -98,6 +115,9 @@ pub enum Accuracy {
         /// [`bias`](Accuracy::SymmetricalError::bias).
         scaling: i8,
     },
+    /// Indicates that the channel is temporarily unavailable.
+    /// This may happen when parts of a sensor are not ready yet, but data is already available for other channels.
+    ChannelTemporarilyUnavailable,
 }
 
 /// Implemented on [`Samples`](crate::sensor::Samples), returned by
