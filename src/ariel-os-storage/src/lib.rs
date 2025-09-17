@@ -13,7 +13,7 @@ mod storage;
 
 use core::ops::Range;
 
-use ariel_os_hal::{
+use ariel_os_hal::hal::{
     OptionalPeripherals,
     storage::{Flash, FlashError, init as flash_init},
 };
