@@ -1027,6 +1027,12 @@ modules:
           - probe-rs download --chip ${PROBE_RS_CHIP} ${out} $@
           - probe-rs reset --chip ${PROBE_RS_CHIP}
 
+      attach:
+        help: Attach probe-rs to rtt logging
+        build: false
+        cmd:
+          - probe-rs attach --chip ${PROBE_RS_CHIP} ${out} $@
+
       debug:
         help: Starts a probe-rs gdb server
         cmd:
