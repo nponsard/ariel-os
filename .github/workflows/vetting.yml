@@ -21,7 +21,7 @@ jobs:
           toolchain: ${{ steps.get_toolchain.outputs.toolchain }}
 
       - name: Install cargo-vet
-        uses: taiki-e/install-action@c0dee14250395ae6b1754a99f67c1d693138b102 # v2
+        uses: taiki-e/install-action@2fdc5fd6ac805b0f8256893bd4c807bcb666af00 # v2
         with:
           tool: cargo-vet@0.10.0
 
