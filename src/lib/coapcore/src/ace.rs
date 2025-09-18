@@ -59,6 +59,10 @@ type UnprotectedAuthzInfoPost<'a> = AceCbor<'a>;
 /// registry](https://www.iana.org/assignments/cose/cose.xhtml#header-parameters).
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 #[derive(minicbor::Decode, Debug)]
+#[allow(
+    missing_docs,
+    reason = "Fields correspond 1:1 to the domain items of the same name"
+)]
 #[cbor(map)]
 #[non_exhaustive]
 pub struct HeaderMap<'a> {
@@ -233,6 +237,10 @@ struct SigStructureForSignature1<'a> {
 #[allow(
     dead_code,
     reason = "Presence of the item makes CBOR derive tolerate the item"
+)]
+#[allow(
+    missing_docs,
+    reason = "Fields correspond 1:1 to the domain items of the same name"
 )]
 #[cbor(map)]
 #[non_exhaustive]
