@@ -7,3 +7,5 @@ apps:
     selects:
       - network
       - random
+    conflicts:
+      - ram-small

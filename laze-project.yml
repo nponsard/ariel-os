@@ -550,9 +550,7 @@ contexts:
     parent: stm32
     selects:
       - cortex-m0-plus
-    disables:
-      # TODO: not enough RAM for HTTP examples
-      - network
+      - ram-small
     provides:
       - has_hwrng
       - has_storage_support
@@ -856,6 +854,9 @@ modules:
       global:
         isr_stacksize_required_default: "512"
         executor_stacksize_required_default: "512"
+
+  - name: ram-small
+    help: This module marks MCUs with little RAM (currently, the ones which cannot run HTTP or CoAP)
 
   - name: stable
     help: build with stable Rust
@@ -1296,6 +1297,8 @@ modules:
       # unless provided by the context.
       - c-function-assert
       - c-function-abort
+    conflicts:
+      - ram-small
     env:
       global:
         FEATURES:
