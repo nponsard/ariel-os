@@ -211,6 +211,7 @@ jobs:
                 external-interrupts,
                 i2c,
                 spi,
+                uart,
                 "
             -p ariel-os-nrf
             --target=thumbv7em-none-eabi
@@ -338,6 +339,7 @@ jobs:
                     external-interrupts,
                     i2c,
                     spi,
+                    uart,
                     " \
                 -p ariel-os-nrf
 

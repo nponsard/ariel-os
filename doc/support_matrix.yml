@@ -79,7 +79,7 @@ chips:
       hwrng: supported
       i2c_controller: not_currently_supported
       spi_main: not_currently_supported
-      uart: not_currently_supported
+      uart: supported
       logging: supported
       storage: supported
       wifi: not_available
@@ -95,7 +95,7 @@ chips:
       hwrng: supported
       i2c_controller: supported
       spi_main: supported
-      uart: not_currently_supported
+      uart: supported
       logging: supported
       storage: supported
       wifi: not_available
@@ -109,7 +109,7 @@ chips:
       hwrng: supported
       i2c_controller: supported
       spi_main: supported
-      uart: not_currently_supported
+      uart: supported
       logging: supported
       storage: supported
       wifi: not_available
@@ -125,7 +125,7 @@ chips:
           - no standalone RNG in the application core, only in the CryptoCell which is not currently supported
       i2c_controller: supported
       spi_main: supported
-      uart: not_currently_supported
+      uart: supported
       logging: supported
       storage: supported
       wifi: not_available
@@ -141,7 +141,7 @@ chips:
           - only available through the CryptoCell
       i2c_controller: supported
       spi_main: supported
-      uart: not_currently_supported
+      uart: needs_testing
       logging: supported
       storage: supported
       wifi: not_available
@@ -159,7 +159,7 @@ chips:
           - only available through the CryptoCell
       i2c_controller: supported
       spi_main: supported
-      uart: not_currently_supported
+      uart: supported
       logging: supported
       storage: supported
       wifi: not_available
