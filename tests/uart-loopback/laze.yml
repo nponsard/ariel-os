@@ -1,6 +1,7 @@
 apps:
   - name: uart-loopback
     context:
+      - esp
       - nrf52832
       - nrf52833
       - nrf52840

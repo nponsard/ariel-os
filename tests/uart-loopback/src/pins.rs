@@ -1,5 +1,13 @@
 use ariel_os::hal::{peripherals, uart};
 
+#[cfg(context = "esp")]
+pub type TestUart<'a> = uart::UART0<'a>;
+#[cfg(context = "esp")]
+ariel_os::hal::define_peripherals!(Peripherals {
+    uart_tx: GPIO4,
+    uart_rx: GPIO5,
+});
+
 #[cfg(context = "nrf52832")]
 pub type TestUart<'a> = uart::UARTE0<'a>;
 #[cfg(context = "nrf52832")]
