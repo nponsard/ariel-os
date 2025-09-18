@@ -11,33 +11,23 @@ pub fn define_count_adjusted_sensor_enums(_item: TokenStream) -> TokenStream {
     #[allow(clippy::wildcard_imports)]
     use define_count_adjusted_enum::*;
 
-    // The order of these feature-gated statements is important as these features are not meant to
-    // be mutually exclusive.
-    #[allow(unused_variables, reason = "overridden by feature selection")]
-    let count = 1;
-    #[cfg(feature = "max-sample-min-count-2")]
-    let count = 2;
-    #[cfg(feature = "max-sample-min-count-3")]
-    let count = 3;
-    #[cfg(feature = "max-sample-min-count-4")]
-    let count = 4;
-    #[cfg(feature = "max-sample-min-count-5")]
-    let count = 5;
-    #[cfg(feature = "max-sample-min-count-6")]
-    let count = 6;
-    #[cfg(feature = "max-sample-min-count-7")]
-    let count = 7;
-    #[cfg(feature = "max-sample-min-count-8")]
-    let count = 8;
-    #[cfg(feature = "max-sample-min-count-9")]
-    let count = 9;
-    #[cfg(feature = "max-sample-min-count-12")]
-    let count = 12;
+    let count = get_allocation_size();
 
     let samples_variants = (1..=count).map(|i| {
         let variant = variant_name(i);
         quote! { #variant([Sample; #i]) }
     });
+    let samples_from_impls = (1..=count)
+        .map(|i| {
+            let variant = variant_name(i);
+            quote! {
+                impl From<[Sample; #i]> for Samples {
+                    fn from(value: [Sample; #i]) -> Self {
+                        Self::#variant(value)
+                    }
+                }
+            }
+        });
     let samples_first_sample = (1..=count).map(|i| {
         let variant = variant_name(i);
         quote! {
@@ -52,6 +42,17 @@ pub fn define_count_adjusted_sensor_enums(_item: TokenStream) -> TokenStream {
         }
     });
 
+    let reading_channels_from_impls = (1..=count)
+        .map(|i| {
+            let variant = variant_name(i);
+            quote! {
+                impl From<[ReadingChannel; #i]> for ReadingChannels {
+                    fn from(value: [ReadingChannel; #i]) -> Self {
+                        Self::#variant(value)
+                    }
+                }
+            }
+        });
     let reading_channels_variants = (1..=count).map(|i| {
         let variant = variant_name(i);
         quote! { #variant([ReadingChannel; #i]) }
@@ -71,7 +72,8 @@ pub fn define_count_adjusted_sensor_enums(_item: TokenStream) -> TokenStream {
         ///
         /// # Note
         ///
-        /// This type is automatically generated, the number of variants is automatically adjusted.
+        /// This type is automatically generated, the number of [`Sample`]s that can be stored is
+        /// automatically adjusted.
         #[derive(Debug, Copy, Clone)]
         pub enum Samples {
             #(
@@ -79,6 +81,8 @@ pub fn define_count_adjusted_sensor_enums(_item: TokenStream) -> TokenStream {
                 #samples_variants
             ),*
         }
+
+        #(#samples_from_impls)*
 
         impl Reading for Samples {
             fn sample(&self) -> Sample {
@@ -98,7 +102,8 @@ pub fn define_count_adjusted_sensor_enums(_item: TokenStream) -> TokenStream {
         ///
         /// # Note
         ///
-        /// This type is automatically generated, the number of variants is automatically adjusted.
+        /// This type is automatically generated, the number of [`ReadingChannel`]s that can be
+        /// stored is automatically adjusted.
         #[derive(Debug, Copy, Clone)]
         pub enum ReadingChannels {
             #(
@@ -106,6 +111,8 @@ pub fn define_count_adjusted_sensor_enums(_item: TokenStream) -> TokenStream {
                 #reading_channels_variants
             ),*,
         }
+
+        #(#reading_channels_from_impls)*
 
         impl ReadingChannels {
             /// Returns an iterator over the underlying [`ReadingChannel`] items.
@@ -138,5 +145,32 @@ pub fn define_count_adjusted_sensor_enums(_item: TokenStream) -> TokenStream {
 mod define_count_adjusted_enum {
     pub fn variant_name(index: usize) -> syn::Ident {
         quote::format_ident!("V{index}")
+    }
+
+    pub fn get_allocation_size() -> usize {
+        // The order of these feature-gated statements is important as these features are not meant to
+        // be mutually exclusive.
+        #[allow(unused_variables, reason = "overridden by feature selection")]
+        let count = 1;
+        #[cfg(feature = "max-sample-min-count-2")]
+        let count = 2;
+        #[cfg(feature = "max-sample-min-count-3")]
+        let count = 3;
+        #[cfg(feature = "max-sample-min-count-4")]
+        let count = 4;
+        #[cfg(feature = "max-sample-min-count-5")]
+        let count = 5;
+        #[cfg(feature = "max-sample-min-count-6")]
+        let count = 6;
+        #[cfg(feature = "max-sample-min-count-7")]
+        let count = 7;
+        #[cfg(feature = "max-sample-min-count-8")]
+        let count = 8;
+        #[cfg(feature = "max-sample-min-count-9")]
+        let count = 9;
+        #[cfg(feature = "max-sample-min-count-12")]
+        let count = 12;
+
+        count
     }
 }
