@@ -154,7 +154,7 @@ pub(crate) fn init() {
     #[cfg(any(context = "nrf", context = "rp", context = "stm32"))]
     {
         // nrf-sdc doesn't like when the SWI is priority 0.
-        #[cfg(all(context = "nrf", feature = "ble"))]
+        #[cfg(context = "nrf")]
         {
             use crate::hal::interrupt::{InterruptExt, Priority};
             hal::SWI.set_priority(Priority::P1);
