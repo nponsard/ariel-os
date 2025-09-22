@@ -25,17 +25,47 @@ use serde::Serialize;
 const BOARD_PAGE_TEMPLATE: &str = r#"
 # {{ board_info.name }}
 
-## Support Matrix
+## Board Info
 
-|Feature|Support Status|
+|||
 |---|---|
 |Support Tier|{{ board_info.tier }}|
-|Chip|{{ board_info.chip }}|
 |Ariel OS Name|`{{ board_info.technical_name }}`|
+|Chip|{{ board_info.chip }}|
+|Chip Ariel OS Name|`{{ board_info.chip_technical_name }}`|
 |Flashing|TODO|
-{%- for f in board_info.functionalities %}
-|{{ f.title }}|{{ f.icon}}|
-{%- endfor %}
+
+## Support Matrix
+
+<table class="support-matrix">
+  <thead>
+    <tr>
+      <th>Functionality</th>
+      <th>Support Status</th>
+    </tr>
+  </thead>
+  <tbody>
+    {%- for functionality in board_info.functionalities %}
+    <tr>
+      <td>{{ functionality.title }}</td>
+      <td class="support-cell" title="{{ functionality.description }}">{{ functionality.icon }}</td>
+    </tr>
+    {%- endfor %}
+  </tbody>
+</table>
+
+<style>
+@media (min-width: 1920px) {
+  .support-matrix {
+    position: relative;
+    left: 50%;
+    transform: translate(-50%, 0);
+  }
+}
+.support-cell {
+  text-align: center;
+}
+</style>
 
 Legend:
 
