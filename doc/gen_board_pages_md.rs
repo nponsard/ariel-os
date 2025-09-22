@@ -39,9 +39,18 @@ const BOARD_PAGE_TEMPLATE: &str = r#"
 
 Legend:
 
-{%- for s in support_keys %}
-  {{ s.icon }} : {{ s.description }}
-{%- endfor %}
+<dl>
+  {%- for support_key in support_keys %}
+  <div>
+    <dt>{{ support_key.icon }}</dt><dd>{{ support_key.description }}</dd>
+  </div>
+  {%- endfor %}
+</dl>
+<style>
+dt, dd {
+  display: inline;
+}
+</style>
 
 ## References
 
