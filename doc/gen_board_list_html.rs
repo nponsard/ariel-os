@@ -31,7 +31,7 @@ const LIST_TEMPLATE: &str = r#"
 struct Args {
     /// board support tier (1, 2, or 3)
     #[argh(option)]
-    tier: schema::SupportTier,
+    tier: schema::Tier,
     #[argh(positional)]
     /// path of the input YAML file
     input_file: PathBuf,
@@ -108,7 +108,7 @@ fn validate_input(matrix: &schema::Matrix) -> Result<(), Error> {
 
 fn render_html(
     matrix: &schema::Matrix,
-    support_tier: &schema::SupportTier,
+    support_tier: &schema::Tier,
 ) -> Result<String, Error> {
     use minijinja::{context, Environment};
 

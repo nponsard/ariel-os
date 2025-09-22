@@ -29,7 +29,7 @@ const BOARD_PAGE_TEMPLATE: &str = r#"
 
 |||
 |---|---|
-|Support Tier|{{ board_info.tier }}|
+|Tier|{{ board_info.tier }}|
 |Ariel OS Name|`{{ board_info.technical_name }}`|
 |Chip|{{ board_info.chip }}|
 |Chip Ariel OS Name|`{{ board_info.chip_technical_name }}`|
