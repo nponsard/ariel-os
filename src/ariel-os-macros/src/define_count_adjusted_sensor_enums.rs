@@ -67,7 +67,7 @@ pub fn define_count_adjusted_sensor_enums(_item: TokenStream) -> TokenStream {
     let reading_channels_iter = (1..=count)
         .map(|i| {
             let variant = variant_name(i);
-            quote! { InnerReadingChannels::#variant(ref samples) => samples.iter().copied() }
+            quote! { InnerReadingChannels::#variant(ref channels) => channels.iter().copied() }
         });
 
     let expanded = quote! {
