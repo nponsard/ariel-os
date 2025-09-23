@@ -62,12 +62,12 @@ pub fn define_count_adjusted_sensor_enums(_item: TokenStream) -> TokenStream {
     let samples_iter = (1..=count)
         .map(|i| {
             let variant = variant_name(i);
-            quote! { InnerSamples::#variant(samples) => samples.into_iter() }
+            quote! { InnerSamples::#variant(ref samples) => samples.iter().copied() }
         });
     let reading_channels_iter = (1..=count)
         .map(|i| {
             let variant = variant_name(i);
-            quote! { InnerReadingChannels::#variant(samples) => samples.into_iter() }
+            quote! { InnerReadingChannels::#variant(ref samples) => samples.iter().copied() }
         });
 
     let expanded = quote! {
