@@ -33,12 +33,10 @@ jobs:
         with:
           tool: rustfilt@0.2.1
 
-      # - name: Install laze
-      #   uses: taiki-e/install-action@v2
-      #   with:
-      #     tool: laze@0.1
       - name: Install laze
-        run: cargo install laze --git https://github.com/nponsard/laze --branch feat/absolute-root
+        uses: taiki-e/install-action@v2
+        with:
+          tool: laze@0.1
 
       - name: Install prerequisites
         run: sudo apt-get install ninja-build gcc-arm-none-eabi

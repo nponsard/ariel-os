@@ -1649,9 +1649,9 @@ modules:
           - "-C instrument-coverage"
         # needs https://github.com/kaspar030/laze/pull/751
         LLVM_PROFILE_FILE:
-          - "${absroot}/${build-dir}/profile/%p-%m.profraw"
+          - "${project-root}/${build-dir}/profile/%p-%m.profraw"
         PROFILE_DIR:
-          - "${absroot}/${build-dir}/profile"
+          - "${project-root}/${build-dir}/profile"
     tasks:
       coverage:
         help: collects coverage of host tests
