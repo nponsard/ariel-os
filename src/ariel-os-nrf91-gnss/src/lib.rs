@@ -6,10 +6,10 @@ use crate::config::GnssOperationMode;
 use crate::state_atomic::StateAtomic;
 use ariel_os_debug::log::warn;
 use ariel_os_sensors::{
-    Category, Label, MeasurementUnit, Sensor,
+    Category, Label, MeasurementUnit, Reading, Sensor,
     sensor::{
         Accuracy, ReadingChannel, ReadingChannels, ReadingError, ReadingResult, ReadingWaiter,
-        Sample, Samples, State,
+        Sample, Samples, State, ValueError,
     },
 };
 use embassy_sync::{blocking_mutex::raw::CriticalSectionRawMutex, channel::Channel, mutex::Mutex};
@@ -47,137 +47,63 @@ fn default_gnss_config() -> nrf_modem::GnssConfig {
     }
 }
 
+#[derive(Debug, Copy, Clone, PartialEq, Eq)]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
+pub enum GnssValueError {
+    /// Error reading value from sample, see inner error.
+    Reading(ValueError),
+    /// Sensor does not provide the correct channels
+    InvalidSensor,
+}
+
 pub trait Nrf91GnssExt {
     /// Returns the time of the last fix in seconds since UNIX epoch.
-    fn time_of_fix_seconds(&self) -> i64;
+    fn time_of_fix_seconds(&self) -> Result<i64, GnssValueError>;
 
     /// Returns the time of the last fix in milliseconds since UNIX epoch.
-    fn time_of_fix(&self) -> i64 {
-        self.time_of_fix_seconds() * 1000 + self.time_of_fix_delta_ms()
+    fn time_of_fix(&self) -> Result<i64, GnssValueError> {
+        Ok(self.time_of_fix_seconds()? * 1000 + self.time_of_fix_delta_ms()?)
     }
     /// Returns the milliseconds part of the time of the last fix.
-    fn time_of_fix_delta_ms(&self) -> i64;
+    fn time_of_fix_delta_ms(&self) -> Result<i64, GnssValueError>;
 }
 
 impl Nrf91GnssExt for Samples {
-    fn time_of_fix_seconds(&self) -> i64 {
-        let since_ariel_epoch = self.samples().skip(6).next().unwrap().raw_value() as i64;
-        ARIEL_EPOCH.unix_timestamp() + since_ariel_epoch
-    }
-    fn time_of_fix_delta_ms(&self) -> i64 {
-        self.samples().skip(7).next().unwrap().raw_value() as i64
-    }
-}
+    fn time_of_fix_seconds(&self) -> Result<i64, GnssValueError> {
+        let sample = self
+            .samples()
+            .zip(
+                self.sensor()
+                    .reading_channels()
+                    .iter(),
+            )
+            .find(|(_, channel)| channel.label() == Label::TimeOfFix)
+            .ok_or(GnssValueError::InvalidSensor)?;
 
-fn convert_to_samples(data: &nrf_modem::nrfxlib_sys::nrf_modem_gnss_pvt_data_frame) -> Samples {
-    let date = Date::from_calendar_date(
-        data.datetime.year.into(),
-        Month::try_from(data.datetime.month).unwrap(),
-        data.datetime.day,
-    )
-    .unwrap();
-    let time = Time::from_hms(
-        data.datetime.hour,
-        data.datetime.minute,
-        data.datetime.seconds,
-    )
-    .unwrap();
-    let datetime = UtcDateTime::new(date, time);
+        if sample.0.accuracy() == Accuracy::ValueTemporarilyUnavailable {
+            return Err(GnssValueError::Reading(ValueError::TemporarilyUnavailable));
+        }
 
-    let seconds_since_epoch = (datetime - ARIEL_EPOCH).whole_seconds();
-    Samples::from([
-        Sample::new(
-            (data.latitude * 10_000_000f64) as i32,
-            if data.accuracy < 0.1 {
-                Accuracy::ValueTemporarilyUnavailable
-            } else {
-                Accuracy::SymmetricalError {
-                    // Accuracy in meters, max value is 25,5. Need to watch out for overflows.
-                    deviation: clamp_to_u8(data.accuracy * 10f32),
-                    bias: 0,
-                    scaling: -1,
-                }
-            },
-        ),
-        Sample::new(
-            (data.longitude * 10_000_000f64) as i32,
-            if data.accuracy < 0.1 {
-                Accuracy::ValueTemporarilyUnavailable
-            } else {
-                Accuracy::SymmetricalError {
-                    deviation: clamp_to_u8(data.accuracy * 10f32),
-                    bias: 0,
-                    scaling: -1,
-                }
-            },
-        ),
-        Sample::new(
-            (data.altitude * 100f32) as i32,
-            if data.accuracy < 0.1 {
-                Accuracy::ValueTemporarilyUnavailable
-            } else {
-                Accuracy::SymmetricalError {
-                    deviation: clamp_to_u8(data.altitude_accuracy * 10f32),
-                    bias: 0,
-                    scaling: -1,
-                }
-            },
-        ),
-        Sample::new(
-            (data.speed * 1_000_000f32) as i32,
-            if data.accuracy < 0.1 {
-                Accuracy::ValueTemporarilyUnavailable
-            } else {
-                Accuracy::SymmetricalError {
-                    deviation: clamp_to_u8(data.speed_accuracy * 10f32),
-                    bias: 0,
-                    scaling: -1,
-                }
-            },
-        ),
-        Sample::new(
-            (data.vertical_speed * 1_000_000f32) as i32,
-            if data.accuracy < 0.1 {
-                Accuracy::ValueTemporarilyUnavailable
-            } else {
-                Accuracy::SymmetricalError {
-                    deviation: clamp_to_u8(data.vertical_speed_accuracy * 10f32),
-                    bias: 0,
-                    scaling: -1,
-                }
-            },
-        ),
-        Sample::new(
-            (data.heading * 1_000_000f32) as i32,
-            if data.accuracy < 0.1 {
-                Accuracy::ValueTemporarilyUnavailable
-            } else {
-                Accuracy::SymmetricalError {
-                    deviation: clamp_to_u8(data.heading_accuracy),
-                    bias: 0,
-                    scaling: 0,
-                }
-            },
-        ),
-        Sample::new(
-            seconds_since_epoch as i32,
-            // Default year if no GPS connection has been established yet.
-            if data.datetime.year == 1980 {
-                Accuracy::ValueTemporarilyUnavailable
-            } else {
-                Accuracy::Unknown
-            },
-        ),
-        Sample::new(
-            data.datetime.ms as i32,
-            // Default year if no GPS connection has been established yet.
-            if data.datetime.year == 1980 {
-                Accuracy::ValueTemporarilyUnavailable
-            } else {
-                Accuracy::Unknown
-            },
-        ),
-    ])
+        let since_ariel_epoch: i64 = sample.0.raw_value().into();
+        Ok(ARIEL_EPOCH.unix_timestamp() + since_ariel_epoch)
+    }
+    fn time_of_fix_delta_ms(&self) -> Result<i64, GnssValueError> {
+        let sample = self
+            .samples()
+            .zip(
+                self.sensor()
+                    .reading_channels()
+                    .iter(),
+            )
+            .find(|(_, channel)| channel.label() == Label::TimeOfFixSubSecond)
+            .ok_or(GnssValueError::InvalidSensor)?;
+
+        if sample.0.accuracy() == Accuracy::ValueTemporarilyUnavailable {
+            return Err(GnssValueError::Reading(ValueError::TemporarilyUnavailable));
+        }
+
+        Ok(sample.0.raw_value().into())
+    }
 }
 
 pub struct Nrf91Gnss {
@@ -212,7 +138,7 @@ impl Nrf91Gnss {
         self.state.set(State::Enabled);
     }
 
-    pub async fn run(&self) {
+    pub async fn run(&'static self) {
         loop {
             let command = self.command_channel.receive().await;
             let gnss = nrf_modem::Gnss::new().await.unwrap();
@@ -272,7 +198,7 @@ impl Nrf91Gnss {
                     match value {
                         Ok(nrf_modem::GnssData::PositionVelocityTime(pos)) => {
                             if triggered {
-                                let samples = convert_to_samples(&pos);
+                                let samples = self.convert_to_samples(&pos);
                                 self.result_channel.clear();
                                 self.result_channel.send(Ok(samples)).await;
                                 triggered = false;
@@ -294,7 +220,7 @@ impl Nrf91Gnss {
                 ) {
                     self.result_channel.clear();
                     if let Some(data) = latest_data {
-                        let samples = convert_to_samples(&data);
+                        let samples = self.convert_to_samples(&data);
                         let _ = self.result_channel.send(Ok(samples)).await;
                     } else {
                         let _ = self
@@ -307,6 +233,122 @@ impl Nrf91Gnss {
                 let _ = stream.deactivate().await;
             }
         }
+    }
+    fn convert_to_samples(
+        &'static self,
+        data: &nrf_modem::nrfxlib_sys::nrf_modem_gnss_pvt_data_frame,
+    ) -> Samples {
+        let date = Date::from_calendar_date(
+            data.datetime.year.into(),
+            Month::try_from(data.datetime.month).unwrap(),
+            data.datetime.day,
+        )
+        .unwrap();
+        let time = Time::from_hms(
+            data.datetime.hour,
+            data.datetime.minute,
+            data.datetime.seconds,
+        )
+        .unwrap();
+        let datetime = UtcDateTime::new(date, time);
+
+        let seconds_since_epoch = (datetime - ARIEL_EPOCH).whole_seconds();
+        Samples::new_8(
+            [
+                Sample::new(
+                    (data.latitude * 10_000_000f64) as i32,
+                    if data.accuracy < 0.1 {
+                        Accuracy::ValueTemporarilyUnavailable
+                    } else {
+                        Accuracy::SymmetricalError {
+                            // Accuracy in meters, max value is 25,5. Need to watch out for overflows.
+                            deviation: clamp_to_u8(data.accuracy * 10f32),
+                            bias: 0,
+                            scaling: -1,
+                        }
+                    },
+                ),
+                Sample::new(
+                    (data.longitude * 10_000_000f64) as i32,
+                    if data.accuracy < 0.1 {
+                        Accuracy::ValueTemporarilyUnavailable
+                    } else {
+                        Accuracy::SymmetricalError {
+                            deviation: clamp_to_u8(data.accuracy * 10f32),
+                            bias: 0,
+                            scaling: -1,
+                        }
+                    },
+                ),
+                Sample::new(
+                    (data.altitude * 100f32) as i32,
+                    if data.accuracy < 0.1 {
+                        Accuracy::ValueTemporarilyUnavailable
+                    } else {
+                        Accuracy::SymmetricalError {
+                            deviation: clamp_to_u8(data.altitude_accuracy * 10f32),
+                            bias: 0,
+                            scaling: -1,
+                        }
+                    },
+                ),
+                Sample::new(
+                    (data.speed * 1_000_000f32) as i32,
+                    if data.accuracy < 0.1 {
+                        Accuracy::ValueTemporarilyUnavailable
+                    } else {
+                        Accuracy::SymmetricalError {
+                            deviation: clamp_to_u8(data.speed_accuracy * 10f32),
+                            bias: 0,
+                            scaling: -1,
+                        }
+                    },
+                ),
+                Sample::new(
+                    (data.vertical_speed * 1_000_000f32) as i32,
+                    if data.accuracy < 0.1 {
+                        Accuracy::ValueTemporarilyUnavailable
+                    } else {
+                        Accuracy::SymmetricalError {
+                            deviation: clamp_to_u8(data.vertical_speed_accuracy * 10f32),
+                            bias: 0,
+                            scaling: -1,
+                        }
+                    },
+                ),
+                Sample::new(
+                    (data.heading * 1_000_000f32) as i32,
+                    if data.accuracy < 0.1 {
+                        Accuracy::ValueTemporarilyUnavailable
+                    } else {
+                        Accuracy::SymmetricalError {
+                            deviation: clamp_to_u8(data.heading_accuracy),
+                            bias: 0,
+                            scaling: 0,
+                        }
+                    },
+                ),
+                Sample::new(
+                    seconds_since_epoch as i32,
+                    // Default year if no GPS connection has been established yet.
+                    if data.datetime.year == 1980 {
+                        Accuracy::ValueTemporarilyUnavailable
+                    } else {
+                        Accuracy::Unknown
+                    },
+                ),
+                Sample::new(
+                    data.datetime.ms as i32,
+                    // Default year if no GPS connection has been established yet.
+                    if data.datetime.year == 1980 {
+                        Accuracy::ValueTemporarilyUnavailable
+                    } else {
+                        Accuracy::Unknown
+                    },
+                ),
+            ],
+            self,
+        )
     }
 }
 

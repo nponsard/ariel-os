@@ -51,7 +51,7 @@ async fn main() {
                         );
                     }
 
-                    info!("Time of fix: {}", samples.time_of_fix());
+                    info!("Time of fix: {:?}", samples.time_of_fix());
                 }
                 Err(err) => {
                     error!("Error when reading: {:?}", err);
