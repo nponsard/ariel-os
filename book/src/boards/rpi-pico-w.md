@@ -3,12 +3,14 @@
 
 ## Board Info
 
-|||
-|---|---|
-|Tier|1|
-|Ariel OS Name|`rpi-pico-w`|
-|Chip|RP2040|
-|Chip Ariel OS Name|`rp2040`|
+- **Tier:** 1
+- **Ariel OS Name:** `rpi-pico-w`
+- **Chip:** RP2040
+- **Chip Ariel OS Name:** `rp2040`
+
+### References
+
+- [Manufacturer link](https://web.archive.org/web/20250101022830/https://www.raspberrypi.com/products/raspberry-pi-pico/)
 
 ## Support Matrix
 
@@ -100,7 +102,3 @@ dt, dd {
   display: inline;
 }
 </style>
-
-## References
-
-- [Manufacturer link](https://web.archive.org/web/20250101022830/https://www.raspberrypi.com/products/raspberry-pi-pico/)

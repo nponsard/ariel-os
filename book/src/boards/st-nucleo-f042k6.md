@@ -3,12 +3,14 @@
 
 ## Board Info
 
-|||
-|---|---|
-|Tier|3|
-|Ariel OS Name|`st-nucleo-f042k6`|
-|Chip|STM32F042K6|
-|Chip Ariel OS Name|`stm32f042k6`|
+- **Tier:** 3
+- **Ariel OS Name:** `st-nucleo-f042k6`
+- **Chip:** STM32F042K6
+- **Chip Ariel OS Name:** `stm32f042k6`
+
+### References
+
+- [Manufacturer link](https://web.archive.org/web/20241114214921/https://www.st.com/en/evaluation-tools/nucleo-f042k6.html)
 
 ## Support Matrix
 
@@ -100,7 +102,3 @@ dt, dd {
   display: inline;
 }
 </style>
-
-## References
-
-- [Manufacturer link](https://web.archive.org/web/20241114214921/https://www.st.com/en/evaluation-tools/nucleo-f042k6.html)

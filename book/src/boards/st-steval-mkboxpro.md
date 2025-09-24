@@ -3,12 +3,14 @@
 
 ## Board Info
 
-|||
-|---|---|
-|Tier|2|
-|Ariel OS Name|`st-steval-mkboxpro`|
-|Chip|STM32U585AI|
-|Chip Ariel OS Name|`stm32u585ai`|
+- **Tier:** 2
+- **Ariel OS Name:** `st-steval-mkboxpro`
+- **Chip:** STM32U585AI
+- **Chip Ariel OS Name:** `stm32u585ai`
+
+### References
+
+- [Manufacturer link](https://web.archive.org/web/20250507145935/https://www.st.com/en/evaluation-tools/steval-mkboxpro.html)
 
 ## Support Matrix
 
@@ -100,7 +102,3 @@ dt, dd {
   display: inline;
 }
 </style>
-
-## References
-
-- [Manufacturer link](https://web.archive.org/web/20250507145935/https://www.st.com/en/evaluation-tools/steval-mkboxpro.html)

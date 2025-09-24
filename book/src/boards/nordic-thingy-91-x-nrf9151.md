@@ -3,12 +3,14 @@
 
 ## Board Info
 
-|||
-|---|---|
-|Tier|2|
-|Ariel OS Name|`nordic-thingy-91-x-nrf9151`|
-|Chip|nRF9151|
-|Chip Ariel OS Name|`nrf9151`|
+- **Tier:** 2
+- **Ariel OS Name:** `nordic-thingy-91-x-nrf9151`
+- **Chip:** nRF9151
+- **Chip Ariel OS Name:** `nrf9151`
+
+### References
+
+- [Manufacturer link](https://web.archive.org/web/20250329185651/https://www.nordicsemi.com/Products/Development-hardware/Nordic-Thingy-91-X)
 
 ## Support Matrix
 
@@ -100,7 +102,3 @@ dt, dd {
   display: inline;
 }
 </style>
-
-## References
-
-- [Manufacturer link](https://web.archive.org/web/20250329185651/https://www.nordicsemi.com/Products/Development-hardware/Nordic-Thingy-91-X)

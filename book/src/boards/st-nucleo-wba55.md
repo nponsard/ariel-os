@@ -3,12 +3,14 @@
 
 ## Board Info
 
-|||
-|---|---|
-|Tier|3|
-|Ariel OS Name|`st-nucleo-wba55`|
-|Chip|STM32WBA55CG|
-|Chip Ariel OS Name|`stm32wba55cg`|
+- **Tier:** 3
+- **Ariel OS Name:** `st-nucleo-wba55`
+- **Chip:** STM32WBA55CG
+- **Chip Ariel OS Name:** `stm32wba55cg`
+
+### References
+
+- [Manufacturer link](https://web.archive.org/web/20240803070523/https://www.st.com/en/evaluation-tools/nucleo-wba55cg.html)
 
 ## Support Matrix
 
@@ -100,7 +102,3 @@ dt, dd {
   display: inline;
 }
 </style>
-
-## References
-
-- [Manufacturer link](https://web.archive.org/web/20240803070523/https://www.st.com/en/evaluation-tools/nucleo-wba55cg.html)

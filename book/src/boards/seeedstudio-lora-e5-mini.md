@@ -3,12 +3,14 @@
 
 ## Board Info
 
-|||
-|---|---|
-|Tier|3|
-|Ariel OS Name|`seeedstudio-lora-e5-mini`|
-|Chip|STM32WLE5JC|
-|Chip Ariel OS Name|`stm32wle5jc`|
+- **Tier:** 3
+- **Ariel OS Name:** `seeedstudio-lora-e5-mini`
+- **Chip:** STM32WLE5JC
+- **Chip Ariel OS Name:** `stm32wle5jc`
+
+### References
+
+- [Manufacturer link](https://web.archive.org/web/20250802201959/https://wiki.seeedstudio.com/LoRa_E5_mini/)
 
 ## Support Matrix
 
@@ -100,7 +102,3 @@ dt, dd {
   display: inline;
 }
 </style>
-
-## References
-
-- [Manufacturer link](https://web.archive.org/web/20250802201959/https://wiki.seeedstudio.com/LoRa_E5_mini/)

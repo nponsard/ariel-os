@@ -3,12 +3,14 @@
 
 ## Board Info
 
-|||
-|---|---|
-|Tier|1|
-|Ariel OS Name|`rpi-pico2-w`|
-|Chip|RP235xa|
-|Chip Ariel OS Name|`rp235xa`|
+- **Tier:** 1
+- **Ariel OS Name:** `rpi-pico2-w`
+- **Chip:** RP235xa
+- **Chip Ariel OS Name:** `rp235xa`
+
+### References
+
+- [Manufacturer link](https://web.archive.org/web/20250130144056/https://www.raspberrypi.com/products/raspberry-pi-pico-2/)
 
 ## Support Matrix
 
@@ -100,7 +102,3 @@ dt, dd {
   display: inline;
 }
 </style>
-
-## References
-
-- [Manufacturer link](https://web.archive.org/web/20250130144056/https://www.raspberrypi.com/products/raspberry-pi-pico-2/)

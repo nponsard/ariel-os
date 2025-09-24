@@ -3,12 +3,14 @@
 
 ## Board Info
 
-|||
-|---|---|
-|Tier|1|
-|Ariel OS Name|`espressif-esp32-c3-lcdkit`|
-|Chip|ESP32-C3|
-|Chip Ariel OS Name|`esp32c3`|
+- **Tier:** 1
+- **Ariel OS Name:** `espressif-esp32-c3-lcdkit`
+- **Chip:** ESP32-C3
+- **Chip Ariel OS Name:** `esp32c3`
+
+### References
+
+- [Manufacturer link](https://web.archive.org/web/20250408100740/https://www.espressif.com/en/dev-board/esp32-c3-lcdkit-en)
 
 ## Support Matrix
 
@@ -100,7 +102,3 @@ dt, dd {
   display: inline;
 }
 </style>
-
-## References
-
-- [Manufacturer link](https://web.archive.org/web/20250408100740/https://www.espressif.com/en/dev-board/esp32-c3-lcdkit-en)

@@ -3,12 +3,14 @@
 
 ## Board Info
 
-|||
-|---|---|
-|Tier|1|
-|Ariel OS Name|`st-nucleo-h755zi-q`|
-|Chip|STM32H755ZI|
-|Chip Ariel OS Name|`stm32h755zi`|
+- **Tier:** 1
+- **Ariel OS Name:** `st-nucleo-h755zi-q`
+- **Chip:** STM32H755ZI
+- **Chip Ariel OS Name:** `stm32h755zi`
+
+### References
+
+- [Manufacturer link](https://web.archive.org/web/20240524105149/https://www.st.com/en/evaluation-tools/nucleo-h755zi-q.html)
 
 ## Support Matrix
 
@@ -100,7 +102,3 @@ dt, dd {
   display: inline;
 }
 </style>
-
-## References
-
-- [Manufacturer link](https://web.archive.org/web/20240524105149/https://www.st.com/en/evaluation-tools/nucleo-h755zi-q.html)

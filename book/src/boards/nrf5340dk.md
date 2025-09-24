@@ -3,12 +3,14 @@
 
 ## Board Info
 
-|||
-|---|---|
-|Tier|1|
-|Ariel OS Name|`nrf5340dk`|
-|Chip|nRF5340|
-|Chip Ariel OS Name|`nrf5340`|
+- **Tier:** 1
+- **Ariel OS Name:** `nrf5340dk`
+- **Chip:** nRF5340
+- **Chip Ariel OS Name:** `nrf5340`
+
+### References
+
+- [Manufacturer link](https://web.archive.org/web/20250115224621/https://www.nordicsemi.com/Products/Development-hardware/nrf5340-dk)
 
 ## Support Matrix
 
@@ -100,7 +102,3 @@ dt, dd {
   display: inline;
 }
 </style>
-
-## References
-
-- [Manufacturer link](https://web.archive.org/web/20250115224621/https://www.nordicsemi.com/Products/Development-hardware/nrf5340-dk)

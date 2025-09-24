@@ -3,12 +3,14 @@
 
 ## Board Info
 
-|||
-|---|---|
-|Tier|1|
-|Ariel OS Name|`stm32u083c-dk`|
-|Chip|STM32U083MC|
-|Chip Ariel OS Name|`stm32u083mc`|
+- **Tier:** 1
+- **Ariel OS Name:** `stm32u083c-dk`
+- **Chip:** STM32U083MC
+- **Chip Ariel OS Name:** `stm32u083mc`
+
+### References
+
+- [Manufacturer link](https://web.archive.org/web/20250119131656/https://www.st.com/en/evaluation-tools/stm32u083c-dk.html)
 
 ## Support Matrix
 
@@ -100,7 +102,3 @@ dt, dd {
   display: inline;
 }
 </style>
-
-## References
-
-- [Manufacturer link](https://web.archive.org/web/20250119131656/https://www.st.com/en/evaluation-tools/stm32u083c-dk.html)

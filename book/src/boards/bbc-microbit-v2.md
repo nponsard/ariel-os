@@ -3,12 +3,14 @@
 
 ## Board Info
 
-|||
-|---|---|
-|Tier|1|
-|Ariel OS Name|`bbc-microbit-v2`|
-|Chip|nRF52833|
-|Chip Ariel OS Name|`nrf52833`|
+- **Tier:** 1
+- **Ariel OS Name:** `bbc-microbit-v2`
+- **Chip:** nRF52833
+- **Chip Ariel OS Name:** `nrf52833`
+
+### References
+
+- [Manufacturer link](https://web.archive.org/web/20250109121140/https://microbit.org/new-microbit/)
 
 ## Support Matrix
 
@@ -100,7 +102,3 @@ dt, dd {
   display: inline;
 }
 </style>
-
-## References
-
-- [Manufacturer link](https://web.archive.org/web/20250109121140/https://microbit.org/new-microbit/)

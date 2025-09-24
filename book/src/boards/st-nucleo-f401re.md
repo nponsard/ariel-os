@@ -3,12 +3,14 @@
 
 ## Board Info
 
-|||
-|---|---|
-|Tier|2|
-|Ariel OS Name|`st-nucleo-f401re`|
-|Chip|STM32F401RE|
-|Chip Ariel OS Name|`stm32f401re`|
+- **Tier:** 2
+- **Ariel OS Name:** `st-nucleo-f401re`
+- **Chip:** STM32F401RE
+- **Chip Ariel OS Name:** `stm32f401re`
+
+### References
+
+- [Manufacturer link](https://web.archive.org/web/20250115005425/https://www.st.com/en/evaluation-tools/nucleo-f401re.html)
 
 ## Support Matrix
 
@@ -100,7 +102,3 @@ dt, dd {
   display: inline;
 }
 </style>
-
-## References
-
-- [Manufacturer link](https://web.archive.org/web/20250115005425/https://www.st.com/en/evaluation-tools/nucleo-f401re.html)

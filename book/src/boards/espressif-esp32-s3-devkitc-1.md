@@ -3,12 +3,14 @@
 
 ## Board Info
 
-|||
-|---|---|
-|Tier|1|
-|Ariel OS Name|`espressif-esp32-s3-devkitc-1`|
-|Chip|ESP32-S3|
-|Chip Ariel OS Name|`esp32s3`|
+- **Tier:** 1
+- **Ariel OS Name:** `espressif-esp32-s3-devkitc-1`
+- **Chip:** ESP32-S3
+- **Chip Ariel OS Name:** `esp32s3`
+
+### References
+
+- [Manufacturer link](https://web.archive.org/web/20250122153707/https://www.espressif.com/en/dev-board/esp32-s3-devkitc-1-en)
 
 ## Support Matrix
 
@@ -100,7 +102,3 @@ dt, dd {
   display: inline;
 }
 </style>
-
-## References
-
-- [Manufacturer link](https://web.archive.org/web/20250122153707/https://www.espressif.com/en/dev-board/esp32-s3-devkitc-1-en)

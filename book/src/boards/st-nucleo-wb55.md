@@ -3,12 +3,14 @@
 
 ## Board Info
 
-|||
-|---|---|
-|Tier|1|
-|Ariel OS Name|`st-nucleo-wb55`|
-|Chip|STM32WB55RG|
-|Chip Ariel OS Name|`stm32wb55rg`|
+- **Tier:** 1
+- **Ariel OS Name:** `st-nucleo-wb55`
+- **Chip:** STM32WB55RG
+- **Chip Ariel OS Name:** `stm32wb55rg`
+
+### References
+
+- [Manufacturer link](https://web.archive.org/web/20240803070523/https://www.st.com/en/evaluation-tools/nucleo-wb55rg.html)
 
 ## Support Matrix
 
@@ -100,7 +102,3 @@ dt, dd {
   display: inline;
 }
 </style>
-
-## References
-
-- [Manufacturer link](https://web.archive.org/web/20240803070523/https://www.st.com/en/evaluation-tools/nucleo-wb55rg.html)

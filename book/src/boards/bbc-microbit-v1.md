@@ -3,12 +3,14 @@
 
 ## Board Info
 
-|||
-|---|---|
-|Tier|3|
-|Ariel OS Name|`bbc-microbit-v1`|
-|Chip|nRF51822-xxAA|
-|Chip Ariel OS Name|`nrf51822-xxaa`|
+- **Tier:** 3
+- **Ariel OS Name:** `bbc-microbit-v1`
+- **Chip:** nRF51822-xxAA
+- **Chip Ariel OS Name:** `nrf51822-xxaa`
+
+### References
+
+- [Manufacturer link](https://web.archive.org/web/20250109121140/https://microbit.org/get-started/features/overview/#original-micro:bit)
 
 ## Support Matrix
 
@@ -100,7 +102,3 @@ dt, dd {
   display: inline;
 }
 </style>
-
-## References
-
-- [Manufacturer link](https://web.archive.org/web/20250109121140/https://microbit.org/get-started/features/overview/#original-micro:bit)

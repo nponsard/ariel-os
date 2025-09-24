@@ -36,12 +36,14 @@ const BOARD_PAGE_TEMPLATE: &str = r#"
 
 ## Board Info
 
-|||
-|---|---|
-|Tier|{{ board_info.tier }}|
-|Ariel OS Name|`{{ board_info.technical_name }}`|
-|Chip|{{ board_info.chip }}|
-|Chip Ariel OS Name|`{{ board_info.chip_technical_name }}`|
+- **Tier:** {{ board_info.tier }}
+- **Ariel OS Name:** `{{ board_info.technical_name }}`
+- **Chip:** {{ board_info.chip }}
+- **Chip Ariel OS Name:** `{{ board_info.chip_technical_name }}`
+
+### References
+
+- [Manufacturer link]({{ board_info.url }})
 
 ## Support Matrix
 
@@ -89,10 +91,6 @@ dt, dd {
   display: inline;
 }
 </style>
-
-## References
-
-- [Manufacturer link]({{ board_info.url }})
 "#;
 
 const TABLE_TEMPLATE: &str = r##"<!-- This table is auto-generated. Do not edit manually. -->

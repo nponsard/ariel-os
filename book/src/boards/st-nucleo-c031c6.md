@@ -3,12 +3,14 @@
 
 ## Board Info
 
-|||
-|---|---|
-|Tier|1|
-|Ariel OS Name|`st-nucleo-c031c6`|
-|Chip|STM32C031C6|
-|Chip Ariel OS Name|`stm32c031c6`|
+- **Tier:** 1
+- **Ariel OS Name:** `st-nucleo-c031c6`
+- **Chip:** STM32C031C6
+- **Chip Ariel OS Name:** `stm32c031c6`
+
+### References
+
+- [Manufacturer link](https://web.archive.org/web/20241114214921/https://www.st.com/en/evaluation-tools/nucleo-c031c6.html)
 
 ## Support Matrix
 
@@ -100,7 +102,3 @@ dt, dd {
   display: inline;
 }
 </style>
-
-## References
-
-- [Manufacturer link](https://web.archive.org/web/20241114214921/https://www.st.com/en/evaluation-tools/nucleo-c031c6.html)

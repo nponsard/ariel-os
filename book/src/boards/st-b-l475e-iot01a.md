@@ -3,12 +3,14 @@
 
 ## Board Info
 
-|||
-|---|---|
-|Tier|2|
-|Ariel OS Name|`st-b-l475e-iot01a`|
-|Chip|STM32L475VG|
-|Chip Ariel OS Name|`stm32l475vg`|
+- **Tier:** 2
+- **Ariel OS Name:** `st-b-l475e-iot01a`
+- **Chip:** STM32L475VG
+- **Chip Ariel OS Name:** `stm32l475vg`
+
+### References
+
+- [Manufacturer link](https://web.archive.org/web/20250402084429/https://www.st.com/en/evaluation-tools/b-l475e-iot01a.html)
 
 ## Support Matrix
 
@@ -100,7 +102,3 @@ dt, dd {
   display: inline;
 }
 </style>
-
-## References
-
-- [Manufacturer link](https://web.archive.org/web/20250402084429/https://www.st.com/en/evaluation-tools/b-l475e-iot01a.html)
