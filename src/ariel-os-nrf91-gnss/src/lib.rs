@@ -6,7 +6,7 @@ use crate::config::GnssOperationMode;
 use crate::state_atomic::StateAtomic;
 use ariel_os_debug::log::warn;
 use ariel_os_sensors::{
-    Category, Label, MeasurementUnit, Reading, Sensor,
+    Category, Label, MeasurementUnit, Sensor,
     sensor::{
         Accuracy, ReadingChannel, ReadingChannels, ReadingError, ReadingResult, ReadingWaiter,
         Sample, Samples, State, ValueError,
@@ -71,38 +71,20 @@ pub trait Nrf91GnssExt {
 impl Nrf91GnssExt for Samples {
     fn time_of_fix_seconds(&self) -> Result<i64, GnssValueError> {
         let sample = self
-            .samples()
-            .zip(
-                self.sensor()
-                    .reading_channels()
-                    .iter(),
-            )
-            .find(|(_, channel)| channel.label() == Label::TimeOfFix)
+            .unfiltered_samples()
+            .nth(6) // 7th sample is TimeOfFix
             .ok_or(GnssValueError::InvalidSensor)?;
 
-        if sample.0.accuracy() == Accuracy::ValueTemporarilyUnavailable {
-            return Err(GnssValueError::Reading(ValueError::TemporarilyUnavailable));
-        }
-
-        let since_ariel_epoch: i64 = sample.0.raw_value().into();
+        let since_ariel_epoch: i64 = sample.value().map_err(GnssValueError::Reading)?.into();
         Ok(ARIEL_EPOCH.unix_timestamp() + since_ariel_epoch)
     }
     fn time_of_fix_delta_ms(&self) -> Result<i64, GnssValueError> {
         let sample = self
-            .samples()
-            .zip(
-                self.sensor()
-                    .reading_channels()
-                    .iter(),
-            )
-            .find(|(_, channel)| channel.label() == Label::TimeOfFixSubSecond)
+            .unfiltered_samples()
+            .nth(7)
             .ok_or(GnssValueError::InvalidSensor)?;
 
-        if sample.0.accuracy() == Accuracy::ValueTemporarilyUnavailable {
-            return Err(GnssValueError::Reading(ValueError::TemporarilyUnavailable));
-        }
-
-        Ok(sample.0.raw_value().into())
+        Ok(sample.value().map_err(GnssValueError::Reading)?.into())
     }
 }
 
@@ -425,13 +407,13 @@ impl Sensor for Nrf91Gnss {
             ),
             ReadingChannel::new(
                 // Seconds since Ariel epoch (2024-01-01)
-                Label::TimeOfFix,
+                Label::Opaque,
                 0,
                 MeasurementUnit::Second,
             ),
             ReadingChannel::new(
                 // Milliseconds
-                Label::TimeOfFixSubSecond,
+                Label::Opaque,
                 -3,
                 MeasurementUnit::Second,
             ),
