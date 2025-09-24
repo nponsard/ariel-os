@@ -17,12 +17,15 @@ pub fn define_count_adjusted_sensor_enums(_item: TokenStream) -> TokenStream {
         let variant = variant_name(i);
         quote! { #variant([Sample; #i]) }
     });
-    let samples_from_impls = (1..=count).map(|i| {
+    let samples_new_funcs = (1..=count).map(|i| {
         let variant = variant_name(i);
+        let func_name = new_variant_func_name(i);
         quote! {
-            impl From<[Sample; #i]> for Samples {
-                fn from(value: [Sample; #i]) -> Self {
-                    Self { samples: InnerSamples::#variant(value) }
+            /// Creates a new [`Samples`] containing `#i` samples.
+            pub fn #func_name(value: [Sample; #i], sensor: &'static dyn Sensor) -> Self {
+                    Self {
+                    samples: InnerSamples::#variant(value),
+                    sensor,
                 }
             }
         }
@@ -66,6 +69,12 @@ pub fn define_count_adjusted_sensor_enums(_item: TokenStream) -> TokenStream {
     });
 
     let expanded = quote! {
+        /// For driver implementors only, access to the sensor.
+        pub trait SensorAccess {
+            /// Get the sensor that produced these samples. For driver implementors only.
+            fn sensor(&self) -> &'static dyn Sensor;
+        }
+
         /// Samples returned by a sensor driver.
         ///
         /// This type implements [`Reading`] to iterate over the samples.
@@ -74,12 +83,29 @@ pub fn define_count_adjusted_sensor_enums(_item: TokenStream) -> TokenStream {
         ///
         /// This type is automatically generated, the number of [`Sample`]s that can be stored is
         /// automatically adjusted.
-        #[derive(Debug, Copy, Clone)]
+        #[derive(Copy, Clone)]
         pub struct Samples {
             samples: InnerSamples,
+            sensor: &'static dyn Sensor,
         }
 
-        #(#samples_from_impls)*
+        impl core::fmt::Debug for Samples {
+            fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+                f.debug_struct("Samples")
+                 .field("samples", &self.samples)
+                 .finish()
+            }
+        }
+
+        impl Samples {
+            #(#samples_new_funcs)*
+        }
+
+        impl SensorAccess for Samples {
+            fn sensor(&self) -> &'static dyn Sensor {
+                self.sensor
+            }
+        }
 
         impl Reading for Samples {
             fn sample(&self) -> Sample {
@@ -149,6 +175,10 @@ pub fn define_count_adjusted_sensor_enums(_item: TokenStream) -> TokenStream {
 mod define_count_adjusted_enum {
     pub fn variant_name(index: usize) -> syn::Ident {
         quote::format_ident!("V{index}")
+    }
+
+    pub fn new_variant_func_name(index: usize) -> syn::Ident {
+        quote::format_ident!("new_{index}")
     }
 
     pub fn get_allocation_size() -> usize {
