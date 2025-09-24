@@ -9,7 +9,6 @@
 |Ariel OS Name|`rpi-pico-w`|
 |Chip|RP2040|
 |Chip Ariel OS Name|`rp2040`|
-|Flashing|TODO|
 
 ## Support Matrix
 

@@ -9,7 +9,6 @@
 |Ariel OS Name|`espressif-esp32-c6-devkitc-1`|
 |Chip|ESP32-C6|
 |Chip Ariel OS Name|`esp32c6`|
-|Flashing|TODO|
 
 ## Support Matrix
 

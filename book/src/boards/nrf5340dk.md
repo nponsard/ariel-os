@@ -9,7 +9,6 @@
 |Ariel OS Name|`nrf5340dk`|
 |Chip|nRF5340|
 |Chip Ariel OS Name|`nrf5340`|
-|Flashing|TODO|
 
 ## Support Matrix
 

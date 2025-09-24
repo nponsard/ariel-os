@@ -9,7 +9,6 @@
 |Ariel OS Name|`espressif-esp32-c3-lcdkit`|
 |Chip|ESP32-C3|
 |Chip Ariel OS Name|`esp32c3`|
-|Flashing|TODO|
 
 ## Support Matrix
 

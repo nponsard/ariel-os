@@ -9,7 +9,6 @@
 |Ariel OS Name|`st-nucleo-f411re`|
 |Chip|STM32F411RE|
 |Chip Ariel OS Name|`stm32f411re`|
-|Flashing|TODO|
 
 ## Support Matrix
 

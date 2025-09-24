@@ -9,7 +9,6 @@
 |Ariel OS Name|`st-nucleo-h755zi-q`|
 |Chip|STM32H755ZI|
 |Chip Ariel OS Name|`stm32h755zi`|
-|Flashing|TODO|
 
 ## Support Matrix
 

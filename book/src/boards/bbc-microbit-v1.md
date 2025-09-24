@@ -9,7 +9,6 @@
 |Ariel OS Name|`bbc-microbit-v1`|
 |Chip|nRF51822-xxAA|
 |Chip Ariel OS Name|`nrf51822-xxaa`|
-|Flashing|TODO|
 
 ## Support Matrix
 

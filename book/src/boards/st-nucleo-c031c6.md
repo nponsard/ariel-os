@@ -9,7 +9,6 @@
 |Ariel OS Name|`st-nucleo-c031c6`|
 |Chip|STM32C031C6|
 |Chip Ariel OS Name|`stm32c031c6`|
-|Flashing|TODO|
 
 ## Support Matrix
 

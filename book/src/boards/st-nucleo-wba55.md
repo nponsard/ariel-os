@@ -9,7 +9,6 @@
 |Ariel OS Name|`st-nucleo-wba55`|
 |Chip|STM32WBA55CG|
 |Chip Ariel OS Name|`stm32wba55cg`|
-|Flashing|TODO|
 
 ## Support Matrix
 

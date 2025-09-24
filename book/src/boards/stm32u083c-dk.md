@@ -9,7 +9,6 @@
 |Ariel OS Name|`stm32u083c-dk`|
 |Chip|STM32U083MC|
 |Chip Ariel OS Name|`stm32u083mc`|
-|Flashing|TODO|
 
 ## Support Matrix
 
@@ -51,7 +50,7 @@
     </tr>
     <tr>
       <td>Ethernet over USB</td>
-      <td class="support-cell" title="available in hardware, but not currently supported by Ariel OS">❌</td>
+      <td class="support-cell" title="supported">✅</td>
     </tr>
     <tr>
       <td>Hardware Random Number Generator</td>

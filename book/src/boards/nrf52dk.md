@@ -9,7 +9,6 @@
 |Ariel OS Name|`nrf52dk`|
 |Chip|nRF52832|
 |Chip Ariel OS Name|`nrf52832`|
-|Flashing|TODO|
 
 ## Support Matrix
 

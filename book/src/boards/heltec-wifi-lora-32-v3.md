@@ -9,7 +9,6 @@
 |Ariel OS Name|`heltec-wifi-lora-32-v3`|
 |Chip|ESP32-S3|
 |Chip Ariel OS Name|`esp32s3`|
-|Flashing|TODO|
 
 ## Support Matrix
 

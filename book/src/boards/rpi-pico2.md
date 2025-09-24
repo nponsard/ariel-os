@@ -9,7 +9,6 @@
 |Ariel OS Name|`rpi-pico2`|
 |Chip|RP235xa|
 |Chip Ariel OS Name|`rp235xa`|
-|Flashing|TODO|
 
 ## Support Matrix
 

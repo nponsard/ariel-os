@@ -9,7 +9,6 @@
 |Ariel OS Name|`st-b-l475e-iot01a`|
 |Chip|STM32L475VG|
 |Chip Ariel OS Name|`stm32l475vg`|
-|Flashing|TODO|
 
 ## Support Matrix
 

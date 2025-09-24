@@ -9,7 +9,6 @@
 |Ariel OS Name|`nordic-thingy-91-x-nrf9151`|
 |Chip|nRF9151|
 |Chip Ariel OS Name|`nrf9151`|
-|Flashing|TODO|
 
 ## Support Matrix
 

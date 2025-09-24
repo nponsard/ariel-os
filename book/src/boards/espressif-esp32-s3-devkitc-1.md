@@ -9,7 +9,6 @@
 |Ariel OS Name|`espressif-esp32-s3-devkitc-1`|
 |Chip|ESP32-S3|
 |Chip Ariel OS Name|`esp32s3`|
-|Flashing|TODO|
 
 ## Support Matrix
 

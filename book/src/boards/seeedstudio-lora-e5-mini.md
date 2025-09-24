@@ -9,7 +9,6 @@
 |Ariel OS Name|`seeedstudio-lora-e5-mini`|
 |Chip|STM32WLE5JC|
 |Chip Ariel OS Name|`stm32wle5jc`|
-|Flashing|TODO|
 
 ## Support Matrix
 

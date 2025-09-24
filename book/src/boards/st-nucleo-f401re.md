@@ -9,7 +9,6 @@
 |Ariel OS Name|`st-nucleo-f401re`|
 |Chip|STM32F401RE|
 |Chip Ariel OS Name|`stm32f401re`|
-|Flashing|TODO|
 
 ## Support Matrix
 

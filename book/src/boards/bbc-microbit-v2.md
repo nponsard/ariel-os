@@ -9,7 +9,6 @@
 |Ariel OS Name|`bbc-microbit-v2`|
 |Chip|nRF52833|
 |Chip Ariel OS Name|`nrf52833`|
-|Flashing|TODO|
 
 ## Support Matrix
 

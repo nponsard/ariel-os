@@ -9,7 +9,6 @@
 |Ariel OS Name|`st-steval-mkboxpro`|
 |Chip|STM32U585AI|
 |Chip Ariel OS Name|`stm32u585ai`|
-|Flashing|TODO|
 
 ## Support Matrix
 
