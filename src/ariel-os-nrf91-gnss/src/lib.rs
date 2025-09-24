@@ -47,6 +47,28 @@ fn default_gnss_config() -> nrf_modem::GnssConfig {
     }
 }
 
+pub trait Nrf91GnssExt {
+    /// Returns the time of the last fix in seconds since UNIX epoch.
+    fn time_of_fix_seconds(&self) -> i64;
+
+    /// Returns the time of the last fix in milliseconds since UNIX epoch.
+    fn time_of_fix(&self) -> i64 {
+        self.time_of_fix_seconds() * 1000 + self.time_of_fix_delta_ms()
+    }
+    /// Returns the milliseconds part of the time of the last fix.
+    fn time_of_fix_delta_ms(&self) -> i64;
+}
+
+impl Nrf91GnssExt for Samples {
+    fn time_of_fix_seconds(&self) -> i64 {
+        let since_ariel_epoch = self.samples().skip(6).next().unwrap().raw_value() as i64;
+        ARIEL_EPOCH.unix_timestamp() + since_ariel_epoch
+    }
+    fn time_of_fix_delta_ms(&self) -> i64 {
+        self.samples().skip(7).next().unwrap().raw_value() as i64
+    }
+}
+
 fn convert_to_samples(data: &nrf_modem::nrfxlib_sys::nrf_modem_gnss_pvt_data_frame) -> Samples {
     let date = Date::from_calendar_date(
         data.datetime.year.into(),
@@ -67,7 +89,7 @@ fn convert_to_samples(data: &nrf_modem::nrfxlib_sys::nrf_modem_gnss_pvt_data_fra
         Sample::new(
             (data.latitude * 10_000_000f64) as i32,
             if data.accuracy < 0.1 {
-                Accuracy::TemporarilyUnavailable
+                Accuracy::ValueTemporarilyUnavailable
             } else {
                 Accuracy::SymmetricalError {
                     // Accuracy in meters, max value is 25,5. Need to watch out for overflows.
@@ -80,7 +102,7 @@ fn convert_to_samples(data: &nrf_modem::nrfxlib_sys::nrf_modem_gnss_pvt_data_fra
         Sample::new(
             (data.longitude * 10_000_000f64) as i32,
             if data.accuracy < 0.1 {
-                Accuracy::TemporarilyUnavailable
+                Accuracy::ValueTemporarilyUnavailable
             } else {
                 Accuracy::SymmetricalError {
                     deviation: clamp_to_u8(data.accuracy * 10f32),
@@ -92,7 +114,7 @@ fn convert_to_samples(data: &nrf_modem::nrfxlib_sys::nrf_modem_gnss_pvt_data_fra
         Sample::new(
             (data.altitude * 100f32) as i32,
             if data.accuracy < 0.1 {
-                Accuracy::TemporarilyUnavailable
+                Accuracy::ValueTemporarilyUnavailable
             } else {
                 Accuracy::SymmetricalError {
                     deviation: clamp_to_u8(data.altitude_accuracy * 10f32),
@@ -104,7 +126,7 @@ fn convert_to_samples(data: &nrf_modem::nrfxlib_sys::nrf_modem_gnss_pvt_data_fra
         Sample::new(
             (data.speed * 1_000_000f32) as i32,
             if data.accuracy < 0.1 {
-                Accuracy::TemporarilyUnavailable
+                Accuracy::ValueTemporarilyUnavailable
             } else {
                 Accuracy::SymmetricalError {
                     deviation: clamp_to_u8(data.speed_accuracy * 10f32),
@@ -116,7 +138,7 @@ fn convert_to_samples(data: &nrf_modem::nrfxlib_sys::nrf_modem_gnss_pvt_data_fra
         Sample::new(
             (data.vertical_speed * 1_000_000f32) as i32,
             if data.accuracy < 0.1 {
-                Accuracy::TemporarilyUnavailable
+                Accuracy::ValueTemporarilyUnavailable
             } else {
                 Accuracy::SymmetricalError {
                     deviation: clamp_to_u8(data.vertical_speed_accuracy * 10f32),
@@ -128,7 +150,7 @@ fn convert_to_samples(data: &nrf_modem::nrfxlib_sys::nrf_modem_gnss_pvt_data_fra
         Sample::new(
             (data.heading * 1_000_000f32) as i32,
             if data.accuracy < 0.1 {
-                Accuracy::TemporarilyUnavailable
+                Accuracy::ValueTemporarilyUnavailable
             } else {
                 Accuracy::SymmetricalError {
                     deviation: clamp_to_u8(data.heading_accuracy),
@@ -141,7 +163,7 @@ fn convert_to_samples(data: &nrf_modem::nrfxlib_sys::nrf_modem_gnss_pvt_data_fra
             seconds_since_epoch as i32,
             // Default year if no GPS connection has been established yet.
             if data.datetime.year == 1980 {
-                Accuracy::TemporarilyUnavailable
+                Accuracy::ValueTemporarilyUnavailable
             } else {
                 Accuracy::Unknown
             },
@@ -150,7 +172,7 @@ fn convert_to_samples(data: &nrf_modem::nrfxlib_sys::nrf_modem_gnss_pvt_data_fra
             data.datetime.ms as i32,
             // Default year if no GPS connection has been established yet.
             if data.datetime.year == 1980 {
-                Accuracy::TemporarilyUnavailable
+                Accuracy::ValueTemporarilyUnavailable
             } else {
                 Accuracy::Unknown
             },
@@ -361,13 +383,13 @@ impl Sensor for Nrf91Gnss {
             ),
             ReadingChannel::new(
                 // Seconds since Ariel epoch (2024-01-01)
-                Label::DateTimeUpper,
+                Label::TimeOfFix,
                 0,
                 MeasurementUnit::Second,
             ),
             ReadingChannel::new(
                 // Milliseconds
-                Label::DateTimeLower,
+                Label::TimeOfFixSubSecond,
                 -3,
                 MeasurementUnit::Second,
             ),

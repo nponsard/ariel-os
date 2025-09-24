@@ -32,11 +32,10 @@ pub enum Label {
     Heading,
     /// Temperature.
     Temperature,
-    /// First 4 bytes of the i64 timestamp (milliseconds since UNIX epoch).
-    /// Needs to be combied using [`datetime::combine_timestamp`].
-    DateTimeUpper,
-    /// Last 4 bytes of the i64 timestamp.
-    DateTimeLower,
+    /// Timestamp of GNSS fix in seconds. Using a custom epoch.
+    TimeOfFix,
+    /// Sub-second part of the GNSS fix timestamp.
+    TimeOfFixSubSecond,
     /// Vertical speed.
     VerticalSpeed,
     /// X axis.
@@ -58,8 +57,8 @@ impl core::fmt::Display for Label {
             Self::RelativeHumidity => write!(f, "Relative humidity"),
             Self::Heading => write!(f, "Heading"),
             Self::Temperature => write!(f, "Temperature"),
-            Self::DateTimeUpper => write!(f, "Time (upper part)"),
-            Self::DateTimeLower => write!(f, "Time (lower part)"),
+            Self::TimeOfFix => write!(f, "Time of GNSS fix"),
+            Self::TimeOfFixSubSecond => write!(f, "Sub-second part of time of GNSS fix"),
             Self::VerticalSpeed => write!(f, "Vertical speed"),
             Self::X => write!(f, "X"),
             Self::Y => write!(f, "Y"),

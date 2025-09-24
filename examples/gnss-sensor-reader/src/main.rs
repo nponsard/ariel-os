@@ -9,6 +9,7 @@ use ariel_os::{
     sensors::{REGISTRY, Reading},
     time::Timer,
 };
+use ariel_os_nrf91_gnss::Nrf91GnssExt;
 
 #[ariel_os::task(autostart)]
 async fn main() {
@@ -36,7 +37,7 @@ async fn main() {
                     for (sample, reading_channel) in
                         samples.samples().zip(sensor.reading_channels().iter())
                     {
-                        let value = sample.value_unchecked() as f32
+                        let value = sample.raw_value() as f32
                             / 10i32.pow((-reading_channel.scaling()) as u32) as f32;
 
                         info!(
@@ -49,6 +50,8 @@ async fn main() {
                             sample.accuracy()
                         );
                     }
+
+                    info!("Time of fix: {}", samples.time_of_fix());
                 }
                 Err(err) => {
                     error!("Error when reading: {:?}", err);
