@@ -214,7 +214,7 @@ jobs:
           key: "${{ matrix.partition }}"
 
       - name: Install laze
-        uses: taiki-e/install-action@6f69ec9970ed0c500b1b76d648e05c4c7e0e5671 # v2
+        uses: taiki-e/install-action@4575ae687efd0e2c78240087f26013fb2484987f # v2
         if: steps.should-skip.outputs.result != 'true'
         with:
           tool: laze@0.1
