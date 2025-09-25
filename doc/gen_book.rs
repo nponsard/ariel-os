@@ -47,7 +47,7 @@ const BOARD_PAGE_TEMPLATE: &str = r#"
 
 ## Support Matrix
 
-<table class="support-matrix">
+<table>
   <thead>
     <tr>
       <th>Functionality</th>
@@ -65,13 +65,6 @@ const BOARD_PAGE_TEMPLATE: &str = r#"
 </table>
 
 <style>
-@media (min-width: 1920px) {
-  .support-matrix {
-    position: relative;
-    left: 50%;
-    transform: translate(-50%, 0);
-  }
-}
 .support-cell {
   text-align: center;
 }
