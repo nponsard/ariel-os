@@ -81,9 +81,13 @@ pub fn init() -> OptionalPeripherals {
     OptionalPeripherals::from(peripherals)
 }
 
+fn board_config(config: &mut Config) {
+    rcc_config(config);
+}
+
 // TODO: find better place for this
 #[expect(clippy::too_many_lines)]
-fn board_config(config: &mut Config) {
+fn rcc_config(config: &mut Config) {
     #[cfg(context = "st-b-l475e-iot01a")]
     {
         use embassy_stm32::rcc::*;
