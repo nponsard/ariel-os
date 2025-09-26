@@ -1,4 +1,3 @@
-
 # ST NUCLEO-F042K6
 
 ## Board Info

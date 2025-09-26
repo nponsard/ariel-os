@@ -1,4 +1,3 @@
-
 # ST NUCLEO-C031C6
 
 ## Board Info

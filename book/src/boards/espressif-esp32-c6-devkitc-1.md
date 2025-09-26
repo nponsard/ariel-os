@@ -1,4 +1,3 @@
-
 # Espressif ESP32-C6-DevKitC-1
 
 ## Board Info

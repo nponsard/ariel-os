@@ -1,4 +1,3 @@
-
 # Espressif ESP32-C3-LCDkit
 
 ## Board Info

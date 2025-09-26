@@ -31,8 +31,7 @@ const LIST_TEMPLATE: &str = r#"
 </ul>
 "#;
 
-const BOARD_PAGE_TEMPLATE: &str = r#"
-# {{ board_info.name }}
+const BOARD_PAGE_TEMPLATE: &str = r#"# {{ board_info.name }}
 
 ## Board Info
 
@@ -403,9 +402,11 @@ impl SubCommandPages {
                     .into());
                 }
             } else {
-                fs::write(&board_page_path, board_page).map_err(|source| Error::WritingOutputFile {
-                    path: board_page_path.clone(),
-                    source,
+                fs::write(&board_page_path, board_page).map_err(|source| {
+                    Error::WritingOutputFile {
+                        path: board_page_path.clone(),
+                        source,
+                    }
                 })?;
             }
         }

@@ -1,4 +1,3 @@
-
 # nRF5340-DK
 
 ## Board Info
