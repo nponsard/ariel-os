@@ -191,6 +191,9 @@ impl SubCommand {
 #[argh(subcommand, name = "matrix")]
 /// generate the HTML support matrix
 struct SubCommandMatrix {
+    /// just check if the support matrix is up to date
+    #[argh(switch)]
+    check: bool,
     /// board tier (1, 2, or 3)
     #[argh(option)]
     tier: schema::Tier,
@@ -228,12 +231,28 @@ impl SubCommandMatrix {
             .render(context!(matrix => matrix, boards => boards))
             .unwrap();
 
-        fs::write(&self.output_path, format!("{matrix_html}{key_html}\n")).map_err(|source| {
-            Error::WritingOutputFile {
+        let html = format!("{matrix_html}{key_html}\n");
+
+        if self.check {
+            let existing_html = fs::read_to_string(&self.output_path).map_err(|source| {
+                Error::ReadingExistingFile {
+                    path: self.output_path.clone(),
+                    source,
+                }
+            })?;
+
+            if existing_html != html {
+                return Err(Error::ExistingHtmlNotUpToDate {
+                    path: self.output_path.clone(),
+                }
+                .into());
+            }
+        } else {
+            fs::write(&self.output_path, html).map_err(|source| Error::WritingOutputFile {
                 path: self.output_path.clone(),
                 source,
-            }
-        })?;
+            })?;
+        }
 
         Ok(())
     }
