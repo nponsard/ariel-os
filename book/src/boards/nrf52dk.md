@@ -1,4 +1,3 @@
-
 # nRF52-DK
 
 ## Board Info

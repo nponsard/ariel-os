@@ -1,4 +1,3 @@
-
 # ST NUCLEO-F401RE
 
 ## Board Info

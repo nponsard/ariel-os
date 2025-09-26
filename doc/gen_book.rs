@@ -31,8 +31,7 @@ const LIST_TEMPLATE: &str = r#"
 </ul>
 "#;
 
-const BOARD_PAGE_TEMPLATE: &str = r#"
-# {{ board_info.name }}
+const BOARD_PAGE_TEMPLATE: &str = r#"# {{ board_info.name }}
 
 ## Board Info
 
@@ -403,9 +402,11 @@ impl SubCommandPages {
                     .into());
                 }
             } else {
-                fs::write(&board_page_path, board_page).map_err(|source| Error::WritingOutputFile {
-                    path: board_page_path.clone(),
-                    source,
+                fs::write(&board_page_path, board_page).map_err(|source| {
+                    Error::WritingOutputFile {
+                        path: board_page_path.clone(),
+                        source,
+                    }
                 })?;
             }
         }
@@ -437,16 +438,16 @@ struct FunctionalitySupport {
 fn main() -> miette::Result<()> {
     let args: Args = argh::from_env();
 
-    let input_path = fs::read_to_string(&args.input_path()).map_err(|source| Error::InputFile {
+    let input_file = fs::read_to_string(&args.input_path()).map_err(|source| Error::InputFile {
         path: args.input_path().into(),
         source,
     })?;
 
-    let matrix = serde_yaml::from_str(&input_path).map_err(|source| {
+    let matrix = serde_yaml::from_str(&input_file).map_err(|source| {
         let err_span = miette::SourceSpan::from(source.location().unwrap().index());
         Error::Parsing {
             path: args.input_path().into(),
-            src: input_path,
+            src: input_file,
             err_span,
             source,
         }

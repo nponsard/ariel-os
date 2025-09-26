@@ -1,4 +1,3 @@
-
 # BBC micro:bit V1
 
 ## Board Info

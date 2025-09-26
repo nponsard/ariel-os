@@ -1,4 +1,3 @@
-
 # Heltec WiFi LoRa 32 V3
 
 ## Board Info

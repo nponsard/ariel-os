@@ -1,3 +1,5 @@
+{{#title Hardware & Functionality Support Overview - Ariel OS manual}}
+
 # Hardware & Functionality Support
 
 > The tables below indicate whether we support using the piece of functionality in a portable manner, through an abstraction layer and platform-aware configuration.

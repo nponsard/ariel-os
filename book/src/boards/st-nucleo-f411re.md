@@ -1,4 +1,3 @@
-
 # ST NUCLEO-F411RE
 
 ## Board Info

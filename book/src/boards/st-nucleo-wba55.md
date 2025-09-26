@@ -1,4 +1,3 @@
-
 # ST NUCLEO-WBA55CG
 
 ## Board Info

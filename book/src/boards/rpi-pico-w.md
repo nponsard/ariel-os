@@ -1,4 +1,3 @@
-
 # Raspberry Pi Pico W
 
 ## Board Info

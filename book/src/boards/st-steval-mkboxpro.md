@@ -1,4 +1,3 @@
-
 # STEVAL-MKBOXPRO
 
 ## Board Info

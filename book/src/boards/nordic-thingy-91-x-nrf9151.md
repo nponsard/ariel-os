@@ -1,4 +1,3 @@
-
 # Nordic Thingy:91 X
 
 ## Board Info

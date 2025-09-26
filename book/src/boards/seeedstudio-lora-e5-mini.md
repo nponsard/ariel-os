@@ -1,4 +1,3 @@
-
 # Seeed Studio LoRa-E5 mini
 
 ## Board Info

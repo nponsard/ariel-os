@@ -1,4 +1,3 @@
-
 # ST NUCLEO-H755ZI-Q
 
 ## Board Info
