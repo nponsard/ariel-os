@@ -3,6 +3,7 @@
 ## Tier 1
 
 Tier 1 hardware gets regularly tested, either automatically or manually.
+
 - [BBC micro:bit V2](./bbc-microbit-v2.md)
 - [Espressif ESP32-C3-LCDkit](./espressif-esp32-c3-lcdkit.md)
 - [Espressif ESP32-C6-DevKitC-1](./espressif-esp32-c6-devkitc-1.md)
@@ -21,6 +22,7 @@ Tier 1 hardware gets regularly tested, either automatically or manually.
 ## Tier 2
 
 Tier 2 hardware only gets tested infrequently, but Ariel OS maintainers do have access to the hardware.
+
 - [Nordic Thingy:91 X](./nordic-thingy-91-x-nrf9151.md)
 - [nRF52-DK](./nrf52dk.md)
 - [nRF9160-DK](./nrf9160dk-nrf9160.md)
@@ -31,6 +33,7 @@ Tier 2 hardware only gets tested infrequently, but Ariel OS maintainers do have 
 ## Tier 3
 
 Tier 3 hardware is build-tested only, as Ariel OS maintainers do not have access to the hardware.
+
 - [BBC micro:bit V1](./bbc-microbit-v1.md)
 - [Heltec WiFi LoRa 32 V3](./heltec-wifi-lora-32-v3.md)
 - [Seeed Studio LoRa-E5 mini](./seeedstudio-lora-e5-mini.md)
