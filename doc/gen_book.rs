@@ -23,14 +23,6 @@ use miette::Diagnostic;
 use minijinja::{context, Environment};
 use serde::Serialize;
 
-const LIST_TEMPLATE: &str = r#"
-<ul>
-{%- for name, board in boards %}
-  <li><a href=./{{ name }}.html>{{ board.name }}</a></li>
-{%- endfor %}
-</ul>
-"#;
-
 #[derive(argh::FromArgs)]
 /// utility commands to generate parts of the Ariel OS book
 struct Args {

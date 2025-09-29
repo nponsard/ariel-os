@@ -438,7 +438,7 @@ jobs:
 
       - name: Check the board index page markdown generation exit code
         run: |
-          ./doc/gen_book.rs board-index doc/support_matrix.yml /dev/null --template-path book/src/boards/index.md.tmpl
+          ./doc/gen_book.rs board-index doc/support_matrix.yml /dev/null --template-path book/templates/board-index.md.tmpl
 
       - name: Install mdbook
         uses: taiki-e/install-action@ea0eda622640ac23a17ba349cf09e2709d58f5e1 # v2
