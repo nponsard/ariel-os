@@ -1307,6 +1307,8 @@ modules:
       global:
         FEATURES:
           - ariel-os/hwrng
+        RUSTFLAGS:
+          - --cfg getrandom_backend=\"custom\"
 
   - name: has_hwrng
     selects:
@@ -1435,17 +1437,6 @@ modules:
       global:
         FEATURES:
           - ariel-os/random
-
-  - name: random-crypto
-    help: A system-wide cryptographically secure RNG is available.
-    selects:
-      - random
-    env:
-      global:
-        FEATURES:
-          - ariel-os/csprng
-        RUSTFLAGS:
-          - --cfg getrandom_backend=\"custom\"
 
   - name: sw/benchmark
     help: provided if a target supports `benchmark()`
