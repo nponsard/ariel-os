@@ -30,7 +30,7 @@ jobs:
           toolchain: ${{ steps.get_toolchain.outputs.toolchain }}
 
       - name: Install laze
-        uses: taiki-e/install-action@ea0eda622640ac23a17ba349cf09e2709d58f5e1 # v2
+        uses: taiki-e/install-action@3216b6964cbfe053bb8b9a2ef245bd9300e2061d # v2
         with:
           tool: laze@0.1
 
@@ -89,7 +89,7 @@ jobs:
         uses: Swatinem/rust-cache@98c8021b550208e191a6a3145459bfc9fb29c4c0 # v2
 
       - name: Install cargo-deny
-        uses: taiki-e/install-action@ea0eda622640ac23a17ba349cf09e2709d58f5e1 # v2
+        uses: taiki-e/install-action@3216b6964cbfe053bb8b9a2ef245bd9300e2061d # v2
         with:
           tool: cargo-deny
 
@@ -378,7 +378,7 @@ jobs:
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5
 
       - name: Install taplo
-        uses: taiki-e/install-action@ea0eda622640ac23a17ba349cf09e2709d58f5e1 # v2
+        uses: taiki-e/install-action@3216b6964cbfe053bb8b9a2ef245bd9300e2061d # v2
         with:
           tool: taplo
           fallback: none
@@ -394,7 +394,7 @@ jobs:
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5
 
       - name: Install cargo-manifest-check
-        uses: taiki-e/install-action@ea0eda622640ac23a17ba349cf09e2709d58f5e1 # v2
+        uses: taiki-e/install-action@3216b6964cbfe053bb8b9a2ef245bd9300e2061d # v2
         with:
           tool: cargo-manifest-check@0.2
 
@@ -441,7 +441,7 @@ jobs:
           ./doc/gen_book.rs board-index doc/support_matrix.yml /dev/null --template-path book/templates/board-index.md.tmpl
 
       - name: Install mdbook
-        uses: taiki-e/install-action@ea0eda622640ac23a17ba349cf09e2709d58f5e1 # v2
+        uses: taiki-e/install-action@3216b6964cbfe053bb8b9a2ef245bd9300e2061d # v2
         with:
           tool: mdbook
 
