@@ -97,16 +97,18 @@ embedded-test = { version = "0.6.1", default-features = false, features = [
 ] }
 
 esp-alloc = { version = "0.8.0", default-features = false }
-esp-hal = { version = "1.0.0-rc.0", default-features = false, features = [
+esp-bootloader-esp-idf = { version = "0.3.0", features = ["esp-rom-sys"] }
+esp-hal = { version = "1.0.0-rc.1", default-features = false, features = [
   "unstable",
 ] }
-esp-hal-embassy = { version = "0.9.0", default-features = false }
-esp-println = { version = "0.15.0", default-features = false }
-esp-radio = { version = "0.15.0", default-features = false }
+esp-println = { version = "0.16.0", default-features = false }
+esp-radio = { version = "0.16.0", default-features = false }
+esp-rom-sys = { version = "0.1.2", default-features = false }
+esp-sync = { version = "0.1.0", default-features = false }
 esp-wifi-sys = { version = "0.7.1", default-features = false }
 
-esp-storage = { version = "0.7.0" }
-xtensa-lx-rt = { version = "0.20.0", default-features = false }
+esp-storage = { version = "0.8.0" }
+xtensa-lx-rt = { version = "0.21.0", default-features = false }
 
 linkme = { version = "0.3.32" }
 
