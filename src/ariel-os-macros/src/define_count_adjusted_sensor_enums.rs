@@ -4,7 +4,6 @@
 /// One single type must be defined so that it can be used in the Future returned by sensor
 /// drivers, which must be the same for every sensor driver so it can be part of the `Sensor`
 /// trait.
-#[expect(clippy::too_many_lines)]
 #[proc_macro]
 pub fn define_count_adjusted_sensor_enums(_item: TokenStream) -> TokenStream {
     use quote::quote;
@@ -18,17 +17,16 @@ pub fn define_count_adjusted_sensor_enums(_item: TokenStream) -> TokenStream {
         let variant = variant_name(i);
         quote! { #variant([Sample; #i]) }
     });
-    let samples_from_impls = (1..=count)
-        .map(|i| {
-            let variant = variant_name(i);
-            quote! {
-                impl From<[Sample; #i]> for Samples {
-                    fn from(value: [Sample; #i]) -> Self {
-                        Self { samples: InnerSamples::#variant(value) }
-                    }
+    let samples_from_impls = (1..=count).map(|i| {
+        let variant = variant_name(i);
+        quote! {
+            impl From<[Sample; #i]> for Samples {
+                fn from(value: [Sample; #i]) -> Self {
+                    Self { samples: InnerSamples::#variant(value) }
                 }
             }
-        });
+        }
+    });
     let samples_first_sample = (1..=count).map(|i| {
         let variant = variant_name(i);
         quote! {
@@ -43,32 +41,29 @@ pub fn define_count_adjusted_sensor_enums(_item: TokenStream) -> TokenStream {
         }
     });
 
-    let reading_channels_from_impls = (1..=count)
-        .map(|i| {
-            let variant = variant_name(i);
-            quote! {
-                impl From<[ReadingChannel; #i]> for ReadingChannels {
-                    fn from(value: [ReadingChannel; #i]) -> Self {
-                        Self { channels: InnerReadingChannels::#variant(value) }
-                    }
+    let reading_channels_from_impls = (1..=count).map(|i| {
+        let variant = variant_name(i);
+        quote! {
+            impl From<[ReadingChannel; #i]> for ReadingChannels {
+                fn from(value: [ReadingChannel; #i]) -> Self {
+                    Self { channels: InnerReadingChannels::#variant(value) }
                 }
             }
-        });
+        }
+    });
     let reading_channels_variants = (1..=count).map(|i| {
         let variant = variant_name(i);
         quote! { #variant([ReadingChannel; #i]) }
     });
 
-    let samples_iter = (1..=count)
-        .map(|i| {
-            let variant = variant_name(i);
-            quote! { InnerSamples::#variant(ref samples) => samples.iter().copied() }
-        });
-    let reading_channels_iter = (1..=count)
-        .map(|i| {
-            let variant = variant_name(i);
-            quote! { InnerReadingChannels::#variant(ref channels) => channels.iter().copied() }
-        });
+    let samples_iter = (1..=count).map(|i| {
+        let variant = variant_name(i);
+        quote! { InnerSamples::#variant(ref samples) => samples.iter().copied() }
+    });
+    let reading_channels_iter = (1..=count).map(|i| {
+        let variant = variant_name(i);
+        quote! { InnerReadingChannels::#variant(ref channels) => channels.iter().copied() }
+    });
 
     let expanded = quote! {
         /// Samples returned by a sensor driver.
