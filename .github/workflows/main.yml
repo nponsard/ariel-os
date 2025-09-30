@@ -157,7 +157,7 @@ jobs:
             --
             --deny warnings
 
-      - run: echo 'RUSTFLAGS=--cfg context="esp32c6"' >> $GITHUB_ENV
+      - run: echo 'RUSTFLAGS=--cfg context="esp32c6" --cfg getrandom_backend="custom"' >> $GITHUB_ENV
       - name: clippy for ESP32
         uses: clechasseur/rs-clippy-check@69da786488ddcceb16285b0219841750089369ba # v5
         with:
@@ -176,7 +176,7 @@ jobs:
             --
             --deny warnings
 
-      - run: echo 'RUSTFLAGS=--cfg context="cortex-m" --cfg context="rp" --cfg context="rp2040"' >> $GITHUB_ENV
+      - run: echo 'RUSTFLAGS=--cfg context="cortex-m" --cfg context="rp" --cfg context="rp2040" --cfg getrandom_backend="custom"' >> $GITHUB_ENV
       - name: clippy for RP
         uses: clechasseur/rs-clippy-check@69da786488ddcceb16285b0219841750089369ba # v5
         with:
@@ -195,7 +195,7 @@ jobs:
             --
             --deny warnings
 
-      - run: echo 'RUSTFLAGS=--cfg context="nrf52840" --cfg context="nrf52"' >> $GITHUB_ENV
+      - run: echo 'RUSTFLAGS=--cfg context="nrf52840" --cfg context="nrf52" --cfg getrandom_backend="custom"' >> $GITHUB_ENV
       - name: clippy for nRF
         uses: clechasseur/rs-clippy-check@69da786488ddcceb16285b0219841750089369ba # v5
         with:
@@ -215,7 +215,7 @@ jobs:
             --
             --deny warnings
 
-      - run: echo 'RUSTFLAGS=--cfg context="stm32wb55rg"' >> $GITHUB_ENV
+      - run: echo 'RUSTFLAGS=--cfg context="stm32wb55rg" --cfg getrandom_backend="custom"' >> $GITHUB_ENV
       - name: clippy for STM32
         uses: clechasseur/rs-clippy-check@69da786488ddcceb16285b0219841750089369ba # v5
         with:
