@@ -23,122 +23,6 @@ use miette::Diagnostic;
 use minijinja::{context, Environment};
 use serde::Serialize;
 
-const BOARD_PAGE_TEMPLATE: &str = r#"# {{ board_info.name }}
-
-## Board Info
-
-- **Tier:** {{ board_info.tier }}
-- **Ariel OS Name:** `{{ board_info.technical_name }}`
-- **Chip:** {{ board_info.chip }}
-- **Chip Ariel OS Name:** `{{ board_info.chip_technical_name }}`
-
-### References
-
-- [Manufacturer link]({{ board_info.url }})
-
-## Support Matrix
-
-<table>
-  <thead>
-    <tr>
-      <th>Functionality</th>
-      <th>Support Status</th>
-    </tr>
-  </thead>
-  <tbody>
-    {%- for functionality in board_info.functionalities %}
-    <tr>
-      <td>{{ functionality.title }}</td>
-      <td class="support-cell" title="{{ functionality.description }}">{{ functionality.icon }}</td>
-    </tr>
-    {%- endfor %}
-  </tbody>
-</table>
-
-<style>
-.support-cell {
-  text-align: center;
-}
-</style>
-
-Legend:
-
-<dl>
-  {%- for support_key in support_keys %}
-  <div>
-    <dt>{{ support_key.icon }}</dt><dd>{{ support_key.description }}</dd>
-  </div>
-  {%- endfor %}
-</dl>
-<style>
-dt, dd {
-  display: inline;
-}
-</style>
-"#;
-
-const TABLE_TEMPLATE: &str = r##"<!-- This table is auto-generated. Do not edit manually. -->
-<table class="support-matrix">
-  <thead>
-    <tr>
-      <th colspan="2">Chip</th>
-      <th colspan="2">Testing Board</th>
-      <th colspan="{{ matrix.functionalities|length }}">Functionality</th>
-    </tr>
-    <tr>
-      <th>Manufacturer Name</th>
-      <th>Ariel OS Name</th>
-      <th>Manufacturer Name</th>
-      <th>Ariel OS Name</th>
-      {%- for functionality in matrix.functionalities %}
-      <th>{{ functionality.title }}</th>
-      {%- endfor %}
-    </tr>
-  </thead>
-  <tbody>
-    {%- for board in boards %}
-    <tr>
-      <td>{{ board.chip }}</td>
-      <td><code>{{ board.chip_technical_name }}</code></td>
-      <td><a href="{{ board.url }}">{{ board.name }}</a></td>
-      <td><code>{{ board.technical_name }}</code></td>
-      {%- for functionality in board.functionalities %}
-      <td class="support-cell" title="{{ functionality.description }}">{{ functionality.icon }}</td>
-      {%- endfor %}
-    </tr>
-    {%- endfor %}
-  </tbody>
-</table>
-<style>
-@media (min-width: 1920px) {
-  .support-matrix {
-    position: relative;
-    left: 50%;
-    transform: translate(-50%, 0);
-  }
-}
-.support-cell {
-  text-align: center;
-}
-</style>
-"##;
-
-const KEY_TEMPLATE: &str = r##"<p>Key:</p>
-
-<dl>
-  {%- for support_key in matrix.support_keys %}
-  <div>
-    <dt>{{ support_key.icon }}</dt><dd>{{ support_key.description }}</dd>
-  </div>
-  {%- endfor %}
-</dl>
-<style>
-dt, dd {
-  display: inline;
-}
-</style>
-"##;
-
 #[derive(argh::FromArgs)]
 /// utility commands to generate parts of the Ariel OS book
 struct Args {
@@ -189,6 +73,9 @@ struct SubCommandMatrix {
     /// board tier (1, 2, or 3)
     #[argh(option)]
     tier: schema::Tier,
+    #[argh(option)]
+    /// path of the support matrix html template
+    template_path: PathBuf,
     #[argh(positional)]
     /// path of the input YAML file
     input_path: PathBuf,
@@ -199,6 +86,13 @@ struct SubCommandMatrix {
 
 impl SubCommandMatrix {
     fn run(self, matrix: &schema::Matrix) -> miette::Result<()> {
+        let matrix_template = fs::read_to_string(&self.template_path).map_err(|source| {
+            Error::SummaryTemplateFile {
+                path: self.template_path.clone(),
+                source,
+            }
+        })?;
+
         let mut board_info = gen_functionalities(&matrix)?;
 
         // TODO: read the order from the YAML file instead?
@@ -210,39 +104,32 @@ impl SubCommandMatrix {
             .collect::<Vec<_>>();
 
         let mut env = Environment::new();
-        env.add_template("matrix", TABLE_TEMPLATE).unwrap();
-        env.add_template("matrix_key", KEY_TEMPLATE).unwrap();
-
+        env.add_template("matrix", &matrix_template).unwrap();
         let tmpl = env.get_template("matrix").unwrap();
         let matrix_html = tmpl
             .render(context!(matrix => matrix, boards => boards))
             .unwrap();
 
-        let tmpl = env.get_template("matrix_key").unwrap();
-        let key_html = tmpl
-            .render(context!(matrix => matrix, boards => boards))
-            .unwrap();
-
-        let html = format!("{matrix_html}{key_html}\n");
-
         if self.check {
-            let existing_html = fs::read_to_string(&self.output_path).map_err(|source| {
+            let existing_matrix_html = fs::read_to_string(&self.output_path).map_err(|source| {
                 Error::ReadingExistingFile {
                     path: self.output_path.clone(),
                     source,
                 }
             })?;
 
-            if existing_html != html {
+            if existing_matrix_html != matrix_html {
                 return Err(Error::ExistingHtmlNotUpToDate {
                     path: self.output_path.clone(),
                 }
                 .into());
             }
         } else {
-            fs::write(&self.output_path, html).map_err(|source| Error::WritingOutputFile {
-                path: self.output_path.clone(),
-                source,
+            fs::write(&self.output_path, matrix_html).map_err(|source| {
+                Error::WritingOutputFile {
+                    path: self.output_path.clone(),
+                    source,
+                }
             })?;
         }
 
@@ -413,6 +300,9 @@ struct SubCommandPages {
     /// just check if the board pages are up to date
     #[argh(switch)]
     check: bool,
+    #[argh(option)]
+    /// path of the template summary
+    template_path: PathBuf,
     #[argh(positional)]
     /// path of the input YAML file
     input_path: PathBuf,
@@ -423,11 +313,19 @@ struct SubCommandPages {
 
 impl SubCommandPages {
     fn run(self, matrix: &schema::Matrix) -> miette::Result<()> {
+        let board_page_template = fs::read_to_string(&self.template_path).map_err(|source| {
+            Error::SummaryTemplateFile {
+                path: self.template_path.clone(),
+                source,
+            }
+        })?;
+
         let board_info = gen_functionalities(&matrix)?;
 
         for board in &board_info {
             let mut env = Environment::new();
-            env.add_template("board_page", BOARD_PAGE_TEMPLATE).unwrap();
+            env.add_template("board_page", &board_page_template)
+                .unwrap();
             let tmpl = env.get_template("board_page").unwrap();
             let board_page = tmpl
                 .render(context!(
