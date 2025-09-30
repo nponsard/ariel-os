@@ -74,7 +74,7 @@ impl TimerQueue {
 impl embassy_time_driver::Driver for TimerQueue {
     #[inline]
     fn now(&self) -> u64 {
-        crate::now()
+        now()
     }
 
     #[inline]
