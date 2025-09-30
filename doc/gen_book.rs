@@ -207,7 +207,7 @@ impl SubCommandList {
                 })?;
 
             if existing_board_index_md != board_index_md {
-                return Err(Error::ExistingHtmlNotUpToDate {
+                return Err(Error::ExistingMarkdownNotUpToDate {
                     path: self.output_path.clone(),
                 }
                 .into());
@@ -275,7 +275,7 @@ impl SubCommandSummary {
             })?;
 
             if existing_summary_md != summary_md {
-                return Err(Error::ExistingHtmlNotUpToDate {
+                return Err(Error::ExistingMarkdownNotUpToDate {
                     path: self.output_path.clone(),
                 }
                 .into());
@@ -347,7 +347,7 @@ impl SubCommandPages {
                     })?;
 
                 if existing_board_page != board_page {
-                    return Err(Error::ExistingHtmlNotUpToDate {
+                    return Err(Error::ExistingMarkdownNotUpToDate {
                         path: board_page_path.clone(),
                     }
                     .into());
@@ -587,4 +587,6 @@ enum Error {
     ReadingExistingFile { path: PathBuf, source: io::Error },
     #[error("existing HTML file `{path}` is not up to date")]
     ExistingHtmlNotUpToDate { path: PathBuf },
+    #[error("existing Markdown file `{path}` is not up to date")]
+    ExistingMarkdownNotUpToDate { path: PathBuf },
 }
