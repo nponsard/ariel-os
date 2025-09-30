@@ -58,6 +58,18 @@ mod time_driver;
 pub use esp_hal::peripherals::OptionalPeripherals;
 
 #[doc(hidden)]
+pub trait IntoPeripheral<'a, T: 'a> {
+    fn into_hal_peripheral(self) -> T;
+}
+
+#[doc(hidden)]
+impl<'a, T: 'a> IntoPeripheral<'a, T> for T {
+    fn into_hal_peripheral(self) -> T {
+        self
+    }
+}
+
+#[doc(hidden)]
 #[must_use]
 pub fn init() -> OptionalPeripherals {
     let config = esp_hal::Config::default().with_cpu_clock(esp_hal::clock::CpuClock::max());
@@ -96,7 +108,7 @@ pub fn init() -> OptionalPeripherals {
         }
     };
 
-    //esp_hal_embassy::init(embassy_timer);
+    crate::time_driver::init(embassy_timer);
 
     peripherals
 }
