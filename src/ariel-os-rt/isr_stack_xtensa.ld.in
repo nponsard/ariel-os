@@ -1,0 +1,5 @@
+/* use names used by xtensa. grep for `xtensa_lx::set_stack_pointer` in esp-hal repo. */
+_stack_lowest = _stack_end_cpu0;
+_stack_highest = _stack_start_cpu0;
+
+ASSERT((_stack_highest - _stack_lowest) >= ${ISR_STACKSIZE} , "ERROR(ariel-os-rt): not enough unused memory for isr stack of size ${ISR_STACKSIZE}");

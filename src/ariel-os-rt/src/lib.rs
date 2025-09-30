@@ -52,6 +52,7 @@ cfg_if::cfg_if! {
 
 #[cfg(any(context = "cortex-m", context = "riscv", context = "xtensa"))]
 mod isr_stack {
+    #[cfg(not(context = "xtensa"))]
     pub(crate) const ISR_STACKSIZE: usize = {
         const CONFIG_ISR_STACKSIZE: usize = ariel_os_utils::usize_from_env_or!(
             "CONFIG_ISR_STACKSIZE",
@@ -74,6 +75,7 @@ mod isr_stack {
         CONFIG_ISR_STACKSIZE
     };
 
+    #[cfg(not(context = "xtensa"))]
     core::arch::global_asm!(
         r#"
         .section .isr_stack, "wa"
