@@ -22,8 +22,8 @@ pub fn define_count_adjusted_sensor_enums(_item: TokenStream) -> TokenStream {
         let variant = variant_name(i);
         let func_name = new_variant_func_name(i);
         quote! {
-            /// Creates a new [`Samples`] containing `#i` samples.
-            pub fn #func_name(value: [Sample; #i], sensor: &'static dyn Sensor) -> Self {
+            #[doc = concat!("Creates a new [`Samples`] containing ", #i, " sample(s).")]
+            pub fn #func_name(sensor: &'static dyn Sensor, value: [Sample; #i]) -> Self {
                     Self {
                     samples: InnerSamples::#variant(value),
                     sensor,
@@ -70,10 +70,20 @@ pub fn define_count_adjusted_sensor_enums(_item: TokenStream) -> TokenStream {
     });
 
     let expanded = quote! {
-        /// For driver implementors only, access to the sensor.
-        pub trait SensorAccess {
-            /// Get the sensor that produced these samples. For driver implementors only.
+        /// Provides access to the sensor driver instance.
+        /// For driver implementors only.
+        pub trait SensorAccess: private::Sealed {
+            /// Returns the sensor driver instance that produced these samples.
+            /// For driver implementors only.
             fn sensor(&self) -> &'static dyn Sensor;
+        }
+
+        /// Avoid external implementations of [`SensorAccess`].
+        mod private {
+            use super::Samples;
+            pub trait Sealed {}
+
+            impl Sealed for Samples {}
         }
 
         /// Samples returned by a sensor driver.
@@ -94,6 +104,7 @@ pub fn define_count_adjusted_sensor_enums(_item: TokenStream) -> TokenStream {
             fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
                 f.debug_struct("Samples")
                  .field("samples", &self.samples)
+                 .field("sensor", &"&dyn Sensor")
                  .finish()
             }
         }
