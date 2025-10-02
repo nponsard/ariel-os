@@ -224,10 +224,10 @@ impl Nrf91Gnss {
     ) -> Samples {
         let date = Date::from_calendar_date(
             data.datetime.year.into(),
-            Month::try_from(data.datetime.month).unwrap(),
+            Month::try_from(data.datetime.month).unwrap_or(Month::January),
             data.datetime.day,
         )
-        .unwrap();
+        .unwrap_or(Date::from_calendar_date(1980, Month::January, 6).unwrap());
         let time = Time::from_hms(
             data.datetime.hour,
             data.datetime.minute,
