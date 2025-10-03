@@ -232,6 +232,8 @@ jobs:
             --
             --deny warnings
 
+      # Reset `RUSTFLAGS`.
+      - run: echo 'RUSTFLAGS=' >> $GITHUB_ENV
       - name: clippy
         uses: clechasseur/rs-clippy-check@69da786488ddcceb16285b0219841750089369ba # v5
         with:
