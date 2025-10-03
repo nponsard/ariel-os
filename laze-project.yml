@@ -1307,6 +1307,8 @@ modules:
       global:
         FEATURES:
           - ariel-os/hwrng
+        RUSTFLAGS:
+          - --cfg getrandom_backend=\"custom\"
 
   - name: has_hwrng
     selects:
