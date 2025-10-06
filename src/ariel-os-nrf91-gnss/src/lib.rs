@@ -222,6 +222,8 @@ impl Nrf91Gnss {
         &'static self,
         data: &nrf_modem::nrfxlib_sys::nrf_modem_gnss_pvt_data_frame,
     ) -> Samples {
+        info!("GNSS flags: {:04x}", data.flags);
+
         let date = Date::from_calendar_date(
             data.datetime.year.into(),
             Month::try_from(data.datetime.month).unwrap_or(Month::January),
