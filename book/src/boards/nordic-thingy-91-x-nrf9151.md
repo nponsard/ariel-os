@@ -21,9 +21,9 @@
 |SPI Main Mode|<span title="supported">✅</span>|
 |Logging|<span title="supported">✅</span>|
 |User USB|<span title="not available on this piece of hardware">–</span>|
-|Wi-Fi|<span title="available in hardware, but not currently supported by Ariel OS">❌</span>[^requires supporting the onboard nRF7002 chip]|
+|Wi-Fi|<span title="available in hardware, but not currently supported by Ariel OS">❌</span>[^requires-supporting-the-onboard-nrf7002-chip]|
 |Ethernet over USB|<span title="not available on this piece of hardware">–</span>|
-|Hardware Random Number Generator|<span title="available in hardware, but not currently supported by Ariel OS">❌</span>[^only available through the CryptoCell]|
+|Hardware Random Number Generator|<span title="available in hardware, but not currently supported by Ariel OS">❌</span>[^only-available-through-the-cryptocell]|
 |Persistent Storage|<span title="supported">✅</span>|
 
 <p>Legend:</p>
@@ -52,5 +52,5 @@ dt, dd {
 </style>
 
 
-[^requires supporting the onboard nRF7002 chip]: requires supporting the onboard nRF7002 chip
-[^only available through the CryptoCell]: only available through the CryptoCell
+[^requires-supporting-the-onboard-nrf7002-chip]: requires supporting the onboard nRF7002 chip
+[^only-available-through-the-cryptocell]: only available through the CryptoCell

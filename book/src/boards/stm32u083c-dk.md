@@ -24,7 +24,7 @@
 |Wi-Fi|<span title="not available on this piece of hardware">–</span>|
 |Ethernet over USB|<span title="supported">✅</span>|
 |Hardware Random Number Generator|<span title="supported">✅</span>|
-|Persistent Storage|<span title="supported with some caveats">☑️</span>[^removing items not supported]|
+|Persistent Storage|<span title="supported with some caveats">☑️</span>[^removing-items-not-supported]|
 
 <p>Legend:</p>
 
@@ -52,4 +52,4 @@ dt, dd {
 </style>
 
 
-[^removing items not supported]: removing items not supported
+[^removing-items-not-supported]: removing items not supported

@@ -23,7 +23,7 @@
 |User USB|<span title="supported">✅</span>|
 |Wi-Fi|<span title="not available on this piece of hardware">–</span>|
 |Ethernet over USB|<span title="supported">✅</span>|
-|Hardware Random Number Generator|<span title="available in hardware, but not currently supported by Ariel OS">❌</span>[^no standalone RNG in the application core, only in the CryptoCell which is not currently supported]|
+|Hardware Random Number Generator|<span title="available in hardware, but not currently supported by Ariel OS">❌</span>[^no-standalone-rng-in-the-application-core-only-in-the-cryptocell-which-is-not-currently-supported]|
 |Persistent Storage|<span title="supported">✅</span>|
 
 <p>Legend:</p>
@@ -52,4 +52,4 @@ dt, dd {
 </style>
 
 
-[^no standalone RNG in the application core, only in the CryptoCell which is not currently supported]: no standalone RNG in the application core, only in the CryptoCell which is not currently supported
+[^no-standalone-rng-in-the-application-core-only-in-the-cryptocell-which-is-not-currently-supported]: no standalone RNG in the application core, only in the CryptoCell which is not currently supported

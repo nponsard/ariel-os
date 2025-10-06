@@ -24,7 +24,7 @@
 |Wi-Fi|<span title="not available on this piece of hardware">–</span>|
 |Ethernet over USB|<span title="not available on this piece of hardware">–</span>|
 |Hardware Random Number Generator|<span title="not available on this piece of hardware">–</span>|
-|Persistent Storage|<span title="available in hardware, but not currently supported by Ariel OS">❌</span>[^unsupported heterogeneous flash organization]|
+|Persistent Storage|<span title="available in hardware, but not currently supported by Ariel OS">❌</span>[^unsupported-heterogeneous-flash-organization]|
 
 <p>Legend:</p>
 
@@ -52,4 +52,4 @@ dt, dd {
 </style>
 
 
-[^unsupported heterogeneous flash organization]: unsupported heterogeneous flash organization
+[^unsupported-heterogeneous-flash-organization]: unsupported heterogeneous flash organization

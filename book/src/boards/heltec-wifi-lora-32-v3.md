@@ -20,11 +20,11 @@
 |I2C Controller Mode|<span title="needs testing">🚦</span>|
 |SPI Main Mode|<span title="needs testing">🚦</span>|
 |Logging|<span title="supported">✅</span>|
-|User USB|<span title="available in hardware, but not currently supported by Ariel OS">❌</span>[^USB does not enumerate][^See also: https://github.com/ariel-os/ariel-os/issues/903]|
+|User USB|<span title="available in hardware, but not currently supported by Ariel OS">❌</span>[^usb-does-not-enumerate][^see-also-https-github-com-ariel-os-ariel-os-issues-903]|
 |Wi-Fi|<span title="supported">✅</span>|
 |Ethernet over USB|<span title="available in hardware, but not currently supported by Ariel OS">❌</span>|
 |Hardware Random Number Generator|<span title="supported">✅</span>|
-|Persistent Storage|<span title="available in hardware, but not currently supported by Ariel OS">❌</span>[^requires partitioning support]|
+|Persistent Storage|<span title="available in hardware, but not currently supported by Ariel OS">❌</span>[^requires-partitioning-support]|
 
 <p>Legend:</p>
 
@@ -52,6 +52,6 @@ dt, dd {
 </style>
 
 
-[^USB does not enumerate]: USB does not enumerate
-[^See also: https://github.com/ariel-os/ariel-os/issues/903]: See also: https://github.com/ariel-os/ariel-os/issues/903
-[^requires partitioning support]: requires partitioning support
+[^usb-does-not-enumerate]: USB does not enumerate
+[^see-also-https-github-com-ariel-os-ariel-os-issues-903]: See also: https://github.com/ariel-os/ariel-os/issues/903
+[^requires-partitioning-support]: requires partitioning support

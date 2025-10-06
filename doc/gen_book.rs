@@ -9,6 +9,7 @@ miette = { version = "7.2.0", features = ["fancy"] }
 minijinja = { version = "2.0.3" }
 serde = { version = "1.0.0", features = ["derive"] }
 serde_yaml = { version = "0.9.34" } # TODO: use a maintained crate instead
+slug = { version = "0.1" }
 thiserror = { version = "1.0.61" }
 ---
 
@@ -22,6 +23,7 @@ use std::{
 use miette::Diagnostic;
 use minijinja::{context, Environment};
 use serde::Serialize;
+use slug::slugify;
 
 #[derive(argh::FromArgs)]
 /// utility commands to generate parts of the Ariel OS book
@@ -324,6 +326,7 @@ impl SubCommandPages {
 
         for board in &board_info {
             let mut env = Environment::new();
+            env.add_filter("slugify", slugify::<String>);
             env.add_template("board_page", &board_page_template)
                 .unwrap();
             let tmpl = env.get_template("board_page").unwrap();

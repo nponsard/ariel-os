@@ -16,7 +16,7 @@
 |Functionality|Support Status|
 |---|:---:|
 {%- for functionality in board_info.functionalities %}
-|{{ functionality.title }}|<span title="{{ functionality.description }}">{{ functionality.icon }}</span>{%- if functionality.comments %}{%- for comment in functionality.comments %}[^{{ comment }}]{%- endfor %}{%- endif %}|
+|{{ functionality.title }}|<span title="{{ functionality.description }}">{{ functionality.icon }}</span>{%- if functionality.comments %}{%- for comment in functionality.comments %}[^{{ comment|slugify }}]{%- endfor %}{%- endif %}|
 {%- endfor %}
 
 <p>Legend:</p>
@@ -36,6 +36,6 @@ dt, dd {
 
 {% for functionality in board_info.functionalities %}
   {%- for comment in functionality.comments %}
-[^{{ comment }}]: {{ comment }}
+[^{{ comment|slugify }}]: {{ comment }}
   {%- endfor %}
 {%- endfor %}
