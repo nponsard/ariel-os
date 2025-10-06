@@ -382,7 +382,7 @@ struct FunctionalitySupport {
     title: String,
     icon: String,
     description: String,
-    // TODO: add comments
+    comments: Option<Vec<String>>,
     // TODO: add the PR link
 }
 
@@ -465,43 +465,56 @@ fn gen_functionalities(matrix: &schema::Matrix) -> Result<Vec<BoardSupport>, Err
             let functionalities = matrix.functionalities.iter().map(|functionality_info| {
                 let name = &functionality_info.name;
 
-                let support_key = if let Some(support_info) = board_info.support.get(name) {
-                    let status = support_info.status();
-                    matrix
-                        .support_keys
-                        .iter()
-                        .find(|s| s.name == status)
-                        .ok_or(Error::InvalidSupportKeyNameBoard {
-                            found: status.to_owned(),
-                            functionality: name.to_owned(),
-                            board: board_name.to_owned(),
-                        })?
-                } else {
-                    let support_info =
-                        chip_info
-                            .support
-                            .get(name)
-                            .ok_or(Error::MissingSupportInfo {
-                                board: board_name.to_owned(),
-                                chip: board_info.chip.to_owned(),
-                                functionality: functionality_info.title.to_owned(),
-                            })?;
-                    let status = support_info.status();
-                    matrix
-                        .support_keys
-                        .iter()
-                        .find(|s| s.name == status)
-                        .ok_or(Error::InvalidSupportKeyNameChip {
-                            found: status.to_owned(),
-                            functionality: name.to_owned(),
-                            chip: chip_info.name.to_owned(),
-                        })?
+                let (support_info, support_key) =
+                    if let Some(support_info) = board_info.support.get(name) {
+                        let status = support_info.status();
+                        (
+                            support_info,
+                            matrix
+                                .support_keys
+                                .iter()
+                                .find(|s| s.name == status)
+                                .ok_or(Error::InvalidSupportKeyNameBoard {
+                                    found: status.to_owned(),
+                                    functionality: name.to_owned(),
+                                    board: board_name.to_owned(),
+                                })?,
+                        )
+                    } else {
+                        let support_info =
+                            chip_info
+                                .support
+                                .get(name)
+                                .ok_or(Error::MissingSupportInfo {
+                                    board: board_name.to_owned(),
+                                    chip: board_info.chip.to_owned(),
+                                    functionality: functionality_info.title.to_owned(),
+                                })?;
+                        let status = support_info.status();
+                        (
+                            support_info,
+                            matrix
+                                .support_keys
+                                .iter()
+                                .find(|s| s.name == status)
+                                .ok_or(Error::InvalidSupportKeyNameChip {
+                                    found: status.to_owned(),
+                                    functionality: name.to_owned(),
+                                    chip: chip_info.name.to_owned(),
+                                })?,
+                        )
+                    };
+
+                let comments = match support_info {
+                    schema::SupportInfo::StatusOnly(_) => None,
+                    schema::SupportInfo::Details { comments, .. } => comments.clone(),
                 };
 
                 Ok(FunctionalitySupport {
                     title: functionality_info.title.to_owned(),
                     icon: support_key.icon.to_owned(),
                     description: support_key.description.to_owned(),
+                    comments,
                 })
             });
             let errors = functionalities
