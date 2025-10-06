@@ -134,7 +134,7 @@ pub async fn driver() {
     let system_mode = SystemMode {
         lte_support: true,
         lte_psm_support: true,
-        nbiot_support: true,
+        nbiot_support: false,
         gnss_support: true,
         preference: ConnectionPreference::None,
     };
@@ -154,4 +154,9 @@ pub async fn driver() {
     nrf_modem::init_with_custom_layout(system_mode, memory_layout)
         .await
         .unwrap();
+
+    //  Periodic TAU of 8 hours and an active time of 6 seconds.
+
+    let res = nrf_modem::send_at::<0>(r#"AT+CPSMS=1,"","","00101000","00000011""#).await;
+    debug!("AT+CPSMS=1 result: {:?}", defmt::Debug2Format(&res));
 }
