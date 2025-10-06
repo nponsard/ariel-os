@@ -51,6 +51,5 @@ dt, dd {
 }
 </style>
 
-
-[^requires-supporting-the-onboard-nrf7002-chip]: requires supporting the onboard nRF7002 chip
-[^only-available-through-the-cryptocell]: only available through the CryptoCell
+[^requires-supporting-the-onboard-nrf7002-chip]: Requires supporting the onboard nRF7002 chip.
+[^only-available-through-the-cryptocell]: Only available through the CryptoCell.

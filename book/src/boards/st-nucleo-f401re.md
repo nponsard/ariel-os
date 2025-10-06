@@ -51,5 +51,4 @@ dt, dd {
 }
 </style>
 
-
-[^unsupported-heterogeneous-flash-organization]: unsupported heterogeneous flash organization
+[^unsupported-heterogeneous-flash-organization]: Unsupported heterogeneous flash organization.

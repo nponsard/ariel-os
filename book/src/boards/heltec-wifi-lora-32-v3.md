@@ -51,7 +51,6 @@ dt, dd {
 }
 </style>
 
-
-[^usb-does-not-enumerate]: USB does not enumerate
-[^see-also-https-github-com-ariel-os-ariel-os-issues-903]: See also: https://github.com/ariel-os/ariel-os/issues/903
-[^requires-partitioning-support]: requires partitioning support
+[^usb-does-not-enumerate]: USB does not enumerate.
+[^see-also-https-github-com-ariel-os-ariel-os-issues-903]: See also: https://github.com/ariel-os/ariel-os/issues/903.
+[^requires-partitioning-support]: Requires partitioning support.

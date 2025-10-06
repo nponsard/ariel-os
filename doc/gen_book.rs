@@ -327,6 +327,7 @@ impl SubCommandPages {
         for board in &board_info {
             let mut env = Environment::new();
             env.add_filter("slugify", slugify::<String>);
+            env.add_filter("capitalize_first", capitalize_first);
             env.add_template("board_page", &board_page_template)
                 .unwrap();
             let tmpl = env.get_template("board_page").unwrap();
@@ -548,6 +549,14 @@ fn gen_functionalities(matrix: &schema::Matrix) -> Result<Vec<BoardSupport>, Err
         Ok(boards.map(|f| f.unwrap()).collect())
     } else {
         Err(Error::ValidationIssues { errors })
+    }
+}
+
+fn capitalize_first(value: String) -> String {
+    let mut chars = value.chars();
+    match chars.next() {
+        None => String::new(),
+        Some(first) => first.to_uppercase().collect::<String>() + chars.as_str(),
     }
 }
 

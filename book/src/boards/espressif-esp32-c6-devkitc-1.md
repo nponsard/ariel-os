@@ -51,7 +51,6 @@ dt, dd {
 }
 </style>
 
-
-[^no-generic-usb-peripheral]: no generic USB peripheral
-[^not-currently-compatible-with-threading]: not currently compatible with threading
-[^requires-partitioning-support]: requires partitioning support
+[^no-generic-usb-peripheral]: No generic USB peripheral.
+[^not-currently-compatible-with-threading]: Not currently compatible with threading.
+[^requires-partitioning-support]: Requires partitioning support.

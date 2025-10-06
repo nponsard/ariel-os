@@ -51,5 +51,4 @@ dt, dd {
 }
 </style>
 
-
-[^would-need-to-allocate-some-flash]: would need to allocate some flash
+[^would-need-to-allocate-some-flash]: Would need to allocate some flash.

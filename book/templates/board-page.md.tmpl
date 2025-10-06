@@ -33,9 +33,8 @@ dt, dd {
   display: inline;
 }
 </style>
-
 {% for functionality in board_info.functionalities %}
   {%- for comment in functionality.comments %}
-[^{{ comment|slugify }}]: {{ comment }}
+[^{{ comment|slugify }}]: {{ comment|capitalize_first }}.
   {%- endfor %}
 {%- endfor %}
