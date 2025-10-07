@@ -1,6 +1,10 @@
 //! Delegate or lend an object to another task.
 
 #![expect(unsafe_code)]
+#![expect(
+    clippy::undocumented_unsafe_blocks,
+    reason = "should be addressed eventually"
+)]
 
 use core::marker::PhantomData;
 

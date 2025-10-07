@@ -1,4 +1,8 @@
 #![expect(unsafe_code)]
+#![expect(
+    clippy::undocumented_unsafe_blocks,
+    reason = "should be addressed eventually"
+)]
 
 use ariel_os_embassy_common::gpio::input::InterruptError;
 use embassy_stm32::{

@@ -1,4 +1,8 @@
 #![allow(unsafe_code)]
+#![allow(
+    clippy::undocumented_unsafe_blocks,
+    reason = "should be addressed eventually"
+)]
 
 use ariel_os_embassy_common::ble::Config;
 
