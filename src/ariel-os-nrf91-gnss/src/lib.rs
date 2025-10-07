@@ -3,7 +3,7 @@
 pub mod config;
 mod state_atomic;
 
-use ariel_os_debug::log::warn;
+use ariel_os_debug::log::{info, warn};
 use ariel_os_sensors::{
     Category, Label, MeasurementUnit, Sensor,
     sensor::{
