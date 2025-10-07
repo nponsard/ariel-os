@@ -14,6 +14,9 @@ pub mod debug_uart;
 #[cfg(feature = "spi")]
 pub mod spi;
 
+#[cfg(feature = "uart")]
+pub mod uart;
+
 #[cfg(feature = "usb")]
 pub mod usb;
 
@@ -77,6 +80,8 @@ pub mod api {
     pub use crate::net;
     #[cfg(feature = "spi")]
     pub use crate::spi;
+    #[cfg(feature = "uart")]
+    pub use crate::uart;
     #[cfg(feature = "usb")]
     pub use crate::usb;
 }
@@ -109,8 +114,11 @@ cfg_if::cfg_if! {
         use wifi::NetworkDevice;
     } else if #[cfg(feature = "eth")] {
         use eth::NetworkDevice;
+    } else if #[cfg(feature= "ltem-nrf-modem")] {
+        use crate::hal::ltem::NetworkDevice;
     } else if #[cfg(context = "ariel-os")] {
         compile_error!("no backend for net is active");
+
     } else {
         use net::DummyDriver as NetworkDevice;
     }
@@ -153,6 +161,11 @@ pub(crate) fn init() {
 
     #[cfg(any(context = "nrf", context = "rp", context = "stm32"))]
     {
+        #[cfg(feature = "nrf91-modem")]
+        {
+            use crate::hal::interrupt::{InterruptExt, Priority};
+            hal::SWI.set_priority(Priority::P1);
+        }
         hal::EXECUTOR.start(hal::SWI);
         hal::EXECUTOR.spawner().must_spawn(init_task(p));
     }
@@ -214,6 +227,9 @@ async fn init_task(mut peripherals: hal::OptionalPeripherals) {
     #[cfg(feature = "spi")]
     hal::spi::init(&mut peripherals);
 
+    #[cfg(feature = "uart")]
+    hal::uart::init(&mut peripherals);
+
     #[cfg(feature = "hwrng")]
     hal::hwrng::construct_rng(&mut peripherals);
     // Clock startup and entropy collection may lend themselves to parallelization, provided that
@@ -245,6 +261,11 @@ async fn init_task(mut peripherals: hal::OptionalPeripherals) {
     let ble_config = ble::config();
     #[cfg(all(feature = "ble", not(context = "rp")))]
     hal::ble::driver(ble_peripherals, spawner, ble_config);
+
+    #[cfg(feature = "nrf91-modem")]
+    {
+        hal::modem::driver().await;
+    }
 
     #[cfg(feature = "usb")]
     let mut usb_builder = {
@@ -333,6 +354,9 @@ async fn init_task(mut peripherals: hal::OptionalPeripherals) {
     #[cfg(feature = "wifi-esp")]
     let device = hal::wifi::esp_wifi::init(&mut peripherals, spawner);
 
+    #[cfg(feature = "ltem-nrf-modem")]
+    let (device, control) = hal::ltem::init(spawner).await;
+
     #[cfg(feature = "net")]
     {
         use embassy_net::StackResources;
@@ -352,14 +376,18 @@ async fn init_task(mut peripherals: hal::OptionalPeripherals) {
             feature = "usb-ethernet",
             feature = "wifi-cyw43",
             feature = "wifi-esp",
-            feature = "eth"
+            feature = "eth",
+            feature = "ltem-nrf-modem"
         )))]
         // The creation of `device` is not organized in such a way that they could be put in a
         // cfg-if without larger refactoring; relying on unused variable lints to keep the
         // condition list up to date.
         let device: NetworkDevice = net::new_dummy();
 
+        #[cfg(not(feature = "ltem-nrf-modem"))]
         let config = net::config();
+        #[cfg(feature = "ltem-nrf-modem")]
+        let config = embassy_net::Config::default();
 
         let seed = net::unique_seed();
         debug!("Network stack seed: {:#x}", seed);
@@ -379,6 +407,23 @@ async fn init_task(mut peripherals: hal::OptionalPeripherals) {
             .is_err()
         {
             unreachable!();
+        }
+
+        // update the network stack with the device's configuration
+        #[cfg(feature = "ltem-nrf-modem")]
+        {
+            // TODO: user configuration of APN settings
+
+            // let apn_config = hal::ltem::Config {
+            //     apn: b"eapn1.net",
+            //     auth_prot: hal::ltem::AuthProt::Pap,
+            //     auth: Some((b"NordicSe", b"NordicSe")),
+            //     pin: None,
+            // };
+
+            spawner
+                .spawn(hal::ltem::control_task(control, None, stack))
+                .unwrap();
         }
     }
 
