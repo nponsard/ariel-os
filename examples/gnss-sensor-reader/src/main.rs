@@ -9,7 +9,7 @@ use ariel_os::{
     sensors::{REGISTRY, Reading},
     time::Timer,
 };
-use ariel_os_nrf91_gnss::Nrf91GnssExt;
+use ariel_os_nrf91_gnss::GnssExt;
 
 #[ariel_os::task(autostart)]
 async fn main() {
