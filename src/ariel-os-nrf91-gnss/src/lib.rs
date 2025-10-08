@@ -58,7 +58,7 @@ pub enum GnssValueError {
     InvalidSensor,
 }
 
-pub trait Nrf91GnssExt {
+pub trait GnssExt {
     /// Returns the time of the last fix in seconds since UNIX epoch.
     fn time_of_fix_seconds(&self) -> Result<i64, GnssValueError>;
 
@@ -70,7 +70,7 @@ pub trait Nrf91GnssExt {
     fn time_of_fix_delta_ms(&self) -> Result<i64, GnssValueError>;
 }
 
-impl Nrf91GnssExt for Samples {
+impl GnssExt for Samples {
     fn time_of_fix_seconds(&self) -> Result<i64, GnssValueError> {
         let sample = self
             .unfiltered_samples()
