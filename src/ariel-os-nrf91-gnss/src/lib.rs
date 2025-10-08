@@ -222,100 +222,116 @@ impl Nrf91Gnss {
         &'static self,
         data: &nrf_modem::nrfxlib_sys::nrf_modem_gnss_pvt_data_frame,
     ) -> Samples {
+        let fix_valid =
+            (data.flags as u32 & nrf_modem::nrfxlib_sys::NRF_MODEM_GNSS_PVT_FLAG_FIX_VALID) != 0;
+        let velocity_valid = (data.flags as u32
+            & nrf_modem::nrfxlib_sys::NRF_MODEM_GNSS_PVT_FLAG_VELOCITY_VALID)
+            != 0;
+
         let date = Date::from_calendar_date(
             data.datetime.year.into(),
-            Month::try_from(data.datetime.month).unwrap(),
+            Month::try_from(data.datetime.month).unwrap_or(Month::January),
             data.datetime.day,
-        )
-        .unwrap();
+        );
+
         let time = Time::from_hms(
             data.datetime.hour,
             data.datetime.minute,
             data.datetime.seconds,
-        )
-        .unwrap();
-        let datetime = UtcDateTime::new(date, time);
+        );
 
-        let seconds_since_epoch = (datetime - ARIEL_EPOCH).whole_seconds();
+        // Default year if no GPS connection has been established yet.
+        let seconds_since_epoch = if data.datetime.year == 1980 {
+            None
+        } else if let Ok(date) = date
+            && let Ok(time) = time
+        {
+            let datetime = UtcDateTime::new(date, time);
+
+            Some((datetime - ARIEL_EPOCH).whole_seconds())
+        } else {
+            None
+        };
+
         Samples::new_8(
             [
                 Sample::new(
                     (data.latitude * 10_000_000f64) as i32,
-                    if data.accuracy < 0.1 {
-                        Accuracy::ValueTemporarilyUnavailable
-                    } else {
+                    if fix_valid {
                         Accuracy::SymmetricalError {
                             // Accuracy in meters, max value is 25,5. Need to watch out for overflows.
                             deviation: clamp_to_u8(data.accuracy * 10f32),
                             bias: 0,
                             scaling: -1,
                         }
+                    } else {
+                        Accuracy::ValueTemporarilyUnavailable
                     },
                 ),
                 Sample::new(
                     (data.longitude * 10_000_000f64) as i32,
-                    if data.accuracy < 0.1 {
-                        Accuracy::ValueTemporarilyUnavailable
-                    } else {
+                    if fix_valid {
                         Accuracy::SymmetricalError {
                             deviation: clamp_to_u8(data.accuracy * 10f32),
                             bias: 0,
                             scaling: -1,
                         }
+                    } else {
+                        Accuracy::ValueTemporarilyUnavailable
                     },
                 ),
                 Sample::new(
                     (data.altitude * 100f32) as i32,
-                    if data.accuracy < 0.1 {
-                        Accuracy::ValueTemporarilyUnavailable
-                    } else {
+                    if fix_valid {
                         Accuracy::SymmetricalError {
                             deviation: clamp_to_u8(data.altitude_accuracy * 10f32),
                             bias: 0,
                             scaling: -1,
                         }
+                    } else {
+                        Accuracy::ValueTemporarilyUnavailable
                     },
                 ),
                 Sample::new(
                     (data.speed * 1_000_000f32) as i32,
-                    if data.accuracy < 0.1 {
-                        Accuracy::ValueTemporarilyUnavailable
-                    } else {
+                    if velocity_valid {
                         Accuracy::SymmetricalError {
                             deviation: clamp_to_u8(data.speed_accuracy * 10f32),
                             bias: 0,
                             scaling: -1,
                         }
+                    } else {
+                        Accuracy::ValueTemporarilyUnavailable
                     },
                 ),
                 Sample::new(
                     (data.vertical_speed * 1_000_000f32) as i32,
-                    if data.accuracy < 0.1 {
-                        Accuracy::ValueTemporarilyUnavailable
-                    } else {
+                    if velocity_valid {
                         Accuracy::SymmetricalError {
                             deviation: clamp_to_u8(data.vertical_speed_accuracy * 10f32),
                             bias: 0,
                             scaling: -1,
                         }
+                    } else {
+                        Accuracy::ValueTemporarilyUnavailable
                     },
                 ),
                 Sample::new(
                     (data.heading * 1_000_000f32) as i32,
-                    if data.accuracy < 0.1 {
-                        Accuracy::ValueTemporarilyUnavailable
-                    } else {
+                    if velocity_valid {
                         Accuracy::SymmetricalError {
                             deviation: clamp_to_u8(data.heading_accuracy),
                             bias: 0,
                             scaling: 0,
                         }
+                    } else {
+                        Accuracy::ValueTemporarilyUnavailable
                     },
                 ),
                 Sample::new(
-                    seconds_since_epoch as i32,
+                    seconds_since_epoch.unwrap_or(0) as i32,
                     // Default year if no GPS connection has been established yet.
-                    if data.datetime.year == 1980 {
+                    if seconds_since_epoch.is_none() {
                         Accuracy::ValueTemporarilyUnavailable
                     } else {
                         Accuracy::Unknown
@@ -324,7 +340,7 @@ impl Nrf91Gnss {
                 Sample::new(
                     data.datetime.ms as i32,
                     // Default year if no GPS connection has been established yet.
-                    if data.datetime.year == 1980 {
+                    if seconds_since_epoch.is_none() {
                         Accuracy::ValueTemporarilyUnavailable
                     } else {
                         Accuracy::Unknown
