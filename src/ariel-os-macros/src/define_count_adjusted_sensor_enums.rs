@@ -110,10 +110,10 @@ pub fn define_count_adjusted_sensor_enums(_item: TokenStream) -> TokenStream {
         }
 
         impl<I: Iterator> ExactSizeIterator for SizedIterator<I> {}
-        impl<I: Iterator + core::iter::FusedIterator> core::iter::FusedIterator for SizedIterator<I> {}
+        impl<I: core::iter::FusedIterator> core::iter::FusedIterator for SizedIterator<I> {}
 
         /// Return all samples of a sensor, without filtering out opaque channels. For driver implementors only.
-        pub trait UnfilteredSamples {
+        pub trait PrivateReading {
             /// Return all samples of a sensor, without filtering out opaque channels. For driver implementors only.
             fn unfiltered_samples(&self) -> impl ExactSizeIterator<Item = Sample> + core::iter::FusedIterator;
         }
@@ -151,7 +151,7 @@ pub fn define_count_adjusted_sensor_enums(_item: TokenStream) -> TokenStream {
             }
         }
 
-        impl UnfilteredSamples for Samples {
+        impl PrivateReading for Samples {
             fn unfiltered_samples(&self) -> impl ExactSizeIterator<Item = Sample> + core::iter::FusedIterator {
                 match self.samples {
                     #(#samples_iter),*
@@ -170,7 +170,7 @@ pub fn define_count_adjusted_sensor_enums(_item: TokenStream) -> TokenStream {
                 let size = self.sensor().reading_channels().iter().len();
                 let iter = self.unfiltered_samples()
                     .enumerate()
-                    .filter(move |(i,_sample)| {
+                    .filter(move |(i, _sample)| {
                         if let Some(channel) = self.sensor().reading_channels().iter_raw().nth(*i){
                             channel.label() != Label::Opaque
                         } else {
