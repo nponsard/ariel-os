@@ -112,12 +112,6 @@ pub fn define_count_adjusted_sensor_enums(_item: TokenStream) -> TokenStream {
         impl<I: Iterator> ExactSizeIterator for SizedIterator<I> {}
         impl<I: core::iter::FusedIterator> core::iter::FusedIterator for SizedIterator<I> {}
 
-        /// Return all samples of a sensor, without filtering out opaque channels. For driver implementors only.
-        pub trait PrivateReading {
-            /// Return all samples of a sensor, without filtering out opaque channels. For driver implementors only.
-            fn unfiltered_samples(&self) -> impl ExactSizeIterator<Item = Sample> + core::iter::FusedIterator;
-        }
-
         /// Samples returned by a sensor driver.
         ///
         /// This type implements [`Reading`] to iterate over the samples.
