@@ -170,14 +170,17 @@ pub fn define_count_adjusted_sensor_enums(_item: TokenStream) -> TokenStream {
                 let size = self.sensor().reading_channels().iter().len();
                 let iter = self.unfiltered_samples()
                     .enumerate()
-                    .filter(move |(i, _sample)| {
-                        if let Some(channel) = self.sensor().reading_channels().iter_raw().nth(*i){
-                            channel.label() != Label::Opaque
+                    .filter_map(move |(i, sample)| {
+                        if let Some(channel) = self.sensor().reading_channels().iter_raw().nth(i) {
+                            if channel.label() == Label::Opaque {
+                                None
+                            } else {
+                                Some(sample)
+                            }
                         } else {
-                            false
+                            None
                         }
-                    })
-                    .map(|(_,sample)| sample);
+                    });
                 SizedIterator::new(iter, size)
             }
         }
