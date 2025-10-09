@@ -134,6 +134,8 @@ chips:
       logging: supported
       storage: supported
       wifi: not_available
+      user_usb: not_available
+      ethernet_over_usb: not_available
 
   nrf9160:
     name: nRF9160
@@ -149,6 +151,8 @@ chips:
       logging: supported
       storage: supported
       wifi: not_available
+      user_usb: not_available
+      ethernet_over_usb: not_available
 
   rp2040:
     name: RP2040
@@ -438,8 +442,6 @@ boards:
     chip: nrf9151
     tier: "2"
     support:
-      user_usb: not_available
-      ethernet_over_usb: not_available
       wifi:
         status: not_currently_supported
         comments:
@@ -476,8 +478,6 @@ boards:
     chip: nrf9160
     tier: "2"
     support:
-      user_usb: not_available
-      ethernet_over_usb: not_available
 
   rpi-pico:
     name: Raspberry Pi Pico
