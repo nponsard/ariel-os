@@ -7,15 +7,10 @@ builders:
   parent: nrf51822-xxaa
   provides:
   - has_buttons
-  - has_leds
 - name: bbc-microbit-v2
   parent: nrf52833
   provides:
   - has_buttons
-  - has_leds
-  env:
-    RUSTFLAGS:
-    - --cfg=board_init
 - name: dfrobot-firebeetle2-esp32-c6
   parent: esp32c6
   provides:
