@@ -27,4 +27,3 @@ boards:
     buttons:
       button0:
         pin: PC13
-        # active: high

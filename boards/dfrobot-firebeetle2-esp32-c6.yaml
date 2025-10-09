@@ -4,12 +4,9 @@ boards:
     leds:
       led0:
         pin: GPIO15
-        # color: green
-        # active: high
     buttons:
       button0:
         pin: GPIO9
-        # active: high
         aliases:
           - D9
           - BOOT

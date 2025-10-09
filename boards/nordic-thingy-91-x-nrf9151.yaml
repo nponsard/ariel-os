@@ -4,9 +4,6 @@ boards:
     leds:
       led0:
         pin: P0_29
-        # color: green
-        # active: high
     buttons:
       button0:
         pin: P0_26
-        # active: high

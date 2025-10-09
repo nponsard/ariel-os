@@ -9,8 +9,6 @@ boards:
         aliases:
           - LD1
         color: red
-        # active: high
     buttons:
       button0:
         pin: PB13
-        # active: high

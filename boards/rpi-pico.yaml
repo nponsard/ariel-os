@@ -7,4 +7,3 @@ boards:
       led0:
         pin: PIN_25
         color: green
-        # active: high

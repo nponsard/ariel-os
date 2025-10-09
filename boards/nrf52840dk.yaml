@@ -1,4 +1,3 @@
-description: test sbd file
 boards:
   nrf52840dk:
     chip: nrf52840

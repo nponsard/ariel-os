@@ -9,34 +9,28 @@ boards:
       led0:
         pin: PB5
         color: blue
-        # active: high
         aliases:
           - LED1
       led1:
         pin: PB0
         color: green
-        # active: high
         aliases:
           - LED2
       led2:
         pin: PB1
         color: red
-        # active: high
         aliases:
           - LED3
     buttons:
       button0:
         pin: PC4
-        # active: high
         aliases:
           - SW1
       button1:
         pin: PD0
-        # active: high
         aliases:
           - SW2
       button2:
         pin: PD1
-        # active: high
         aliases:
           - SW3

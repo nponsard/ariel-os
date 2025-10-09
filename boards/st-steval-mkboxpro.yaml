@@ -17,36 +17,30 @@ boards:
           - LED1
           - D5
         color: green
-        # active: high
       led1:
         pin: PH11
         aliases:
           - LED2
           - D6
         color: red
-        # active: high
       led2:
         pin: PH12
         aliases:
           - LED3
           - D7
         color: orange
-        # active: high
       led3:
         pin: PF9
         aliases:
           - USB_enum_LED
           - D10
         color: blue
-        # active: high
     buttons:
       button0:
         pin: PC13
-        # active: high
         aliases:
           - BT1
       button1:
         pin: PE0
-        # active: high
         aliases:
           - BT2

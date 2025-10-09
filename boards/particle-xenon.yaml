@@ -1,4 +1,3 @@
-description: test sbd file
 boards:
   particle-xenon:
     chip: nrf52840

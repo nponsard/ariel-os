@@ -6,8 +6,6 @@ boards:
         # note: this is the RGB LED red channel
         color: red
         pin: P0_23
-        # active: high
     buttons:
       button0:
         pin: P1_00
-        # active: low

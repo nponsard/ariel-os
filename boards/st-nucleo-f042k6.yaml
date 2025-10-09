@@ -6,7 +6,3 @@ boards:
     leds:
       led0:
         pin: PA5
-        # color: green
-        # active: high
-#   buttons:
-# Note: the board only has one physical button which is hardwired to NRST

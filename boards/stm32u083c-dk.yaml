@@ -8,9 +8,6 @@ boards:
     leds:
       led0:
         pin: PA5
-        # color: green
-        # active: high
     buttons:
       button0:
         pin: PC2
-        # active: high
