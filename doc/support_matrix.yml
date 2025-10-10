@@ -86,12 +86,14 @@ chips:
     support:
       gpio: supported
       debug_output: supported
+      ethernet_over_usb: needs_testing
       hwrng: supported
       i2c_controller: supported
       spi_main: supported
       logging: supported
       storage: supported
       wifi: not_available
+      user_usb: needs_testing
 
   nrf52840:
     name: nRF52840
@@ -274,6 +276,7 @@ chips:
     support:
       gpio: supported
       debug_output: supported
+      ethernet_over_usb: needs_testing
       hwrng: not_available
       i2c_controller: needs_testing
       spi_main: needs_testing
@@ -283,12 +286,14 @@ chips:
         comments:
           - unsupported heterogeneous flash organization
       wifi: not_available
+      user_usb: needs_testing
 
   stm32f411re:
     name: STM32F411RE
     support:
       gpio: supported
       debug_output: supported
+      ethernet_over_usb: needs_testing
       hwrng: not_available
       i2c_controller: supported
       spi_main: supported
@@ -298,12 +303,19 @@ chips:
         comments:
           - unsupported heterogeneous flash organization
       wifi: not_available
+      user_usb: needs_testing
 
   stm32h755zi:
     name: STM32H755ZI
     support:
       gpio: supported
       debug_output: supported
+      ethernet_over_usb:
+        status: not_currently_supported
+        comments:
+          - USB does not enumerate
+          - "See also: https://github.com/embassy-rs/embassy/issues/2376"
+          - "Workaround in: https://github.com/ariel-os/ariel-os/pull/1126"
       hwrng: supported
       i2c_controller: supported
       spi_main: supported
@@ -319,6 +331,12 @@ chips:
     support:
       gpio: supported
       debug_output: supported
+      ethernet_over_usb:
+        status: not_currently_supported
+        comments:
+          - USB does not enumerate
+          - "See also: https://github.com/embassy-rs/embassy/issues/2376"
+          - "Workaround in: https://github.com/ariel-os/ariel-os/pull/1126"
       hwrng: supported
       i2c_controller: needs_testing
       spi_main: needs_testing
@@ -334,6 +352,7 @@ chips:
     support:
       gpio: supported
       debug_output: supported
+      ethernet_over_usb: needs_testing
       hwrng: supported
       i2c_controller: needs_testing
       spi_main: needs_testing
@@ -343,6 +362,7 @@ chips:
         comments:
           - removing items not supported
       wifi: not_available
+      user_usb: supported
 
   stm32u083mc:
     name: STM32U083MC
@@ -364,6 +384,12 @@ chips:
     support:
       gpio: supported
       debug_output: supported
+      ethernet_over_usb:
+        status: not_currently_supported
+        comments:
+          - USB does not enumerate
+          - "See also: https://github.com/embassy-rs/embassy/issues/2376"
+          - "Workaround in: https://github.com/ariel-os/ariel-os/pull/1126"
       hwrng: supported
       i2c_controller: supported
       spi_main: supported
