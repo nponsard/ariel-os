@@ -450,6 +450,30 @@ contexts:
   - name: esp32-s3-wroom-1
     parent: esp32s3
 
+  - name: native-chip
+    # This intermediary context is necessary so we can generate the native "board"
+    # using sbd.
+    parent: ariel-os
+    selects:
+      - infini-core
+      - ?debug-console
+    provides:
+      - has_device_identity
+      - has_hwrng
+      - sw/benchmark
+    disables:
+      - semihosting
+      - defmt
+      - probe-rs
+    env:
+      RUSTC_TARGET: x86_64-unknown-linux-gnu
+      RUSTFLAGS:
+        # This is needed to keep the linkme sections on native also in combination
+        # with gc-sections.
+        - -Clink-arg=-Wl,-znostart-stop-gc
+      CARGO_TARGET_PREFIX: CARGO_TARGET_X86_64_UNKNOWN_LINUX_GNU
+      CARGO_RUNNER: '"sh -c"'
+
   - name: stm32
     help: STM32 support (based on embassy-stm32)
     parent: ariel-os
@@ -1750,29 +1774,6 @@ builders:
 
     disables:
       - periph_rtt
-
-  - name: native
-    parent: ariel-os
-    selects:
-      - infini-core
-      - ?debug-console
-    provides:
-      - has_device_identity
-      - has_hwrng
-      - sw/benchmark
-    disables:
-      - semihosting
-      - defmt
-      - probe-rs
-    env:
-      RUSTC_TARGET: x86_64-unknown-linux-gnu
-      RUSTFLAGS:
-        # This is needed to keep the linkme sections on native also in combination
-        # with gc-sections.
-        - -Clink-arg=-Wl,-znostart-stop-gc
-      CARGO_TARGET_PREFIX: CARGO_TARGET_X86_64_UNKNOWN_LINUX_GNU
-      CARGO_RUNNER: '"sh -c"'
-
 apps:
   # define a dummy host application so the host tasks work
   - name: host

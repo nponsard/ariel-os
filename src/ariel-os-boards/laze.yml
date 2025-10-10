@@ -36,6 +36,8 @@ builders:
   provides:
   - has_buttons
   - has_leds
+- name: native
+  parent: native-chip
 - name: nordic-thingy-91-x-nrf9151
   parent: nrf9151
   provides:
