@@ -14,7 +14,7 @@ extern crate tinyrlibc as _;
 use ariel_os_debug::log::debug;
 
 #[cfg(feature = "executor-interrupt")]
-use cortex_m::interrupt::InterruptNumber;
+use cortex_m::interrupt::InterruptNumber as _;
 
 #[doc(hidden)]
 pub struct InterruptHandler {

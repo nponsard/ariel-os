@@ -156,7 +156,7 @@ pub(crate) fn init() {
     {
         #[cfg(feature = "nrf91-modem")]
         {
-            use crate::hal::interrupt::{InterruptExt, Priority};
+            use crate::hal::interrupt::{InterruptExt as _, Priority};
             hal::SWI.set_priority(Priority::P1);
         }
         hal::EXECUTOR.start(hal::SWI);
