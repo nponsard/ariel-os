@@ -24,7 +24,8 @@ cfg_if::cfg_if! {
     include!("nrf9160dk-nrf9160.rs"); } else if #[cfg(context = "particle-xenon")] {
     include!("particle-xenon.rs"); } else if #[cfg(context = "rpi-pico-w")] {
     include!("rpi-pico-w.rs"); } else if #[cfg(context = "rpi-pico")] {
-    include!("rpi-pico.rs"); } else if #[cfg(context = "rpi-pico2")] {
+    include!("rpi-pico.rs"); } else if #[cfg(context = "rpi-pico2-w")] {
+    include!("rpi-pico2-w.rs"); } else if #[cfg(context = "rpi-pico2")] {
     include!("rpi-pico2.rs"); } else if #[cfg(context = "seeedstudio-lora-e5-mini")] {
     include!("seeedstudio-lora-e5-mini.rs"); } else if #[cfg(context =
     "st-b-l475e-iot01a")] { include!("st-b-l475e-iot01a.rs"); } else if #[cfg(context =

@@ -1,5 +1,5 @@
 boards:
-  rpi-pico2:
+  rpi-pico2-w:
     chip: rp235xa
     flags:
       - has_ble_cyw43
