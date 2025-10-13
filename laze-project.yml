@@ -413,9 +413,6 @@ contexts:
       PROBE_RS_PROTOCOL: jtag
       CARGO_TARGET_PREFIX: CARGO_TARGET_RISCV32IMC_UNKNOWN_NONE_ELF
 
-  - name: esp-c3-01m
-    parent: esp32c3
-
   - name: esp32c6
     parent: esp
     selects:
