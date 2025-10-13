@@ -30,7 +30,6 @@ mod getrandom;
 use core::{cell::RefCell, marker::PhantomData};
 
 use embassy_sync::once_lock::OnceLock;
-#[cfg(feature = "csprng")]
 use rand_core::{RngCore, SeedableRng as _};
 
 /// A global RNG.
