@@ -5,6 +5,11 @@
 //! custom network configuration.
 
 #![deny(missing_docs)]
+#![allow(unsafe_code)]
+#![allow(
+    clippy::undocumented_unsafe_blocks,
+    reason = "should be addressed eventually"
+)]
 
 use embassy_net::{Runner, Stack};
 use embassy_sync::once_lock::OnceLock;
