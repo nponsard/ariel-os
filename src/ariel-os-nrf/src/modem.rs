@@ -1,5 +1,5 @@
 use embassy_nrf::{
-    bind_interrupts,
+    bind_interrupts, interrupt,
     interrupt::{Interrupt, typelevel},
     pac,
     pac::{
@@ -16,20 +16,11 @@ use ariel_os_debug::log::debug;
 #[cfg(feature = "executor-interrupt")]
 use cortex_m::interrupt::InterruptNumber as _;
 
-#[doc(hidden)]
-pub struct InterruptHandler {
-    _private: (),
+#[interrupt]
+#[expect(non_snake_case)]
+fn IPC() {
+    nrf_modem::ipc_irq_handler();
 }
-
-impl typelevel::Handler<typelevel::IPC> for InterruptHandler {
-    unsafe fn on_interrupt() {
-        nrf_modem::ipc_irq_handler();
-    }
-}
-
-bind_interrupts!(struct Irqs{
-    IPC => InterruptHandler;
-});
 
 unsafe extern "C" {
     static _MODEM_start: u8;
@@ -47,48 +38,34 @@ fn uicr_hfxo_workaround() {
         return;
     }
 
-    let irq_disabled = cortex_m::register::primask::read().is_inactive();
-    if !irq_disabled {
-        cortex_m::interrupt::disable();
-    }
-    cortex_m::asm::dsb();
-    while !NVMC_S.ready().read().ready() {}
+    cortex_m::interrupt::free(|_| {
+        cortex_m::asm::dsb();
+        while !NVMC_S.ready().read().ready() {}
 
-    NVMC_S
-        .config()
-        .write(|w| w.set_wen(pac::nvmc::vals::Wen::WEN));
-    while !NVMC_S.ready().read().ready() {}
+        NVMC_S
+            .config()
+            .write(|w| w.set_wen(pac::nvmc::vals::Wen::WEN));
+        while !NVMC_S.ready().read().ready() {}
 
-    if hfxosrc == 1 {
         UICR_S.hfxosrc().write(|w| w.set_hfxosrc(Hfxosrc::TCXO));
         cortex_m::asm::dsb();
         while !NVMC_S.ready().read().ready() {}
-    }
 
-    if hfxocnt == 255 {
         UICR_S.hfxocnt().write(|w| w.set_hfxocnt(Hfxocnt(32)));
         cortex_m::asm::dsb();
         while !NVMC_S.ready().read().ready() {}
-    }
 
-    NVMC_S
-        .config()
-        .write(|w| w.set_wen(pac::nvmc::vals::Wen::REN));
-    while !NVMC_S.ready().read().ready() {}
-
-    if !irq_disabled {
-        unsafe {
-            cortex_m::interrupt::enable();
-        }
-    }
+        NVMC_S
+            .config()
+            .write(|w| w.set_wen(pac::nvmc::vals::Wen::REN));
+        while !NVMC_S.ready().read().ready() {}
+    });
 
     cortex_m::peripheral::SCB::sys_reset();
 }
 
 #[doc(hidden)]
 pub async fn driver() {
-    use cortex_m::peripheral::NVIC;
-
     uicr_hfxo_workaround();
 
     // from https://github.com/diondokter/nrf-modem/issues/31
@@ -96,10 +73,12 @@ pub async fn driver() {
     fn configure_modem_non_secure() -> u32 {
         // The RAM memory space is divided into 32 regions of 8 KiB.
         // Set IPC RAM to nonsecure
-        const SPU_REGION_SIZE: u32 = 0x2000; // 8kb
-        const RAM_START: u32 = 0x2000_0000; // 256kb
+        const SPU_REGION_SIZE: u32 = 0x2000; // 8 KiB
+        const RAM_START: u32 = 0x2000_0000; // 256 KiB of RAM. This is the start address of the physical RAM. Symbol is defined in ariel-os-rt.
+        // SAFETY: the linker must link this symbol with a valid address in RAM region.
         let ipc_start: u32 = unsafe { &_MODEM_start as *const u8 } as u32;
         let ipc_reg_offset = (ipc_start - RAM_START) / SPU_REGION_SIZE;
+        // SAFETY: the linker must link this symbol with a valid length that does not exceed the nrf91 available RAM. Symbol is defined in ariel-os-rt.
         let ipc_reg_count = (unsafe { &_MODEM_length as *const u8 } as u32) / SPU_REGION_SIZE;
         let spu = embassy_nrf::pac::SPU;
         let range = ipc_reg_offset..(ipc_reg_offset + ipc_reg_count);
@@ -109,7 +88,7 @@ pub async fn driver() {
         );
         for i in range {
             spu.ramregion(i as usize).perm().write(|w| {
-                w.set_execute(true);
+                w.set_execute(false);
                 w.set_write(true);
                 w.set_read(true);
                 w.set_secattr(false);
@@ -117,33 +96,38 @@ pub async fn driver() {
             })
         }
 
-        // Set regulator access registers to nonsecure
-        spu.periphid(4).perm().write(|w| w.set_secattr(false));
-        // Set clock and power access registers to nonsecure
-        spu.periphid(5).perm().write(|w| w.set_secattr(false));
-        // Set IPC access register to nonsecure
-        spu.periphid(42).perm().write(|w| w.set_secattr(false));
+        // Set needed peripherals to nonsecure
+
+        // Section 4.2.2 of the nRF9160 and nRF9151 Product Specification
+        const REGULATORS_PERIPHERAL_ID: usize = 4;
+        const CLOCK_POWER_PERIPHERAL_ID: usize = 5;
+        const IPC_PERIPHERAL_ID: usize = 42;
+
+        spu.periphid(REGULATORS_PERIPHERAL_ID)
+            .perm()
+            .write(|w| w.set_secattr(false));
+        spu.periphid(CLOCK_POWER_PERIPHERAL_ID)
+            .perm()
+            .write(|w| w.set_secattr(false));
+        spu.periphid(IPC_PERIPHERAL_ID)
+            .perm()
+            .write(|w| w.set_secattr(false));
         ipc_start
     }
     let ipc_start = configure_modem_non_secure();
 
-    unsafe {
-        NVIC::unmask(Interrupt::IPC);
-    }
-
     let system_mode = SystemMode {
         lte_support: true,
         lte_psm_support: true,
-        nbiot_support: true,
+        nbiot_support: false,
         gnss_support: true,
         preference: ConnectionPreference::None,
     };
 
-    let memory_layout = MemoryLayout {
+    /// Set the base address for the IPC shared memory, use default sizes.
+    let mut memory_layout = MemoryLayout {
         base_address: ipc_start,
-        tx_area_size: 0x2000,
-        rx_area_size: 0x2000,
-        trace_area_size: 0x1000,
+        ..Default::default()
     };
 
     #[cfg(feature = "executor-interrupt")]

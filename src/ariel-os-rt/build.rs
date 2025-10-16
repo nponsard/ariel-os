@@ -1,6 +1,9 @@
 use std::env;
 use std::path::PathBuf;
 
+// 32 KiB recommended by [nrf-modem](https://github.com/diondokter/nrf-modem?tab=readme-ov-file#memory)
+const NRF91_MODEM_IPC_KB: u64 = 32;
+
 fn main() {
     if !context("ariel-os") {
         // Platform-independent tooling.
@@ -75,10 +78,14 @@ fn write_memoryx() {
         (512, 1024)
     } else if context("nrf5340-net") {
         (64, 256)
-    } else if cfg!(feature = "nrf91-modem") {
-        (192, 1024)
     } else if context_any(&["nrf9151", "nrf9160"]).is_some() {
-        (256, 1024)
+        let ram = 256;
+        let flash = 1024;
+        if cfg!(feature = "nrf91-modem") {
+            (ram - NRF91_MODEM_IPC_KB, flash)
+        } else {
+            (ram, flash)
+        }
     } else {
         panic!("please set the MCU laze context");
     };
@@ -86,7 +93,7 @@ fn write_memoryx() {
     let (pagesize, ram_base, flash_base) = if context("nrf5340-net") {
         (2048, 0x2100_0000, 0x0100_0000)
     } else if cfg!(feature = "nrf91-modem") {
-        (4096, 0x2001_0000, 0)
+        (4096, 0x2000_0000 + NRF91_MODEM_IPC_KB * 1024, 0)
     } else {
         (4096, 0x2000_0000, 0)
     };
@@ -101,7 +108,11 @@ fn write_memoryx() {
         );
 
     #[cfg(feature = "nrf91-modem")]
-    let memory = memory.add_section(MemorySection::new("MODEM", 0x2000_0000, 64 * 1024));
+    let memory = memory.add_section(MemorySection::new(
+        "MODEM",
+        0x2000_0000,
+        NRF91_MODEM_IPC_KB * 1024,
+    ));
 
     memory.to_cargo_outdir("memory.x").expect("wrote memory.x");
 }
