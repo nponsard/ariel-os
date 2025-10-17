@@ -4,7 +4,7 @@
 /// One single type must be defined so that it can be used in the Future returned by sensor
 /// drivers, which must be the same for every sensor driver so it can be part of the `Sensor`
 /// trait.
-#[allow(clippy::too_many_lines)]
+#[expect(clippy::too_many_lines)]
 #[proc_macro]
 pub fn define_count_adjusted_sensor_enums(_item: TokenStream) -> TokenStream {
     use quote::quote;
@@ -20,12 +20,12 @@ pub fn define_count_adjusted_sensor_enums(_item: TokenStream) -> TokenStream {
     });
     let samples_new_funcs = (1..=count).map(|i| {
         let variant = variant_name(i);
-        let func_name = new_variant_func_name(i);
+        let func_name = from_variant_func_name(i);
         quote! {
             #[doc = concat!("Creates a new [`Samples`] containing ", #i, " sample(s).")]
-            pub fn #func_name(sensor: &'static dyn Sensor, value: [Sample; #i]) -> Self {
+            pub fn #func_name(sensor: &'static dyn Sensor, samples: [Sample; #i]) -> Self {
                     Self {
-                    samples: InnerSamples::#variant(value),
+                    samples: InnerSamples::#variant(samples),
                     sensor,
                 }
             }
@@ -189,8 +189,8 @@ mod define_count_adjusted_enum {
         quote::format_ident!("V{index}")
     }
 
-    pub fn new_variant_func_name(index: usize) -> syn::Ident {
-        quote::format_ident!("new_{index}")
+    pub fn from_variant_func_name(index: usize) -> syn::Ident {
+        quote::format_ident!("from_{index}")
     }
 
     pub fn get_allocation_size() -> usize {
