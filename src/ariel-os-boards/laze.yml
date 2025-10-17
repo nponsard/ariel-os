@@ -184,7 +184,7 @@ builders:
   - has_usb_device_port
   env:
     CARGO_ENV:
-    - CONFIG_SWI=LPUART1
+    - CONFIG_SWI=USART1
 - name: st-nucleo-wba55
   parent: stm32wba55cg
   provides:
@@ -214,4 +214,4 @@ builders:
   - has_usb_device_port
   env:
     CARGO_ENV:
-    - CONFIG_SWI=USART2_LPUART2
+    - CONFIG_SWI=USART4_LPUART3
