@@ -1,7 +1,7 @@
+#![expect(unsafe_code)]
+
 use embassy_nrf::{
-    bind_interrupts, interrupt,
-    interrupt::{Interrupt, typelevel},
-    pac,
+    interrupt, pac,
     pac::{
         NVMC_S, UICR_S,
         uicr::vals::{Hfxocnt, Hfxosrc},
@@ -17,7 +17,6 @@ use ariel_os_debug::log::debug;
 use cortex_m::interrupt::InterruptNumber as _;
 
 #[interrupt]
-#[expect(non_snake_case)]
 fn IPC() {
     nrf_modem::ipc_irq_handler();
 }
@@ -78,8 +77,12 @@ pub async fn driver() {
         // SAFETY: the linker must link this symbol with a valid address in RAM region.
         let ipc_start: u32 = unsafe { &_MODEM_start as *const u8 } as u32;
         let ipc_reg_offset = (ipc_start - RAM_START) / SPU_REGION_SIZE;
-        // SAFETY: the linker must link this symbol with a valid length that does not exceed the nrf91 available RAM. Symbol is defined in ariel-os-rt.
-        let ipc_reg_count = (unsafe { &_MODEM_length as *const u8 } as u32) / SPU_REGION_SIZE;
+        let ipc_reg_count = ((
+            // SAFETY:
+            // the linker must link this symbol with a valid length that does not exceed the nrf91 available RAM. Symbol is defined in ariel-os-rt.
+            unsafe { &_MODEM_length as *const u8 }
+        ) as u32)
+            / SPU_REGION_SIZE;
         let spu = embassy_nrf::pac::SPU;
         let range = ipc_reg_offset..(ipc_reg_offset + ipc_reg_count);
         debug!(
@@ -124,8 +127,8 @@ pub async fn driver() {
         preference: ConnectionPreference::None,
     };
 
-    /// Set the base address for the IPC shared memory, use default sizes.
-    let mut memory_layout = MemoryLayout {
+    // Set the base address for the IPC shared memory, use default sizes.
+    let memory_layout = MemoryLayout {
         base_address: ipc_start,
         ..Default::default()
     };
