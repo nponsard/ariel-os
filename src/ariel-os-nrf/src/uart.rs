@@ -299,6 +299,7 @@ macro_rules! define_uart_drivers {
         }
 
         impl_async_uart_for_driver_enum!(Uart, $( $peripheral ),*);
+        impl_async_uart_bufread_for_driver_enum!(Uart, $( $peripheral ),*);
     }
 }
 
