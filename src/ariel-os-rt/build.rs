@@ -2,7 +2,7 @@ use std::env;
 use std::path::PathBuf;
 
 // 32 KiB recommended by [nrf-modem](https://github.com/diondokter/nrf-modem?tab=readme-ov-file#memory)
-#[allow(unused_variables, reason = "only used when the feature is enabled")]
+#[allow(dead_code, reason = "only used when the feature is enabled")]
 const NRF91_MODEM_IPC_KB: u64 = 32;
 
 fn main() {

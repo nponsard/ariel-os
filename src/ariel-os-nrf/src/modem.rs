@@ -77,12 +77,8 @@ pub async fn driver() {
         // SAFETY: the linker must link this symbol with a valid address in RAM region.
         let ipc_start: u32 = unsafe { &_MODEM_start as *const u8 } as u32;
         let ipc_reg_offset = (ipc_start - RAM_START) / SPU_REGION_SIZE;
-        let ipc_reg_count = ((
-            // SAFETY:
-            // the linker must link this symbol with a valid length that does not exceed the nrf91 available RAM. Symbol is defined in ariel-os-rt.
-            unsafe { &_MODEM_length as *const u8 }
-        ) as u32)
-            / SPU_REGION_SIZE;
+        // SAFETY: the linker must link this symbol with a valid length that does not exceed the nrf91 available RAM. Symbol is defined in ariel-os-rt.
+        let ipc_reg_count = (unsafe { &_MODEM_length as *const u8 } as u32) / SPU_REGION_SIZE;
         let spu = embassy_nrf::pac::SPU;
         let range = ipc_reg_offset..(ipc_reg_offset + ipc_reg_count);
         debug!(
