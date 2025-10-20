@@ -305,17 +305,17 @@ macro_rules! define_uart_drivers {
 // Define a driver per peripheral
 #[cfg(context = "nrf52832")]
 define_uart_drivers!(
-   UARTE0 => UARTE0 + TIMER4 + PPI_CH18 + PPI_CH19 + PPI_GROUP5,
+   UARTE0 => UARTE0 + TIMER4 + PPI_CH14 + PPI_CH15 + PPI_GROUP5,
 );
 #[cfg(context = "nrf52833")]
 define_uart_drivers!(
-   UARTE0 => UARTE0 + TIMER3 + PPI_CH16 + PPI_CH17 + PPI_GROUP4,
-   UARTE1 => UARTE1 + TIMER4 + PPI_CH18 + PPI_CH19 + PPI_GROUP5,
+   UARTE0 => UARTE0 + TIMER3 + PPI_CH13 + PPI_CH14 + PPI_GROUP4,
+   UARTE1 => UARTE1 + TIMER4 + PPI_CH15 + PPI_CH16 + PPI_GROUP5,
 );
 #[cfg(context = "nrf52840")]
 define_uart_drivers!(
-   UARTE0 => UARTE0 + TIMER3 + PPI_CH16 + PPI_CH17 + PPI_GROUP4,
-   UARTE1 => UARTE1 + TIMER4 + PPI_CH18 + PPI_CH19 + PPI_GROUP5,
+   UARTE0 => UARTE0 + TIMER3 + PPI_CH13 + PPI_CH14 + PPI_GROUP4,
+   UARTE1 => UARTE1 + TIMER4 + PPI_CH15 + PPI_CH16 + PPI_GROUP5,
 );
 #[cfg(context = "nrf5340")]
 define_uart_drivers!(
@@ -333,32 +333,32 @@ pub fn init(peripherals: &mut crate::OptionalPeripherals) {
         if #[cfg(context = "nrf52832")] {
             let _ = peripherals.UARTE0.take().unwrap();
             let _ = peripherals.TIMER4.take().unwrap();
-            let _ = peripherals.PPI_CH18.take().unwrap();
-            let _ = peripherals.PPI_CH19.take().unwrap();
+            let _ = peripherals.PPI_CH14.take().unwrap();
+            let _ = peripherals.PPI_CH15.take().unwrap();
             let _ = peripherals.PPI_GROUP5.take().unwrap();
         } else if #[cfg(context = "nrf52833")] {
             let _ = peripherals.UARTE0.take().unwrap();
             let _ = peripherals.TIMER3.take().unwrap();
-            let _ = peripherals.PPI_CH16.take().unwrap();
-            let _ = peripherals.PPI_CH17.take().unwrap();
+            let _ = peripherals.PPI_CH13.take().unwrap();
+            let _ = peripherals.PPI_CH14.take().unwrap();
             let _ = peripherals.PPI_GROUP4.take().unwrap();
 
             let _ = peripherals.UARTE1.take().unwrap();
             let _ = peripherals.TIMER4.take().unwrap();
-            let _ = peripherals.PPI_CH18.take().unwrap();
-            let _ = peripherals.PPI_CH19.take().unwrap();
+            let _ = peripherals.PPI_CH15.take().unwrap();
+            let _ = peripherals.PPI_CH16.take().unwrap();
             let _ = peripherals.PPI_GROUP5.take().unwrap();
         } else if #[cfg(context = "nrf52840")] {
             let _ = peripherals.UARTE0.take().unwrap();
             let _ = peripherals.TIMER3.take().unwrap();
-            let _ = peripherals.PPI_CH16.take().unwrap();
-            let _ = peripherals.PPI_CH17.take().unwrap();
+            let _ = peripherals.PPI_CH13.take().unwrap();
+            let _ = peripherals.PPI_CH14.take().unwrap();
             let _ = peripherals.PPI_GROUP4.take().unwrap();
 
             let _ = peripherals.UARTE1.take().unwrap();
             let _ = peripherals.TIMER4.take().unwrap();
-            let _ = peripherals.PPI_CH18.take().unwrap();
-            let _ = peripherals.PPI_CH19.take().unwrap();
+            let _ = peripherals.PPI_CH15.take().unwrap();
+            let _ = peripherals.PPI_CH16.take().unwrap();
             let _ = peripherals.PPI_GROUP5.take().unwrap();
         } else if #[cfg(context = "nrf5340")] {
             let _ = peripherals.SERIAL3.take().unwrap();
