@@ -310,6 +310,7 @@ contexts:
     parent: nrf91
     provides:
       - has_storage_support
+      - has_nrf_modem
     env:
       PROBE_RS_CHIP: nRF9160_xxAA
 
@@ -317,6 +318,7 @@ contexts:
     parent: nrf91
     provides:
       - has_storage_support
+      - has_nrf_modem
     env:
       # FIXME: probe-rs does not support the nRF9151_xxAA yet, because there is
       # no CMSIS-Pack available
@@ -1057,7 +1059,7 @@ modules:
 
     env:
       global:
-        CARGO_RUNNER: "'probe-rs run ${PROBE_RS_PROTOCOL} --chip ${PROBE_RS_CHIP} --preverify'"
+        CARGO_RUNNER: "'probe-rs run ${PROBE_RS_PROTOCOL} --chip ${PROBE_RS_CHIP} --preverify '"
 
     tasks:
       flash-erase-all:
@@ -1186,6 +1188,16 @@ modules:
         FEATURES:
           - ariel-os/threading
 
+  - name: ltem-nrf-modem
+    selects:
+      - nrf91-modem
+    provides_unique:
+      - network_device
+    env:
+      global:
+        FEATURES:
+          - ariel-os/ltem-nrf-modem
+
   - name: wifi-cyw43
     selects:
       - has_wifi_cyw43
@@ -1294,6 +1306,26 @@ modules:
   - name: has_ble
     selects:
       - doc-only
+
+  - name: gnss
+    selects:
+      - hw/gnss
+    env:
+      global:
+        FEATURES:
+          - ariel-os/gnss
+
+  - name: has_nrf_modem
+    selects:
+      - doc-only
+
+  - name: nrf91-modem
+    selects:
+      - has_nrf_modem
+    env:
+      global:
+        FEATURES:
+          - ariel-os/nrf91-modem
 
   - name: usb
     selects:
@@ -1757,6 +1789,16 @@ builders:
           - echo "Installing c2rust..."
           - 'echo "WARNING: This uses *a lot* of memory!"'
           - cargo install c2rust $@
+      update-book:
+        build: false
+        cmd:
+          - doc/gen_book.rs summary doc/support_matrix.yml book/src/SUMMARY.md --template-path book/templates/SUMMARY.md.tmpl
+          - doc/gen_book.rs board-pages doc/support_matrix.yml book/src/boards/ --template-path book/templates/board-page.md.tmpl
+          - doc/gen_book.rs board-index doc/support_matrix.yml book/src/boards/index.md --template-path book/templates/board-index.md.tmpl
+          - doc/gen_book.rs matrix doc/support_matrix.yml book/src/support_matrix_tier1.html --template-path book/templates/support-matrix.html.tmpl --tier 1
+          - doc/gen_book.rs matrix doc/support_matrix.yml book/src/support_matrix_tier2.html --template-path book/templates/support-matrix.html.tmpl --tier 2
+          - doc/gen_book.rs matrix doc/support_matrix.yml book/src/support_matrix_tier3.html --template-path book/templates/support-matrix.html.tmpl --tier 3
+
 
   - name: bbc-microbit
     parent: bbc-microbit-base

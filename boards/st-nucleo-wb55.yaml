@@ -4,7 +4,7 @@ boards:
     flags:
       - has_usb_device_port
     ariel:
-      swi: LPUART1
+      swi: USART1
     leds:
       led0:
         pin: PB5
