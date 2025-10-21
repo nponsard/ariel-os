@@ -4683,7 +4683,7 @@ dependencies = [
 [[package]]
 name = "riot-coap-handler-demos"
 version = "0.2.0"
-source = "git+https://gitlab.com/etonomy/riot-module-examples?rev=09fa2d45e92ca4e46da7f18af3db3d1bcec238d3#09fa2d45e92ca4e46da7f18af3db3d1bcec238d3"
+source = "git+https://gitlab.com/etonomy/riot-module-examples?rev=9fd24a2608ad5dbaec33fc0c2aec8c5b3539dd0d#9fd24a2608ad5dbaec33fc0c2aec8c5b3539dd0d"
 dependencies = [
  "coap-handler",
  "coap-handler-implementations",
@@ -4700,7 +4700,7 @@ dependencies = [
  "serde_bytes",
  "serde_cbor",
  "switch-hal",
- "try-lock",
+ "try-lock-portable-atomic",
 ]
 
 [[package]]
@@ -4859,13 +4859,13 @@ checksum = "94143f37725109f92c262ed2cf5e59bce7498c01bcc1502d7b9afe439a4e9f49"
 
 [[package]]
 name = "scroll-ring"
-version = "0.1.2"
+version = "0.1.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "827595b27476e68bcbb86dfe8e11f364e4d4efd01cb5f01d845950456006f6ec"
+checksum = "12ebfb8ab3970208db8d9ce883e5f493338910ca91950e2ed9393c12d6dac1b2"
 dependencies = [
  "portable-atomic",
  "ringbuf",
- "try-lock",
+ "try-lock-portable-atomic",
 ]
 
 [[package]]
@@ -5608,9 +5608,10 @@ dependencies = [
 ]
 
 [[package]]
-name = "try-lock"
-version = "0.2.5"
-source = "git+https://github.com/seanmonstar/try-lock?rev=45c39685b56a4dba1b71bdbbbe5f731c3c77dc50#45c39685b56a4dba1b71bdbbbe5f731c3c77dc50"
+name = "try-lock-portable-atomic"
+version = "0.2.5-patch0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "e5fdb48ca18a5a980a9985b41278f5bb13b31a333ff056f616007dee2ebcf981"
 dependencies = [
  "portable-atomic",
 ]
@@ -6352,3 +6353,8 @@ dependencies = [
  "quote",
  "syn 2.0.106",
 ]
+
+[[patch.unused]]
+name = "try-lock"
+version = "0.2.5"
+source = "git+https://github.com/seanmonstar/try-lock?rev=45c39685b56a4dba1b71bdbbbe5f731c3c77dc50#45c39685b56a4dba1b71bdbbbe5f731c3c77dc50"
