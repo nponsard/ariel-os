@@ -284,9 +284,7 @@ chips:
         comments:
           - requires partitioning support
       wifi:
-        status: supported_with_caveats
-        comments:
-          - not currently compatible with threading
+        status: supported
       user_usb:
         status: not_available
         comments:
