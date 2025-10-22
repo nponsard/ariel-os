@@ -9,7 +9,7 @@ apps:
       - ?button-reading
     conflicts:
       - ram-small
-      # needs `feature(type_alias_impl_trait)`
+      # needs `feature(impl_trait_in_assoc_type)`
       - stable
 
 modules:
