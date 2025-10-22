@@ -2,10 +2,14 @@
 #![no_std]
 #![feature(impl_trait_in_assoc_type)]
 
-mod pins;
 mod routes;
 
 use ariel_os::{asynch::Spawner, cell::StaticCell, net, time::Duration};
+
+ariel_os::hal::group_peripherals!(Peripherals {
+    #[cfg(feature = "button-reading")]
+    buttons: ariel_os_boards::pins::ButtonPeripherals,
+});
 
 #[cfg(feature = "button-reading")]
 use embassy_sync::once_lock::OnceLock;
@@ -46,12 +50,12 @@ async fn web_task(task_id: usize, app: &'static picoserve::Router<routes::AppRou
 }
 
 #[ariel_os::spawner(autostart, peripherals)]
-fn main(spawner: Spawner, peripherals: pins::Peripherals) {
+fn main(spawner: Spawner, peripherals: Peripherals) {
     #[cfg(feature = "button-reading")]
     {
         use ariel_os::gpio::{Input, Pull};
 
-        let button = Input::new(peripherals.button.btn1, Pull::Up);
+        let button = Input::new(peripherals.buttons.button0, Pull::Up);
         let _ = BUTTON_INPUT.init(button);
     }
     #[cfg(not(feature = "button-reading"))]
