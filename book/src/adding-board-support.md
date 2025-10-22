@@ -21,6 +21,8 @@ Ariel OS uses [sbd][sbd] (Structured Board Description) files to describe board
 - Create a new board description file `boards/<your-board-name>.yaml`.
   - It is usually best to copy and adapt an existing one.
   - `chip`: The board's chip, needs to correspond to an existing laze context in `laze-project.yml`.
+- In `doc/support_matrix.yml`:
+  - Add an entry under `boards`. Include a link to a `web.archive.org` snapshot that describes the board.
 - Some MCU families need extra steps, see [Extra steps for some MCU families](#extra-steps-for-some-mcu-families).
 
 ```yaml
@@ -66,12 +68,18 @@ sbd-gen generate-ariel boards -o src/ariel-os-boards --mode update
 - STM32 chips do not have a dedicated SWI, so you need to choose one. Select any unused interrupt, like one of the UARTs, and set the `boards.<board_name>.ariel.swi` field in the board description.
 - Each STM32 MCU needs an entry for configuring the clock config, in `src/ariel-os-stm32/src/lib.rs` `rcc_config()`.
 
+### `esp32`
+
+- Some ancillary esp-hal crates require a chip-specific feature to be enabled. You will need to add a device-specific dependency section to `ariel-os-debug`, and `ariel-os-esp`, similar to the existing ones.
+
 ## Adding Support for an MCU from a Supported MCU family
 
 - In `laze-project.yml`:
   - Add a context for the MCU (if it does not already exist).
     - `parent`: The closest Embassy HAL's context.
     - `selects`: A [rustc-target](#adding-support-for-a-processor-architecture) module or one of the `cortex-m*` modules if applicable.
+- In `doc/support_matrix.yml`:
+  - Add an entry under `chips`, with the laze context and supported features.
 
 MCU-specific items inside Ariel OS crates are gated behind
 `#[cfg(context = $CONTEXT)]` attributes, where `$CONTEXT` is the [MCU's `laze

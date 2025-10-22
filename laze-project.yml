@@ -379,6 +379,7 @@ contexts:
       - has_executor_single_thread_support
       - has_hwrng
     env:
+      esp_wifi_heapsize_required: $(72*1024)
       RUSTFLAGS:
         # linkall first
         - -Clink-arg=-Tlinkall.x
@@ -434,6 +435,33 @@ contexts:
 
   - name: esp32-c6-wroom-1
     parent: esp32c6
+
+  - name: esp32s2
+    parent: esp
+    selects:
+      - xtensa
+    provides:
+      - sw/benchmark
+    provides_unique: [c-function-abort]
+    env:
+      RUSTC_TARGET: xtensa-esp32s2-none-elf
+      PROBE_RS_CHIP: esp32s2
+      PROBE_RS_PROTOCOL: jtag
+      CARGO_TARGET_PREFIX: CARGO_TARGET_XTENSA_ESP32S2_NONE_ELF
+      CC: xtensa-esp32s2-elf-gcc
+      esp_wifi_heapsize_required: $(64*1024)
+
+  - name: esp32s2fx2
+    parent: esp32s2
+
+  - name: esp32s2fx4
+    parent: esp32s2
+
+  - name: esp32s2fx4r2
+    parent: esp32s2
+
+  - name: esp32-s2-solo-2
+    parent: esp32s2
 
   - name: esp32s3
     parent: esp
@@ -784,6 +812,7 @@ modules:
   - name: xtensa
     context:
       - esp32
+      - esp32s2
       - esp32s3
     provides_unique:
       - cargo-toolchain
@@ -1484,9 +1513,9 @@ modules:
         # esp-wifi needs a lot of ISR stack.
         isr_stacksize_required:
           - "32768"
-        # esp-wifi needs 72KiB
+        # heap size is configured by the device
         heapsize_required:
-          - $(72*1024)
+          - ${esp_wifi_heapsize_required}
         FEATURES:
           - ariel-os/wifi-esp
 
@@ -1746,7 +1775,7 @@ builders:
           - rustup ${CARGO_TOOLCHAIN} target add riscv32imc-unknown-none-elf
           - rustup ${CARGO_TOOLCHAIN} target add riscv32imac-unknown-none-elf
           - rustup ${CARGO_TOOLCHAIN} component add rust-src
-          - if command -v espup >/dev/null; then espup update --targets=esp32,esp32s3; fi
+          - if command -v espup >/dev/null; then espup update --targets=esp32,esp32s2,esp32s3; fi
 
       install-c2rust:
         build: false

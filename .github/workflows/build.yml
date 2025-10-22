@@ -203,7 +203,7 @@ jobs:
         uses: esp-rs/xtensa-toolchain@main
         with:
           version: "1.85.0.0"
-          buildtargets: esp32s3
+          buildtargets: esp32,esp32s2,esp32s3
           override: false
           export: false
 

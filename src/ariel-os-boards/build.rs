@@ -16,6 +16,9 @@ pub fn main() {
     );
     println!("cargo::rustc-check-cfg=cfg(context, values(\"espressif-esp32-devkitc\"))");
     println!(
+        "cargo::rustc-check-cfg=cfg(context, values(\"espressif-esp32-s2-devkitc-1\"))"
+    );
+    println!(
         "cargo::rustc-check-cfg=cfg(context, values(\"espressif-esp32-s3-devkitc-1\"))"
     );
     println!("cargo::rustc-check-cfg=cfg(context, values(\"heltec-wifi-lora-32-v3\"))");
