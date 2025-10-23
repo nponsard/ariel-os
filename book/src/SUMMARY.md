@@ -11,6 +11,7 @@
   - [DFRobot FireBeetle 2 ESP32-C6](./boards/dfrobot-firebeetle2-esp32-c6.md)
   - [Espressif ESP32-C3-LCDkit](./boards/espressif-esp32-c3-lcdkit.md)
   - [Espressif ESP32-C6-DevKitC-1](./boards/espressif-esp32-c6-devkitc-1.md)
+  - [Espressif ESP32-S2-DevKitC-1](./boards/espressif-esp32-s2-devkitc-1.md)
   - [Espressif ESP32-S3-DevKitC-1](./boards/espressif-esp32-s3-devkitc-1.md)
   - [Heltec WiFi LoRa 32 V3](./boards/heltec-wifi-lora-32-v3.md)
   - [Nordic Thingy:91 X](./boards/nordic-thingy-91-x-nrf9151.md)

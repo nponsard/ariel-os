@@ -11,14 +11,16 @@ cfg_if::cfg_if! {
     #[cfg(context = "espressif-esp32-c6-devkitc-1")] {
     include!("espressif-esp32-c6-devkitc-1.rs"); } else if #[cfg(context =
     "espressif-esp32-devkitc")] { include!("espressif-esp32-devkitc.rs"); } else if
-    #[cfg(context = "espressif-esp32-s3-devkitc-1")] {
-    include!("espressif-esp32-s3-devkitc-1.rs"); } else if #[cfg(context =
-    "heltec-wifi-lora-32-v3")] { include!("heltec-wifi-lora-32-v3.rs"); } else if
-    #[cfg(context = "native")] { include!("native.rs"); } else if #[cfg(context =
-    "nordic-thingy-91-x-nrf9151")] { include!("nordic-thingy-91-x-nrf9151.rs"); } else if
-    #[cfg(context = "nrf52840-mdk")] { include!("nrf52840-mdk.rs"); } else if
-    #[cfg(context = "nrf52840dk")] { include!("nrf52840dk.rs"); } else if #[cfg(context =
-    "nrf52dk")] { include!("nrf52dk.rs"); } else if #[cfg(context = "nrf5340dk-net")] {
+    #[cfg(context = "espressif-esp32-s2-devkitc-1")] {
+    include!("espressif-esp32-s2-devkitc-1.rs"); } else if #[cfg(context =
+    "espressif-esp32-s3-devkitc-1")] { include!("espressif-esp32-s3-devkitc-1.rs"); }
+    else if #[cfg(context = "heltec-wifi-lora-32-v3")] {
+    include!("heltec-wifi-lora-32-v3.rs"); } else if #[cfg(context = "native")] {
+    include!("native.rs"); } else if #[cfg(context = "nordic-thingy-91-x-nrf9151")] {
+    include!("nordic-thingy-91-x-nrf9151.rs"); } else if #[cfg(context = "nrf52840-mdk")]
+    { include!("nrf52840-mdk.rs"); } else if #[cfg(context = "nrf52840dk")] {
+    include!("nrf52840dk.rs"); } else if #[cfg(context = "nrf52dk")] {
+    include!("nrf52dk.rs"); } else if #[cfg(context = "nrf5340dk-net")] {
     include!("nrf5340dk-net.rs"); } else if #[cfg(context = "nrf5340dk")] {
     include!("nrf5340dk.rs"); } else if #[cfg(context = "nrf9160dk-nrf9160")] {
     include!("nrf9160dk-nrf9160.rs"); } else if #[cfg(context = "particle-xenon")] {

@@ -292,6 +292,97 @@ chips:
           - no generic USB peripheral
       ethernet_over_usb: not_available
 
+  esp32s2:
+    name: ESP32-S2
+    support:
+      gpio: supported
+      debug_output: supported
+      hwrng: supported
+      i2c_controller: needs_testing
+      spi_main: needs_testing
+      uart: supported
+      logging: supported
+      storage:
+        status: not_currently_supported
+        comments:
+          - requires partitioning support
+      user_usb:
+        status: not_currently_supported
+        comments:
+          - USB does not enumerate
+          - "See also: https://github.com/ariel-os/ariel-os/issues/903"
+      ethernet_over_usb: not_currently_supported
+      wifi: supported
+
+  # Currently identical to esp32s2.
+  esp32s2fx2:
+    name: ESP32-S2Fx2
+    support:
+      gpio: supported
+      debug_output: supported
+      hwrng: supported
+      i2c_controller: needs_testing
+      spi_main: needs_testing
+      uart: supported
+      logging: supported
+      storage:
+        status: not_currently_supported
+        comments:
+          - requires partitioning support
+      user_usb:
+        status: not_currently_supported
+        comments:
+          - USB does not enumerate
+          - "See also: https://github.com/ariel-os/ariel-os/issues/903"
+      ethernet_over_usb: not_currently_supported
+      wifi: supported
+
+  # Currently identical to esp32s2.
+  esp32s2fx4:
+    name: ESP32-S2Fx4
+    support:
+      gpio: supported
+      debug_output: supported
+      hwrng: supported
+      i2c_controller: needs_testing
+      spi_main: needs_testing
+      uart: supported
+      logging: supported
+      storage:
+        status: not_currently_supported
+        comments:
+          - requires partitioning support
+      user_usb:
+        status: not_currently_supported
+        comments:
+          - USB does not enumerate
+          - "See also: https://github.com/ariel-os/ariel-os/issues/903"
+      ethernet_over_usb: not_currently_supported
+      wifi: supported
+
+  # Currently identical to esp32s2.
+  esp32s2fx4r2:
+    name: ESP32-S2Fx4R2
+    support:
+      gpio: supported
+      debug_output: supported
+      hwrng: supported
+      i2c_controller: needs_testing
+      spi_main: needs_testing
+      uart: supported
+      logging: supported
+      storage:
+        status: not_currently_supported
+        comments:
+          - requires partitioning support
+      user_usb:
+        status: not_currently_supported
+        comments:
+          - USB does not enumerate
+          - "See also: https://github.com/ariel-os/ariel-os/issues/903"
+      ethernet_over_usb: not_currently_supported
+      wifi: supported
+
   esp32s3:
     name: ESP32-S3
     support:
@@ -674,6 +765,13 @@ boards:
     url: https://web.archive.org/web/20250122153727/https://www.espressif.com/en/dev-board/esp32-c6-devkitc-1-en
     chip: esp32c6
     tier: "1"
+    support:
+
+  espressif-esp32-s2-devkitc-1:
+    name: Espressif ESP32-S2-DevKitC-1
+    url: https://web.archive.org/web/20251022182104/https://www.espressif.com/en/dev-board/esp32-s2-devkitc-1-en
+    chip: esp32s2
+    tier: "3"
     support:
 
   espressif-esp32-s3-devkitc-1:
