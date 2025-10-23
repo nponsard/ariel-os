@@ -80,6 +80,7 @@
 - [Async Executors](./async-support.md)
 - [Debug Console](./debug-console.md)
 - [Networking](./networking.md)
+- [Bluetooth Low Energy](./bluetooth.md)
 - [Randomness and Entropy](./randomness.md)
 - [Multithreading](./multithreading.md)
 - [Persistent Storage](./storage.md)
