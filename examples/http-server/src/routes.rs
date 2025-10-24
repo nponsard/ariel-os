@@ -1,4 +1,4 @@
-use picoserve::{AppBuilder, response::File, routing::get_service};
+use picoserve::{AppBuilder as AppBuilderTrait, response::File, routing::get_service};
 
 #[cfg(feature = "button-reading")]
 use picoserve::{
@@ -6,11 +6,11 @@ use picoserve::{
     routing::get,
 };
 
-pub struct AppB;
+pub struct AppBuilder;
 
-pub type AppRouter = <AppB as AppBuilder>::PathRouter;
+pub type AppRouter = <AppBuilder as AppBuilderTrait>::PathRouter;
 
-impl AppBuilder for AppB {
+impl AppBuilderTrait for AppBuilder {
     type PathRouter = impl picoserve::routing::PathRouter;
 
     fn build_app(self) -> picoserve::Router<Self::PathRouter> {

@@ -3,3 +3,7 @@ boards:
     chip: esp32-s2-solo-2
     flags:
       - has_usb_device_port
+    buttons:
+      button0:
+        pin: GPIO0
+        active: low
