@@ -1259,6 +1259,15 @@ modules:
         FEATURES:
           - ariel-os/usb-ethernet
 
+  - name: ble-config-static-mac
+    help: Use a static MAC address for BLE, for debugging/testing only
+    selects:
+      - ble
+    env:
+      global:
+        FEATURES:
+          - ariel-os/ble-config-static-mac
+
   - name: ble
     selects:
       - hw/ble
