@@ -36,15 +36,15 @@ embassy-stm32 = { git = "https://github.com/kaspar030/embassy", rev = "1b75c3d6e
 # esp-radio = { git = "https://github.com/kaspar030/esp-hal", rev = "087a3a05d00810ea5fa3c67348836e5a71a44424" }
 # esp-radio-rtos-driver = { git = "https://github.com/kaspar030/esp-hal", rev = "087a3a05d00810ea5fa3c67348836e5a71a44424" }
 # xtensa-lx-rt = { git = "https://github.com/kaspar030/esp-hal", rev = "087a3a05d00810ea5fa3c67348836e5a71a44424" }
-esp-alloc = { path = "/home/kaspar/src/esp-hal/esp-alloc" }
-esp-bootloader-esp-idf = { path = "/home/kaspar/src/esp-hal/esp-bootloader-esp-idf" }
-esp-hal = { path = "/home/kaspar/src/esp-hal/esp-hal" }
-esp-println ={ path = "/home/kaspar/src/esp-hal/esp-println" }
-esp-radio ={ path = "/home/kaspar/src/esp-hal/esp-radio" }
-esp-radio-rtos-driver = { path = "/home/kaspar/src/esp-hal/esp-radio-rtos-driver" }
-esp-rom-sys = { path = "/home/kaspar/src/esp-hal/esp-rom-sys" }
-esp-sync = { path = "/home/kaspar/src/esp-hal/esp-sync" }
-xtensa-lx-rt = { path = "/home/kaspar/src/esp-hal/xtensa-lx-rt" }
+esp-alloc = { path = "/home/nponsard/git/esp-hal/esp-alloc" }
+esp-bootloader-esp-idf = { path = "/home/nponsard/git/esp-hal/esp-bootloader-esp-idf" }
+esp-hal = { path = "/home/nponsard/git/esp-hal/esp-hal" }
+esp-println ={ path = "/home/nponsard/git/esp-hal/esp-println" }
+esp-radio ={ path = "/home/nponsard/git/esp-hal/esp-radio" }
+esp-radio-rtos-driver = { path = "/home/nponsard/git/esp-hal/esp-radio-rtos-driver" }
+esp-rom-sys = { path = "/home/nponsard/git/esp-hal/esp-rom-sys" }
+esp-sync = { path = "/home/nponsard/git/esp-hal/esp-sync" }
+xtensa-lx-rt = { path = "/home/nponsard/git/esp-hal/xtensa-lx-rt" }
 
 # branch = "v0.6.2+ariel-os"
 embedded-test = { git = "https://github.com/ariel-os/embedded-test", rev = "20642538eb4e6fa44b5f37723b07946c74b5c757" }
