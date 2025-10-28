@@ -155,7 +155,7 @@ jobs:
               ;;
             'ci-build:nrf')
               # Purely redundant boards are excluded for now.
-              echo "LAZE_BUILDERS=bbc-microbit-v1,bbc-microbit-v2,nordic-thingy-91-x-nrf9151,nrf52840dk,nrf52dk,nrf5340dk,nrf5340dk-net,nrf9160dk-nrf9160" >> "$GITHUB_ENV"
+              echo "LAZE_BUILDERS=bbc-microbit-v1,bbc-microbit-v2,nordic-thingy-91-x-nrf9151,nrf52840dk,nrf52dk,nrf5340dk,nrf5340dk-net,nrf9160dk-nrf9160,nrf9151-dk" >> "$GITHUB_ENV"
               ;;
             'ci-build:rp')
               echo "LAZE_BUILDERS=rpi-pico,rpi-pico2,rpi-pico2-w,rpi-pico-w" >> "$GITHUB_ENV"
