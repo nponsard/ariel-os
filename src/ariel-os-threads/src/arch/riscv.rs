@@ -1,8 +1,8 @@
 #![expect(unsafe_code)]
 
 use crate::{Arch, SCHEDULER, Thread, cleanup};
-use ariel_os_debug::log::info;
 use core::arch::global_asm;
+use ariel_os_debug::log::{debug,info};
 #[cfg(context = "esp32c6")]
 use esp_hal::peripherals::INTPRI as SYSTEM;
 #[cfg(context = "esp32c3")]
@@ -47,16 +47,22 @@ impl Arch for Cpu {
         // thread.stack_highest = stack_pos;
 
         // Safety: This is the place to initialize stack painting.
-        unsafe { thread.stack_paint_init(stack_pos) };
+        // unsafe { thread.stack_paint_init(stack_pos) };
     }
 
     /// Enable and trigger the appropriate software interrupt.
     fn start_threading() {
+        debug!("riscv::start_threading");
         interrupt::disable(EspHalCpu::ProCpu, Interrupt::FROM_CPU_INTR0);
+        debug!("interrupts disabled");
+
         Self::schedule();
+        debug!("schedule done");
         // Panics if `FROM_CPU_INTR0` is among `esp_hal::interrupt::RESERVED_INTERRUPTS`,
         // which isn't the case.
-        interrupt::enable(Interrupt::FROM_CPU_INTR0, interrupt::Priority::min()).unwrap();
+        let e = interrupt::enable(Interrupt::FROM_CPU_INTR0, interrupt::Priority::min());
+        debug!("e : {:?}", e);
+        debug!("interrupt enabled");
     }
 
     fn wfi() {
@@ -97,7 +103,8 @@ const fn default_trap_frame() -> ThreadData {
 // SAFETY: symbol required by `esp-pacs`.
 #[allow(non_snake_case)]
 #[unsafe(no_mangle)]
-extern "C" fn FROM_CPU_INTR0() {
+fn FROM_CPU_INTR0() {
+    debug!("interrupt !");
     unsafe {
         // clear FROM_CPU_INTR0
         (&*SYSTEM::PTR)
