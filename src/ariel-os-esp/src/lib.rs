@@ -149,7 +149,7 @@ pub fn init() -> OptionalPeripherals {
     let mut peripherals = OptionalPeripherals::from(esp_hal::init(config));
 
     #[cfg(any(feature = "hwrng", feature = "wifi-esp"))]
-    #[allow(unused_mut)]
+    #[cfg_attr(feature = "wifi-esp", expect(unused_mut))]
     let mut rng = esp_hal::rng::Rng::new(peripherals.RNG.take().unwrap());
 
     #[cfg(feature = "hwrng")]
