@@ -1,15 +1,16 @@
 #![expect(unsafe_code)]
 
 use crate::{Arch, SCHEDULER, Thread, cleanup};
+use ariel_os_debug::log::debug;
 #[cfg(context = "esp32c6")]
 use esp_hal::peripherals::INTPRI as SYSTEM;
 #[cfg(context = "esp32c3")]
 use esp_hal::peripherals::SYSTEM;
 use esp_hal::{
-    Cpu as EspHalCpu,
     interrupt::{self, TrapFrame},
     peripherals::Interrupt,
     riscv,
+    system::Cpu as EspHalCpu,
 };
 
 pub struct Cpu;
@@ -22,8 +23,8 @@ impl Arch for Cpu {
     fn schedule() {
         unsafe {
             (&*SYSTEM::PTR)
-                .cpu_intr_from_cpu_0()
-                .modify(|_, w| w.cpu_intr_from_cpu_0().set_bit());
+                .cpu_intr_from_cpu(0)
+                .modify(|_, w| w.cpu_intr().set_bit());
         }
     }
 
@@ -34,25 +35,31 @@ impl Arch for Cpu {
         // 16 byte alignment.
         let stack_pos = (stack_start + stack.len()) & 0xFFFFFFE0;
         // Set up PC, SP, RA and first argument for function.
-        thread.data.sp = stack_pos;
+        // thread.data.sp = stack_pos;
         thread.data.a0 = arg.unwrap_or_default();
         thread.data.ra = cleanup as usize;
-        thread.data.pc = func as usize;
+        // thread.data.pc = func as usize;
 
         thread.stack_lowest = stack_start;
         thread.stack_highest = stack_pos;
 
         // Safety: This is the place to initialize stack painting.
-        unsafe { thread.stack_paint_init(stack_pos) };
+        // unsafe { thread.stack_paint_init(stack_pos) };
     }
 
     /// Enable and trigger the appropriate software interrupt.
     fn start_threading() {
+        debug!("riscv::start_threading");
         interrupt::disable(EspHalCpu::ProCpu, Interrupt::FROM_CPU_INTR0);
+        debug!("interrupts disabled");
+
         Self::schedule();
+        debug!("schedule done");
         // Panics if `FROM_CPU_INTR0` is among `esp_hal::interrupt::RESERVED_INTERRUPTS`,
         // which isn't the case.
-        interrupt::enable(Interrupt::FROM_CPU_INTR0, interrupt::Priority::min()).unwrap();
+        let e = interrupt::enable(Interrupt::FROM_CPU_INTR0, interrupt::Priority::min());
+        debug!("e : {:?}", e);
+        debug!("interrupt enabled");
     }
 
     fn wfi() {
@@ -78,25 +85,6 @@ const fn default_trap_frame() -> TrapFrame {
         a5: 0,
         a6: 0,
         a7: 0,
-        s0: 0,
-        s1: 0,
-        s2: 0,
-        s3: 0,
-        s4: 0,
-        s5: 0,
-        s6: 0,
-        s7: 0,
-        s8: 0,
-        s9: 0,
-        s10: 0,
-        s11: 0,
-        gp: 0,
-        tp: 0,
-        sp: 0,
-        pc: 0,
-        mstatus: 0,
-        mcause: 0,
-        mtval: 0,
     }
 }
 
@@ -105,25 +93,41 @@ const fn default_trap_frame() -> TrapFrame {
 /// It copies state from the `TrapFrame` except for CSR registers
 /// `mstatus`, `mcause` and `mtval`.
 fn copy_registers(src: &TrapFrame, dst: &mut TrapFrame) {
-    let (mstatus, mcause, mtval) = (dst.mstatus, dst.mcause, dst.mtval);
-    dst.clone_from(src);
-    dst.mstatus = mstatus;
-    dst.mcause = mcause;
-    dst.mtval = mtval;
+    debug!("Copying registers ");
+    debug!("Copying registers src : {:?} ", src);
+    debug!("Copying registers dst:  {:?}", dst);
+    dst.ra = src.ra;
+    dst.t0 = src.t0;
+    dst.t1 = src.t1;
+    dst.t2 = src.t2;
+    dst.t3 = src.t3;
+    dst.t4 = src.t4;
+    dst.t5 = src.t5;
+    dst.t6 = src.t6;
+    dst.a0 = src.a0;
+    dst.a1 = src.a1;
+    dst.a2 = src.a2;
+    dst.a3 = src.a3;
+    dst.a4 = src.a4;
+    dst.a5 = src.a5;
+    dst.a6 = src.a6;
+    dst.a7 = src.a7;
+    debug!("Registers copied");
 }
 
 /// Handler for software interrupt 0, which we use for context switching.
 // SAFETY: symbol required by `esp-pacs`.
 #[allow(non_snake_case)]
 #[unsafe(no_mangle)]
-extern "C" fn FROM_CPU_INTR0(trap_frame: &mut TrapFrame) {
+fn FROM_CPU_INTR0() {
+    debug!("interrupt !");
     unsafe {
         // clear FROM_CPU_INTR0
         (&*SYSTEM::PTR)
-            .cpu_intr_from_cpu_0()
-            .modify(|_, w| w.cpu_intr_from_cpu_0().clear_bit());
+            .cpu_intr_from_cpu(0)
+            .modify(|_, w| w.cpu_intr().clear_bit());
 
-        sched(trap_frame)
+        sched()
     }
 }
 
@@ -135,11 +139,14 @@ extern "C" fn FROM_CPU_INTR0(trap_frame: &mut TrapFrame) {
 /// `trap_frame`.
 /// It should only be called from inside the trap handler that is responsible for
 /// context switching.
-unsafe fn sched(trap_frame: &mut TrapFrame) {
+unsafe fn sched() {
     loop {
+        debug!("sched loop");
         if SCHEDULER.with_mut(|mut scheduler| {
             #[cfg(feature = "multi-core")]
             scheduler.add_current_thread_to_rq();
+
+            debug!("get_next_tid");
 
             let next_tid = match scheduler.get_next_tid() {
                 Some(tid) => tid,
@@ -149,20 +156,31 @@ unsafe fn sched(trap_frame: &mut TrapFrame) {
                 }
             };
 
+            debug!("current_tid");
+
             if let Some(current_tid) = scheduler.current_tid() {
                 if next_tid == current_tid {
                     return true;
                 }
-                copy_registers(
-                    trap_frame,
-                    &mut scheduler.threads[usize::from(current_tid)].data,
-                );
+                // TODO: save registers
+                // copy_registers(
+                //     trap_frame,
+                //     &mut scheduler.threads[usize::from(current_tid)].data,
+                // );
             }
+            debug!("modifying current tid");
+
             *scheduler.current_tid_mut() = Some(next_tid);
 
-            copy_registers(&scheduler.get_unchecked(next_tid).data, trap_frame);
+            debug!("copying registers");
+
+            // TODO(bump): restore registers
+            // copy_registers(&scheduler.get_unchecked(next_tid).data, trap_frame);
+            debug!("should return");
+
             true
         }) {
+            debug!("break");
             break;
         }
     }

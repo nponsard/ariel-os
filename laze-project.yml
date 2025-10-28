@@ -383,13 +383,13 @@ contexts:
       esp_wifi_heapsize_required: $(72*1024)
       RUSTFLAGS:
         # linkall first
-        #- -Clink-arg=-Tlinkall.x
-        - -Clink-arg=-Tmemory.x
-        - -Clink-arg=-Talias.x
-        - -Clink-arg=-Tisr_stack.x
-        - -Clink-arg=-Tesp32s3.x
-        - -Clink-arg=-Thal-defaults.x
-        - -Clink-arg=-Tisr_stack_late.x
+        - -Clink-arg=-Tlinkall.x
+        # - -Clink-arg=-Tmemory.x
+        # - -Clink-arg=-Talias.x
+        # - -Clink-arg=-Tisr_stack.x
+        # - -Clink-arg=-Tesp32s3.x
+        # - -Clink-arg=-Thal-defaults.x
+        # - -Clink-arg=-Tisr_stack_late.x
 
         # this might be needed for backtraces. it is needed for probe-rs.
         - -C force-frame-pointers

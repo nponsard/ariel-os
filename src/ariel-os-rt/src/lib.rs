@@ -128,7 +128,7 @@ mod isr_stack {
         crate::debug!("ariel-os-rt: ISR stacksize: {}", stack.size());
 
         // initial stack paint
-        stack.repaint();
+        // stack.repaint();
     }
 }
 
@@ -176,12 +176,17 @@ fn startup() -> ! {
     #[cfg(test)]
     debug!("ariel_os_rt::startup() cfg(test)");
 
+    debug!("launching init funcs");
+
     for f in INIT_FUNCS {
         f();
     }
 
+    debug!("init funcs launched");
+
     #[cfg(feature = "threading")]
     {
+        debug!("starting threading");
         // SAFETY: this function must not be called more than once
         unsafe {
             threading::start();
