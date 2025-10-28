@@ -1,0 +1,17 @@
+boards:
+  seeedstudio-xiao-esp32s3:
+    chip: esp32-s3-wroom-1
+    flags:
+      - has_usb_device_port
+    leds:
+      led0:
+        pin: GPIO21
+        aliases:
+          - USER_LED
+        color: yellow
+    buttons:
+      button0:
+        pin: GPIO0
+        aliases:
+          - BOOT
+        active: low

@@ -113,6 +113,12 @@ builders:
   env:
     CARGO_ENV:
     - CONFIG_SWI=USART2
+- name: seeedstudio-xiao-esp32s3
+  parent: esp32-s3-wroom-1
+  provides:
+  - has_buttons
+  - has_leds
+  - has_usb_device_port
 - name: st-b-l475e-iot01a
   parent: stm32l475vg
   provides:
