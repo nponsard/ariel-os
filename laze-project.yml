@@ -1777,12 +1777,6 @@ builders:
           - rustup ${CARGO_TOOLCHAIN} component add rust-src
           - if command -v espup >/dev/null; then espup update --targets=esp32,esp32s2,esp32s3; fi
 
-      install-c2rust:
-        build: false
-        cmd:
-          - echo "Installing c2rust..."
-          - 'echo "WARNING: This uses *a lot* of memory!"'
-          - cargo install c2rust $@
       update-book:
         build: false
         cmd:
