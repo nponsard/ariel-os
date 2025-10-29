@@ -5389,6 +5389,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "test-random-getrandom"
+version = "0.0.0"
+dependencies = [
+ "ariel-os",
+ "ariel-os-boards",
+ "getrandom 0.3.3",
+]
+
+[[package]]
 name = "tests_gpio"
 version = "0.0.0"
 dependencies = [
