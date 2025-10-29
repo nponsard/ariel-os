@@ -6,6 +6,7 @@ subdirs:
   - gpio-interrupt-nrf
   - gpio-interrupt-stm32
   - i2c-controller
+  - random-getrandom
   - spi-loopback
   - spi-main
   - threading-dynamic-prios
