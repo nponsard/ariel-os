@@ -229,7 +229,7 @@ macro_rules! define_uart_drivers {
             }
 
             impl<'d> $peripheral<'d> {
-                /// Returns a driver implementing [`embedded-io`] for this Uart
+                /// Returns a driver implementing [`embedded_io_async`] for this Uart
                 /// peripheral.
                 ///
                 /// # Errors
