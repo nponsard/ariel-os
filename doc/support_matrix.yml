@@ -635,7 +635,10 @@ chips:
       spi_main: not_currently_supported
       uart: needs_testing
       logging: supported
-      storage: supported
+      storage:
+        status: supported_with_caveats
+        comments:
+          - removing items not supported
       wifi: not_available
       user_usb: not_available
       ethernet_over_usb: not_available
