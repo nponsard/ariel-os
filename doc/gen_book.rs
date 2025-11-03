@@ -396,8 +396,7 @@ impl SubCommandBoardPages {
 
         for board in &board_info {
             let mut env = Environment::new();
-            env.add_filter("slugify", slugify::<String>);
-            env.add_filter("capitalize_first", capitalize_first);
+            add_custom_filters(&mut env);
             env.add_template("board_page", &board_page_template)
                 .unwrap();
             let tmpl = env.get_template("board_page").unwrap();
@@ -471,8 +470,7 @@ impl SubCommandChipPages {
 
         for chip in &chip_info {
             let mut env = Environment::new();
-            env.add_filter("slugify", slugify::<String>);
-            env.add_filter("capitalize_first", capitalize_first);
+            add_custom_filters(&mut env);
             env.add_template("chip_page", &chip_page_template).unwrap();
             let tmpl = env.get_template("chip_page").unwrap();
             let chip_page = tmpl
@@ -803,6 +801,11 @@ fn capitalize_first(value: String) -> String {
         None => String::new(),
         Some(first) => first.to_uppercase().collect::<String>() + chars.as_str(),
     }
+}
+
+fn add_custom_filters(env: &mut Environment) {
+    env.add_filter("slugify", slugify::<String>);
+    env.add_filter("capitalize_first", capitalize_first);
 }
 
 #[derive(Debug, thiserror::Error, Diagnostic)]
