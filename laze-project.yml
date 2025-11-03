@@ -1779,6 +1779,9 @@ builders:
           - doc/gen_book.rs matrix doc/support_matrix.yml book/src/support_matrix_tier1.html --template-path book/templates/support-matrix.html.tmpl --tier 1
           - doc/gen_book.rs matrix doc/support_matrix.yml book/src/support_matrix_tier2.html --template-path book/templates/support-matrix.html.tmpl --tier 2
           - doc/gen_book.rs matrix doc/support_matrix.yml book/src/support_matrix_tier3.html --template-path book/templates/support-matrix.html.tmpl --tier 3
+          - doc/gen_book.rs chip-pages doc/support_matrix.yml book/src/chips/ --template-path book/templates/chip-page.md.tmpl
+          - doc/gen_book.rs chip-index doc/support_matrix.yml book/src/chips/index.md --template-path book/templates/chip-index.md.tmpl
+
       fmt:
         build: false
         cmd:
