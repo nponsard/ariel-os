@@ -1,6 +1,6 @@
 # Chip Pages
 
-Here's the list of supported chips in ArielOS.
+Here is the list of supported chips in ArielOS.
 
 - [ESP32-C3](./esp32c3.md)
 - [ESP32-C3Fx4](./esp32c3fx4.md)
