@@ -1,4 +1,4 @@
-# ESP32-C3Fx4
+# ESP32-S2Fx4
 
 ## Support Matrix
 
@@ -6,13 +6,13 @@
 |---|:---:|
 |GPIO|<span title="supported">✅</span>|
 |Debug Output|<span title="supported">✅</span>|
-|I2C Controller Mode|<span title="supported">✅</span>|
-|SPI Main Mode|<span title="supported">✅</span>|
+|I2C Controller Mode|<span title="needs testing">🚦</span>|
+|SPI Main Mode|<span title="needs testing">🚦</span>|
 |UART|<span title="supported">✅</span>|
 |Logging|<span title="supported">✅</span>|
-|User USB|<span title="not available on this piece of hardware">–</span>[^no-generic-usb-peripheral]|
+|User USB|<span title="available in hardware, but not currently supported by Ariel OS">❌</span>[^usb-does-not-enumerate][^see-also-https-github-com-ariel-os-ariel-os-issues-903]|
 |Wi-Fi|<span title="supported">✅</span>|
-|Ethernet over USB|<span title="not available on this piece of hardware">–</span>|
+|Ethernet over USB|<span title="available in hardware, but not currently supported by Ariel OS">❌</span>|
 |Hardware Random Number Generator|<span title="supported">✅</span>|
 |Persistent Storage|<span title="available in hardware, but not currently supported by Ariel OS">❌</span>[^requires-partitioning-support]|
 
@@ -41,5 +41,6 @@ dt, dd {
 }
 </style>
 
-[^no-generic-usb-peripheral]: No generic USB peripheral.
+[^usb-does-not-enumerate]: USB does not enumerate.
+[^see-also-https-github-com-ariel-os-ariel-os-issues-903]: See also: https://github.com/ariel-os/ariel-os/issues/903.
 [^requires-partitioning-support]: Requires partitioning support.
