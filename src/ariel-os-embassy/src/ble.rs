@@ -3,10 +3,12 @@ use ariel_os_embassy_common::ble::Config;
 // Must be async and return &trouble_host::Stack<'static, impl Controller>
 pub use crate::hal::ble::ble_stack;
 
+const BLE_ADDR_STORAGE_KEY: &str = "ble-addr";
+
 #[allow(dead_code, reason = "false positive during builds outside of laze")]
-pub(crate) fn config() -> Config {
+pub(crate) async fn config() -> Config {
     let address = get_ble_mac_address();
-    let mut fallback_address = get_fallback_mac_address();
+    let mut fallback_address = get_fallback_mac_address().await;
 
     // Scanning apps show that the last byte of the array appears fist, to be more user-friendly we reverse the order
     fallback_address.reverse();
@@ -40,21 +42,35 @@ fn get_ble_mac_address() -> Option<[u8; 6]> {
 }
 
 /// Generate a random static address for the devices that don't have a public address
-fn get_fallback_mac_address() -> [u8; 6] {
+///
+/// # Panics
+/// - when storage is not initialized
+async fn get_fallback_mac_address() -> [u8; 6] {
     cfg_if::cfg_if! {
         if #[cfg(capability = "hw/device-identity")] {
             ariel_os_identity::interface_eui48(2)
                 .map(|eui48| eui48.0)
                 .unwrap_or([0x02, 0x00, 0x00, 0x00, 0x00, 0x01])
-        } else if #[cfg(feature = "random")] {
+        } else if #[cfg(all(feature = "random", feature = "storage"))] {
+
+            // check if we already generated an address
+            let stored_addr: Option<[u8;6]> = ariel_os_storage::get(BLE_ADDR_STORAGE_KEY).await.unwrap();
+            if let Some(addr) = stored_addr {
+                return addr
+            }
+
             let mut addr = [0u8; 6];
             rand_core::RngCore::fill_bytes(&mut ariel_os_random::fast_rng(), &mut addr);
 
             // Set locally administered and unicast bits
             addr[0] = (addr[0] & 0b1111_0000) | 0b0000_0010;
+
+            // store in storage
+            ariel_os_storage::insert(BLE_ADDR_STORAGE_KEY, addr).await.unwrap();
+
             addr
         } else {
-            // Fallback to a static address
+            // Fallback to a static, locally administered address
             [0x02, 0x00, 0x00, 0x00, 0x00, 0x01]
         }
     }
