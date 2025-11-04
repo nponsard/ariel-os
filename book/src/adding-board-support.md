@@ -61,6 +61,12 @@ sbd-gen generate-ariel boards -o src/ariel-os-boards --mode update
 > CONFIG_WIFI_NETWORK='test' CONFIG_WIFI_PASSWORD='password' laze build --global -b <builder>
 > ```
 
+<div class="warning">
+
+When adding support for a board *in tree*, its name needs to be added to the [list of builders of its corresponding MCU family][ci-builder-lists], so that it gets appropriatetly built for in CI.
+
+</div>
+
 ## Extra Steps for Some MCU Families
 
 ### `stm32`
@@ -144,3 +150,4 @@ Chances are that if you need to add this, you will also have to add support for
 the processor architecture to `ariel-os-bench`, `ariel-os-rt`, `ariel-os-threads`.
 
 [sbd]: https://github.com/ariel-os/sbd
+[ci-builder-lists]: https://github.com/ariel-os/ariel-os/blob/5c23c04cd51c5cfebd561c9d27a47d4e26cdb649/.github/workflows/build.yml#L147-L168
