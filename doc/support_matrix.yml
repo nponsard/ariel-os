@@ -481,7 +481,7 @@ chips:
     support:
       gpio: supported
       debug_output: supported
-      ethernet_over_usb: needs_testing
+      ethernet_over_usb: not_currently_supported
       hwrng: not_available
       i2c_controller: supported
       spi_main: supported
@@ -492,7 +492,10 @@ chips:
         comments:
           - unsupported heterogeneous flash organization
       wifi: not_available
-      user_usb: needs_testing
+      user_usb:
+        status: not_currently_supported
+        comments:
+          - a more complete clock configuration needs to be provided
 
   stm32h755zi:
     name: STM32H755ZI

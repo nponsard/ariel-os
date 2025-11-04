@@ -167,9 +167,9 @@ fn rcc_config() -> embassy_stm32::rcc::Config {
         rcc.pll_src = PllSource::HSE;
         rcc.pll = Some(Pll {
             prediv: PllPreDiv::DIV4,
-            mul: PllMul::MUL84,
-            divp: Some(PllPDiv::DIV2),
-            divq: None,
+            mul: PllMul::MUL168,
+            divp: Some(PllPDiv::DIV4),
+            divq: Some(PllQDiv::DIV7),
             divr: None,
         });
         rcc.ahb_pre = AHBPrescaler::DIV1;
