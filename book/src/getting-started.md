@@ -12,7 +12,7 @@ It explains how to compile and run the `hello-word` example to verify your setup
    <!-- gcc and curl are only required for espup, but it doesn't hurt to install those here. -->
 
     ```sh
-    apt install git ninja-build pkg-config libudev-dev clang gcc-arm-none-eabi gcc-riscv64-unknown-elf gcc curl
+    apt install git ninja-build pkg-config libudev-dev clang gcc-arm-none-eabi gcc-riscv64-unknown-elf gcc curl make
     ```
 
     **Arch Linux**
