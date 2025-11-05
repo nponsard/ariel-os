@@ -1,5 +1,9 @@
 # STM32F401RE
 
+## Chip Info
+
+- **Ariel OS Name:** `stm32f401re`
+
 ## Support Matrix
 
 |Functionality|Support Status|

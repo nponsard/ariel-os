@@ -1,5 +1,9 @@
 # ESP32-S2Fx4R2
 
+## Chip Info
+
+- **Ariel OS Name:** `esp32s2fx4r2`
+
 ## Support Matrix
 
 |Functionality|Support Status|

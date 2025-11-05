@@ -1,5 +1,9 @@
 # STM32WBA55CG
 
+## Chip Info
+
+- **Ariel OS Name:** `stm32wba55cg`
+
 ## Support Matrix
 
 |Functionality|Support Status|

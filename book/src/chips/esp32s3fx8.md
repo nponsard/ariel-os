@@ -1,5 +1,9 @@
 # ESP32-S3Fx8
 
+## Chip Info
+
+- **Ariel OS Name:** `esp32s3fx8`
+
 ## Support Matrix
 
 |Functionality|Support Status|

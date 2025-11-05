@@ -1,5 +1,9 @@
 # ESP32-C6
 
+## Chip Info
+
+- **Ariel OS Name:** `esp32c6`
+
 ## Support Matrix
 
 |Functionality|Support Status|

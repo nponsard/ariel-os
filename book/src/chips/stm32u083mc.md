@@ -1,5 +1,9 @@
 # STM32U083MC
 
+## Chip Info
+
+- **Ariel OS Name:** `stm32u083mc`
+
 ## Support Matrix
 
 |Functionality|Support Status|

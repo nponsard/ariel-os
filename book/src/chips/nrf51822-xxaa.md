@@ -1,5 +1,9 @@
 # nRF51822-xxAA
 
+## Chip Info
+
+- **Ariel OS Name:** `nrf51822-xxaa`
+
 ## Support Matrix
 
 |Functionality|Support Status|

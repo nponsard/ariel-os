@@ -1,5 +1,9 @@
 # STM32U073KC
 
+## Chip Info
+
+- **Ariel OS Name:** `stm32u073kc`
+
 ## Support Matrix
 
 |Functionality|Support Status|
