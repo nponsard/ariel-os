@@ -5,9 +5,11 @@ for a board/device to Ariel OS.
 
 Feel free to report anything that is unclear or missing!
 
+> [!NOTE]
 > This guide requires working on your own copy of Ariel OS.
 > You may want to fork the repository to easily upstream your changes later.
 
+> [!IMPORTANT]
 > Unless documented in the User Guide, please expect the module and context names that are defined in the `laze-project.yml` file to change.
 > We're still figuring out a proper naming scheme.
 > You've been warned.
@@ -55,17 +57,15 @@ To do that, install [`sbd-gen`][sbd] with `cargo install sbd-gen`, then run the 
 sbd-gen generate-ariel boards -o src/ariel-os-boards --mode update
 ```
 
+> [!TIP]
 > To build every example and test for a board the following command can be used (as this is only for compilation the credentials do not need to be valid):
 >
 > ```sh
 > CONFIG_WIFI_NETWORK='test' CONFIG_WIFI_PASSWORD='password' laze build --global -b <builder>
 > ```
 
-<div class="warning">
-
-When adding support for a board *in tree*, its name needs to be added to the [list of builders of its corresponding MCU family][ci-builder-lists], so that it gets appropriatetly built for in CI.
-
-</div>
+> [!WARNING]
+> When adding support for a board *in tree*, its name needs to be added to the [list of builders of its corresponding MCU family][ci-builder-lists], so that it gets appropriatetly built for in CI.
 
 ## Extra Steps for Some MCU Families
 

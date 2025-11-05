@@ -67,6 +67,7 @@ The following assumes you have your target board connected to your host computer
 
 Find the Ariel OS name of your supported board in the [support matrix](./hardware-functionality-support.html).
 
+> [!NOTE]
 > The following assumes the Nordic nRF52840-DK, whose Ariel OS name is `nrf52840dk`.
 > Replace that name with your board's.
 
@@ -94,6 +95,7 @@ laze -C examples/hello-world build -b nrf52840dk flash-erase-all
 
 ![Terminal screencast of compiling and flashing the hello-world example](./hello-world_render.svg)
 
+> [!TIP]
 > If you do not plan on working on Ariel OS *itself*, this repository is not needed anymore and can be deleted.
 
 ## Starting an application project from a template repository
@@ -125,6 +127,7 @@ To check your setup, the default application can be compiled and run as follows:
 laze build -b nrf52840dk run
 ```
 
+> [!IMPORTANT]
 > The board name needs to be replaced with your board's.
 
 See the [Build System page](./build-system.md) to learn more about laze and how to work with out-of-tree applications.
