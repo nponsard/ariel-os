@@ -4,7 +4,7 @@
 
 - **Tier:** 2
 - **Ariel OS Name:** `nordic-thingy-91-x-nrf9151`
-- **Chip:** nRF9151
+- **Chip:** [nRF9151](../chips/nrf9151.md)
 - **Chip Ariel OS Name:** `nrf9151`
 
 ### References

@@ -4,7 +4,7 @@
 
 - **Tier:** 3
 - **Ariel OS Name:** `espressif-esp32-s2-devkitc-1`
-- **Chip:** ESP32-S2
+- **Chip:** [ESP32-S2](../chips/esp32s2.md)
 - **Chip Ariel OS Name:** `esp32s2`
 
 ### References

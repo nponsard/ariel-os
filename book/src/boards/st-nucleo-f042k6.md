@@ -4,7 +4,7 @@
 
 - **Tier:** 3
 - **Ariel OS Name:** `st-nucleo-f042k6`
-- **Chip:** STM32F042K6
+- **Chip:** [STM32F042K6](../chips/stm32f042k6.md)
 - **Chip Ariel OS Name:** `stm32f042k6`
 
 ### References

@@ -4,7 +4,7 @@
 
 - **Tier:** 1
 - **Ariel OS Name:** `st-nucleo-wb55`
-- **Chip:** STM32WB55RG
+- **Chip:** [STM32WB55RG](../chips/stm32wb55rg.md)
 - **Chip Ariel OS Name:** `stm32wb55rg`
 
 ### References

@@ -4,7 +4,7 @@
 
 - **Tier:** 2
 - **Ariel OS Name:** `st-steval-mkboxpro`
-- **Chip:** STM32U585AI
+- **Chip:** [STM32U585AI](../chips/stm32u585ai.md)
 - **Chip Ariel OS Name:** `stm32u585ai`
 
 ### References

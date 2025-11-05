@@ -4,7 +4,7 @@
 
 - **Tier:** 3
 - **Ariel OS Name:** `bbc-microbit-v1`
-- **Chip:** nRF51822-xxAA
+- **Chip:** [nRF51822-xxAA](../chips/nrf51822-xxaa.md)
 - **Chip Ariel OS Name:** `nrf51822-xxaa`
 
 ### References

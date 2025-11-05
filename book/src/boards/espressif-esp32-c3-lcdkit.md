@@ -4,7 +4,7 @@
 
 - **Tier:** 1
 - **Ariel OS Name:** `espressif-esp32-c3-lcdkit`
-- **Chip:** ESP32-C3
+- **Chip:** [ESP32-C3](../chips/esp32c3.md)
 - **Chip Ariel OS Name:** `esp32c3`
 
 ### References

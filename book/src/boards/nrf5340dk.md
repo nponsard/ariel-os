@@ -4,7 +4,7 @@
 
 - **Tier:** 1
 - **Ariel OS Name:** `nrf5340dk`
-- **Chip:** nRF5340
+- **Chip:** [nRF5340](../chips/nrf5340.md)
 - **Chip Ariel OS Name:** `nrf5340`
 
 ### References

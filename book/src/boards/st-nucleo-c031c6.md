@@ -4,7 +4,7 @@
 
 - **Tier:** 1
 - **Ariel OS Name:** `st-nucleo-c031c6`
-- **Chip:** STM32C031C6
+- **Chip:** [STM32C031C6](../chips/stm32c031c6.md)
 - **Chip Ariel OS Name:** `stm32c031c6`
 
 ### References

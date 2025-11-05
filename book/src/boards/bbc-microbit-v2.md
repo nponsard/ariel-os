@@ -4,7 +4,7 @@
 
 - **Tier:** 1
 - **Ariel OS Name:** `bbc-microbit-v2`
-- **Chip:** nRF52833
+- **Chip:** [nRF52833](../chips/nrf52833.md)
 - **Chip Ariel OS Name:** `nrf52833`
 
 ### References

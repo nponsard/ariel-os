@@ -4,7 +4,7 @@
 
 - **Tier:** 1
 - **Ariel OS Name:** `st-nucleo-h755zi-q`
-- **Chip:** STM32H755ZI
+- **Chip:** [STM32H755ZI](../chips/stm32h755zi.md)
 - **Chip Ariel OS Name:** `stm32h755zi`
 
 ### References

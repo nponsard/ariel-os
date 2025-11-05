@@ -4,7 +4,7 @@
 
 - **Tier:** 3
 - **Ariel OS Name:** `st-nucleo-wba55`
-- **Chip:** STM32WBA55CG
+- **Chip:** [STM32WBA55CG](../chips/stm32wba55cg.md)
 - **Chip Ariel OS Name:** `stm32wba55cg`
 
 ### References

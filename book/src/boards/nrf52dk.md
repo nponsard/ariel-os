@@ -4,7 +4,7 @@
 
 - **Tier:** 2
 - **Ariel OS Name:** `nrf52dk`
-- **Chip:** nRF52832
+- **Chip:** [nRF52832](../chips/nrf52832.md)
 - **Chip Ariel OS Name:** `nrf52832`
 
 ### References
