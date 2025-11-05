@@ -1,5 +1,9 @@
 # STM32U585AI
 
+## Chip Info
+
+- **Ariel OS Name:** `stm32u585ai`
+
 ## Support Matrix
 
 |Functionality|Support Status|

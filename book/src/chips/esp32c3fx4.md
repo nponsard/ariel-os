@@ -1,5 +1,9 @@
 # ESP32-C3Fx4
 
+## Chip Info
+
+- **Ariel OS Name:** `esp32c3fx4`
+
 ## Support Matrix
 
 |Functionality|Support Status|

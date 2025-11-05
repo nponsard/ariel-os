@@ -1,5 +1,9 @@
 # STM32H755ZI
 
+## Chip Info
+
+- **Ariel OS Name:** `stm32h755zi`
+
 ## Support Matrix
 
 |Functionality|Support Status|

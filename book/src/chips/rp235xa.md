@@ -1,5 +1,9 @@
 # RP235xa
 
+## Chip Info
+
+- **Ariel OS Name:** `rp235xa`
+
 ## Support Matrix
 
 |Functionality|Support Status|

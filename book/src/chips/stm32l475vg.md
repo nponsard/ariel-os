@@ -1,5 +1,9 @@
 # STM32L475VG
 
+## Chip Info
+
+- **Ariel OS Name:** `stm32l475vg`
+
 ## Support Matrix
 
 |Functionality|Support Status|

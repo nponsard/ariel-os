@@ -1,5 +1,9 @@
 # STM32WLE5JC
 
+## Chip Info
+
+- **Ariel OS Name:** `stm32wle5jc`
+
 ## Support Matrix
 
 |Functionality|Support Status|
