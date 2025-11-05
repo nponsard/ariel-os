@@ -1,0 +1,6 @@
+# Chip Pages
+
+Here is the list of supported chips in Ariel OS.
+{% for chip_technical_name, chip_info in chips|dictsort %}
+- [{{ chip_info.name }}](./{{ chip_technical_name }}.md)
+{%- endfor %}
