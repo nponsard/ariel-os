@@ -15,6 +15,29 @@ It explains how to compile and run the `hello-word` example to verify your setup
     apt install git ninja-build pkg-config libudev-dev clang gcc-arm-none-eabi gcc-riscv64-unknown-elf gcc curl
     ```
 
+    **Arch Linux**
+
+   <!-- lib32-glibc is needed to build for Xtensa -->
+
+    ```sh
+    pacman -S git ninja pkgconf clang arm-none-eabi-gcc arm-none-eabi-newlib gcc curl make lib32-glibc
+    ```
+
+    For RISC-V chips, the compiler can be installed via the `riscv32-gnu-toolchain-elf-bin` AUR package
+    with a AUR helper such as [yay](https://github.com/Jguer/yay):
+
+    ```sh
+    yay -S riscv32-gnu-toolchain-elf-bin
+    ```
+
+    Or manually:
+
+    ```sh
+    git clone https://aur.archlinux.org/riscv32-gnu-toolchain-elf-bin.git
+    cd riscv32-gnu-toolchain-elf-bin
+    makepkg -si
+    ```
+
     **macOS (Apple Silicon)**
 
     ```sh
