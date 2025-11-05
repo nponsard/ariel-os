@@ -4,7 +4,7 @@
 
 - **Tier:** 1
 - **Ariel OS Name:** `rpi-pico`
-- **Chip:** RP2040
+- **Chip:** [RP2040](../chips/rp2040.md)
 - **Chip Ariel OS Name:** `rp2040`
 
 ### References

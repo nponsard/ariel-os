@@ -4,7 +4,7 @@
 
 - **Tier:** 1
 - **Ariel OS Name:** `rpi-pico2`
-- **Chip:** RP235xa
+- **Chip:** [RP235xa](../chips/rp235xa.md)
 - **Chip Ariel OS Name:** `rp235xa`
 
 ### References

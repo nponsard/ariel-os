@@ -4,7 +4,7 @@
 
 - **Tier:** 2
 - **Ariel OS Name:** `dfrobot-firebeetle2-esp32-c6`
-- **Chip:** ESP32-C6Fx4
+- **Chip:** [ESP32-C6Fx4](../chips/esp32c6fx4.md)
 - **Chip Ariel OS Name:** `esp32c6fx4`
 
 ### References

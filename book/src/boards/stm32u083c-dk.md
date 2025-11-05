@@ -4,7 +4,7 @@
 
 - **Tier:** 1
 - **Ariel OS Name:** `stm32u083c-dk`
-- **Chip:** STM32U083MC
+- **Chip:** [STM32U083MC](../chips/stm32u083mc.md)
 - **Chip Ariel OS Name:** `stm32u083mc`
 
 ### References

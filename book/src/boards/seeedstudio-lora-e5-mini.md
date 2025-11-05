@@ -4,7 +4,7 @@
 
 - **Tier:** 3
 - **Ariel OS Name:** `seeedstudio-lora-e5-mini`
-- **Chip:** STM32WLE5JC
+- **Chip:** [STM32WLE5JC](../chips/stm32wle5jc.md)
 - **Chip Ariel OS Name:** `stm32wle5jc`
 
 ### References

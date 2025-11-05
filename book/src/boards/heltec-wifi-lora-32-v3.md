@@ -4,7 +4,7 @@
 
 - **Tier:** 3
 - **Ariel OS Name:** `heltec-wifi-lora-32-v3`
-- **Chip:** ESP32-S3
+- **Chip:** [ESP32-S3](../chips/esp32s3.md)
 - **Chip Ariel OS Name:** `esp32s3`
 
 ### References

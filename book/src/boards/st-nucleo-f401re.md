@@ -4,7 +4,7 @@
 
 - **Tier:** 2
 - **Ariel OS Name:** `st-nucleo-f401re`
-- **Chip:** STM32F401RE
+- **Chip:** [STM32F401RE](../chips/stm32f401re.md)
 - **Chip Ariel OS Name:** `stm32f401re`
 
 ### References

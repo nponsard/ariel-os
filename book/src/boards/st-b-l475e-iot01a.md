@@ -4,7 +4,7 @@
 
 - **Tier:** 2
 - **Ariel OS Name:** `st-b-l475e-iot01a`
-- **Chip:** STM32L475VG
+- **Chip:** [STM32L475VG](../chips/stm32l475vg.md)
 - **Chip Ariel OS Name:** `stm32l475vg`
 
 ### References

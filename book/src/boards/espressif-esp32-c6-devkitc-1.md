@@ -4,7 +4,7 @@
 
 - **Tier:** 1
 - **Ariel OS Name:** `espressif-esp32-c6-devkitc-1`
-- **Chip:** ESP32-C6
+- **Chip:** [ESP32-C6](../chips/esp32c6.md)
 - **Chip Ariel OS Name:** `esp32c6`
 
 ### References
