@@ -30,6 +30,7 @@ Tasks available in Ariel OS include:
 - `reset`: Reboots the target.
 - `tree`: Prints the application's `cargo tree`.
 - `vscode-config`: update rust-analyzer configuration for VSCode, see [vscode-configuration](./vscode-configuration.md)
+- `fmt`: Formats the project's Rust source code following the [Coding Conventions](./coding-conventions.md) (formats all Rust files except generated ones).
 
 > [!IMPORTANT]
 > As some tasks may trigger a rebuild, it is necessary to pass the same settings to related consecutive commands:
