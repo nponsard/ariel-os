@@ -58,6 +58,7 @@ functionalities:
 chips:
   nrf51822-xxaa:
     name: nRF51822-xxAA
+    manufacturer: Nordic Semiconductor
     support:
       gpio: supported
       debug_output: supported
@@ -73,6 +74,7 @@ chips:
 
   nrf52832:
     name: nRF52832
+    manufacturer: Nordic Semiconductor
     support:
       gpio: supported
       debug_output: supported
@@ -88,6 +90,7 @@ chips:
 
   nrf52833:
     name: nRF52833
+    manufacturer: Nordic Semiconductor
     support:
       gpio: supported
       debug_output: supported
@@ -103,6 +106,7 @@ chips:
 
   nrf52840:
     name: nRF52840
+    manufacturer: Nordic Semiconductor
     support:
       gpio: supported
       debug_output: supported
@@ -116,6 +120,7 @@ chips:
 
   nrf5340:
     name: nRF5340
+    manufacturer: Nordic Semiconductor
     support:
       gpio: supported
       debug_output: supported
@@ -132,6 +137,7 @@ chips:
 
   nrf9151:
     name: nRF9151
+    manufacturer: Nordic Semiconductor
     support:
       gpio: supported
       debug_output: supported
@@ -150,6 +156,7 @@ chips:
 
   nrf9160:
     name: nRF9160
+    manufacturer: Nordic Semiconductor
     support:
       gpio: supported
       debug_output: supported
@@ -168,6 +175,7 @@ chips:
 
   rp2040:
     name: RP2040
+    manufacturer: Raspberry Pi
     support:
       gpio: supported
       debug_output: supported
@@ -181,6 +189,7 @@ chips:
 
   rp235xa:
     name: RP235xa
+    manufacturer: Raspberry Pi
     support:
       gpio: supported
       debug_output: supported
@@ -198,6 +207,7 @@ chips:
 
   esp32c3:
     name: ESP32-C3
+    manufacturer: Espressif
     support:
       gpio: supported
       debug_output: supported
@@ -221,6 +231,7 @@ chips:
   # Currently identical to esp32c3.
   esp32c3fx4:
     name: ESP32-C3Fx4
+    manufacturer: Espressif
     support:
       gpio: supported
       debug_output: supported
@@ -243,6 +254,7 @@ chips:
 
   esp32c6:
     name: ESP32-C6
+    manufacturer: Espressif
     support:
       gpio: supported
       debug_output: supported
@@ -266,6 +278,7 @@ chips:
   # Currently identical to esp32c6.
   esp32c6fx4:
     name: ESP32-C6Fx4
+    manufacturer: Espressif
     support:
       gpio: supported
       debug_output: supported
@@ -288,6 +301,7 @@ chips:
 
   esp32s2:
     name: ESP32-S2
+    manufacturer: Espressif
     support:
       gpio: supported
       debug_output: supported
@@ -311,6 +325,7 @@ chips:
   # Currently identical to esp32s2.
   esp32s2fx2:
     name: ESP32-S2Fx2
+    manufacturer: Espressif
     support:
       gpio: supported
       debug_output: supported
@@ -334,6 +349,7 @@ chips:
   # Currently identical to esp32s2.
   esp32s2fx4:
     name: ESP32-S2Fx4
+    manufacturer: Espressif
     support:
       gpio: supported
       debug_output: supported
@@ -357,6 +373,7 @@ chips:
   # Currently identical to esp32s2.
   esp32s2fx4r2:
     name: ESP32-S2Fx4R2
+    manufacturer: Espressif
     support:
       gpio: supported
       debug_output: supported
@@ -379,6 +396,7 @@ chips:
 
   esp32s3:
     name: ESP32-S3
+    manufacturer: Espressif
     support:
       gpio: supported
       debug_output: supported
@@ -402,6 +420,7 @@ chips:
   # Currently identical to esp32s3.
   esp32s3fx8:
     name: ESP32-S3Fx8
+    manufacturer: Espressif
     support:
       gpio: supported
       debug_output: supported
@@ -424,6 +443,7 @@ chips:
 
   stm32c031c6:
     name: STM32C031C6
+    manufacturer: STMicroelectronics
     support:
       gpio: supported
       debug_output: supported
@@ -442,6 +462,7 @@ chips:
 
   stm32f042k6:
     name: STM32F042K6
+    manufacturer: STMicroelectronics
     support:
       gpio: supported
       debug_output: supported
@@ -460,6 +481,7 @@ chips:
 
   stm32f401re:
     name: STM32F401RE
+    manufacturer: STMicroelectronics
     support:
       gpio: supported
       debug_output: supported
@@ -478,6 +500,7 @@ chips:
 
   stm32f411re:
     name: STM32F411RE
+    manufacturer: STMicroelectronics
     support:
       gpio: supported
       debug_output: supported
@@ -499,6 +522,7 @@ chips:
 
   stm32h755zi:
     name: STM32H755ZI
+    manufacturer: STMicroelectronics
     support:
       gpio: supported
       debug_output: supported
@@ -521,6 +545,7 @@ chips:
 
   stm32l475vg:
     name: STM32L475VG
+    manufacturer: STMicroelectronics
     support:
       gpio: supported
       debug_output: supported
@@ -543,6 +568,7 @@ chips:
 
   stm32u073kc:
     name: STM32U073KC
+    manufacturer: STMicroelectronics
     support:
       gpio: supported
       debug_output: supported
@@ -561,6 +587,7 @@ chips:
 
   stm32u083mc:
     name: STM32U083MC
+    manufacturer: STMicroelectronics
     support:
       gpio: supported
       debug_output: supported
@@ -577,6 +604,7 @@ chips:
 
   stm32u585ai:
     name: STM32U585AI
+    manufacturer: STMicroelectronics
     support:
       gpio: supported
       debug_output: supported
@@ -596,6 +624,7 @@ chips:
 
   stm32wb55rg:
     name: STM32WB55RG
+    manufacturer: STMicroelectronics
     support:
       gpio: supported
       debug_output: supported
@@ -612,6 +641,7 @@ chips:
 
   stm32wba55cg:
     name: STM32WBA55CG
+    manufacturer: STMicroelectronics
     support:
       gpio: supported
       debug_output: supported
@@ -630,6 +660,7 @@ chips:
 
   stm32wle5jc:
     name: STM32WLE5JC
+    manufacturer: STMicroelectronics
     support:
       gpio: supported
       debug_output: supported

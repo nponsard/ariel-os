@@ -31,6 +31,7 @@ pub struct FunctionalityInfo {
 #[serde(deny_unknown_fields)]
 pub struct ChipInfo {
     pub name: String,
+    pub manufacturer: String,
     pub description: Option<String>,
     pub support: HashMap<String, SupportInfo>,
 }

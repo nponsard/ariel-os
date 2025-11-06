@@ -2,6 +2,8 @@
 
 Here is the list of supported chips in Ariel OS.
 
+## Espressif
+  
 - [ESP32-C3](./esp32c3.md)
 - [ESP32-C3Fx4](./esp32c3fx4.md)
 - [ESP32-C6](./esp32c6.md)
@@ -12,6 +14,9 @@ Here is the list of supported chips in Ariel OS.
 - [ESP32-S2Fx4R2](./esp32s2fx4r2.md)
 - [ESP32-S3](./esp32s3.md)
 - [ESP32-S3Fx8](./esp32s3fx8.md)
+
+## Nordic Semiconductor
+  
 - [nRF51822-xxAA](./nrf51822-xxaa.md)
 - [nRF52832](./nrf52832.md)
 - [nRF52833](./nrf52833.md)
@@ -19,8 +24,14 @@ Here is the list of supported chips in Ariel OS.
 - [nRF5340](./nrf5340.md)
 - [nRF9151](./nrf9151.md)
 - [nRF9160](./nrf9160.md)
+
+## Raspberry Pi
+  
 - [RP2040](./rp2040.md)
 - [RP235xa](./rp235xa.md)
+
+## STMicroelectronics
+  
 - [STM32C031C6](./stm32c031c6.md)
 - [STM32F042K6](./stm32f042k6.md)
 - [STM32F401RE](./stm32f401re.md)
