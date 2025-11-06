@@ -861,8 +861,8 @@ enum Error {
     WritingOutputFile { path: PathBuf, source: io::Error },
     #[error("could not read existing output HTML file `{path}`")]
     ReadingExistingFile { path: PathBuf, source: io::Error },
-    #[error("existing HTML file `{path}` is not up to date")]
+    #[error("existing HTML file `{path}` is not up to date. To update the book, run `laze build update-book`")]
     ExistingHtmlNotUpToDate { path: PathBuf },
-    #[error("existing Markdown file `{path}` is not up to date")]
+    #[error("existing Markdown file `{path}` is not up to date. To update the book, run `laze build update-book`")]
     ExistingMarkdownNotUpToDate { path: PathBuf },
 }
