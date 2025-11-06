@@ -516,7 +516,8 @@ struct BoardSupport {
     chip: String,
     chip_technical_name: String,
     url: String,
-    doc: String,
+    board_doc: String,
+    chip_doc: String,
     technical_name: String,
     name: String,
     tier: String,
@@ -671,6 +672,7 @@ fn gen_board_functionalities(matrix: &schema::Matrix) -> Result<Vec<BoardSupport
                 })
             });
             let board_doc_page = ["boards/", board_technical_name, ".html"].concat();
+            let chip_doc_page = ["chips/", &board_info.chip, ".html"].concat();
             let errors = functionalities
                 .clone()
                 .filter_map(|f| f.err())
@@ -680,7 +682,8 @@ fn gen_board_functionalities(matrix: &schema::Matrix) -> Result<Vec<BoardSupport
                     chip: chip_info.name.to_owned(),
                     chip_technical_name: board_info.chip.to_owned(),
                     url: board_info.url.to_owned(),
-                    doc: board_doc_page,
+                    board_doc: board_doc_page,
+                    chip_doc: chip_doc_page,
                     technical_name: board_technical_name.to_owned(),
                     name: board_name.to_owned(),
                     tier: board_info.tier.to_owned(),
