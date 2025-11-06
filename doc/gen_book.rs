@@ -252,6 +252,13 @@ struct SubCommandChipIndex {
     output_path: PathBuf,
 }
 
+#[derive(Serialize)]
+struct ChipIndex {
+    name: String,
+    technical_name: String,
+    manufacturer: String,
+}
+
 impl SubCommandChipIndex {
     fn run(self, matrix: &schema::Matrix) -> miette::Result<()> {
         let chip_index_template = fs::read_to_string(&self.template_path).map_err(|source| {
@@ -261,12 +268,22 @@ impl SubCommandChipIndex {
             }
         })?;
 
+        let chips: Vec<_> = matrix
+            .chips
+            .iter()
+            .map(|(k, v)| ChipIndex {
+                name: v.name.to_owned(),
+                technical_name: k.to_owned(),
+                manufacturer: v.manufacturer.to_owned(),
+            })
+            .collect();
+
         let mut env = Environment::new();
         env.add_template("chip_list", &chip_index_template).unwrap();
         let tmpl = env.get_template("chip_list").unwrap();
         let chip_index_md = tmpl
             .render(context!(
-                chips => matrix.chips,
+                chips => chips,
             ))
             .unwrap();
 

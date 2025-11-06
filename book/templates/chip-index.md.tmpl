@@ -1,6 +1,9 @@
 # Chip Pages
 
 Here is the list of supported chips in Ariel OS.
-{% for chip_technical_name, chip_info in chips|dictsort %}
-- [{{ chip_info.name }}](./{{ chip_technical_name }}.md)
-{%- endfor %}
+{% for manufacturer, list in chips|sort(attribute="name")|groupby("manufacturer") %}
+## {{ manufacturer }}
+  {% for chip in list %}
+- [{{ chip.name }}](./{{ chip.technical_name }}.md)
+  {%- endfor %}
+{% endfor %}
