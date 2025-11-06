@@ -23,8 +23,15 @@ It explains how to compile and run the `hello-word` example to verify your setup
     pacman -S git ninja pkgconf clang arm-none-eabi-gcc arm-none-eabi-newlib gcc curl make lib32-glibc
     ```
 
-    For RISC-V chips, the compiler can be installed via the `riscv32-gnu-toolchain-elf-bin` AUR package
-    with a AUR helper such as [yay](https://github.com/Jguer/yay):
+    For RISC-V chips, the compiler can be installed via the `riscv32-gnu-toolchain-elf-bin` AUR package.
+
+    First, make sure to install the `fakeroot` and `debugedit` packages (part of the `base-devel` metapackage):
+
+    ```sh
+    pacman -S fakeroot debugedit
+    ```
+
+    `riscv32-gnu-toolchain-elf-bin` can be installed with an AUR helper, such as [yay](https://github.com/Jguer/yay):
 
     ```sh
     yay -S riscv32-gnu-toolchain-elf-bin
