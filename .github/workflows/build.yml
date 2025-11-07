@@ -145,9 +145,11 @@ jobs:
         run: |
           case '${{ needs.check-labels.outputs.label }}' in
             'ci-build:esp')
+              echo "NEEDS_XTENSA_TOOLCHAIN=1" >> "$GITHUB_ENV"
               echo "LAZE_BUILDERS=ai-c3,espressif-esp32-c3-lcdkit,espressif-esp32-c6-devkitc-1,espressif-esp32-devkitc,espressif-esp32-s3-devkitc-1,heltec-wifi-lora-32-v3" >> "$GITHUB_ENV"
               ;;
             'ci-build:full')
+              echo "NEEDS_XTENSA_TOOLCHAIN=1" >> "$GITHUB_ENV"
               # Not setting `LAZE_BUILDERS` so that the build is not limited
               ;;
             'ci-build:native')
@@ -161,6 +163,7 @@ jobs:
               echo "LAZE_BUILDERS=rpi-pico,rpi-pico2,rpi-pico2-w,rpi-pico-w" >> "$GITHUB_ENV"
               ;;
             'ci-build:small')
+              echo "NEEDS_XTENSA_TOOLCHAIN=1" >> "$GITHUB_ENV"
               echo "LAZE_BUILDERS=ai-c3,espressif-esp32-devkitc,espressif-esp32-c6-devkitc-1,espressif-esp32-s3-devkitc-1,bbc-microbit-v2,native,nrf52840dk,nrf5340dk,rpi-pico,rpi-pico-w,st-nucleo-c031c6,st-nucleo-h755zi-q,st-nucleo-wb55" >> "$GITHUB_ENV"
               ;;
             'ci-build:stm32')
@@ -198,7 +201,7 @@ jobs:
           components: rust-src, rustfmt
 
       - name: Install Rust for Xtensa
-        if: steps.should-skip.outputs.result != 'true' && (env.LAZE_BUILDERS == null || contains(env.LAZE_BUILDERS, 'esp32-s3'))
+        if: steps.should-skip.outputs.result != 'true' && (github.event_name == 'schedule' || env.NEEDS_XTENSA_TOOLCHAIN == '1')
         # No tag yet after https://github.com/esp-rs/xtensa-toolchain/pull/38 (will probably be @v1.5.5)
         uses: esp-rs/xtensa-toolchain@main
         with:
