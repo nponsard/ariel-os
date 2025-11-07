@@ -143,6 +143,11 @@ jobs:
       - name: "limit build unless nightly build"
         if: github.event_name != 'schedule' && steps.should-skip.outputs.result != 'true'
         run: |
+          allow_context() {
+            hal_contexts='context::esp,context::host,context::native,context::nrf,context::rp,context::stm32'
+
+            echo "$hal_contexts" | tr ',' '\n' | grep -v "^context::${1}$" | paste -sd ','
+          }
           case '${{ needs.check-labels.outputs.label }}' in
             'ci-build:esp')
               echo "NEEDS_XTENSA_TOOLCHAIN=1" >> "$GITHUB_ENV"
@@ -160,7 +165,7 @@ jobs:
               echo "LAZE_BUILDERS=bbc-microbit-v1,bbc-microbit-v2,nordic-thingy-91-x-nrf9151,nrf52840dk,nrf52dk,nrf5340dk,nrf5340dk-net,nrf9160dk-nrf9160,nrf9151-dk" >> "$GITHUB_ENV"
               ;;
             'ci-build:rp')
-              echo "LAZE_BUILDERS=rpi-pico,rpi-pico2,rpi-pico2-w,rpi-pico-w" >> "$GITHUB_ENV"
+              echo "LAZE_DISABLE=$(allow_context rp)" >> "$GITHUB_ENV"
               ;;
             'ci-build:small')
               echo "NEEDS_XTENSA_TOOLCHAIN=1" >> "$GITHUB_ENV"
@@ -249,6 +254,8 @@ jobs:
         if: steps.should-skip.outputs.result != 'true'
         run: |
           echo "LAZE_BUILDERS=${LAZE_BUILDERS}"
+          echo "LAZE_DISABLE=${LAZE_DISABLE}"
+          laze build -mg info-boards | uniq
           CONFIG_WIFI_NETWORK='test' CONFIG_WIFI_PASSWORD='password' laze build -DCARGO_ARGS+='--locked' --global --partition hash:${{ matrix.partition }}
 
       # cleanup previous build artifacts. do in background (no need to wait).
