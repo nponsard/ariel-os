@@ -290,7 +290,7 @@ dependencies = [
  "embassy-futures",
  "embassy-hal-internal",
  "embassy-net",
- "embassy-nrf 0.7.0",
+ "embassy-nrf",
  "embassy-stm32",
  "embassy-sync 0.7.2",
  "embassy-time",
@@ -317,6 +317,7 @@ dependencies = [
  "ariel-os-utils",
  "const-sha1",
  "defmt 1.0.1",
+ "embassy-executor 0.9.1",
  "embassy-time",
  "embedded-hal 1.0.0",
  "embedded-hal-async",
@@ -438,7 +439,7 @@ dependencies = [
  "defmt 1.0.1",
  "embassy-embedded-hal",
  "embassy-executor 0.9.1",
- "embassy-nrf 0.7.0",
+ "embassy-nrf",
  "embassy-sync 0.7.2",
  "embedded-hal-async",
  "embedded-io-async 0.6.1",
@@ -1940,8 +1941,8 @@ dependencies = [
 
 [[package]]
 name = "embassy-nrf"
-version = "0.7.0"
-source = "git+https://github.com/kaspar030/embassy?rev=8576fc49be6538b794134aa6cd0b9b7163591f8b#8576fc49be6538b794134aa6cd0b9b7163591f8b"
+version = "0.8.0"
+source = "git+https://github.com/ariel-os/embassy?rev=3940a79a29ae#3940a79a29ae578a35625cae949bea473abf21d1"
 dependencies = [
  "bitflags 2.9.1",
  "cfg-if",
@@ -1967,35 +1968,6 @@ dependencies = [
  "fixed",
  "nrf-pac",
  "optfield",
- "rand_core 0.6.4",
- "rand_core 0.9.3",
-]
-
-[[package]]
-name = "embassy-nrf"
-version = "0.8.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a8d63429d74ab5786cde7c9dc9a0338ea162a4da95e204ac5345c5ae36831fdb"
-dependencies = [
- "bitflags 2.9.1",
- "cfg-if",
- "cortex-m",
- "cortex-m-rt",
- "critical-section",
- "document-features",
- "embassy-embedded-hal",
- "embassy-hal-internal",
- "embassy-sync 0.7.2",
- "embassy-usb-driver",
- "embedded-hal 0.2.7",
- "embedded-hal 1.0.0",
- "embedded-hal-async",
- "embedded-io 0.6.1",
- "embedded-io-async 0.6.1",
- "embedded-storage",
- "embedded-storage-async",
- "fixed",
- "nrf-pac",
  "rand_core 0.6.4",
  "rand_core 0.9.3",
 ]
@@ -4090,7 +4062,7 @@ source = "git+https://github.com/alexmoon/nrf-sdc?rev=e64ad081a6948b3439d1e811da
 dependencies = [
  "cortex-m",
  "defmt 1.0.1",
- "embassy-nrf 0.8.0",
+ "embassy-nrf",
  "embassy-sync 0.7.2",
  "embedded-io 0.6.1",
  "embedded-storage",
@@ -4126,7 +4098,7 @@ dependencies = [
  "critical-section",
  "defmt 1.0.1",
  "embassy-hal-internal",
- "embassy-nrf 0.8.0",
+ "embassy-nrf",
  "embassy-sync 0.7.2",
  "embedded-io 0.6.1",
  "embedded-io-async 0.6.1",
