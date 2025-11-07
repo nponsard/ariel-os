@@ -368,7 +368,7 @@ dependencies = [
  "ariel-os-nrf",
  "ariel-os-rp",
  "ariel-os-stm32",
- "bt-hci 0.6.0",
+ "bt-hci",
  "cfg-if",
  "const_panic",
  "embassy-embedded-hal",
@@ -478,7 +478,7 @@ dependencies = [
  "ariel-os-embassy-common",
  "ariel-os-random",
  "ariel-os-utils",
- "bt-hci 0.6.0",
+ "bt-hci",
  "cfg-if",
  "cyw43",
  "cyw43-pio",
@@ -882,21 +882,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "bf88ba1141d185c399bee5288d850d63b8369520c1eafc32a0430b5b6c287bf4"
 dependencies = [
  "tinyvec",
-]
-
-[[package]]
-name = "bt-hci"
-version = "0.4.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a496a585c0e2e00195e558af18342f79afd67598d3edb32e78c006e606a31386"
-dependencies = [
- "btuuid",
- "defmt 1.0.1",
- "embassy-sync 0.7.2",
- "embedded-io 0.6.1",
- "embedded-io-async 0.6.1",
- "futures-intrusive",
- "heapless 0.8.0",
 ]
 
 [[package]]
@@ -1557,10 +1542,9 @@ dependencies = [
 [[package]]
 name = "cyw43"
 version = "0.5.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "85d050df7c6c6d253d1044fd5f011873ec6f434f77c202e7e7e88d5b12a1e943"
+source = "git+https://github.com/ariel-os/embassy?rev=603583d9#603583d94cb7ba14b3a6bbb84c8c5fea8bffea0d"
 dependencies = [
- "bt-hci 0.4.0",
+ "bt-hci",
  "cortex-m",
  "cortex-m-rt",
  "defmt 1.0.1",
@@ -2660,7 +2644,7 @@ version = "0.17.0"
 source = "git+https://github.com/ariel-os/esp-hal?rev=643ac64a2edec6337b2b1ea00f7002726fa3f9c7#643ac64a2edec6337b2b1ea00f7002726fa3f9c7"
 dependencies = [
  "allocator-api2",
- "bt-hci 0.6.0",
+ "bt-hci",
  "cfg-if",
  "defmt 1.0.1",
  "document-features",
@@ -4138,7 +4122,7 @@ name = "nrf-sdc"
 version = "0.4.0"
 source = "git+https://github.com/alexmoon/nrf-sdc?rev=e64ad081a6948b3439d1e811da36d39a5785dbda#e64ad081a6948b3439d1e811da36d39a5785dbda"
 dependencies = [
- "bt-hci 0.6.0",
+ "bt-hci",
  "critical-section",
  "defmt 1.0.1",
  "embassy-hal-internal",
@@ -5921,7 +5905,7 @@ version = "0.5.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "2881b4859001fe1f48445145cda5149deac9110b1d707ec0a251b7ff6d8bdfa4"
 dependencies = [
- "bt-hci 0.6.0",
+ "bt-hci",
  "defmt 1.0.1",
  "embassy-futures",
  "embassy-sync 0.7.2",
