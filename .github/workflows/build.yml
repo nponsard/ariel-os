@@ -6,6 +6,7 @@ on:
   pull_request:
     branches:
       - main
+  push:
   merge_group:
   schedule:
     # run every morning at 3:17am
@@ -223,6 +224,9 @@ jobs:
         if: steps.should-skip.outputs.result != 'true'
         run: sudo apt-get install ninja-build gcc-arm-none-eabi gcc-riscv64-unknown-elf
 
+      - name: "Set nightly as the default toolchain"
+        if: steps.should-skip.outputs.result != 'true'
+        run: rustup default ${{ steps.get_toolchain.outputs.toolchain }}
       - name: "Show installed versions"
         run: |
           set -x
@@ -246,7 +250,7 @@ jobs:
         if: steps.should-skip.outputs.result != 'true'
         run: |
           echo "LAZE_BUILDERS=${LAZE_BUILDERS}"
-          CONFIG_WIFI_NETWORK='test' CONFIG_WIFI_PASSWORD='password' laze build -DCARGO_ARGS+='--locked' --global --partition hash:${{ matrix.partition }}
+          CONFIG_WIFI_NETWORK='test' CONFIG_WIFI_PASSWORD='password' laze build -DCARGO_ARGS+='--locked' --global --partition hash:${{ matrix.partition }} --select stable
 
       # cleanup previous build artifacts. do in background (no need to wait).
       - name: "cleanup stable build artifacts"
