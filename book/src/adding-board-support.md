@@ -64,9 +64,6 @@ sbd-gen generate-ariel boards -o src/ariel-os-boards --mode update
 > CONFIG_WIFI_NETWORK='test' CONFIG_WIFI_PASSWORD='password' laze build --global -b <builder>
 > ```
 
-> [!WARNING]
-> When adding support for a board *in tree*, its name needs to be added to the [list of builders of its corresponding MCU family][ci-builder-lists], so that it gets appropriatetly built for in CI.
-
 ## Extra Steps for Some MCU Families
 
 ### `stm32`
