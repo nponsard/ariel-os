@@ -3,6 +3,7 @@ use ariel_os_embassy_common::ble::Config;
 // Must be async and return &trouble_host::Stack<'static, impl Controller>
 pub use crate::hal::ble::ble_stack;
 
+#[cfg(all(feature = "random", feature = "storage"))]
 const BLE_ADDR_STORAGE_KEY: &str = "ble-addr";
 
 #[allow(dead_code, reason = "false positive during builds outside of laze")]
@@ -61,6 +62,10 @@ fn get_random_addr() -> [u8; 6] {
 ///
 /// # Panics
 /// - when storage is not initialized
+#[cfg_attr(
+    not(all(feature = "random", feature = "storage")),
+    expect(clippy::unused_async)
+)]
 async fn get_fallback_mac_address() -> [u8; 6] {
     cfg_if::cfg_if! {
         if #[cfg(capability = "hw/device-identity")] {
