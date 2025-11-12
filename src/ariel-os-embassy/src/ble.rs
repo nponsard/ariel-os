@@ -7,7 +7,11 @@ const BLE_ADDR_STORAGE_KEY: &str = "ble-addr";
 
 #[allow(dead_code, reason = "false positive during builds outside of laze")]
 pub(crate) async fn config() -> Config {
-    let address = get_ble_mac_address();
+    #[cfg(feature = "ble-config-public-mac")]
+    let address = None;
+    #[cfg(not(feature = "ble-config-public-mac"))]
+    let address = Some(get_ble_mac_address());
+
     let mut fallback_address = get_fallback_mac_address().await;
 
     // Scanning apps show that the last byte of the array appears fist, to be more user-friendly we reverse the order
@@ -25,7 +29,8 @@ pub(crate) async fn config() -> Config {
 }
 
 /// Checks if we should use a static random address, for debugging/testing only
-fn get_ble_mac_address() -> Option<[u8; 6]> {
+#[allow(clippy::unnecessary_wraps, reason = "Returns none ")]
+fn get_ble_mac_address() -> [u8; 6] {
     cfg_if::cfg_if! {
         if #[cfg(feature = "ble-config-static-mac")] {
             use ariel_os_utils::mac_addr_from_env_or;
@@ -34,11 +39,22 @@ fn get_ble_mac_address() -> Option<[u8; 6]> {
                 "02:00:00:00:00:01",
                 "Mac address for BLE stack in format XX:XX:XX:XX:XX:XX",
             );
-            Some(mac)
+            mac
         } else {
-            None
+            // Random address generated at boot
+            get_random_addr()
         }
     }
+}
+
+/// Generate a random local address
+fn get_random_addr() -> [u8; 6] {
+    let mut addr = [0u8; 6];
+    rand_core::RngCore::fill_bytes(&mut ariel_os_random::fast_rng(), &mut addr);
+
+    // Set locally administered and unicast bits
+    addr[0] = (addr[0] & 0b1111_0000) | 0b0000_0010;
+    addr
 }
 
 /// Generate a random static address for the devices that don't have a public address
@@ -59,11 +75,7 @@ async fn get_fallback_mac_address() -> [u8; 6] {
                 return addr
             }
 
-            let mut addr = [0u8; 6];
-            rand_core::RngCore::fill_bytes(&mut ariel_os_random::fast_rng(), &mut addr);
-
-            // Set locally administered and unicast bits
-            addr[0] = (addr[0] & 0b1111_0000) | 0b0000_0010;
+            let addr = get_random_addr();
 
             // store in storage
             ariel_os_storage::insert(BLE_ADDR_STORAGE_KEY, addr).await.unwrap();

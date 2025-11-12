@@ -104,6 +104,7 @@ liboscore-provide-assert = ["ariel-os-coap/liboscore-provide-assert"]
 network-config-ipv4-static = ["ariel-os-embassy/network-config-ipv4-static"]
 # Selects static BLE address configuration. For debugging/testing only.
 ble-config-static-mac = ["ariel-os-embassy/ble-config-static-mac"]
+ble-config-public-mac = ["ariel-os-embassy/ble-config-public-mac"]
 
 #! ## Serial communication
 ## Enables I2C support.
