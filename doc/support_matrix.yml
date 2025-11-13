@@ -520,6 +520,29 @@ chips:
         comments:
           - a more complete clock configuration needs to be provided
 
+  stm32h753zi:
+    name: STM32H753ZI
+    manufacturer: STMicroelectronics
+    support:
+      gpio: supported
+      debug_output: supported
+      ethernet_over_usb:
+        status: not_currently_supported
+        comments:
+          - USB does not enumerate
+          - "See also: https://github.com/embassy-rs/embassy/issues/2376"
+          - "Workaround in: https://github.com/ariel-os/ariel-os/pull/1126"
+      hwrng: not_currently_supported
+      i2c_controller: not_currently_supported
+      spi_main: not_currently_supported
+      uart: not_currently_supported
+      logging: supported
+      storage:
+        status: supported_with_caveats
+        comments:
+          - removing items not supported
+      wifi: not_available
+
   stm32h755zi:
     name: STM32H755ZI
     manufacturer: STMicroelectronics
@@ -892,6 +915,21 @@ boards:
       user_usb: not_available
       wifi: not_available
       ethernet_over_usb: not_available
+
+  st-nucleo-h753zi:
+    name: ST NUCLEO-H753ZI
+    url: https://web.archive.org/web/20240625050043/https://www.st.com/en/evaluation-tools/nucleo-h753zi.html
+    chip: stm32h753zi
+    tier: "3"
+    support:
+      user_usb: supported
+      wifi: not_available
+      ethernet_over_usb:
+        status: not_currently_supported
+        comments:
+          - USB does not enumerate
+          - "See also: https://github.com/embassy-rs/embassy/issues/2376"
+          - "Workaround in: https://github.com/ariel-os/ariel-os/pull/1126"
 
   st-nucleo-h755zi-q:
     name: ST NUCLEO-H755ZI-Q
