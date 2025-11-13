@@ -36,7 +36,8 @@ pub fn define_count_adjusted_sensor_enums(_item: TokenStream) -> TokenStream {
         quote! {
             InnerSamples::#variant(samples) => {
                 if let Some(sample) = samples.first() {
-                    *sample
+                    let reading_channel = self.sensor.reading_channels().first();
+                    (reading_channel, *sample)
                 } else {
                     // NOTE(no-panic): there is always at least one sample
                     unreachable!();
@@ -62,7 +63,7 @@ pub fn define_count_adjusted_sensor_enums(_item: TokenStream) -> TokenStream {
 
     let samples_iter = (1..=count).map(|i| {
         let variant = variant_name(i);
-        quote! { InnerSamples::#variant(ref samples) => samples.iter().copied() }
+        quote! { InnerSamples::#variant(samples) => samples.iter().copied() }
     });
     let reading_channels_iter = (1..=count).map(|i| {
         let variant = variant_name(i);
@@ -120,22 +121,29 @@ pub fn define_count_adjusted_sensor_enums(_item: TokenStream) -> TokenStream {
         }
 
         impl Reading for Samples {
-            fn sample(&self) -> Sample {
+            fn sample(&self) -> (ReadingChannel, Sample) {
                 match self.samples {
                     #(#samples_first_sample),*
                 }
             }
 
-            fn samples(&self) -> impl ExactSizeIterator<Item = Sample> + core::iter::FusedIterator {
-                match self.samples {
-                    #(#samples_iter),*
-                }
+            fn samples(&self) -> impl ExactSizeIterator<Item = (ReadingChannel, Sample)> + core::iter::FusedIterator {
+                let reading_channels = self.sensor.reading_channels();
+                ChannelsSamplesZip::new(reading_channels, self.samples)
             }
         }
 
         #[derive(Debug, Copy, Clone)]
         enum InnerSamples {
             #(#samples_variants),*
+        }
+
+        impl InnerSamples {
+            fn iter(&self) -> impl ExactSizeIterator<Item = Sample> + core::iter::FusedIterator + '_ {
+                match self {
+                    #(#samples_iter),*
+                }
+            }
         }
 
         /// Metadata required to interpret samples returned by [`Sensor::wait_for_reading()`].
@@ -156,8 +164,6 @@ pub fn define_count_adjusted_sensor_enums(_item: TokenStream) -> TokenStream {
             ///
             /// For a given sensor driver, the number and order of items match the one of
             /// [`Samples`].
-            /// [`Iterator::zip()`] can be useful to zip the returned iterator with the one
-            /// obtained with [`Reading::samples()`].
             pub fn iter(&self) -> impl ExactSizeIterator<Item = ReadingChannel> + core::iter::FusedIterator + '_ {
                 match self.channels {
                     #(#reading_channels_iter),*
@@ -179,6 +185,47 @@ pub fn define_count_adjusted_sensor_enums(_item: TokenStream) -> TokenStream {
         enum InnerReadingChannels {
             #(#reading_channels_variants),*
         }
+
+        // Introducing a custom iterator type is necessary for type erasure.
+        struct ChannelsSamplesZip {
+            reading_channels: ReadingChannels,
+            samples: InnerSamples,
+            i: usize,
+        }
+
+        impl ChannelsSamplesZip {
+            fn new(reading_channels: ReadingChannels, samples: InnerSamples) -> Self {
+                Self {
+                    reading_channels,
+                    samples,
+                    i: 0,
+                }
+            }
+        }
+
+        impl Iterator for ChannelsSamplesZip {
+            type Item = (ReadingChannel, Sample);
+
+            fn next(&mut self) -> Option<Self::Item> {
+                // This is functionally zipping samples with channels.
+                // TODO: it might be possible to write this more efficiently.
+                match (self.reading_channels.iter().nth(self.i), self.samples.iter().nth(self.i)) {
+                    (Some(reading_channel), Some(sample)) => {
+                        self.i += 1;
+                        Some((reading_channel, sample))
+                    }
+                    _ => None,
+                }
+            }
+        }
+
+        impl ExactSizeIterator for ChannelsSamplesZip {
+            fn len(&self) -> usize {
+                self.reading_channels.iter().len().min(self.samples.iter().len())
+            }
+        }
+
+        impl core::iter::FusedIterator for ChannelsSamplesZip {}
     };
 
     TokenStream::from(expanded)
