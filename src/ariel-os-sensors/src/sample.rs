@@ -1,3 +1,5 @@
+use crate::sensor::ReadingChannel;
+
 #[expect(clippy::doc_markdown)]
 /// Represents a value obtained from a sensor device, along with its accuracy.
 ///
@@ -102,7 +104,7 @@ pub enum Accuracy {
 /// [`Sensor::wait_for_reading()`](crate::Sensor::wait_for_reading).
 pub trait Reading: core::fmt::Debug {
     /// Returns the first value returned by [`Reading::samples()`].
-    fn sample(&self) -> Sample;
+    fn sample(&self) -> (ReadingChannel, Sample);
 
     /// Returns an iterator over [`Sample`]s of a sensor reading.
     ///
@@ -112,7 +114,7 @@ pub trait Reading: core::fmt::Debug {
     ///
     /// The default implementation must be overridden on types containing multiple
     /// [`Sample`]s.
-    fn samples(&self) -> impl ExactSizeIterator<Item = Sample> {
+    fn samples(&self) -> impl ExactSizeIterator<Item = (ReadingChannel, Sample)> {
         [self.sample()].into_iter()
     }
 }
