@@ -7,6 +7,8 @@ use crate::sensor::ReadingChannel;
 pub enum SampleError {
     /// The channel is not available at the moment (e.g., part of the sensor is not ready yet).
     TemporarilyUnavailable,
+    /// The channel is disabled by configuration.
+    ChannelDisabled,
 }
 
 #[expect(clippy::doc_markdown)]
@@ -63,6 +65,7 @@ impl Sample {
             SampleMetadata::ChannelTemporarilyUnavailable => {
                 Err(SampleError::TemporarilyUnavailable)
             }
+            SampleMetadata::ChannelDisabled => Err(SampleError::ChannelDisabled),
             SampleMetadata::NoMeasurementError
             | SampleMetadata::UnknownAccuracy
             | SampleMetadata::SymmetricalError { .. } => Ok(self.value),
@@ -122,6 +125,8 @@ pub enum SampleMetadata {
     /// Indicates that the channel is temporarily unavailable.
     /// This may happen when parts of a sensor are not ready yet, but data is already available for other channels.
     ChannelTemporarilyUnavailable,
+    /// The channel is disabled by configuration.
+    ChannelDisabled,
 }
 
 /// Implemented on [`Samples`](crate::sensor::Samples), returned by
