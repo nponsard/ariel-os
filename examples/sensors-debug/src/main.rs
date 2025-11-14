@@ -9,7 +9,7 @@ use ariel_os::{
     hal,
     i2c::controller::{I2cDevice, Kilohertz, highest_freq_in},
     sensors::{
-        REGISTRY, Reading as _, Sensor,
+        Label, REGISTRY, Reading as _, Sensor,
         sensor::{ReadingChannel, Sample, SampleError, SampleMetadata},
     },
     time::Timer,
@@ -61,6 +61,11 @@ async fn main(peripherals: pins::Peripherals) {
 }
 
 fn print_sample(sensor: &dyn Sensor, sample: Sample, reading_channel: ReadingChannel) {
+    if reading_channel.label() == Label::Opaque {
+        // Do not print samples from opaque channels.
+        return;
+    }
+
     let display_name = sensor.display_name().unwrap_or("unknown");
     let label = sensor.label().unwrap_or("no label");
 
