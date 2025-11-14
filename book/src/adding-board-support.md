@@ -25,6 +25,7 @@ Ariel OS uses [sbd][sbd] (Structured Board Description) files to describe board
   - `chip`: The board's chip, needs to correspond to an existing laze context in `laze-project.yml`.
 - In `doc/support_matrix.yml`:
   - Add an entry under `boards`. Include a link to a `web.archive.org` snapshot that describes the board.
+  - Update the generated support pages from the book using `laze build update-book`.
 - Some MCU families need extra steps, see [Extra steps for some MCU families](#extra-steps-for-some-mcu-families).
 
 ```yaml
@@ -83,6 +84,7 @@ sbd-gen generate-ariel boards -o src/ariel-os-boards --mode update
     - `selects`: A [rustc-target](#adding-support-for-a-processor-architecture) module or one of the `cortex-m*` modules if applicable.
 - In `doc/support_matrix.yml`:
   - Add an entry under `chips`, with the laze context and supported features.
+  - Update the generated support pages from the book using `laze build update-book`.
 
 MCU-specific items inside Ariel OS crates are gated behind
 `#[cfg(context = $CONTEXT)]` attributes, where `$CONTEXT` is the [MCU's `laze
