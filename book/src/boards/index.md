@@ -43,4 +43,5 @@ Tier 3 hardware is build-tested only, as Ariel OS maintainers do not have access
 - [Seeed Studio LoRa-E5 mini](./seeedstudio-lora-e5-mini.md)
 - [ST NUCLEO-F042K6](./st-nucleo-f042k6.md)
 - [ST NUCLEO-F411RE](./st-nucleo-f411re.md)
+- [ST NUCLEO-H753ZI](./st-nucleo-h753zi.md)
 - [ST NUCLEO-WBA55CG](./st-nucleo-wba55.md)

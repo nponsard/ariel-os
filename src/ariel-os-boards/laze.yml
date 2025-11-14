@@ -184,6 +184,17 @@ builders:
   env:
     CARGO_ENV:
     - CONFIG_SWI=USART2
+- name: st-nucleo-h753zi
+  parent: stm32h753zi
+  provides:
+  - has_buttons
+  - has_eth_stm32
+  - has_leds
+  - has_swi
+  - has_usb_device_port
+  env:
+    CARGO_ENV:
+    - CONFIG_SWI=UART5
 - name: st-nucleo-h755zi-q
   parent: stm32h755zi
   provides:

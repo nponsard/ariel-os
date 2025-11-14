@@ -285,7 +285,7 @@ define_uart_drivers!(
    UART7 => UART7,
    UART8 => UART8,
 );
-#[cfg(context = "stm32h755zi")]
+#[cfg(any(context = "stm32h755zi", context = "stm32h753zi"))]
 define_uart_drivers!(
    LPUART1 => LPUART1,
    USART1 => USART1,
@@ -367,6 +367,16 @@ pub fn init(peripherals: &mut crate::OptionalPeripherals) {
             let _ = peripherals.UART7.take().unwrap();
             let _ = peripherals.UART8.take().unwrap();
         } else if #[cfg(context = "stm32h755zi")] {
+            let _ = peripherals.LPUART1.take().unwrap();
+            let _ = peripherals.USART1.take().unwrap();
+            let _ = peripherals.USART2.take().unwrap();
+            let _ = peripherals.USART3.take().unwrap();
+            let _ = peripherals.UART4.take().unwrap();
+            let _ = peripherals.UART5.take().unwrap();
+            let _ = peripherals.USART6.take().unwrap();
+            let _ = peripherals.UART7.take().unwrap();
+            let _ = peripherals.UART8.take().unwrap();
+        } else if #[cfg(context = "stm32h753zi")] {
             let _ = peripherals.LPUART1.take().unwrap();
             let _ = peripherals.USART1.take().unwrap();
             let _ = peripherals.USART2.take().unwrap();
