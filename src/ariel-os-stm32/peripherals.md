@@ -149,6 +149,60 @@
 | USART3     | uart                |
 | USART6     | uart                |
 
+## stm32h753zi
+
+| Peripheral | Used by             |
+| ---------- | ------------------- |
+| ETH        | eth-stm32           |
+| EXTI0      | external-interrupts |
+| EXTI1      | external-interrupts |
+| EXTI2      | external-interrupts |
+| EXTI3      | external-interrupts |
+| EXTI4      | external-interrupts |
+| EXTI5      | external-interrupts |
+| EXTI6      | external-interrupts |
+| EXTI7      | external-interrupts |
+| EXTI8      | external-interrupts |
+| EXTI9      | external-interrupts |
+| EXTI10     | external-interrupts |
+| EXTI11     | external-interrupts |
+| EXTI12     | external-interrupts |
+| EXTI13     | external-interrupts |
+| EXTI14     | external-interrupts |
+| EXTI15     | external-interrupts |
+| FLASH      | storage             |
+| I2C1       | i2c                 |
+| I2C2       | i2c                 |
+| I2C3       | i2c                 |
+| I2C4       | i2c                 |
+| LPUART1    | uart                |
+| PA1        | eth-stm32           |
+| PA2        | eth-stm32           |
+| PA7        | eth-stm32           |
+| PA11       | usb                 |
+| PA12       | usb                 |
+| PB13       | eth-stm32           |
+| PC1        | eth-stm32           |
+| PC4        | eth-stm32           |
+| PC5        | eth-stm32           |
+| PG11       | eth-stm32           |
+| PG13       | eth-stm32           |
+| RNG        | hwrng               |
+| SPI1       | spi                 |
+| SPI2       | spi                 |
+| SPI3       | spi                 |
+| SPI4       | spi                 |
+| SPI5       | spi                 |
+| SPI6       | spi                 |
+| UART4      | uart                |
+| UART7      | uart                |
+| UART8      | uart                |
+| USART1     | uart                |
+| USART2     | uart                |
+| USART3     | uart                |
+| USART6     | uart                |
+| USB        | usb                 |
+
 ## stm32h755zi
 
 | Peripheral | Used by             |
