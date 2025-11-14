@@ -5076,10 +5076,9 @@ version = "0.0.0"
 dependencies = [
  "ariel-os",
  "ariel-os-boards",
+ "ariel-os-nrf91-gnss",
  "ariel-os-sensors",
  "embassy-sync 0.6.2",
- "embedded-hal 1.0.0",
- "embedded-hal-async",
  "once_cell",
 ]
 

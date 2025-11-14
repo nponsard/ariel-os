@@ -4,6 +4,7 @@
 mod pins;
 mod sensors;
 
+use ariel_os::asynch::Spawner;
 use ariel_os::{
     debug::log::{debug, error, info},
     hal,
@@ -19,9 +20,14 @@ use embassy_sync::mutex::Mutex;
 pub static I2C_BUS: once_cell::sync::OnceCell<
     Mutex<embassy_sync::blocking_mutex::raw::CriticalSectionRawMutex, hal::i2c::controller::I2c>,
 > = once_cell::sync::OnceCell::new();
-
 #[ariel_os::task(autostart, peripherals)]
 async fn main(peripherals: pins::Peripherals) {
+    let spawner = Spawner::for_current_executor().await;
+
+    sensors::NRF91_GNSS
+        .init(ariel_os_nrf91_gnss::config::Config::default())
+        .await;
+    spawner.spawn(sensors::nrf91_gnss_runner()).unwrap();
     let mut i2c_config = hal::i2c::controller::Config::default();
     i2c_config.frequency = const { highest_freq_in(Kilohertz::kHz(100)..=Kilohertz::kHz(400)) };
     debug!("Selected frequency: {:?}", i2c_config.frequency);
