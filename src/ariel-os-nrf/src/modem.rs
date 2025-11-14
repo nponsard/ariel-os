@@ -74,11 +74,11 @@ pub async fn driver() {
         // Set IPC RAM to nonsecure
         const SPU_REGION_SIZE: u32 = 0x2000; // 8 KiB
         const RAM_START: u32 = 0x2000_0000; // 256 KiB of RAM. This is the start address of the physical RAM. Symbol is defined in ariel-os-rt.
-        // SAFETY: the linker must link this symbol with a valid address in RAM region.
-        let ipc_start: u32 = unsafe { &_MODEM_start as *const u8 } as u32;
+        // The linker must link this symbol with a valid address in RAM region.
+        let ipc_start: u32 = &raw const _MODEM_start as u32;
         let ipc_reg_offset = (ipc_start - RAM_START) / SPU_REGION_SIZE;
-        // SAFETY: the linker must link this symbol with a valid length that does not exceed the nrf91 available RAM. Symbol is defined in ariel-os-rt.
-        let ipc_reg_count = (unsafe { &_MODEM_length as *const u8 } as u32) / SPU_REGION_SIZE;
+        // The linker must link this symbol with a valid length that does not exceed the nrf91 available RAM. Symbol is defined in ariel-os-rt.
+        let ipc_reg_count = (&raw const _MODEM_length as u32) / SPU_REGION_SIZE;
         let spu = embassy_nrf::pac::SPU;
         let range = ipc_reg_offset..(ipc_reg_offset + ipc_reg_count);
         debug!(
