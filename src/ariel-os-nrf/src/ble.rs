@@ -21,13 +21,10 @@ use crate::{irqs::Irqs, peripheral::Peri};
 
 pub type BleStack = Stack<'static, SoftdeviceController<'static>, DefaultPacketPool>;
 
-static STACK: OnceLock<
-    Mutex<
-        CriticalSectionRawMutex,
-        SameExecutorCell<Mutex<CriticalSectionRawMutex, Option<BleStack>>>,
-    >,
-> = OnceLock::new();
-static STACK_GUARD: StaticCell<BleStack> = StaticCell::new();
+static STACK: OnceLock<Mutex<CriticalSectionRawMutex, Option<SameExecutorCell<BleStack>>>> =
+    OnceLock::new();
+
+static STACK_GUARD: StaticCell<SameExecutorCell<BleStack>> = StaticCell::new();
 
 static MPSL: StaticCell<MultiprotocolServiceLayer<'_>> = StaticCell::new();
 static SDC_MEM: StaticCell<sdc::Mem<SDC_MEM_SIZE>> = StaticCell::new();
@@ -84,20 +81,11 @@ const L2CAP_RXQ: u8 = 2;
 //&'static MutexGuard<'static, CriticalSectionRawMutex, SameExecutorCell<BleStack>>
 
 pub async fn ble_stack() -> &'static BleStack {
-    STACK_GUARD.init(
-        STACK
-            .get()
-            .await
-            .lock()
-            .await
-            .get_async()
-            .await
-            .unwrap()
-            .lock()
-            .await
-            .take()
-            .unwrap(),
-    )
+    STACK_GUARD
+        .init(STACK.get().await.lock().await.take().unwrap())
+        .get_async()
+        .await
+        .unwrap()
 }
 
 #[cfg(context = "nrf52")]
@@ -256,10 +244,7 @@ pub fn driver(p: Peripherals, spawner: Spawner, config: ariel_os_embassy_common:
     let resources = ariel_os_embassy_common::ble::get_ble_host_resources();
 
     let stack = trouble_host::new(sdc, resources).set_random_address(config.address);
-    let _ = STACK.init(Mutex::new(SameExecutorCell::new(
-        Mutex::new(Some(stack)),
-        spawner,
-    )));
+    let _ = STACK.init(Mutex::new(Some(SameExecutorCell::new(stack, spawner))));
 
     debug!("nRF BLE driver initialized");
 }
