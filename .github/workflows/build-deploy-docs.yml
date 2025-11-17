@@ -94,6 +94,17 @@ jobs:
                   usb-hid,
                   coapcore/_nightly_docs
                   "
+          cargo doc \
+            --target=riscv32imac-unknown-none-elf \
+            --no-deps \
+            -p embedded-hal@1.0.0 \
+            -p embedded-hal-async \
+            -p embedded-io-async
+          cargo doc \
+            --no-deps \
+            -p embedded-hal@1.0.0 \
+            -p embedded-hal-async \
+            -p embedded-io-async
           RUSTDOCFLAGS='-D warnings --cfg context="esp32c6" --cfg nightly' cargo doc \
               --target=riscv32imac-unknown-none-elf \
               --no-deps \
