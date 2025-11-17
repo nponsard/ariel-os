@@ -41,39 +41,39 @@ impl Default for Config {
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 #[non_exhaustive]
 pub enum Baudrate {
-    /// 1200 bauds.
+    /// 1200 baud.
     _1200,
-    /// 2400 bauds.
+    /// 2400 baud.
     _2400,
-    /// 4800 bauds.
+    /// 4800 baud.
     _4800,
-    /// 9600 bauds.
+    /// 9600 baud.
     _9600,
-    /// 14400 bauds.
+    /// 14400 baud.
     _14400,
-    /// 19200 bauds.
+    /// 19200 baud.
     _19200,
-    /// 28800 bauds.
+    /// 28800 baud.
     _28800,
-    /// 31250 bauds.
+    /// 31250 baud.
     _31250,
-    /// 38400 bauds.
+    /// 38400 baud.
     _38400,
-    /// 56000 bauds.
+    /// 56000 baud.
     _56000,
-    /// 57600 bauds.
+    /// 57600 baud.
     _57600,
-    /// 76800 bauds.
+    /// 76800 baud.
     _76800,
-    /// 115200 bauds.
+    /// 115200 baud.
     _115200,
-    /// 230400 bauds.
+    /// 230400 baud.
     _230400,
-    /// 250000 bauds.
+    /// 250000 baud.
     _250000,
-    /// 460800 bauds.
+    /// 460800 baud.
     _460800,
-    /// 921600 bauds.
+    /// 921600 baud.
     _921600,
     /// 1 Megabaud.
     _1000000,
