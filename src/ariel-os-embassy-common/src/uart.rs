@@ -18,19 +18,19 @@ pub enum ConfigError {
 pub enum Baudrate<A> {
     /// HAL-specific baud rate.
     Hal(A),
-    /// 2400 bauds.
+    /// 2400 baud.
     _2400,
-    /// 4800 bauds.
+    /// 4800 baud.
     _4800,
-    /// 9600 bauds.
+    /// 9600 baud.
     _9600,
-    /// 19200 bauds.
+    /// 19200 baud.
     _19200,
-    /// 38400 bauds.
+    /// 38400 baud.
     _38400,
-    /// 57600 bauds.
+    /// 57600 baud.
     _57600,
-    /// 115200 bauds.
+    /// 115200 baud.
     _115200,
 }
 
