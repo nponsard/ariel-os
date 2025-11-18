@@ -11,6 +11,20 @@ BLE is enabled by selecting one or both of the BLE [laze modules][laze-modules-b
 
 If you want to learn more about BLE concepts, you can read the [TrouBLE documentation](https://embassy.dev/trouble/#_concepts).
 
+### Optional configuration
+
+There are some settings exposed via environment variables that you may want to change depending on your use case:
+
+- `CONFIG_BLE_MTU`: Maximum Transmission Unit (unit: bytes), the default is 27 for better compatibility, newer versions of BLE allow for up to 251.
+- `CONFIG_BLE_MAX_CONNS`: Maximum number of concurrent connections to be handled by the BLE stack, the default is 1 to reduce memory usage. If you need to connect to multiple devices or serve multiple devices, increase this value.
+- `CONFIG_BLE_MAX_CHANNELS`: Maximum number of concurrent channels to be handled by the BLE stack, the default is 1 to reduce memory usage. Increase this value if you want to use multiple channels. GATT services use only one channel.
+
+### Configure a static address for debugging/testing
+
+By default Ariel OS will use the registered (public) address of the module or generate one from the device identity. It is recommended to keep this behavior when deploying your application.
+
+For debugging/testing purposes or when developing a BLE driver you may need to set the address to a static value. To do that, select the `ble-config-static-mac` [laze module][laze-modules-book] and set your wanted address using the `CONFIG_BLE_STATIC_MAC` environment variable. The expected format is a hexadecimal representation of the 6 bytes address, colon separator is optional. Example: `CONFIG_BLE_STATIC_MAC=02:aa:aa:aa:aa:aa`.
+
 ### Using the BLE stack
 
 To use BLE in your application, you need to get the pre-configured stack and build the host object from it:
