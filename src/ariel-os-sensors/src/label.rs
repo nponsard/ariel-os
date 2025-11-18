@@ -5,13 +5,6 @@
 ///
 /// Missing variants can be added when required.
 /// Please open an issue to discuss it.
-///
-/// [`Label::Main`] must be used for sensor drivers returning a single
-/// [`Sample`](crate::sensor::Sample), even if a more specific label exists for the
-/// physical quantity.
-/// This allows consumers displaying the label to ignore it for sensor drivers returning a single
-/// [`Sample`](crate::sensor::Sample).
-/// Other labels are reserved for sensor drivers returning multiple physical quantities.
 #[derive(Debug, Copy, Clone, PartialEq, Eq)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 #[non_exhaustive]
@@ -36,8 +29,6 @@ pub enum Label {
     Latitude,
     /// Longitude.
     Longitude,
-    /// Used for sensor drivers returning a single [`Sample`](crate::sensor::Sample).
-    Main,
     /// Opaque channel: the associated sample is intended for the sensor driver only, and no guarantees are provided.
     Opaque,
     /// Relative humidity.
@@ -69,7 +60,6 @@ impl core::fmt::Display for Label {
             Self::GroundSpeed => write!(f, "Ground speed"),
             Self::Latitude => write!(f, "Latitude"),
             Self::Longitude => write!(f, "Longitude"),
-            Self::Main => write!(f, ""),
             Self::Opaque => write!(f, "[opaque]"),
             Self::RelativeHumidity => write!(f, "Relative humidity"),
             Self::Heading => write!(f, "Heading"),
