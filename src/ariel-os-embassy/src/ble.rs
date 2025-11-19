@@ -1,3 +1,4 @@
+use ariel_os_debug::log::debug;
 use ariel_os_embassy_common::ble::Config;
 
 // Must be async and return &trouble_host::Stack<'static, impl Controller>
@@ -23,6 +24,11 @@ pub(crate) async fn config() -> Config {
     });
 
     let fallback_address = trouble_host::Address::random(fallback_address);
+
+    debug!(
+        "Fallback address: {:?} | address: {:?}",
+        fallback_address, address
+    );
     Config {
         address,
         fallback_address,

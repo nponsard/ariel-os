@@ -3,9 +3,12 @@
 #![no_std]
 
 use embassy_futures::join::join;
-use trouble_host::advertise::{
-    AdStructure, Advertisement, AdvertisementParameters, BR_EDR_NOT_SUPPORTED,
-    LE_GENERAL_DISCOVERABLE,
+use trouble_host::{
+    advertise::{
+        AdStructure, Advertisement, AdvertisementParameters, BR_EDR_NOT_SUPPORTED,
+        LE_GENERAL_DISCOVERABLE,
+    },
+    prelude::ConnectionEvent,
 };
 
 use ariel_os::{
@@ -37,21 +40,40 @@ async fn run_advertisement() {
             interval_max: Duration::from_millis(100),
             ..Default::default()
         };
-
-        let _advertiser = stack
-            .peripheral
-            .advertise(
-                &params,
-                Advertisement::NonconnectableScannableUndirected {
-                    adv_data: adv_data.get(..len).unwrap(),
-                    scan_data: &[],
-                },
-            )
-            .await;
-
         loop {
-            info!("Still running");
-            Timer::after_secs(60).await;
+            let advertiser = stack
+                .peripheral
+                .advertise(
+                    &params,
+                    Advertisement::ConnectableScannableUndirected {
+                        adv_data: adv_data.get(..len).unwrap(),
+                        scan_data: &[],
+                    },
+                )
+                .await
+                .unwrap();
+            let con = advertiser.accept().await.unwrap();
+            loop {
+                match con.next().await {
+                    ConnectionEvent::Disconnected { reason } => {
+                        info!("disconnect, reason: {:?}", reason);
+                        break;
+                    }
+                    ConnectionEvent::ConnectionParamsUpdated {
+                        conn_interval,
+                        peripheral_latency,
+                        supervision_timeout,
+                    } => {
+                        info!("ConnectionParamsUpdated");
+                    }
+                    ConnectionEvent::Gatt { data } => {
+                        info!("Gatt");
+                    }
+                    ConnectionEvent::PhyUpdated { tx_phy, rx_phy } => {
+                        info!("PhyUpdated")
+                    }
+                }
+            }
         }
     })
     .await;

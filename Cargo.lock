@@ -825,6 +825,20 @@ dependencies = [
 ]
 
 [[package]]
+name = "ble-serial-bridge"
+version = "0.0.0"
+dependencies = [
+ "ariel-os",
+ "ariel-os-boards",
+ "embassy-futures",
+ "embassy-sync 0.6.2",
+ "embedded-io-async",
+ "heapless 0.8.0",
+ "static_cell",
+ "trouble-host",
+]
+
+[[package]]
 name = "blinky"
 version = "0.0.0"
 dependencies = [
@@ -1147,6 +1161,17 @@ dependencies = [
  "tempfile",
  "walkdir",
  "windows-sys 0.42.0",
+]
+
+[[package]]
+name = "cmac"
+version = "0.7.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "8543454e3c3f5126effff9cd44d562af4e31fb8ce1cc0d3dcd8f084515dbc1aa"
+dependencies = [
+ "cipher",
+ "dbl",
+ "digest",
 ]
 
 [[package]]
@@ -1587,6 +1612,15 @@ checksum = "8d162beedaa69905488a8da94f5ac3edb4dd4788b732fadb7bd120b2625c1976"
 dependencies = [
  "data-encoding",
  "syn 2.0.106",
+]
+
+[[package]]
+name = "dbl"
+version = "0.3.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "bd2735a791158376708f9347fe8faba9667589d82427ef3aed6794a8981de3d9"
+dependencies = [
+ "generic-array 0.14.7",
 ]
 
 [[package]]
@@ -5615,7 +5649,9 @@ version = "0.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "b31abacc7bd8bc686160f6de3347a3b7669ae4a31e4eef9a306466e97d297cea"
 dependencies = [
+ "aes",
  "bt-hci",
+ "cmac",
  "defmt 0.3.100",
  "embassy-futures",
  "embassy-sync 0.6.2",
@@ -5623,6 +5659,8 @@ dependencies = [
  "embedded-io 0.6.1",
  "futures",
  "heapless 0.8.0",
+ "p256",
+ "rand_chacha 0.3.1",
  "rand_core 0.6.4",
  "static_cell",
  "trouble-host-macros",

@@ -17,6 +17,8 @@ static STACK: OnceLock<Stack<'static, SoftdeviceController<'static>>> = OnceLock
 static MPSL: StaticCell<MultiprotocolServiceLayer<'_>> = StaticCell::new();
 static SDC_MEM: StaticCell<sdc::Mem<SDC_MEM_SIZE>> = StaticCell::new();
 static RNG: StaticCell<ariel_os_random::CryptoRngSend> = StaticCell::new();
+static RNG2: StaticCell<ariel_os_random::CryptoRngSend> = StaticCell::new();
+
 
 // Memory to allocate to the SoftDevice Controller (SDC).
 //
@@ -56,7 +58,7 @@ const SDC_MEM_SIZE: usize = 6080;
 // Size of the TX buffer (number of packets), minimum is 1, SoftDevice default is 3 (SDC_DEFAULT_TX_PACKET_COUNT).
 const L2CAP_TXQ: u8 = 3;
 // Size of the RX buffer (number of packets), minimum is 1, SoftDevice default is 2 (SDC_DEFAULT_RX_PACKET_COUNT).
-const L2CAP_RXQ: u8 = 2;
+const L2CAP_RXQ: u8 = 3;
 
 pub async fn ble_stack() -> &'static Stack<'static, SoftdeviceController<'static>> {
     STACK.get().await
@@ -199,6 +201,8 @@ pub fn driver(p: Peripherals, spawner: Spawner, config: ariel_os_embassy_common:
     spawner.must_spawn(mpsl_task(mpsl));
 
     let rng = RNG.init(ariel_os_random::crypto_rng_send());
+    let rng2 = RNG2.init(ariel_os_random::crypto_rng_send());
+
 
     #[cfg(context = "nrf52")]
     let sdc_p = sdc::Peripherals::new(
@@ -217,7 +221,7 @@ pub fn driver(p: Peripherals, spawner: Spawner, config: ariel_os_embassy_common:
 
     let resources = ariel_os_embassy_common::ble::get_ble_host_resources();
 
-    let stack = trouble_host::new(sdc, resources);
+    let stack = trouble_host::new(sdc, resources).set_random_generator_seed(rng2);
     let stack = if let Some(address) = config.address {
         // Set the requested static random address
         stack.set_random_address(address)

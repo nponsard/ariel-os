@@ -8,6 +8,7 @@ subdirs:
   - benchmark
   - ble-advertiser
   - ble-scanner
+  - ble-serial-bridge
   - blinky
   - coap-client
   - coap-server

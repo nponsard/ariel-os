@@ -1,0 +1,8 @@
+apps:
+  - name: ble-serial-bridge
+    env:
+      global:
+        executor_stacksize_required:
+          - "16384"
+    selects:
+      - ble-peripheral
