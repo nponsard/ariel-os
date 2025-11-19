@@ -3,7 +3,7 @@
 pub mod config;
 mod state_atomic;
 
-use ariel_os_debug::log::warn;
+use ariel_os_debug::log::{info, warn};
 use ariel_os_sensors::{
     Category, Label, MeasurementUnit, Reading, Sensor,
     sensor::{
@@ -70,20 +70,45 @@ pub trait GnssExt {
     fn time_of_fix_delta_ms(&self) -> Result<i64, GnssSampleError>;
 }
 
+fn get_element_after_marker(
+    iter: impl Iterator<Item = (ReadingChannel, Sample)>,
+    marker: Label,
+    position: usize,
+) -> Option<(ReadingChannel, Sample)> {
+    let mut peekable = iter.peekable();
+    while let Some((c, _)) = peekable.peek() {
+        if c.label() == Label::OpaqueGnssTime {
+            break;
+        }
+        peekable.next();
+    }
+    let result = peekable.nth(position);
+
+    // if its not an opaque value we're doing something wrong
+    if let Some((c, _)) = result
+        && !(c.label() == Label::Opaque || c.label() == marker)
+    {
+        None
+    } else {
+        result
+    }
+}
+
+/// TODO: expand documentation
+///
+/// The channel with the label [`Label::OpaqueGnssTime`] is the first part of the time data, seconds since ariel epoch
+/// The channel following is the second part of the time data and should have the label [`Label::Opaque`], ms since last second.
+///
 impl GnssExt for Samples {
     fn time_of_fix_seconds(&self) -> Result<i64, GnssSampleError> {
-        let sample = self
-            .samples()
-            .nth(6) // 7th sample is TimeOfFix
+        let sample = get_element_after_marker(self.samples(), Label::OpaqueGnssTime, 0)
             .ok_or(GnssSampleError::InvalidSensor)?;
 
         let since_ariel_epoch: i64 = sample.1.value().map_err(GnssSampleError::Reading)?.into();
         Ok(ARIEL_EPOCH.unix_timestamp() + since_ariel_epoch)
     }
     fn time_of_fix_delta_ms(&self) -> Result<i64, GnssSampleError> {
-        let sample = self
-            .samples()
-            .nth(7)
+        let sample = get_element_after_marker(self.samples(), Label::OpaqueGnssTime, 1)
             .ok_or(GnssSampleError::InvalidSensor)?;
 
         Ok(sample.1.value().map_err(GnssSampleError::Reading)?.into())
@@ -425,7 +450,7 @@ impl Sensor for Nrf91Gnss {
             ),
             ReadingChannel::new(
                 // Seconds since Ariel epoch (2024-01-01)
-                Label::Opaque,
+                Label::OpaqueGnssTime,
                 0,
                 MeasurementUnit::Second,
             ),
