@@ -17,7 +17,13 @@ If you want to learn more about BLE concepts, you can read the [TrouBLE document
 The ability to configure which Bluetooth address is used and other capacity parameters like the MTU is planned in future updates.
 
 > [!IMPORTANT]
-> For compatibility reasons the MTU is fixed at 27 bytes and the address is fixed as a static random address of `FF:E4:05:1A:8F:FF`.
+> For compatibility reasons the MTU is fixed at 27 bytes.
+>
+> The device address is randomly generated at boot and may be periodically rotated.
+>
+> Current implementation: the address is a static device address and is not rotated during execution.
+> This allows to use the BLE feature of Ariel OS on multiple devices in the same location.
+> We later plan to switch to private device addresses by default, which *are* rotated during execution.
 
 ## Using the BLE Stack
 
