@@ -5,7 +5,7 @@
 
 use core::{ffi::c_void, ptr::NonNull, sync::atomic::AtomicUsize};
 
-use ariel_os_debug::log::{debug, trace};
+use ariel_os_debug::log::{debug, trace, warn};
 use ariel_os_threads::{CoreAffinity, CoreId, THREAD_COUNT, create_raw, current_tid, yield_same};
 use esp_radio_rtos_driver::Scheduler;
 use esp_wifi_sys::include::malloc;
@@ -42,7 +42,7 @@ impl Scheduler for ArielScheduler {
     }
 
     fn usleep(&self, us: u32) {
-        todo!("not implemented");
+        warn!("not sleeping");
     }
 
     fn now(&self) -> u64 {
