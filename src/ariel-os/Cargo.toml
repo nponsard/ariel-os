@@ -120,8 +120,6 @@ usb-hid = ["ariel-os-embassy/usb-hid"]
 #! specific system functionality.
 #! The features below need to be enabled so that the provided custom
 #! configuration is taken into account.
-# Enables custom BLE configuration.
-ble-config-override = ["ariel-os-embassy/ble-config-override"]
 ## Enables custom network configuration.
 network-config-override = ["ariel-os-embassy/network-config-override"]
 ## Enables custom USB configuration.
