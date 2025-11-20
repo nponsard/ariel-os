@@ -58,6 +58,8 @@ pub enum ThreadState {
     SemaphoreBlocked,
     // Waiting on a [`crate::sync::RecursiveLock`].
     RecursiveLockBlocked,
+    /// Waiting for a [`super::wait_queue::WaitQueue`].
+    WaitQueueBlocked,
 }
 
 impl Thread {
