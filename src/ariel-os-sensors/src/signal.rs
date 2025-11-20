@@ -1,4 +1,4 @@
-//! This module contains a custom [`Signal`] struct meant to be used in the [`ariel-os-sensors`][ariel-os-sensors] ecosystem
+//! This module contains a custom [`Signal`] struct meant to be used in the [`ariel-os-sensors`][ariel-os-sensors] ecosystem.
 
 use core::{
     cell::Cell,
@@ -16,7 +16,7 @@ enum SignalState<T> {
     Ready(T),
 }
 
-/// Custom signal struct inspired by [`embassy_sync::signal::Signal`] and [`embassy_sync::channel::Channel`]
+/// Custom signal struct inspired by [`embassy_sync::signal::Signal`] and [`embassy_sync::channel::Channel`].
 ///
 /// This is meant for single-producer and single-consumer signaling.
 ///
@@ -37,7 +37,7 @@ impl<T> Default for Signal<T> {
 }
 
 impl<T> Signal<T> {
-    /// Create a new empty [`Signal`]
+    /// Create a new empty [`Signal`].
     #[must_use]
     pub const fn new() -> Self {
         Self {
@@ -100,7 +100,7 @@ impl<T> Signal<T> {
         })
     }
 
-    /// Removes any pending value from the signal
+    /// Removes any pending value from the signal.
     pub fn clear(&self) {
         self.inner.lock(|cell| {
             let state = cell.take();
