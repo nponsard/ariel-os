@@ -16,6 +16,15 @@
 //! - A *sensor driver* refers to a sensor device as exposed by the sensor abstraction layer.
 //! - A *sensor driver instance* is an instance of a sensor driver.
 //!
+//! # Goals
+//!
+//! This abstraction has two main goals:
+//!
+//! - Providing a unified way of accessing the readings from all registered sensor driver instances
+//!   in a homogeneous way.
+//! - Making it easy and as transparent as possible to substitute a specific sensor device by a
+//!   similar one from the same category.
+//!
 //! # Accessing sensor driver instances
 //!
 //! Registered sensor driver instances can be accessed using
