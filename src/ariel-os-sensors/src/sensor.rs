@@ -323,4 +323,14 @@ mod tests {
 
     // Assert that the Sensor trait is object-safe
     static _SENSOR_REFS: &[&dyn Sensor] = &[];
+
+    #[test]
+    fn assert_type_sizes() {
+        // The size of these types is not a functional requirement of the API, but this makes sure
+        // they stay small to keep resource usage down.
+        assert!(size_of::<Category>() <= size_of::<u8>());
+        assert!(size_of::<Label>() <= size_of::<u8>());
+        assert!(size_of::<MeasurementUnit>() <= size_of::<u8>());
+        assert!(size_of::<ReadingChannel>() <= size_of::<u32>());
+    }
 }
