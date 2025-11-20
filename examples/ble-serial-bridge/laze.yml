@@ -6,3 +6,4 @@ apps:
           - "16384"
     selects:
       - ble-peripheral
+      - sw/storage

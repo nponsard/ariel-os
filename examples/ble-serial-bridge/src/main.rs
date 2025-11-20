@@ -11,17 +11,18 @@ use embassy_futures::{
 use embassy_sync::{blocking_mutex::raw::CriticalSectionRawMutex, channel::Channel};
 use embedded_io_async::{Read, Write as _};
 use heapless::Vec;
+use serde::{Deserialize, Serialize};
 use trouble_host::{
-    BleHostError, Controller, Error,
+    BleHostError, BondInformation, Controller, Error, LongTermKey,
     advertise::{AdStructure, Advertisement, BR_EDR_NOT_SUPPORTED, LE_GENERAL_DISCOVERABLE},
     gap::{GapConfig, PeripheralConfig},
     gatt::{GattConnection, GattConnectionEvent, GattEvent},
-    prelude::{FromGatt, Peripheral, appearance, gatt_server, gatt_service},
+    prelude::{BdAddr, FromGatt, Peripheral, appearance, gatt_server, gatt_service},
 };
 
 use ariel_os::{
-    debug::log::{info, warn},
-    hal,
+    debug::log::{debug, info, warn},
+    hal, storage,
     uart::Baudrate,
 };
 
@@ -49,12 +50,44 @@ struct UartService {
     #[characteristic(uuid = "6e400003-b5a3-f393-e0a9-e50e24dcca9e", read, notify)]
     read_data: u8,
 }
+#[derive(Serialize, Deserialize, Debug)]
+struct SerializableBond {
+    addr: [u8; 6],
+    ltk: u128,
+}
+
+impl From<SerializableBond> for BondInformation {
+    fn from(value: SerializableBond) -> Self {
+        BondInformation::new(BdAddr::new(value.addr), LongTermKey::new(value.ltk))
+    }
+}
+
+impl From<BondInformation> for SerializableBond {
+    fn from(value: BondInformation) -> Self {
+        SerializableBond {
+            addr: value.address.into_inner(),
+            ltk: value.ltk.0,
+        }
+    }
+}
+
+const BOND_STORAGE_KEY: &str = "BOND";
 
 #[ariel_os::task(autostart)]
 async fn run_advertisement() {
     info!("starting ble stack");
 
+    let value: Option<SerializableBond> = storage::get(BOND_STORAGE_KEY).await.unwrap();
+
     let stack = ariel_os::ble::ble_stack().await;
+
+    let mut bond_stored = if let Some(bond) = value {
+        let res = stack.add_bond_information(bond.into());
+        debug!("added bond: {:?}", res);
+        true
+    } else {
+        false
+    };
     let mut host = stack.build();
 
     let server = Server::new_with_config(GapConfig::Peripheral(PeripheralConfig {
@@ -68,8 +101,9 @@ async fn run_advertisement() {
         loop {
             match advertise("Ariel OS", &mut host.peripheral, &server).await {
                 Ok(conn) => {
+                    // conn.raw().set_bondable(!bond_stored).unwrap();
                     // set up tasks when the connection is established to a central, so they don't run when no one is connected.
-                    let a = gatt_events_task(&server, &conn);
+                    let a = gatt_events_task(&server, &conn, &mut bond_stored);
                     let b = ble_tx(&server, &conn);
                     // run until any task ends (usually because the connection has been closed),
                     // then return to advertising state.
@@ -84,57 +118,64 @@ async fn run_advertisement() {
     .await;
 }
 
-#[ariel_os::task(autostart, peripherals)]
-async fn uart_runner(peripherals: Peripherals) {
-    let mut config = hal::uart::Config::default();
-    config.baudrate = Baudrate::_115200;
-    info!("Selected configuration: {:?}", config);
+// #[ariel_os::task(autostart, peripherals)]
+// async fn uart_runner(peripherals: Peripherals) {
+//     let mut config = hal::uart::Config::default();
+//     config.baudrate = Baudrate::_115200;
+//     info!("Selected configuration: {:?}", config);
 
-    let mut rx_buf = [0u8; 32];
-    let mut tx_buf = [0u8; 32];
+//     let mut rx_buf = [0u8; 32];
+//     let mut tx_buf = [0u8; 32];
 
-    let mut uart = pins::TestUart::new(
-        peripherals.uart_rx,
-        peripherals.uart_tx,
-        &mut rx_buf,
-        &mut tx_buf,
-        config,
-    )
-    .expect("Invalid UART configuration");
+//     let mut uart = pins::TestUart::new(
+//         peripherals.uart_rx,
+//         peripherals.uart_tx,
+//         &mut rx_buf,
+//         &mut tx_buf,
+//         config,
+//     )
+//     .expect("Invalid UART configuration");
 
-    loop {
-        let mut buf = [0u8; MAX_RX_PACKET_SIZE];
+//     loop {
+//         let mut buf = [0u8; MAX_RX_PACKET_SIZE];
 
-        let read = async { uart.read(&mut buf).await.expect("Failed to read") };
-        let write = async {
-            TX_CHANNEL.ready_to_receive().await;
-        };
+//         let read = async { uart.read(&mut buf).await.expect("Failed to read") };
+//         let write = async {
+//             TX_CHANNEL.ready_to_receive().await;
+//         };
 
-        match select(write, read).await {
-            Either::First(_) => {
-                let data = TX_CHANNEL.receive().await;
-                uart.write(&data).await.expect("UART write error");
-            }
-            Either::Second(n) => {
-                let mut data: Vec<u8, MAX_RX_PACKET_SIZE> = Vec::new();
-                data.extend_from_slice(&buf[..n]).unwrap();
-                RX_CHANNEL.send(data).await;
-            }
-        }
-    }
-}
+//         match select(write, read).await {
+//             Either::First(_) => {
+//                 let data = TX_CHANNEL.receive().await;
+//                 uart.write(&data).await.expect("UART write error");
+//             }
+//             Either::Second(n) => {
+//                 let mut data: Vec<u8, MAX_RX_PACKET_SIZE> = Vec::new();
+//                 data.extend_from_slice(&buf[..n]).unwrap();
+//                 RX_CHANNEL.send(data).await;
+//             }
+//         }
+//     }
+// }
 
 /// Stream Events until the connection closes.
 ///
 /// This function will handle the GATT events and process them.
 /// This is how we interact with read and write requests.
-async fn gatt_events_task(server: &Server<'_>, conn: &GattConnection<'_, '_>) -> Result<(), Error> {
+async fn gatt_events_task(
+    server: &Server<'_>,
+    conn: &GattConnection<'_, '_>,
+    bond_stored: &mut bool,
+) -> Result<(), Error> {
     let write_data = server.uart_service.write_data;
     loop {
         match conn.next().await {
             GattConnectionEvent::Bonded { bond_info } => {
                 info!("[gatt] pairing complete: {:?}", bond_info);
-
+                storage::insert(BOND_STORAGE_KEY, SerializableBond::from(bond_info))
+                    .await
+                    .unwrap();
+                *bond_stored = true;
             }
             GattConnectionEvent::Disconnected { reason } => {
                 info!("[gatt] disconnected: {:?}", reason);

@@ -834,6 +834,7 @@ dependencies = [
  "embassy-sync 0.6.2",
  "embedded-io-async",
  "heapless 0.8.0",
+ "serde",
  "static_cell",
  "trouble-host",
 ]
