@@ -153,7 +153,7 @@ jobs:
           mv target/doc/* ./_site/dev/docs/api
 
       - name: Install mdbook
-        uses: taiki-e/install-action@6cc14f7f2f4b3129aff07a8b071d2d4f2733465d # v2
+        uses: taiki-e/install-action@62da238c048aa0f865cc5a322082957d34e7fc1a # v2
         with:
           tool: mdbook@0.5.0-alpha.1
 
