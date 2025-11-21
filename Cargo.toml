@@ -14,6 +14,7 @@ members = [
   "src/ariel-os-debug-log",
   "src/ariel-os-embassy-common",
   "src/ariel-os-esp",
+  "src/ariel-os-gnss-time-extension",
   "src/ariel-os-hal",
   "src/ariel-os-identity",
   "src/ariel-os-macros",

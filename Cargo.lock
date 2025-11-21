@@ -360,6 +360,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "ariel-os-gnss-time-extension"
+version = "0.1.0"
+dependencies = [
+ "ariel-os-debug",
+ "ariel-os-sensors",
+ "defmt 1.0.1",
+ "time",
+]
+
+[[package]]
 name = "ariel-os-hal"
 version = "0.2.0"
 dependencies = [
@@ -458,10 +468,13 @@ name = "ariel-os-nrf91-gnss"
 version = "0.1.0"
 dependencies = [
  "ariel-os-debug",
+ "ariel-os-gnss-time-extension",
  "ariel-os-sensors",
+ "ariel-os-sensors-utils",
  "defmt 1.0.1",
  "embassy-sync 0.6.2",
  "futures",
+ "libm",
  "nrf-modem",
  "portable-atomic",
  "time",
@@ -3049,6 +3062,7 @@ version = "0.0.0"
 dependencies = [
  "ariel-os",
  "ariel-os-boards",
+ "ariel-os-gnss-time-extension",
  "ariel-os-nrf91-gnss",
  "linkme",
 ]

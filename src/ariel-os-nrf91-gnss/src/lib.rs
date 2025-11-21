@@ -1,7 +1,6 @@
 #![no_std]
 
 pub mod config;
-mod state_atomic;
 
 use core::f64::consts::PI;
 
@@ -13,14 +12,12 @@ use ariel_os_sensors::{
         SampleError, SampleMetadata, Samples, State,
     },
 };
+use ariel_os_sensors_utils::AtomicState;
 use embassy_sync::{blocking_mutex::raw::CriticalSectionRawMutex, channel::Channel, mutex::Mutex};
 use futures::StreamExt;
 use time::{Date, Month, Time, UtcDateTime, macros::utc_datetime};
 
 use crate::config::GnssOperationMode;
-use crate::state_atomic::StateAtomic;
-
-const ARIEL_EPOCH: UtcDateTime = utc_datetime!(2024-01-01 0:00);
 
 // From WGS 84, Mean Radius of the Three Semi-axes in meters
 const EARTH_RADIUS: f64 = 6371008.7714;
@@ -57,76 +54,10 @@ fn default_gnss_config() -> nrf_modem::GnssConfig {
     }
 }
 
-#[derive(Debug, Copy, Clone, PartialEq, Eq)]
-#[cfg_attr(feature = "defmt", derive(defmt::Format))]
-pub enum GnssSampleError {
-    /// Error reading value from sample, see inner error.
-    Reading(SampleError),
-    /// Sensor does not provide the correct channels
-    InvalidSensor,
-}
-
-pub trait GnssExt {
-    /// Returns the time of the last fix in seconds since UNIX epoch.
-    fn time_of_fix_seconds(&self) -> Result<i64, GnssSampleError>;
-
-    /// Returns the time of the last fix in milliseconds since UNIX epoch.
-    fn time_of_fix(&self) -> Result<i64, GnssSampleError> {
-        Ok(self.time_of_fix_seconds()? * 1000 + self.time_of_fix_delta_ms()?)
-    }
-    /// Returns the milliseconds part of the time of the last fix.
-    fn time_of_fix_delta_ms(&self) -> Result<i64, GnssSampleError>;
-}
-
-fn get_element_after_marker(
-    iter: impl Iterator<Item = (ReadingChannel, Sample)>,
-    marker: Label,
-    position: usize,
-) -> Option<(ReadingChannel, Sample)> {
-    let mut peekable = iter.peekable();
-    while let Some((c, _)) = peekable.peek() {
-        if c.label() == Label::OpaqueGnssTime {
-            break;
-        }
-        peekable.next();
-    }
-    let result = peekable.nth(position);
-
-    // if its not an opaque value we're doing something wrong
-    if let Some((c, _)) = result
-        && !(c.label() == Label::Opaque || c.label() == marker)
-    {
-        None
-    } else {
-        result
-    }
-}
-
-/// TODO: expand documentation
-///
-/// The channel with the label [`Label::OpaqueGnssTime`] is the first part of the time data, seconds since ariel epoch
-/// The channel following is the second part of the time data and should have the label [`Label::Opaque`], ms since last second.
-///
-impl GnssExt for Samples {
-    fn time_of_fix_seconds(&self) -> Result<i64, GnssSampleError> {
-        let sample = get_element_after_marker(self.samples(), Label::OpaqueGnssTime, 0)
-            .ok_or(GnssSampleError::InvalidSensor)?;
-
-        let since_ariel_epoch: i64 = sample.1.value().map_err(GnssSampleError::Reading)?.into();
-        Ok(ARIEL_EPOCH.unix_timestamp() + since_ariel_epoch)
-    }
-    fn time_of_fix_delta_ms(&self) -> Result<i64, GnssSampleError> {
-        let sample = get_element_after_marker(self.samples(), Label::OpaqueGnssTime, 1)
-            .ok_or(GnssSampleError::InvalidSensor)?;
-
-        Ok(sample.1.value().map_err(GnssSampleError::Reading)?.into())
-    }
-}
-
 pub struct Nrf91Gnss {
     config: Mutex<CriticalSectionRawMutex, config::Config>,
     label: Option<&'static str>,
-    state: StateAtomic,
+    state: AtomicState,
 
     command_channel: Channel<CriticalSectionRawMutex, Command, 1>,
     result_channel: Channel<CriticalSectionRawMutex, ReadingResult<Samples>, 1>,
@@ -139,7 +70,7 @@ impl Nrf91Gnss {
         Self {
             config: Mutex::new(config::Config::new(GnssOperationMode::Continuous)),
             label,
-            state: StateAtomic::new(State::Uninitialized),
+            state: AtomicState::new(State::Uninitialized),
             command_channel: Channel::new(),
             result_channel: Channel::new(),
         }
@@ -267,21 +198,24 @@ impl Nrf91Gnss {
             data.datetime.day,
         );
 
-        let time = Time::from_hms(
+        let time = Time::from_hms_milli(
             data.datetime.hour,
             data.datetime.minute,
             data.datetime.seconds,
+            data.datetime.ms,
         );
 
         // Default year if no GPS connection has been established yet.
-        let seconds_since_epoch = if data.datetime.year == 1980 {
+        let time_parts = if data.datetime.year == 1980 {
             None
         } else if let Ok(date) = date
             && let Ok(time) = time
         {
             let datetime = UtcDateTime::new(date, time);
 
-            Some((datetime - ARIEL_EPOCH).whole_seconds())
+            Some(ariel_os_gnss_time_extension::convert_datetime_to_parts(
+                datetime,
+            ))
         } else {
             None
         };
@@ -299,18 +233,18 @@ impl Nrf91Gnss {
             self,
             [
                 Sample::new(
-                    seconds_since_epoch.unwrap_or(0) as i32,
+                    time_parts.unwrap_or((0, 0)).0 as i32,
                     // Default year if no GPS connection has been established yet.
-                    if seconds_since_epoch.is_none() {
+                    if time_parts.is_none() {
                         SampleMetadata::ChannelTemporarilyUnavailable
                     } else {
                         SampleMetadata::UnknownAccuracy
                     },
                 ),
                 Sample::new(
-                    data.datetime.ms as i32,
+                    time_parts.unwrap_or((0, 0)).1 as i32,
                     // Default year if no GPS connection has been established yet.
-                    if seconds_since_epoch.is_none() {
+                    if time_parts.is_none() {
                         SampleMetadata::ChannelTemporarilyUnavailable
                     } else {
                         SampleMetadata::UnknownAccuracy
