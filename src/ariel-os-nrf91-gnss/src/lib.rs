@@ -299,6 +299,24 @@ impl Nrf91Gnss {
             self,
             [
                 Sample::new(
+                    seconds_since_epoch.unwrap_or(0) as i32,
+                    // Default year if no GPS connection has been established yet.
+                    if seconds_since_epoch.is_none() {
+                        SampleMetadata::ChannelTemporarilyUnavailable
+                    } else {
+                        SampleMetadata::UnknownAccuracy
+                    },
+                ),
+                Sample::new(
+                    data.datetime.ms as i32,
+                    // Default year if no GPS connection has been established yet.
+                    if seconds_since_epoch.is_none() {
+                        SampleMetadata::ChannelTemporarilyUnavailable
+                    } else {
+                        SampleMetadata::UnknownAccuracy
+                    },
+                ),
+                Sample::new(
                     (data.latitude * 10_000_000f64) as i32,
                     if fix_valid {
                         SampleMetadata::SymmetricalError {
@@ -371,24 +389,6 @@ impl Nrf91Gnss {
                         SampleMetadata::ChannelTemporarilyUnavailable
                     },
                 ),
-                Sample::new(
-                    seconds_since_epoch.unwrap_or(0) as i32,
-                    // Default year if no GPS connection has been established yet.
-                    if seconds_since_epoch.is_none() {
-                        SampleMetadata::ChannelTemporarilyUnavailable
-                    } else {
-                        SampleMetadata::UnknownAccuracy
-                    },
-                ),
-                Sample::new(
-                    data.datetime.ms as i32,
-                    // Default year if no GPS connection has been established yet.
-                    if seconds_since_epoch.is_none() {
-                        SampleMetadata::ChannelTemporarilyUnavailable
-                    } else {
-                        SampleMetadata::UnknownAccuracy
-                    },
-                ),
             ],
         )
     }
@@ -422,6 +422,19 @@ impl Sensor for Nrf91Gnss {
 
     fn reading_channels(&self) -> ariel_os_sensors::sensor::ReadingChannels {
         ReadingChannels::from([
+            // Putting these first so `GnssExt` doesn't spend more time searching for them.
+            ReadingChannel::new(
+                // Seconds since Ariel epoch (2024-01-01)
+                Label::OpaqueGnssTime,
+                0,
+                MeasurementUnit::Second,
+            ),
+            ReadingChannel::new(
+                // Milliseconds
+                Label::Opaque,
+                -3,
+                MeasurementUnit::Second,
+            ),
             ReadingChannel::new(
                 // Accuracy is in meters.
                 Label::Latitude,
@@ -464,18 +477,6 @@ impl Sensor for Nrf91Gnss {
                 Label::Heading,
                 -6,
                 MeasurementUnit::Degree,
-            ),
-            ReadingChannel::new(
-                // Seconds since Ariel epoch (2024-01-01)
-                Label::OpaqueGnssTime,
-                0,
-                MeasurementUnit::Second,
-            ),
-            ReadingChannel::new(
-                // Milliseconds
-                Label::Opaque,
-                -3,
-                MeasurementUnit::Second,
             ),
         ])
     }
