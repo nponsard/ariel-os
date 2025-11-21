@@ -11,9 +11,11 @@ workspace = true
 
 [dependencies]
 ariel-os-debug = { path = "../ariel-os-debug" }
+ariel-os-gnss-time-extension = { path = "../ariel-os-gnss-time-extension" }
 ariel-os-sensors = { path = "../ariel-os-sensors", features = [
   "max-sample-min-count-8",
 ] }
+ariel-os-sensors-utils = { path = "../ariel-os-sensors-utils" }
 embassy-sync = { workspace = true }
 portable-atomic = { workspace = true }
 futures = { workspace = true, default-features = false }

@@ -9,7 +9,7 @@ use ariel_os::{
     sensors::{Label, REGISTRY, Reading},
     time::Timer,
 };
-use ariel_os_nrf91_gnss::GnssExt;
+use ariel_os_gnss_time_extension::GnssTimeExt;
 
 #[ariel_os::task(autostart)]
 async fn main() {
@@ -59,7 +59,7 @@ async fn main() {
                         }
                     }
 
-                    info!("Time of fix: {:?}", samples.time_of_fix());
+                    info!("Time of fix: {:?}", samples.time_of_fix_timestamp());
                 }
                 Err(err) => {
                     error!("Error when reading: {:?}", err);

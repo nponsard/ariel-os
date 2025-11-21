@@ -9,6 +9,9 @@ ariel-os-boards = { path = "../../src/ariel-os-boards" }
 ariel-os-nrf91-gnss = { path = "../../src/ariel-os-nrf91-gnss", features = [
   "defmt",
 ] }
+ariel-os-gnss-time-extension = { path = "../../src/ariel-os-gnss-time-extension", features = [
+  "defmt",
+] }
 linkme = { workspace = true }
 
 [lints]
