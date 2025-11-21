@@ -3,6 +3,8 @@
 pub mod config;
 mod state_atomic;
 
+use core::f64::consts::PI;
+
 use ariel_os_debug::log::{info, warn};
 use ariel_os_sensors::{
     Category, Label, MeasurementUnit, Reading, Sensor,
@@ -19,6 +21,12 @@ use crate::config::GnssOperationMode;
 use crate::state_atomic::StateAtomic;
 
 const ARIEL_EPOCH: UtcDateTime = utc_datetime!(2024-01-01 0:00);
+
+// From WGS 84, Mean Radius of the Three Semi-axes in meters
+const EARTH_RADIUS: f64 = 6371008.7714;
+// The fraction of degrees representing a meter for the latitude (and the longitude at the equator)
+// Compute at build time to improve performance
+const DEGREES_PER_METER_BASE: f64 = 360.0 / (EARTH_RADIUS * 2.0 * PI);
 
 enum Command {
     Trigger,
@@ -278,6 +286,15 @@ impl Nrf91Gnss {
             None
         };
 
+        let latitude_accuracy = f64::from(data.accuracy) * DEGREES_PER_METER_BASE;
+
+        // For longitude, the distance represented by a degree changes depending on the latitude
+        //
+        // The perimeter of the circle formed by the latitude is `cos(latitude_radians) * EARTH_RADIUS * 2 * PI`
+        // Full formula here is `longitude_accuracy = accuracy * 360 / (cos(latitude_radians) * EARTH_RADIUS * 2 * PI)`. We have 360 / (EARTH_RADIUS * 2 * PI) already pre-computed.
+        let longitude_accuracy = f64::from(data.accuracy) * DEGREES_PER_METER_BASE
+            / libm::cos(data.latitude.to_radians());
+
         Samples::from_8(
             self,
             [
@@ -285,10 +302,10 @@ impl Nrf91Gnss {
                     (data.latitude * 10_000_000f64) as i32,
                     if fix_valid {
                         SampleMetadata::SymmetricalError {
-                            // Accuracy in meters, max value is 25,5. Need to watch out for overflows.
-                            deviation: clamp_to_u8(data.accuracy * 10f32),
+                            // One meter is approximately 0.000009 degrees. Accuracy value usually between 1 and 50 meters.
+                            deviation: clamp_to_u8(latitude_accuracy as f32 * 100_000f32),
                             bias: 0,
-                            scaling: -1,
+                            scaling: -5,
                         }
                     } else {
                         SampleMetadata::ChannelTemporarilyUnavailable
@@ -298,9 +315,9 @@ impl Nrf91Gnss {
                     (data.longitude * 10_000_000f64) as i32,
                     if fix_valid {
                         SampleMetadata::SymmetricalError {
-                            deviation: clamp_to_u8(data.accuracy * 10f32),
+                            deviation: clamp_to_u8(longitude_accuracy as f32 * 100_000f32),
                             bias: 0,
-                            scaling: -1,
+                            scaling: -5,
                         }
                     } else {
                         SampleMetadata::ChannelTemporarilyUnavailable
