@@ -20,8 +20,6 @@ use time::{Date, Month, Time, UtcDateTime, macros::utc_datetime};
 use crate::config::GnssOperationMode;
 use crate::state_atomic::StateAtomic;
 
-const ARIEL_EPOCH: UtcDateTime = utc_datetime!(2024-01-01 0:00);
-
 // From WGS 84, Mean Radius of the Three Semi-axes in meters
 const EARTH_RADIUS: f64 = 6371008.7714;
 // The fraction of degrees representing a meter for the latitude (and the longitude at the equator)
@@ -54,72 +52,6 @@ fn default_gnss_config() -> nrf_modem::GnssConfig {
         },
         timing_source: nrf_modem::GnssTimingSource::Tcxo,
         power_mode: nrf_modem::GnssPowerSaveMode::Disabled,
-    }
-}
-
-#[derive(Debug, Copy, Clone, PartialEq, Eq)]
-#[cfg_attr(feature = "defmt", derive(defmt::Format))]
-pub enum GnssSampleError {
-    /// Error reading value from sample, see inner error.
-    Reading(SampleError),
-    /// Sensor does not provide the correct channels
-    InvalidSensor,
-}
-
-pub trait GnssExt {
-    /// Returns the time of the last fix in seconds since UNIX epoch.
-    fn time_of_fix_seconds(&self) -> Result<i64, GnssSampleError>;
-
-    /// Returns the time of the last fix in milliseconds since UNIX epoch.
-    fn time_of_fix(&self) -> Result<i64, GnssSampleError> {
-        Ok(self.time_of_fix_seconds()? * 1000 + self.time_of_fix_delta_ms()?)
-    }
-    /// Returns the milliseconds part of the time of the last fix.
-    fn time_of_fix_delta_ms(&self) -> Result<i64, GnssSampleError>;
-}
-
-fn get_element_after_marker(
-    iter: impl Iterator<Item = (ReadingChannel, Sample)>,
-    marker: Label,
-    position: usize,
-) -> Option<(ReadingChannel, Sample)> {
-    let mut peekable = iter.peekable();
-    while let Some((c, _)) = peekable.peek() {
-        if c.label() == Label::OpaqueGnssTime {
-            break;
-        }
-        peekable.next();
-    }
-    let result = peekable.nth(position);
-
-    // if its not an opaque value we're doing something wrong
-    if let Some((c, _)) = result
-        && !(c.label() == Label::Opaque || c.label() == marker)
-    {
-        None
-    } else {
-        result
-    }
-}
-
-/// TODO: expand documentation
-///
-/// The channel with the label [`Label::OpaqueGnssTime`] is the first part of the time data, seconds since ariel epoch
-/// The channel following is the second part of the time data and should have the label [`Label::Opaque`], ms since last second.
-///
-impl GnssExt for Samples {
-    fn time_of_fix_seconds(&self) -> Result<i64, GnssSampleError> {
-        let sample = get_element_after_marker(self.samples(), Label::OpaqueGnssTime, 0)
-            .ok_or(GnssSampleError::InvalidSensor)?;
-
-        let since_ariel_epoch: i64 = sample.1.value().map_err(GnssSampleError::Reading)?.into();
-        Ok(ARIEL_EPOCH.unix_timestamp() + since_ariel_epoch)
-    }
-    fn time_of_fix_delta_ms(&self) -> Result<i64, GnssSampleError> {
-        let sample = get_element_after_marker(self.samples(), Label::OpaqueGnssTime, 1)
-            .ok_or(GnssSampleError::InvalidSensor)?;
-
-        Ok(sample.1.value().map_err(GnssSampleError::Reading)?.into())
     }
 }
 

@@ -359,6 +359,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "ariel-os-gnss-time-extension"
+version = "0.1.0"
+dependencies = [
+ "ariel-os-debug",
+ "ariel-os-sensors",
+ "time",
+]
+
+[[package]]
 name = "ariel-os-hal"
 version = "0.2.0"
 dependencies = [
