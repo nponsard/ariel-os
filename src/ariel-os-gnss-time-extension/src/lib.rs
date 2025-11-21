@@ -1,12 +1,24 @@
 //! # GNSS Time Extension
 //!
-//! This extension allows you to read the time information from Samples produced
+//! This extension allows you to read the time information from [`Samples`] produced
 //! by a compatible GNSS driver.
+//!
+//! # For users
+//!
+//! Import the trait [`GnssTimeExt`], you then access the time information on [`Samples`] generated
+//! by a compatible driver by using those functions:
+//!
+//! - [`GnssTimeExt::time_of_fix_timestamp()`]: UTC time in seconds since UNIX epoch.
+//! - [`GnssTimeExt::time_of_fix_timestamp_nanos()`]: UTC time in nanoseconds since UNIX epoch.
+//!     Some sensors may have worse than nanosecond precision but this function
+//!     will always return nanoseconds.
+//!
 //!
 //! # For implementors
 //!
+//! Get parts with [`convert_datetime_to_parts()`].
 //! You need to return a channel with the label [`Label::OpaqueGnssTime`] containing the first
-//! element followed by a channel with the label [`Label::Opaque`] containing the second element.
+//! part followed by a channel with the label [`Label::Opaque`] containing the second part.
 
 use ariel_os_sensors::{
     Label, Reading as _,
@@ -26,15 +38,52 @@ pub enum GnssTimeExtError {
 }
 
 pub trait GnssTimeExt {
-    /// Returns the time of the last fix in seconds since UNIX epoch.
-    fn time_of_fix_seconds(&self) -> Result<i64, GnssTimeExtError>;
+    /// Returns the UTC time in seconds since UNIX epoch.
+    ///
+    /// # Errors
+    ///
+    /// Returns errors if the reading is not compatible with this extension
+    /// or one [`Sample`] returned an error
+    fn time_of_fix_timestamp(&self) -> Result<i64, GnssTimeExtError>;
 
-    /// Returns the time of the last fix in milliseconds since UNIX epoch.
-    fn time_of_fix(&self) -> Result<i64, GnssTimeExtError> {
-        Ok(self.time_of_fix_seconds()? * 1000 + self.time_of_fix_delta_ms()?)
+    /// Returns the time of the last fix in nanoseconds since UNIX epoch.
+    ///
+    /// # Errors
+    ///
+    /// Returns errors if the reading is not compatible with this extension
+    /// or one [`Sample`] returned an error
+    fn time_of_fix_timestamp_nanos(&self) -> Result<i128, GnssTimeExtError> {
+        Ok(self.time_of_fix_seconds()? * 1_000_000_000 + self.time_of_fix_delta_ns()?)
     }
-    /// Returns the milliseconds part of the time of the last fix.
-    fn time_of_fix_delta_ms(&self) -> Result<i64, GnssTimeExtError>;
+    /// Returns the nanoseconds part of the time of the last fix.
+    ///
+    /// # Errors
+    ///
+    /// Returns errors if the reading is not compatible with this extension
+    /// or one [`Sample`] returned an error
+    fn time_of_fix_delta_ns(&self) -> Result<i64, GnssTimeExtError>;
+}
+
+impl GnssTimeExt for Samples {
+    fn time_of_fix_timestamp(&self) -> Result<i64, GnssTimeExtError> {
+        let sample = get_element_after_marker(self.samples(), Label::OpaqueGnssTime, 0)
+            .ok_or(GnssTimeExtError::InvalidSensor)?;
+
+        let since_ariel_epoch: i64 = sample.1.value().map_err(GnssTimeExtError::Reading)?.into();
+        Ok(ARIEL_EPOCH.unix_timestamp() + since_ariel_epoch)
+    }
+    fn time_of_fix_delta_ns(&self) -> Result<i64, GnssTimeExtError> {
+        let sample = get_element_after_marker(self.samples(), Label::OpaqueGnssTime, 1)
+            .ok_or(GnssTimeExtError::InvalidSensor)?;
+
+        Ok(sample.1.value().map_err(GnssTimeExtError::Reading)?.into())
+    }
+}
+
+pub fn convert_datetime_to_parts(utc_datetime: UtcDateTime) -> (i32, i32) {
+    let seconds_since_epoch = (datetime - ARIEL_EPOCH).whole_seconds();
+    let nanoseconds = utc_datetime.nanosecond() as i32;
+    return (seconds_since_epoch, nanoseconds);
 }
 
 fn get_element_after_marker(
@@ -58,26 +107,5 @@ fn get_element_after_marker(
         None
     } else {
         result
-    }
-}
-
-/// TODO: expand documentation
-///
-/// The channel with the label [`Label::OpaqueGnssTime`] is the first part of the time data, seconds since ariel epoch
-/// The channel following is the second part of the time data and should have the label [`Label::Opaque`], ms since last second.
-///
-impl GnssTimeExt for Samples {
-    fn time_of_fix_seconds(&self) -> Result<i64, GnssTimeExtError> {
-        let sample = get_element_after_marker(self.samples(), Label::OpaqueGnssTime, 0)
-            .ok_or(GnssTimeExtError::InvalidSensor)?;
-
-        let since_ariel_epoch: i64 = sample.1.value().map_err(GnssTimeExtError::Reading)?.into();
-        Ok(ARIEL_EPOCH.unix_timestamp() + since_ariel_epoch)
-    }
-    fn time_of_fix_delta_ms(&self) -> Result<i64, GnssTimeExtError> {
-        let sample = get_element_after_marker(self.samples(), Label::OpaqueGnssTime, 1)
-            .ok_or(GnssTimeExtError::InvalidSensor)?;
-
-        Ok(sample.1.value().map_err(GnssTimeExtError::Reading)?.into())
     }
 }
