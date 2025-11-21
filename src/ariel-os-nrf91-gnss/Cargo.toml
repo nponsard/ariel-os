@@ -20,6 +20,7 @@ futures = { workspace = true, default-features = false }
 defmt = { workspace = true, optional = true }
 time = { workspace = true, features = ["macros"] }
 nrf-modem = { workspace = true, features = ["modem-log"] }
+libm = "0.2.15"
 
 [target.'cfg(context = "nrf9151")'.dependencies]
 nrf-modem = { workspace = true, features = ["nrf9151"] }
