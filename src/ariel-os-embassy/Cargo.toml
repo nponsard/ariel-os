@@ -130,9 +130,11 @@ eth-stm32 = ["ariel-os-hal/eth-stm32", "net", "eth"]
 ble = [
   "dep:trouble-host",
   "ariel-os-embassy-common/ble",
-  # Some HALs need hwrng to initialize the BLE stack.
-  "hwrng",
   "ariel-os-hal/ble",
+  # Random is needed for BLE initialization and Address generation
+  "ariel-os-random/csprng",
+  "hwrng",
+  "random",
 ]
 ble-cyw43 = ["ble", "ariel-os-hal/ble-cyw43"]
 ble-peripheral = ["ble", "ariel-os-hal/ble-peripheral"]
