@@ -50,6 +50,7 @@
 //! Sensor drivers must implement the [`Sensor`] trait.
 //!
 #![no_std]
+#![cfg_attr(nightly, feature(doc_cfg))]
 #![deny(clippy::pedantic)]
 #![deny(missing_docs)]
 
