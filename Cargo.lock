@@ -298,6 +298,7 @@ dependencies = [
  "embassy-stm32",
  "embassy-sync 0.6.2",
  "embassy-time",
+ "embassy-time-queue-utils",
  "embassy-usb",
  "embedded-hal 1.0.0",
  "embedded-hal-async",
