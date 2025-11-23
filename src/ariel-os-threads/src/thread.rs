@@ -56,6 +56,8 @@ pub enum ThreadState {
     ChannelTxBlocked(usize),
     // Waiting on a [`crate::sync::Semaphore`].
     SemaphoreBlocked,
+    // Waiting on a [`crate::sync::RecursiveLock`].
+    RecursiveLockBlocked,
 }
 
 impl Thread {
