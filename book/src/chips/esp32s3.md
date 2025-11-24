@@ -14,7 +14,7 @@
 |SPI Main Mode|<span title="needs testing">🚦</span>|
 |UART|<span title="supported">✅</span>|
 |Logging|<span title="supported">✅</span>|
-|User USB|<span title="available in hardware, but not currently supported by Ariel OS">❌</span>[^usb-does-not-enumerate][^see-also-https-github-com-ariel-os-ariel-os-issues-903]|
+|User USB|<span title="supported">✅</span>|
 |Wi-Fi|<span title="supported">✅</span>|
 |Ethernet over USB|<span title="available in hardware, but not currently supported by Ariel OS">❌</span>|
 |Hardware Random Number Generator|<span title="supported">✅</span>|
@@ -45,6 +45,4 @@ dt, dd {
 }
 </style>
 
-[^usb-does-not-enumerate]: USB does not enumerate.
-[^see-also-https-github-com-ariel-os-ariel-os-issues-903]: See also: https://github.com/ariel-os/ariel-os/issues/903.
 [^requires-partitioning-support]: Requires partitioning support.
