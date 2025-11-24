@@ -56,6 +56,10 @@ functionalities:
     title: Wi-Fi
     support_criteria: wifi
     description:
+  - name: ble
+    title: Bluetooth Low Energy
+    support_criteria: ble-scanner
+    description:
   - name: ethernet_over_usb
     title: Ethernet over USB
     support_criteria: usb-ethernet
@@ -84,6 +88,7 @@ chips:
       logging: supported
       storage: not_currently_supported
       wifi: not_available
+      ble: not_currently_supported
       user_usb: not_available
       ethernet_over_usb: not_available
 
@@ -100,6 +105,7 @@ chips:
       logging: supported
       storage: supported
       wifi: not_available
+      ble: supported
       user_usb: not_available
       ethernet_over_usb: not_available
 
@@ -117,6 +123,7 @@ chips:
       logging: supported
       storage: supported
       wifi: not_available
+      ble: supported
       user_usb: needs_testing
 
   nrf52840:
@@ -132,6 +139,7 @@ chips:
       logging: supported
       storage: supported
       wifi: not_available
+      ble: supported
 
   nrf5340:
     name: nRF5340
@@ -149,6 +157,7 @@ chips:
       logging: supported
       storage: supported
       wifi: not_available
+      ble: supported
 
   nrf9151:
     name: nRF9151
@@ -166,6 +175,7 @@ chips:
       logging: supported
       storage: supported
       wifi: not_available
+      ble: not_available
       user_usb: not_available
       ethernet_over_usb: not_available
 
@@ -185,6 +195,7 @@ chips:
       logging: supported
       storage: supported
       wifi: not_available
+      ble: not_available
       user_usb: not_available
       ethernet_over_usb: not_available
 
@@ -201,6 +212,7 @@ chips:
       logging: supported
       storage: supported
       wifi: not_available
+      ble: not_available
 
   rp235xa:
     name: RP235xa
@@ -219,6 +231,7 @@ chips:
       logging: supported
       storage: supported
       wifi: not_available
+      ble: not_available
 
   esp32c3:
     name: ESP32-C3
@@ -237,6 +250,7 @@ chips:
           - requires partitioning support
       wifi:
         status: supported
+      ble: not_currently_supported
       user_usb:
         status: not_available
         comments:
@@ -261,6 +275,7 @@ chips:
           - requires partitioning support
       wifi:
         status: supported
+      ble: not_currently_supported
       user_usb:
         status: not_available
         comments:
@@ -284,6 +299,7 @@ chips:
           - requires partitioning support
       wifi:
         status: supported
+      ble: not_currently_supported
       user_usb:
         status: not_available
         comments:
@@ -308,6 +324,7 @@ chips:
           - requires partitioning support
       wifi:
         status: supported
+      ble: not_currently_supported
       user_usb:
         status: not_available
         comments:
@@ -336,6 +353,7 @@ chips:
           - "See also: https://github.com/ariel-os/ariel-os/issues/903"
       ethernet_over_usb: not_currently_supported
       wifi: supported
+      ble: not_available
 
   # Currently identical to esp32s2.
   esp32s2fx2:
@@ -360,6 +378,7 @@ chips:
           - "See also: https://github.com/ariel-os/ariel-os/issues/903"
       ethernet_over_usb: not_currently_supported
       wifi: supported
+      ble: not_available
 
   # Currently identical to esp32s2.
   esp32s2fx4:
@@ -384,6 +403,7 @@ chips:
           - "See also: https://github.com/ariel-os/ariel-os/issues/903"
       ethernet_over_usb: not_currently_supported
       wifi: supported
+      ble: not_available
 
   # Currently identical to esp32s2.
   esp32s2fx4r2:
@@ -408,6 +428,7 @@ chips:
           - "See also: https://github.com/ariel-os/ariel-os/issues/903"
       ethernet_over_usb: not_currently_supported
       wifi: supported
+      ble: not_available
 
   esp32s3:
     name: ESP32-S3
@@ -427,6 +448,7 @@ chips:
       user_usb: supported
       ethernet_over_usb: not_currently_supported
       wifi: supported
+      ble: not_currently_supported
 
   # Currently identical to esp32s3.
   esp32s3fx8:
@@ -447,6 +469,7 @@ chips:
       user_usb: supported
       ethernet_over_usb: not_currently_supported
       wifi: supported
+      ble: not_currently_supported
 
   stm32c031c6:
     name: STM32C031C6
@@ -466,6 +489,7 @@ chips:
           - would need to allocate some flash
       user_usb: not_available
       wifi: not_available
+      ble: not_available
 
   stm32f042k6:
     name: STM32F042K6
@@ -485,6 +509,7 @@ chips:
           - would need to allocate some flash
       user_usb: not_available
       wifi: not_available
+      ble: not_available
 
   stm32f401re:
     name: STM32F401RE
@@ -503,6 +528,7 @@ chips:
         comments:
           - unsupported heterogeneous flash organization
       wifi: not_available
+      ble: not_available
       user_usb: needs_testing
 
   stm32f411re:
@@ -522,6 +548,7 @@ chips:
         comments:
           - unsupported heterogeneous flash organization
       wifi: not_available
+      ble: not_available
       user_usb:
         status: not_currently_supported
         comments:
@@ -549,6 +576,7 @@ chips:
         comments:
           - removing items not supported
       wifi: not_available
+      ble: not_available
 
   stm32h755zi:
     name: STM32H755ZI
@@ -572,6 +600,7 @@ chips:
         comments:
           - removing items not supported
       wifi: not_available
+      ble: not_available
 
   stm32l475vg:
     name: STM32L475VG
@@ -595,6 +624,7 @@ chips:
         comments:
           - removing items not supported
       wifi: not_available
+      ble: not_available
 
   stm32u073kc:
     name: STM32U073KC
@@ -613,6 +643,7 @@ chips:
         comments:
           - removing items not supported
       wifi: not_available
+      ble: not_available
       user_usb: supported
 
   stm32u083mc:
@@ -631,6 +662,7 @@ chips:
         comments:
           - removing items not supported
       wifi: not_available
+      ble: not_available
 
   stm32u585ai:
     name: STM32U585AI
@@ -651,6 +683,7 @@ chips:
       logging: supported
       storage: supported
       wifi: not_available
+      ble: not_available
 
   stm32wb55rg:
     name: STM32WB55RG
@@ -668,6 +701,7 @@ chips:
         comments:
           - removing items not supported
       wifi: not_available
+      ble: not_currently_supported
 
   stm32wba55cg:
     name: STM32WBA55CG
@@ -685,6 +719,7 @@ chips:
         comments:
           - removing items not supported
       wifi: not_available
+      ble: not_currently_supported
       user_usb: not_available
       ethernet_over_usb: not_available
 
@@ -704,6 +739,7 @@ chips:
         comments:
           - removing items not supported
       wifi: not_available
+      ble: not_available
       user_usb: not_available
       ethernet_over_usb: not_available
 
@@ -736,6 +772,7 @@ boards:
         status: not_currently_supported
         comments:
           - requires supporting the onboard nRF7002 chip
+      ble: not_available
 
   nrf52dk:
     name: nRF52-DK
@@ -743,6 +780,7 @@ boards:
     chip: nrf52832
     tier: "2"
     support:
+      ble: supported
 
   nrf52840dk:
     name: nRF52840-DK
@@ -775,6 +813,7 @@ boards:
     chip: nrf9160
     tier: "2"
     support:
+      ble: not_available
 
   rpi-pico:
     name: Raspberry Pi Pico
@@ -793,6 +832,7 @@ boards:
     support:
       user_usb: supported
       wifi: supported
+      ble: supported
       ethernet_over_usb: supported
 
   rpi-pico2:
@@ -812,6 +852,7 @@ boards:
     support:
       user_usb: supported
       wifi: supported
+      ble: supported
       ethernet_over_usb: supported
 
   dfrobot-firebeetle2-esp32-c6:
@@ -889,6 +930,7 @@ boards:
         status: not_currently_supported
         comments:
           - an external Wi-Fi module is present on the board
+      ble: not_currently_supported
       ethernet_over_usb:
         status: not_currently_supported
         comments:
@@ -985,6 +1027,7 @@ boards:
     support:
       user_usb: supported
       wifi: not_available
+      ble: not_currently_supported
       ethernet_over_usb:
         status: not_currently_supported
         comments:
