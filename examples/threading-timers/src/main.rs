@@ -2,8 +2,8 @@
 #![no_std]
 
 use ariel_os::{
-    asynch::blocker::block_on,
     debug::{ExitCode, exit, log::info},
+    thread::block_on,
     time::Timer,
 };
 
