@@ -23,6 +23,7 @@
 |Logging|<span title="supported">✅</span>|
 |User USB|<span title="not available on this piece of hardware">–</span>|
 |Wi-Fi|<span title="not available on this piece of hardware">–</span>|
+|Bluetooth Low Energy|<span title="not available on this piece of hardware">–</span>|
 |Ethernet over USB|<span title="not available on this piece of hardware">–</span>|
 |Hardware Random Number Generator|<span title="supported">✅</span>|
 |Persistent Storage|<span title="supported with some caveats">☑️</span>[^removing-items-not-supported]|
