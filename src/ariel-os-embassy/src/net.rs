@@ -210,15 +210,13 @@ fn __ariel_os_network_config() -> embassy_net::Config {
 
     #[cfg(feature = "network-config-ipv6-static")]
     {
-        let ipaddr = ariel_os_utils::ipv6_addr_from_env_or!(
+        let ipaddr = ariel_os_utils::ipv6_addr_from_env!(
             "CONFIG_NET_IPV6_STATIC_ADDRESS",
-            "2001:db8::61",
             "static IPv6 address",
         );
 
-        let gw_addr = ariel_os_utils::ipv6_addr_from_env_or!(
+        let gw_addr = ariel_os_utils::ipv6_addr_from_env!(
             "CONFIG_NET_IPV6_STATIC_GATEWAY_ADDRESS",
-            "2001:db8::1",
             "static IPv6 gateway address",
         );
 
