@@ -165,6 +165,21 @@ ble-peripheral = ["ble", "ariel-os-embassy/ble-peripheral"]
 # Enables BLE to act as a central. Can be used in conjunction with `ble-peripheral`.
 ble-central = ["ble", "ariel-os-embassy/ble-central"]
 
+#! ## Timer queue size configuration
+#! Should only be enabled when threading is enabled, too.
+#! Default is 64 entries for regular boards and 8 entries for those with little ram.
+#! When more than this number of concurrent timers are used, the system will loop (and not sleep/idle anymore).
+## Enables support for up to 8 concurrent timers. (default on `ram-tiny` boards)
+timer-generic-queue-8 = ["ariel-os-embassy/timer-generic-queue-8"]
+## Enables support for up to 16 concurrent timers.
+timer-generic-queue-16 = ["ariel-os-embassy/timer-generic-queue-16"]
+## Enables support for up to 32 concurrent timers.
+timer-generic-queue-32 = ["ariel-os-embassy/timer-generic-queue-32"]
+## Enables support for up to 64 concurrent timers. (default)
+timer-generic-queue-64 = ["ariel-os-embassy/timer-generic-queue-64"]
+## Enables support for up to 128 concurrent timers.
+timer-generic-queue-128 = ["ariel-os-embassy/timer-generic-queue-128"]
+
 #! ## Development and debugging
 # Enables the debug console, required to use
 # [`println!`](ariel_os_debug::println).

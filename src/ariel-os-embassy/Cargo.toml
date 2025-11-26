@@ -26,6 +26,7 @@ embassy-net = { workspace = true, optional = true, features = [
 ] }
 embassy-sync = { workspace = true }
 embassy-time = { workspace = true, optional = true }
+embassy-time-queue-utils = { workspace = true, optional = true }
 embassy-usb = { workspace = true, optional = true }
 
 embedded-hal = { workspace = true }
@@ -71,7 +72,7 @@ external-interrupts = [
   "ariel-os-embassy-common/external-interrupts",
   "ariel-os-hal/external-interrupts",
 ]
-time = ["dep:embassy-time"]
+time = ["dep:embassy-time", "dep:embassy-time-queue-utils"]
 
 ## Enables I2C support.
 i2c = [
@@ -146,8 +147,22 @@ ble-central = ["ble", "ariel-os-hal/ble-central"]
 threading = [
   "dep:ariel-os-threads",
   "ariel-os-hal/threading",
-  "embassy-time?/generic-queue-128",
+  # this sets the default timer queue size, which is currently 64. See `generic-queue-*` features.
+  "embassy-time-queue-utils?/_generic-queue",
 ]
+
+# See ariel-os/Cargo.toml for more details
+## Generic Queue with 8 timers
+timer-generic-queue-8 = ["embassy-time?/generic-queue-8"]
+## Generic Queue with 16 timers
+timer-generic-queue-16 = ["embassy-time?/generic-queue-16"]
+## Generic Queue with 32 timers
+timer-generic-queue-32 = ["embassy-time?/generic-queue-32"]
+## Generic Queue with 64 timers
+timer-generic-queue-64 = ["embassy-time?/generic-queue-64"]
+## Generic Queue with 128 timers
+timer-generic-queue-128 = ["embassy-time?/generic-queue-128"]
+
 network-config-ipv4-static = ["network-config-override"]
 network-config-ipv6-static = ["network-config-override"]
 network-config-override = []
