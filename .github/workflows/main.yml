@@ -466,11 +466,9 @@ jobs:
       - name: Check that the chip pages are all up-to-date
         run: ./doc/gen_book.rs chip-pages doc/support_matrix.yml book/src/chips/ --check --template-path book/templates/chip-page.md.tmpl
 
-      - name: Check that the support matrices are up-to-date
+      - name: Check that the support matrix is up-to-date
         run: |
-          ./doc/gen_book.rs matrix doc/support_matrix.yml book/src/support_matrix_tier1.html --tier 1 --template-path book/templates/support-matrix.html.tmpl --check
-          ./doc/gen_book.rs matrix doc/support_matrix.yml book/src/support_matrix_tier2.html --tier 2 --template-path book/templates/support-matrix.html.tmpl --check
-          ./doc/gen_book.rs matrix doc/support_matrix.yml book/src/support_matrix_tier3.html --tier 3 --template-path book/templates/support-matrix.html.tmpl --check
+          ./doc/gen_book.rs matrix doc/support_matrix.yml book/src/support_matrix.html --template-path book/templates/support-matrix.html.tmpl --check
 
       - name: Check that the board index page is up-to-date
         run: |
