@@ -192,14 +192,20 @@ fn __ariel_os_network_config() -> embassy_net::Config {
                 "static IPv4 gateway address",
             );
 
-            let prefix_len = u8_from_env_or!(
+            const PREFIX_LEN: u8 = u8_from_env_or!(
                 "CONFIG_NET_IPV4_STATIC_CIDR_PREFIX_LEN",
                 24,
                 "static IPv4 CIDR prefix length"
             );
+            const {
+                assert!(
+                    PREFIX_LEN <= 32,
+                    "`CONFIG_NET_IPV4_STATIC_CIDR_PREFIX_LEN` must be <= 32",
+                );
+            }
 
             config.ipv4 = embassy_net::ConfigV4::Static(embassy_net::StaticConfigV4 {
-                address: embassy_net::Ipv4Cidr::new(ipaddr, prefix_len),
+                address: embassy_net::Ipv4Cidr::new(ipaddr, PREFIX_LEN),
                 dns_servers: heapless::Vec::new(),
                 gateway: Some(gw_addr),
             });
@@ -222,14 +228,20 @@ fn __ariel_os_network_config() -> embassy_net::Config {
             "static IPv6 gateway address",
         );
 
-        let prefix_len = ariel_os_utils::u8_from_env_or!(
+        const PREFIX_LEN: u8 = ariel_os_utils::u8_from_env_or!(
             "CONFIG_NET_IPV6_STATIC_CIDR_PREFIX_LEN",
             64,
             "static IPv6 CIDR prefix length"
         );
+        const {
+            assert!(
+                PREFIX_LEN <= 128,
+                "`CONFIG_NET_IPV6_STATIC_CIDR_PREFIX_LEN` must be <= 128",
+            );
+        }
 
         config.ipv6 = embassy_net::ConfigV6::Static(embassy_net::StaticConfigV6 {
-            address: embassy_net::Ipv6Cidr::new(ipaddr, prefix_len),
+            address: embassy_net::Ipv6Cidr::new(ipaddr, PREFIX_LEN),
             dns_servers: heapless::Vec::new(),
             gateway: Some(gw_addr),
         });
