@@ -112,10 +112,50 @@ pub async fn coap_run(handler: impl coap_handler::Handler + coap_handler::Report
 /// This is a separate function because if that function is not exposed publicly (i.e. when the
 /// laze feature `coap-server` is not active), it is called automatically in a separate task.
 ///
+/// It sets up the security configuration, and ultimately runs the CoAP transport (currently only
+/// CoAP-over-UDP) forever.
+///
 /// # Panics
 ///
 /// This can only be run once, as it sets up a system wide CoAP handler.
 async fn coap_run_impl(handler: impl coap_handler::Handler + coap_handler::Reporting) -> ! {
+    cfg_if::cfg_if! {
+        if #[cfg(feature = "coap-server-config-storage")] {
+            let security_config = stored::server_security_config().await;
+        } else if #[cfg(feature = "coap-server-config-demokeys")] {
+            let security_config = demo_setup::build_demo_ssc();
+        } else if #[cfg(feature = "coap-server-config-unprotected")] {
+            let security_config = coapcore::seccfg::AllowAll;
+        } else {
+            // We could pick another policy too to get 4.04 errors, but "there may be something but
+            // I won't tell you" is just as good an answer, and may prune some more branches even.
+            let security_config = coapcore::seccfg::DenyAll;
+
+            #[cfg(all(feature = "coap-server", not(feature = "doc")))]
+            compile_error!("No CoAP server configuration chosen out of the coap-server-config-* features.");
+        }
+    }
+
+    // FIXME: Should we allow users to override that? After all, this is just convenience and may
+    // be limiting in special applications.
+    let handler = handler.with_wkc();
+    let handler = coapcore::OscoreEdhocHandler::new(
+        handler,
+        security_config,
+        || lakers_crypto_rustcrypto::Crypto::new(ariel_os_random::crypto_rng()),
+        ariel_os_random::crypto_rng(),
+        coapcore::time::TimeUnknown,
+    );
+
+    coap_run_udp(handler).await;
+}
+
+/// Runs the CoAP handler on CoAP-over-UDP indefinitely
+///
+/// # Panics
+///
+/// This can only be run once, as it sets up a system wide CoAP handler.
+async fn coap_run_udp(mut handler: impl coap_handler::Handler) -> ! {
     static COAP: StaticCell<embedded_nal_coap::CoAPShared<CONCURRENT_REQUESTS>> = StaticCell::new();
 
     let stack = ariel_os_embassy::net::network_stack().await.unwrap();
@@ -148,34 +188,6 @@ async fn coap_run_impl(handler: impl coap_handler::Handler + coap_handler::Repor
     let mut unconnected = udp_nal::UnconnectedUdp::bind_multiple(socket, local_any)
         .await
         .unwrap();
-
-    cfg_if::cfg_if! {
-        if #[cfg(feature = "coap-server-config-storage")] {
-            let security_config = stored::server_security_config().await;
-        } else if #[cfg(feature = "coap-server-config-demokeys")] {
-            let security_config = demo_setup::build_demo_ssc();
-        } else if #[cfg(feature = "coap-server-config-unprotected")] {
-            let security_config = coapcore::seccfg::AllowAll;
-        } else {
-            // We could pick another policy too to get 4.04 errors, but "there may be something but
-            // I won't tell you" is just as good an answer, and may prune some more branches even.
-            let security_config = coapcore::seccfg::DenyAll;
-
-            #[cfg(all(feature = "coap-server", not(feature = "doc")))]
-            compile_error!("No CoAP server configuration chosen out of the coap-server-config-* features.");
-        }
-    }
-
-    // FIXME: Should we allow users to override that? After all, this is just convenience and may
-    // be limiting in special applications.
-    let handler = handler.with_wkc();
-    let mut handler = coapcore::OscoreEdhocHandler::new(
-        handler,
-        security_config,
-        || lakers_crypto_rustcrypto::Crypto::new(ariel_os_random::crypto_rng()),
-        ariel_os_random::crypto_rng(),
-        coapcore::time::TimeUnknown,
-    );
 
     info!("Server is ready.");
 
