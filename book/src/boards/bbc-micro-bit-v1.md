@@ -1,17 +1,25 @@
-# ST NUCLEO-WBA55CG
+# BBC micro:bit V1
 
-## Board Info
+## References
+
+- [Manufacturer link](https://web.archive.org/web/20250109121140/https://microbit.org/get-started/features/overview/#original-micro:bit)
+
+## laze Builders
+
+For more information on laze builders, check out [this page](../build-system.md#laze-builders).
+### `bbc-microbit-v1`
 
 - **Tier:** 3
-- **Ariel OS Name:** `st-nucleo-wba55`
-- **Chip:** [STM32WBA55CG](../chips/stm32wba55cg.md)
-- **Chip Ariel OS Name:** `stm32wba55cg`
+- **Chip:** [nRF51822-xxAA](../chips/nrf51822-xxaa.md)
+- **Chip Ariel OS Name:** `nrf51822-xxaa`
 
-### References
+To target this laze builder, run the following command in the root of your Ariel OS app:
 
-- [Manufacturer link](https://web.archive.org/web/20240803070523/https://www.st.com/en/evaluation-tools/nucleo-wba55cg.html)
+```bash
+laze build -b bbc-microbit-v1
+```
 
-## Support Matrix
+#### Support Matrix
 
 |Functionality|Support Status|
 |---|:---:|
@@ -19,14 +27,14 @@
 |Debug Output|<span title="supported">✅</span>|
 |I2C Controller Mode|<span title="available in hardware, but not currently supported by Ariel OS">❌</span>|
 |SPI Main Mode|<span title="available in hardware, but not currently supported by Ariel OS">❌</span>|
-|UART|<span title="needs testing">🚦</span>|
+|UART|<span title="available in hardware, but not currently supported by Ariel OS">❌</span>|
 |Logging|<span title="supported">✅</span>|
 |User USB|<span title="not available on this piece of hardware">–</span>|
 |Wi-Fi|<span title="not available on this piece of hardware">–</span>|
 |Bluetooth Low Energy|<span title="available in hardware, but not currently supported by Ariel OS">❌</span>|
 |Ethernet over USB|<span title="not available on this piece of hardware">–</span>|
 |Hardware Random Number Generator|<span title="supported">✅</span>|
-|Persistent Storage|<span title="available in hardware, but not currently supported by Ariel OS">❌</span>[^removing-items-not-supported]|
+|Persistent Storage|<span title="available in hardware, but not currently supported by Ariel OS">❌</span>|
 
 <p>Legend:</p>
 
@@ -53,4 +61,5 @@ dt, dd {
 }
 </style>
 
-[^removing-items-not-supported]: Removing items not supported.
+
+  

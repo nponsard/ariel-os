@@ -1,17 +1,25 @@
-# Seeed Studio LoRa-E5 mini
+# ST NUCLEO-WBA55CG
 
-## Board Info
+## References
+
+- [Manufacturer link](https://web.archive.org/web/20240803070523/https://www.st.com/en/evaluation-tools/nucleo-wba55cg.html)
+
+## laze Builders
+
+For more information on laze builders, check out [this page](../build-system.md#laze-builders).
+### `st-nucleo-wba55`
 
 - **Tier:** 3
-- **Ariel OS Name:** `seeedstudio-lora-e5-mini`
-- **Chip:** [STM32WLE5JC](../chips/stm32wle5jc.md)
-- **Chip Ariel OS Name:** `stm32wle5jc`
+- **Chip:** [STM32WBA55CG](../chips/stm32wba55cg.md)
+- **Chip Ariel OS Name:** `stm32wba55cg`
 
-### References
+To target this laze builder, run the following command in the root of your Ariel OS app:
 
-- [Manufacturer link](https://web.archive.org/web/20250802201959/https://wiki.seeedstudio.com/LoRa_E5_mini/)
+```bash
+laze build -b st-nucleo-wba55
+```
 
-## Support Matrix
+#### Support Matrix
 
 |Functionality|Support Status|
 |---|:---:|
@@ -23,10 +31,10 @@
 |Logging|<span title="supported">✅</span>|
 |User USB|<span title="not available on this piece of hardware">–</span>|
 |Wi-Fi|<span title="not available on this piece of hardware">–</span>|
-|Bluetooth Low Energy|<span title="not available on this piece of hardware">–</span>|
+|Bluetooth Low Energy|<span title="available in hardware, but not currently supported by Ariel OS">❌</span>|
 |Ethernet over USB|<span title="not available on this piece of hardware">–</span>|
 |Hardware Random Number Generator|<span title="supported">✅</span>|
-|Persistent Storage|<span title="supported with some caveats">☑️</span>[^removing-items-not-supported]|
+|Persistent Storage|<span title="available in hardware, but not currently supported by Ariel OS">❌</span>[^removing-items-not-supported]|
 
 <p>Legend:</p>
 
@@ -53,4 +61,6 @@ dt, dd {
 }
 </style>
 
+
+  
 [^removing-items-not-supported]: Removing items not supported.

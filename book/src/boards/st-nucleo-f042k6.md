@@ -1,17 +1,25 @@
 # ST NUCLEO-F042K6
 
-## Board Info
-
-- **Tier:** 3
-- **Ariel OS Name:** `st-nucleo-f042k6`
-- **Chip:** [STM32F042K6](../chips/stm32f042k6.md)
-- **Chip Ariel OS Name:** `stm32f042k6`
-
-### References
+## References
 
 - [Manufacturer link](https://web.archive.org/web/20241114214921/https://www.st.com/en/evaluation-tools/nucleo-f042k6.html)
 
-## Support Matrix
+## laze Builders
+
+For more information on laze builders, check out [this page](../build-system.md#laze-builders).
+### `st-nucleo-f042k6`
+
+- **Tier:** 3
+- **Chip:** [STM32F042K6](../chips/stm32f042k6.md)
+- **Chip Ariel OS Name:** `stm32f042k6`
+
+To target this laze builder, run the following command in the root of your Ariel OS app:
+
+```bash
+laze build -b st-nucleo-f042k6
+```
+
+#### Support Matrix
 
 |Functionality|Support Status|
 |---|:---:|
@@ -53,4 +61,6 @@ dt, dd {
 }
 </style>
 
+
+  
 [^would-need-to-allocate-some-flash]: Would need to allocate some flash.

@@ -1,17 +1,25 @@
 # native
 
-## Board Info
-
-- **Tier:** 1
-- **Ariel OS Name:** `native`
-- **Chip:** [native](../chips/native-chip.md)
-- **Chip Ariel OS Name:** `native-chip`
-
-### References
+## References
 
 - [Manufacturer link](#)
 
-## Support Matrix
+## laze Builders
+
+For more information on laze builders, check out [this page](../build-system.md#laze-builders).
+### `native`
+
+- **Tier:** 1
+- **Chip:** [native](../chips/native-chip.md)
+- **Chip Ariel OS Name:** `native-chip`
+
+To target this laze builder, run the following command in the root of your Ariel OS app:
+
+```bash
+laze build -b native
+```
+
+#### Support Matrix
 
 |Functionality|Support Status|
 |---|:---:|
@@ -52,3 +60,6 @@ dt, dd {
   display: inline;
 }
 </style>
+
+
+  

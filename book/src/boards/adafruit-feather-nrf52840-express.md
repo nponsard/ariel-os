@@ -1,17 +1,25 @@
 # Adafruit Feather nRF52840 Express
 
-## Board Info
-
-- **Tier:** 2
-- **Ariel OS Name:** `adafruit-feather-nrf52840-express`
-- **Chip:** [nRF52840](../chips/nrf52840.md)
-- **Chip Ariel OS Name:** `nrf52840`
-
-### References
+## References
 
 - [Manufacturer link](https://web.archive.org/web/20251022231757/https://www.adafruit.com/product/4062)
 
-## Support Matrix
+## laze Builders
+
+For more information on laze builders, check out [this page](../build-system.md#laze-builders).
+### `adafruit-feather-nrf52840-express`
+
+- **Tier:** 2
+- **Chip:** [nRF52840](../chips/nrf52840.md)
+- **Chip Ariel OS Name:** `nrf52840`
+
+To target this laze builder, run the following command in the root of your Ariel OS app:
+
+```bash
+laze build -b adafruit-feather-nrf52840-express
+```
+
+#### Support Matrix
 
 |Functionality|Support Status|
 |---|:---:|
@@ -52,3 +60,6 @@ dt, dd {
   display: inline;
 }
 </style>
+
+
+  

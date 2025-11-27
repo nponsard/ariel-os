@@ -1,17 +1,25 @@
-# ST NUCLEO-WB55RG
+# Raspberry Pi Pico W
 
-## Board Info
+## References
+
+- [Manufacturer link](https://web.archive.org/web/20250101022830/https://www.raspberrypi.com/products/raspberry-pi-pico/)
+
+## laze Builders
+
+For more information on laze builders, check out [this page](../build-system.md#laze-builders).
+### `rpi-pico-w`
 
 - **Tier:** 1
-- **Ariel OS Name:** `st-nucleo-wb55`
-- **Chip:** [STM32WB55RG](../chips/stm32wb55rg.md)
-- **Chip Ariel OS Name:** `stm32wb55rg`
+- **Chip:** [RP2040](../chips/rp2040.md)
+- **Chip Ariel OS Name:** `rp2040`
 
-### References
+To target this laze builder, run the following command in the root of your Ariel OS app:
 
-- [Manufacturer link](https://web.archive.org/web/20240803070523/https://www.st.com/en/evaluation-tools/nucleo-wb55rg.html)
+```bash
+laze build -b rpi-pico-w
+```
 
-## Support Matrix
+#### Support Matrix
 
 |Functionality|Support Status|
 |---|:---:|
@@ -22,11 +30,11 @@
 |UART|<span title="supported">✅</span>|
 |Logging|<span title="supported">✅</span>|
 |User USB|<span title="supported">✅</span>|
-|Wi-Fi|<span title="not available on this piece of hardware">–</span>|
-|Bluetooth Low Energy|<span title="available in hardware, but not currently supported by Ariel OS">❌</span>|
+|Wi-Fi|<span title="supported">✅</span>|
+|Bluetooth Low Energy|<span title="supported">✅</span>|
 |Ethernet over USB|<span title="supported">✅</span>|
 |Hardware Random Number Generator|<span title="supported">✅</span>|
-|Persistent Storage|<span title="supported with some caveats">☑️</span>[^removing-items-not-supported]|
+|Persistent Storage|<span title="supported">✅</span>|
 
 <p>Legend:</p>
 
@@ -53,4 +61,5 @@ dt, dd {
 }
 </style>
 
-[^removing-items-not-supported]: Removing items not supported.
+
+  
