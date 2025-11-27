@@ -529,9 +529,7 @@ contexts:
     parent: stm32
     selects:
       - cortex-m0-plus
-    disables:
-      # TODO: embedded-test currently hard-codes 16k for its thread
-      - embedded-test
+      - ram-tiny
     env:
       isr_stacksize_required_default: "1024"
       executor_stacksize_required_default: "3072"
