@@ -42,7 +42,7 @@ before starting the debug session.
 
 laze allows enabling/disabling individual features using [*modules*](#laze-modules), which can be selected
 or disabled on the command line using `--select <module>` or `--disable <module>`.
-To specify laze modules for an out-of-tree application, see [below](#enabling-laze-modules-for-an-application).
+To enable or disable laze modules for an out-of-tree application, see [below](#enabling-laze-modules-for-an-application).
 
 > [!NOTE]
 > Modules are documented in their respective pages.
@@ -97,9 +97,9 @@ apps:
 The specified modules will be enabled for the application, some of which may enable associated Cargo features (as individually documented for each laze module).
 If a module is not available on a target—e.g., because networking is not available on the target, or not yet supported by Ariel OS—laze will prevent the application to be compiled for that target.
 
-### Forbidding laze modules for an application
+### Disabling laze modules for an application
 
-Conversely, to forbid laze modules through the configuration file, the [`conflicts` array][laze-module-conflicts-book] is used:
+Conversely, to disable laze modules through the configuration file, the [`conflicts` array][laze-module-conflicts-book] is used:
 
 ```yaml
 apps:
