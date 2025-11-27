@@ -2,9 +2,10 @@
 
 #![expect(unsafe_code)]
 
-use ariel_os_threads::{ThreadId, current_tid, flags, flags::ThreadFlags};
 use core::pin::Pin;
 use core::task::{Context, Poll, RawWaker, RawWakerVTable, Waker};
+
+use crate::{ThreadId, current_tid, flags, flags::ThreadFlags};
 
 const THREAD_FLAG_WAKER: ThreadFlags = 1; // TODO: find more appropriate value
 
