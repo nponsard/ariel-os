@@ -4,6 +4,8 @@
 
 use core::cell::UnsafeCell;
 
+use critical_section::CriticalSection;
+
 use crate::{ThreadState, threadlist::ThreadList};
 
 /// An [`WaitQueue`], allowing threads to wait for or be notified by other threads.
@@ -31,10 +33,35 @@ impl WaitQueue {
     ///
     /// Panics if this is called outside of a thread context.
     pub fn wait(&self) {
-        critical_section::with(|cs| {
-            let waiters = unsafe { &mut *self.waiters.get() };
-            waiters.put_current(cs, ThreadState::WaitQueueBlocked);
-        });
+        critical_section::with(|cs| self.wait_cs(cs));
+    }
+
+    fn wait_cs(&self, cs: CriticalSection<'_>) {
+        let waiters = unsafe { &mut *self.waiters.get() };
+        waiters.put_current(cs, ThreadState::WaitQueueBlocked);
+    }
+
+    /// Waits for this [`WaitQueue`] to be notified, with deadline (blocking).
+    ///
+    /// # Panics
+    ///
+    /// Panics if this is called outside of a thread context.
+    pub fn wait_until(&self, deadline: embassy_time::Instant) -> bool {
+        // Safety:
+        // `on_timeout` takes care of removing the thread from the threadlist.
+        unsafe {
+            crate::timeout::with_deadline(
+                deadline,
+                || {
+                    self.wait();
+                },
+                |cs| {
+                    #[expect(unused_unsafe)]
+                    let waiters = unsafe { &mut *self.waiters.get() };
+                    waiters.remove_current(cs)
+                },
+            )
+        }
     }
 
     /// Notify all waiters.
@@ -48,7 +75,8 @@ impl WaitQueue {
     pub fn notify_one(&self) {
         critical_section::with(|cs| {
             let waiters = unsafe { &mut *self.waiters.get() };
-            waiters.pop(cs)
+            let _res = waiters.pop(cs);
+            ariel_os_debug::log::trace!("WaitQueue::notify_one() notifying {:?}", _res);
         });
     }
 }
