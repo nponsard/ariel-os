@@ -943,7 +943,7 @@ modules:
         isr_stacksize_required_default: "512"
         executor_stacksize_required_default: "512"
         FEATURES:
-          - ariel-os/generic-queue-8
+          - ariel-os/timer-generic-queue-8
 
   - name: ram-small
     help: This module marks MCUs with little RAM (currently, the ones which cannot run HTTP or CoAP)
