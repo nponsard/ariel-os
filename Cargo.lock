@@ -554,8 +554,6 @@ name = "ariel-os-sensors-signaling"
 version = "0.1.0"
 dependencies = [
  "embassy-sync 0.6.2",
- "embassy-time",
- "portable-atomic",
 ]
 
 [[package]]
@@ -563,6 +561,7 @@ name = "ariel-os-sensors-utils"
 version = "0.1.0"
 dependencies = [
  "ariel-os-sensors",
+ "ariel-os-sensors-signaling",
  "embassy-sync 0.6.2",
  "embassy-time",
  "portable-atomic",

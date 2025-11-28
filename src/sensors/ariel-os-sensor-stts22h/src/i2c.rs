@@ -10,7 +10,7 @@ use ariel_os_sensors::{
         Samples, SetModeError, State, TriggerMeasurementError,
     },
 };
-use ariel_os_sensors_utils::{AtomicState, SensorSignaling};
+use ariel_os_sensors_utils::{AtomicState, SensorSignalingWrapper};
 use embassy_sync::{
     blocking_mutex::raw::CriticalSectionRawMutex, mutex::Mutex, once_lock::OnceLock,
 };
@@ -53,7 +53,7 @@ pub struct Stts22h {
     label: Option<&'static str>,
     i2c: OnceLock<Mutex<CriticalSectionRawMutex, I2cDevice>>,
     address: AtomicU8,
-    signaling: SensorSignaling,
+    signaling: SensorSignalingWrapper,
 }
 
 impl Stts22h {
@@ -66,7 +66,7 @@ impl Stts22h {
             label,
             i2c: OnceLock::new(),
             address: AtomicU8::new(I2cAddress::AddrVdd as u8),
-            signaling: SensorSignaling::new(),
+            signaling: SensorSignalingWrapper::new(),
         }
     }
 

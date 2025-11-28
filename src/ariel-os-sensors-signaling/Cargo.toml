@@ -13,8 +13,6 @@ license.workspace = true
 
 [dependencies]
 embassy-sync = { workspace = true }
-embassy-time = { workspace = true }
-portable-atomic = { workspace = true }
 
 [features]
 _test = []

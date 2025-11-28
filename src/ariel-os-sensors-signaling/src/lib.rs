@@ -1,20 +1,13 @@
 #![no_std]
 
 use core::{
-    cell::{Cell, RefCell},
+    cell::Cell,
     future::poll_fn,
     pin::Pin,
     task::{Context, Poll, Waker},
 };
 
-use embassy_sync::{
-    blocking_mutex::{Mutex, raw::CriticalSectionRawMutex},
-    channel::Channel,
-    signal::Signal,
-    waitqueue::WakerRegistration,
-};
-use embassy_time::{Duration, Timer};
-use portable_atomic::{AtomicBool, Ordering};
+use embassy_sync::blocking_mutex::{Mutex, raw::CriticalSectionRawMutex};
 
 #[derive(Debug)]
 enum ReadingState<T> {
@@ -110,7 +103,7 @@ impl<T> SensorSignaling<T> {
     }
 
     pub async fn wait_for_trigger(&self) {
-        poll_fn(move |cx| self.poll_wait_trigger(cx)).await
+        poll_fn(move |cx| self.poll_wait_trigger(cx)).await;
     }
 
     fn poll_send_reading(&self, cx: &mut Context<'_>, res: T) -> (Option<T>, Poll<()>) {
@@ -168,12 +161,12 @@ impl<T> SensorSignaling<T> {
         })
     }
 
-    async fn send_reading(&self, res: T) {
+    pub async fn send_reading(&self, res: T) {
         SensorSignalingSendFuture {
             message: Some(res),
             signaling: self,
         }
-        .await
+        .await;
     }
 
     fn poll_receive_reading(&self, cx: &mut Context<'_>) -> Poll<T> {
@@ -230,7 +223,7 @@ impl<T> SensorSignaling<T> {
         })
     }
 
-    pub fn receive_reading(&'static self) -> SensorSignalingReceiveFuture<'_, T> {
+    pub fn receive_reading(&'static self) -> SensorSignalingReceiveFuture<'static, T> {
         SensorSignalingReceiveFuture { signaling: self }
     }
 }
@@ -240,7 +233,7 @@ pub struct SensorSignalingReceiveFuture<'ch, T> {
     signaling: &'ch SensorSignaling<T>,
 }
 
-impl<'ch, T> Future for SensorSignalingReceiveFuture<'ch, T> {
+impl<T> Future for SensorSignalingReceiveFuture<'_, T> {
     type Output = T;
 
     fn poll(self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<T> {
@@ -254,7 +247,8 @@ pub struct SensorSignalingSendFuture<'ch, T> {
     message: Option<T>,
 }
 
-impl<'ch, T> Future for SensorSignalingSendFuture<'ch, T> {
+impl<T> Unpin for SensorSignalingSendFuture<'_, T> {}
+impl<T> Future for SensorSignalingSendFuture<'_, T> {
     type Output = ();
 
     fn poll(mut self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Self::Output> {

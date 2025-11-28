@@ -1,254 +1,37 @@
-use core::{
-    cell::{Cell, RefCell},
-    future::poll_fn,
-    task::{Context, Poll, Waker},
-};
+use ariel_os_sensors::sensor::{ReadingError, ReadingResult, ReadingWaiter, Samples};
+use ariel_os_sensors_signaling::SensorSignaling;
 
-use ariel_os_sensors::sensor::{
-    ReadingError, ReadingResult, ReadingWaiter, Sample, Samples, State,
-};
-use embassy_sync::{
-    blocking_mutex::{Mutex, raw::CriticalSectionRawMutex},
-    channel::Channel,
-    signal::Signal,
-    waitqueue::WakerRegistration,
-};
-use embassy_time::{Duration, Timer};
-use portable_atomic::{AtomicBool, Ordering};
-
-#[derive(PartialEq, Eq, Debug)]
-enum ReadingState {
-    None,
-    WaitingReading(Waker),
-    ReadingReady(ReadingResult<Samples>),
-    WaitingSend(ReadingResult<Samples>, Waker),
+pub struct SensorSignalingWrapper {
+    inner: SensorSignaling<ReadingResult<Samples>>,
 }
 
-#[derive(PartialEq, Eq, Debug)]
-enum TriggerState {
-    None,
-    Waiting(Waker),
-    Signaled,
-}
-
-struct SensorSignalingState {
-    pub trigger_state: TriggerState,
-    pub reading_state: ReadingState,
-}
-
-impl Default for SensorSignalingState {
-    fn default() -> Self {
-        Self {
-            trigger_state: TriggerState::None,
-            reading_state: ReadingState::None,
-        }
-    }
-}
-// TODO: rename this
-pub struct SensorSignaling {
-    inner: Mutex<CriticalSectionRawMutex, Cell<SensorSignalingState>>,
-}
-
-impl SensorSignaling {
+impl SensorSignalingWrapper {
     #[must_use]
     pub const fn new() -> Self {
         Self {
-            inner: Mutex::new(Cell::new(SensorSignalingState {
-                trigger_state: TriggerState::None,
-                reading_state: ReadingState::None,
-            })),
+            inner: SensorSignaling::new(),
         }
     }
 
     pub fn trigger_measurement(&self) {
-        self.inner.lock(|inner| {
-            let state = inner.replace({
-                SensorSignalingState {
-                    trigger_state: TriggerState::Signaled,
-                    // Remove the possibly lingering reading.
-                    reading_state: None,
-                }
-            });
-
-            if let TriggerState::Waiting(waker) = state.trigger_state {
-                waker.wake();
-            }
-        });
-    }
-
-    fn poll_wait_trigger(&self, cx: &mut Context<'_>) -> Poll<()> {
-        self.inner.lock(|cell| {
-            let state = cell.take();
-            let reading_state = state.reading_state;
-            match state.trigger_state {
-                TriggerState::None => {
-                    cell.set(SensorSignalingState {
-                        trigger_state: TriggerState::Waiting(cx.waker().clone()),
-                        reading_state,
-                    });
-                    Poll::Pending
-                }
-                TriggerState::Waiting(w) if w.will_wake(cx.waker()) => {
-                    cell.set(SensorSignalingState {
-                        trigger_state: TriggerState::Waiting(w),
-                        reading_state,
-                    });
-
-                    Poll::Pending
-                }
-                TriggerState::Waiting(w) => {
-                    cell.set(SensorSignalingState {
-                        trigger_state: TriggerState::Waiting(cx.waker().clone()),
-                        reading_state,
-                    });
-                    w.wake();
-                    Poll::Pending
-                }
-                TriggerState::Signaled => Poll::Ready(()),
-            }
-        })
+        self.inner.trigger_measurement();
     }
 
     pub async fn wait_for_trigger(&self) {
-        poll_fn(move |cx| self.poll_wait(cx)).await
-    }
-
-    fn poll_send_reading(&self, cx: &mut Context<'_>, res: ReadingResult<Samples>) {
-        self.inner.lock(|cell| {
-            let state = cell.take();
-            let trigger_state = state.trigger_state;
-
-            match state.reading_state {
-                ReadingState::None => {
-                    cell.set(SensorSignalingState {
-                        trigger_state,
-                        reading_state: ReadingState::ReadingReady(res),
-                    });
-                    Poll::Ready(())
-                }
-                ReadingState::ReadingReady(prev) => {
-                    cell.set(SensorSignalingState {
-                        trigger_state,
-                        reading_state: ReadingState::WaitingSend(prev, cx.waker().clone()),
-                    });
-                    Poll::Pending
-                }
-                ReadingState::WaitingReading(read_waker) => {
-                    cell.set(SensorSignalingState {
-                        trigger_state,
-                        reading_state: ReadingState::ReadingReady(res),
-                    });
-                    read_waker.wake();
-                    Poll::Ready(())
-                }
-                ReadingState::WaitingSend(prev, prev_waker) => {
-                    if prev_waker.will_wake(cx.waker()) {
-                        cell.set(SensorSignalingState {
-                            trigger_state,
-                            // Optimization from WakerRegistration:
-                            // "If both the old and new Wakers wake the same task, we can simply
-                            // keep the old waker, skipping the clone."
-                            reading_state: ReadingState::WaitingSend(prev, prev_waker),
-                        });
-                    } else {
-                        cell.set(SensorSignalingState {
-                            trigger_state,
-                            reading_state: ReadingState::WaitingSend(prev, cx.waker().clone()),
-                        });
-
-                        // We can't store multiple wakers, they will fight eachother until the data
-                        // is read once.
-                        // This should happen only if a measurement is triggered multiple times and
-                        // the value is not read.
-                        prev_waker.wake();
-                    }
-                    Poll::Pending
-                }
-            }
-        })
-    }
-
-    async fn send_reading(&self, res: ReadingResult<Samples>) {
-        poll_fn(|cx| self.poll_send_reading(cx, res)).await
+        self.inner.wait_for_trigger().await;
     }
 
     pub async fn signal_reading(&self, reading: Samples) {
-        self.send_reading(OK(res)).await
+        self.inner.send_reading(Ok(reading)).await;
     }
 
     pub async fn signal_reading_err(&self, reading_err: ReadingError) {
-        self.send_reading(Err(reading_err)).await
-    }
-
-    fn poll_receive_reading(&self, cx: &mut Context<'_>) -> Poll<ReadingResult<Samples>> {
-        self.inner.lock(|cell| {
-            let state = cell.take();
-            let trigger_state = state.trigger_state;
-            match state.reading_state {
-                ReadingState::None => {
-                    cell.set(SensorSignalingState {
-                        trigger_state,
-                        reading_state: ReadingState::WaitingReading(cx.waker().clone()),
-                    });
-                    Poll::Pending
-                }
-                ReadingState::WaitingReading(prev_waker) => {
-                    if prev_waker.will_wake(cx.waker()) {
-                        cell.set(SensorSignalingState {
-                            trigger_state,
-                            // Optimization from WakerRegistration:
-                            // "If both the old and new Wakers wake the same task, we can simply
-                            // keep the old waker, skipping the clone."
-                            reading_state: ReadingState::WaitingReading(prev_waker),
-                        });
-                    } else {
-                        cell.set(SensorSignalingState {
-                            trigger_state,
-                            reading_state: ReadingState::WaitingReading(cx.waker().clone()),
-                        });
-
-                        // We can't store multiple wakers, they will fight eachother until the data
-                        // is read once.
-                        // This should happen only if a measurement is triggered multiple times and
-                        // the value is not read.
-                        prev_waker.wake();
-                    }
-                    Poll::Pending
-                }
-                ReadingState::ReadingReady(res) => {
-                    cell.set(SensorSignalingState {
-                        trigger_state,
-                        reading_state: ReadingState::None,
-                    });
-                    Poll::Ready(res)
-                }
-                ReadingState::WaitingSend(res, waker) => {
-                    cell.set(SensorSignalingState {
-                        trigger_state,
-                        reading_state: ReadingState::None,
-                    });
-                    waker.wake();
-                    Poll::Ready(res)
-                }
-            }
-        })
+        self.inner.send_reading(Err(reading_err)).await;
     }
 
     pub fn wait_for_reading(&'static self) -> ReadingWaiter {
         ReadingWaiter::SpecialWaiter {
-            waiter: SensorSignalingReceiveFuture { signaling: self },
+            waiter: self.inner.receive_reading(),
         }
-    }
-}
-
-pub struct SensorSignalingReceiveFuture<'ch> {
-    signaling: &'ch SensorSignaling,
-}
-
-impl<'ch> Future for SensorSignalingReceiveFuture<'ch> {
-    type Output = ReadingResult<Samples>;
-
-    fn poll(self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<ReadingResult<Samples>> {
-        self.channel.poll_receive(cx)
     }
 }

@@ -16,6 +16,7 @@ ariel-os-sensors = { workspace = true }
 embassy-sync = { workspace = true }
 embassy-time = { workspace = true }
 portable-atomic = { workspace = true }
+ariel-os-sensors-signaling = { workspace = true }
 
 [features]
 _test = []

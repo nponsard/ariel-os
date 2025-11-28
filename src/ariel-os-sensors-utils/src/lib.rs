@@ -7,4 +7,4 @@ mod atomic_state;
 mod sensor_signaling;
 
 pub use atomic_state::AtomicState;
-pub use sensor_signaling::SensorSignaling;
+pub use sensor_signaling::SensorSignalingWrapper;
