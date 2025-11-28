@@ -82,8 +82,11 @@ jobs:
         with:
           toolchain: ${{ steps.get_toolchain.outputs.toolchain }}
           # Required for checking ariel-os-esp and ariel-os-nrf
-          targets: riscv32imac-unknown-none-elf, thumbv7em-none-eabi
-          components: clippy, rustfmt
+          targets: riscv32imac-unknown-none-elf, thumbv7em-none-eabi, thumbv8m.main-none-eabihf
+          components: clippy, rustfmt, llvm-tools
+
+      - name: Install prerequisites
+        run: sudo apt-get install gcc-arm-none-eabi
 
       - name: rust cache
         uses: Swatinem/rust-cache@98c8021b550208e191a6a3145459bfc9fb29c4c0 # v2
@@ -200,7 +203,7 @@ jobs:
             --deny warnings
 
       - run: echo 'RUSTFLAGS=--cfg context="nrf52840" --cfg context="nrf52" --cfg getrandom_backend="custom"' >> $GITHUB_ENV
-      - name: clippy for nRF
+      - name: clippy for nRF52
         uses: clechasseur/rs-clippy-check@286fd9545eb133adad54b4af34bcb642e266ddd1 # v5
         with:
           args: |
@@ -217,6 +220,25 @@ jobs:
                 "
             -p ariel-os-nrf
             --target=thumbv7em-none-eabi
+            --
+            --deny warnings
+      - run: echo 'RUSTFLAGS=--cfg context="nrf9160" --cfg context="nrf91" --cfg getrandom_backend="custom"' >> $GITHUB_ENV
+      - name: clippy for nRF91
+        uses: clechasseur/rs-clippy-check@286fd9545eb133adad54b4af34bcb642e266ddd1 # v5
+        with:
+          args: |
+            --verbose
+            --locked
+            --features "
+                embassy-nrf/nrf9160-s,
+                external-interrupts,
+                i2c,
+                spi,
+                uart,
+                nrf91-modem
+                "
+            -p ariel-os-nrf
+            --target=thumbv8m.main-none-eabihf
             --
             --deny warnings
 
