@@ -542,10 +542,20 @@ name = "ariel-os-sensors"
 version = "0.1.0"
 dependencies = [
  "ariel-os-macros",
+ "ariel-os-sensors-signaling",
  "defmt 1.0.1",
  "embassy-sync 0.6.2",
  "linkme",
  "pin-project",
+]
+
+[[package]]
+name = "ariel-os-sensors-signaling"
+version = "0.1.0"
+dependencies = [
+ "embassy-sync 0.6.2",
+ "embassy-time",
+ "portable-atomic",
 ]
 
 [[package]]

@@ -1,12 +1,12 @@
+#![no_std]
+
 use core::{
     cell::{Cell, RefCell},
     future::poll_fn,
+    pin::Pin,
     task::{Context, Poll, Waker},
 };
 
-use ariel_os_sensors::sensor::{
-    ReadingError, ReadingResult, ReadingWaiter, Sample, Samples, State,
-};
 use embassy_sync::{
     blocking_mutex::{Mutex, raw::CriticalSectionRawMutex},
     channel::Channel,
@@ -16,27 +16,27 @@ use embassy_sync::{
 use embassy_time::{Duration, Timer};
 use portable_atomic::{AtomicBool, Ordering};
 
-#[derive(PartialEq, Eq, Debug)]
-enum ReadingState {
+#[derive(Debug)]
+enum ReadingState<T> {
     None,
     WaitingReading(Waker),
-    ReadingReady(ReadingResult<Samples>),
-    WaitingSend(ReadingResult<Samples>, Waker),
+    ReadingReady(T),
+    WaitingSend(T, Waker),
 }
 
-#[derive(PartialEq, Eq, Debug)]
+#[derive(Debug)]
 enum TriggerState {
     None,
     Waiting(Waker),
     Signaled,
 }
 
-struct SensorSignalingState {
+struct SensorSignalingState<T> {
     pub trigger_state: TriggerState,
-    pub reading_state: ReadingState,
+    pub reading_state: ReadingState<T>,
 }
 
-impl Default for SensorSignalingState {
+impl<T> Default for SensorSignalingState<T> {
     fn default() -> Self {
         Self {
             trigger_state: TriggerState::None,
@@ -45,17 +45,17 @@ impl Default for SensorSignalingState {
     }
 }
 // TODO: rename this
-pub struct SensorSignaling {
-    inner: Mutex<CriticalSectionRawMutex, Cell<SensorSignalingState>>,
+pub struct SensorSignaling<T> {
+    inner: Mutex<CriticalSectionRawMutex, Cell<SensorSignalingState<T>>>,
 }
 
-impl SensorSignaling {
+impl<T> SensorSignaling<T> {
     #[must_use]
     pub const fn new() -> Self {
         Self {
-            inner: Mutex::new(Cell::new(SensorSignalingState {
+            inner: Mutex::new(Cell::new(SensorSignalingState::<T> {
                 trigger_state: TriggerState::None,
-                reading_state: ReadingState::None,
+                reading_state: ReadingState::<T>::None,
             })),
         }
     }
@@ -63,10 +63,10 @@ impl SensorSignaling {
     pub fn trigger_measurement(&self) {
         self.inner.lock(|inner| {
             let state = inner.replace({
-                SensorSignalingState {
+                SensorSignalingState::<T> {
                     trigger_state: TriggerState::Signaled,
                     // Remove the possibly lingering reading.
-                    reading_state: None,
+                    reading_state: ReadingState::<T>::None,
                 }
             });
 
@@ -110,10 +110,10 @@ impl SensorSignaling {
     }
 
     pub async fn wait_for_trigger(&self) {
-        poll_fn(move |cx| self.poll_wait(cx)).await
+        poll_fn(move |cx| self.poll_wait_trigger(cx)).await
     }
 
-    fn poll_send_reading(&self, cx: &mut Context<'_>, res: ReadingResult<Samples>) {
+    fn poll_send_reading(&self, cx: &mut Context<'_>, res: T) -> (Option<T>, Poll<()>) {
         self.inner.lock(|cell| {
             let state = cell.take();
             let trigger_state = state.trigger_state;
@@ -124,14 +124,14 @@ impl SensorSignaling {
                         trigger_state,
                         reading_state: ReadingState::ReadingReady(res),
                     });
-                    Poll::Ready(())
+                    (None, Poll::Ready(()))
                 }
                 ReadingState::ReadingReady(prev) => {
                     cell.set(SensorSignalingState {
                         trigger_state,
                         reading_state: ReadingState::WaitingSend(prev, cx.waker().clone()),
                     });
-                    Poll::Pending
+                    (Some(res), Poll::Pending)
                 }
                 ReadingState::WaitingReading(read_waker) => {
                     cell.set(SensorSignalingState {
@@ -139,7 +139,7 @@ impl SensorSignaling {
                         reading_state: ReadingState::ReadingReady(res),
                     });
                     read_waker.wake();
-                    Poll::Ready(())
+                    (None, Poll::Ready(()))
                 }
                 ReadingState::WaitingSend(prev, prev_waker) => {
                     if prev_waker.will_wake(cx.waker()) {
@@ -162,25 +162,21 @@ impl SensorSignaling {
                         // the value is not read.
                         prev_waker.wake();
                     }
-                    Poll::Pending
+                    (Some(res), Poll::Pending)
                 }
             }
         })
     }
 
-    async fn send_reading(&self, res: ReadingResult<Samples>) {
-        poll_fn(|cx| self.poll_send_reading(cx, res)).await
+    async fn send_reading(&self, res: T) {
+        SensorSignalingSendFuture {
+            message: Some(res),
+            signaling: self,
+        }
+        .await
     }
 
-    pub async fn signal_reading(&self, reading: Samples) {
-        self.send_reading(OK(res)).await
-    }
-
-    pub async fn signal_reading_err(&self, reading_err: ReadingError) {
-        self.send_reading(Err(reading_err)).await
-    }
-
-    fn poll_receive_reading(&self, cx: &mut Context<'_>) -> Poll<ReadingResult<Samples>> {
+    fn poll_receive_reading(&self, cx: &mut Context<'_>) -> Poll<T> {
         self.inner.lock(|cell| {
             let state = cell.take();
             let trigger_state = state.trigger_state;
@@ -234,21 +230,41 @@ impl SensorSignaling {
         })
     }
 
-    pub fn wait_for_reading(&'static self) -> ReadingWaiter {
-        ReadingWaiter::SpecialWaiter {
-            waiter: SensorSignalingReceiveFuture { signaling: self },
-        }
+    pub fn receive_reading(&'static self) -> SensorSignalingReceiveFuture<'_, T> {
+        SensorSignalingReceiveFuture { signaling: self }
     }
 }
 
-pub struct SensorSignalingReceiveFuture<'ch> {
-    signaling: &'ch SensorSignaling,
+#[must_use = "futures do nothing unless you `.await` or poll them"]
+pub struct SensorSignalingReceiveFuture<'ch, T> {
+    signaling: &'ch SensorSignaling<T>,
 }
 
-impl<'ch> Future for SensorSignalingReceiveFuture<'ch> {
-    type Output = ReadingResult<Samples>;
+impl<'ch, T> Future for SensorSignalingReceiveFuture<'ch, T> {
+    type Output = T;
 
-    fn poll(self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<ReadingResult<Samples>> {
-        self.channel.poll_receive(cx)
+    fn poll(self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<T> {
+        self.signaling.poll_receive_reading(cx)
+    }
+}
+
+#[must_use = "futures do nothing unless you `.await` or poll them"]
+pub struct SensorSignalingSendFuture<'ch, T> {
+    signaling: &'ch SensorSignaling<T>,
+    message: Option<T>,
+}
+
+impl<'ch, T> Future for SensorSignalingSendFuture<'ch, T> {
+    type Output = ();
+
+    fn poll(mut self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Self::Output> {
+        match self.message.take() {
+            Some(msg) => {
+                let (out, poll) = self.signaling.poll_send_reading(cx, msg);
+                self.message = out;
+                poll
+            }
+            None => panic!("Message cannot be None"),
+        }
     }
 }

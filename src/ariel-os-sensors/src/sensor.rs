@@ -112,6 +112,14 @@ pub enum ReadingWaiter {
         waiter: ReceiveFuture<'static, CriticalSectionRawMutex, ReadingResult<Samples>, 1>,
     },
     #[doc(hidden)]
+    SpecialWaiter {
+        #[pin]
+        waiter: ariel_os_sensors_signaling::SensorSignalingReceiveFuture<
+            'static,
+            ReadingResult<Samples>,
+        >,
+    },
+    #[doc(hidden)]
     Err(ReadingError),
     #[doc(hidden)]
     Resolved,
@@ -124,6 +132,7 @@ impl Future for ReadingWaiter {
         let this = self.as_mut().project();
         match this {
             ReadingWaiterProj::Waiter { waiter } => waiter.poll(cx),
+            ReadingWaiterProj::SpecialWaiter { waiter } => waiter.poll(cx),
             ReadingWaiterProj::Err(err) => {
                 // Replace the error with a dummy error value, crafted from thin air, and mark the
                 // future as resolved, so that we do not take this dummy value into account later.
