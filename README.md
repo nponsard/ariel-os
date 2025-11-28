@@ -1,6 +1,5 @@
 <p align="center"> <img src="book/src/figures/ariel-hexacube-orange-rounded.svg" alt="logo" height="300"/> </p>
 
-[![Build Status][build-badge]][build-info]
 [![Book][book-badge]][documentation-mdbook]
 [![Documentation][rustdoc-badge]][documentation-dev-rustdoc]
 [![Matrix][matrix-badge]][matrix-link]
@@ -82,8 +81,6 @@ Thanks to all the people who already contributed!
   <img src="https://contrib.rocks/image?repo=ariel-os/ariel-os" alt="All contributors" />
 </a>
 
-[build-badge]: https://github.com/ariel-os/ariel-os/actions/workflows/main.yml/badge.svg
-[build-info]: https://github.com/ariel-os/ariel-os/actions/workflows/main.yml
 [matrix-badge]: https://img.shields.io/badge/chat-Matrix-brightgreen.svg
 [matrix-link]: https://matrix.to/#/#ariel-os:matrix.org
 [book-badge]: https://img.shields.io/badge/Book-%F0%9F%93%94-blue
