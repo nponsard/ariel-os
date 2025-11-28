@@ -1,10 +1,6 @@
 name: Build templates
 
 on:
-  pull_request:
-    branches:
-      - main
-
   schedule:
     # run every morning at 3:17am
     - cron: '17 3 * * *'
