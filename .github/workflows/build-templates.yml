@@ -80,20 +80,10 @@ jobs:
       - name: "ariel-os-hello compilation test"
         run: cd ariel-os-hello && LAZE_BUILDERS=espressif-esp32-c6-devkitc-1,nrf52840dk,rpi-pico-w,st-nucleo-wb55 CONFIG_WIFI_NETWORK='test' CONFIG_WIFI_PASSWORD='password' laze build
 
-  build-success:
-    if: ${{ always() }}
+  report-failure:
     runs-on: ubuntu-latest
-    name: Final Results
     needs: [build]
     steps:
-      - run: |
-          result="${{ needs.build.result }}"
-          if [[ $result == "success" || $result == "skipped" ]]; then
-            exit 0
-          else
-            exit 1
-          fi
-
       - name: Report nightly failure
         if: failure() && github.event_name == 'schedule' && github.repository == 'ariel-os/ariel-os'
         uses: s3krit/matrix-message-action@v0.0.3
