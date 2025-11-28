@@ -42,6 +42,12 @@ pub struct SensorSignaling<T> {
     inner: Mutex<CriticalSectionRawMutex, Cell<SensorSignalingState<T>>>,
 }
 
+impl<T> Default for SensorSignaling<T> {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl<T> SensorSignaling<T> {
     #[must_use]
     pub const fn new() -> Self {
@@ -97,7 +103,14 @@ impl<T> SensorSignaling<T> {
                     w.wake();
                     Poll::Pending
                 }
-                TriggerState::Signaled => Poll::Ready(()),
+                TriggerState::Signaled => {
+                    cell.set(SensorSignalingState {
+                        trigger_state: TriggerState::None,
+                        reading_state,
+                    });
+
+                    Poll::Ready(())
+                }
             }
         })
     }
