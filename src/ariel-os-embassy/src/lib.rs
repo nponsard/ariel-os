@@ -259,6 +259,11 @@ async fn init_task(mut peripherals: hal::OptionalPeripherals) {
     #[cfg(all(feature = "ble", not(context = "rp")))]
     hal::ble::driver(ble_peripherals, spawner, ble_config);
 
+    #[cfg(feature = "nrf91-modem")]
+    {
+        hal::modem::driver().await;
+    }
+
     #[cfg(feature = "usb")]
     let mut usb_builder = {
         use static_cell::ConstStaticCell;

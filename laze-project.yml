@@ -309,6 +309,7 @@ contexts:
   - name: nrf9160
     parent: nrf91
     provides:
+      - has_nrf91_modem
       - has_storage_support
     env:
       PROBE_RS_CHIP: nRF9160_xxAA
@@ -316,6 +317,7 @@ contexts:
   - name: nrf9151
     parent: nrf91
     provides:
+      - has_nrf91_modem
       - has_storage_support
     env:
       # FIXME: probe-rs does not support the nRF9151_xxAA yet, because there is
@@ -1369,6 +1371,18 @@ modules:
     selects:
       - doc-only
 
+  - name: has_nrf91_modem
+    selects:
+      - doc-only
+
+  - name: nrf91-modem
+    selects:
+      - has_nrf91_modem
+    env:
+      global:
+        FEATURES:
+          - ariel-os/nrf91-modem
+
   - name: usb
     selects:
       - hw/usb-device-port
@@ -1814,7 +1828,7 @@ builders:
           - rustup ${CARGO_TOOLCHAIN} target add thumbv8m.main-none-eabihf
           - rustup ${CARGO_TOOLCHAIN} target add riscv32imc-unknown-none-elf
           - rustup ${CARGO_TOOLCHAIN} target add riscv32imac-unknown-none-elf
-          - rustup ${CARGO_TOOLCHAIN} component add rust-src
+          - rustup ${CARGO_TOOLCHAIN} component add rust-src llvm-tools
           - if command -v espup >/dev/null; then espup update --targets=esp32,esp32s2,esp32s3; fi
 
       update-book:
