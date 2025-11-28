@@ -2,8 +2,8 @@ name: Build templates
 
 on:
   schedule:
-    # run every morning at 3:17am
-    - cron: '17 3 * * *'
+    # run every morning at 2:00am
+    - cron: '0 2 * * *'
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
