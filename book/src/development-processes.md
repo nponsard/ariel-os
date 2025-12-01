@@ -82,6 +82,8 @@ The following steps must be followed when preparing a new release of `ariel-os`:
     > [!IMPORTANT]
     > - The crates in `/src/lib/` are managed separately and their version numbers should *not* be bumped.
     > - The `ariel-os-sensors` crate's version is decoupled from the rest of the OS, as every sensor driver relies on it, and bumping it may result in fragmenting the entire ecosystem of sensor drivers.
+    > - The `ariel-os-sensors-utils` crate's version is also decoupled from the rest of the OS.
+    > - There might be other crates whose versions are decoupled from the rest of the OS; do **check the manifests** for such an indication before bumping.
 
 1. Update the changelog manually, going through merge commits, especially focusing on PRs with the [`breaking`][issue-label-breaking] and [`changelog:highlight`][issue-label-changelog-highlight] labels, and skipping those with the [`changelog:skip`][issue-label-changelog-skip] label.
    If PR descriptions contain the string `BREAKING CHANGE` (in line with the [Conventional Commits][conventional-commits-spec] specification), these may be highlighted in the changelog.
