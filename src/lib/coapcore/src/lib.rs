@@ -60,6 +60,7 @@
 #![allow(clippy::too_many_lines)]
 #![allow(rust_2018_idioms)]
 #![expect(clippy::unused_trait_names)]
+#![expect(clippy::doc_paragraphs_missing_punctuation)]
 
 mod iana;
 
