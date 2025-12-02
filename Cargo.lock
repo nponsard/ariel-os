@@ -530,10 +530,13 @@ name = "ariel-os-sensors"
 version = "0.1.0"
 dependencies = [
  "ariel-os-macros",
+ "critical-section",
  "defmt 1.0.1",
+ "embassy-futures",
  "embassy-sync 0.6.2",
  "linkme",
  "pin-project",
+ "static_cell",
 ]
 
 [[package]]
