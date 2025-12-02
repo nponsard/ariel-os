@@ -5,9 +5,7 @@ use core::{
     task::{Context, Poll},
 };
 
-use embassy_sync::{blocking_mutex::raw::CriticalSectionRawMutex, channel::ReceiveFuture};
-
-use crate::{Category, Label, MeasurementUnit};
+use crate::{Category, Label, MeasurementUnit, signal};
 
 pub use crate::{
     Reading,
@@ -104,36 +102,70 @@ pub trait Sensor: Send + Sync {
 
 /// Future returned by [`Sensor::wait_for_reading()`].
 #[must_use = "futures do nothing unless you `.await` or poll them"]
-#[pin_project::pin_project(project = ReadingWaiterProj)]
-pub enum ReadingWaiter {
-    #[doc(hidden)]
-    Waiter {
-        #[pin]
-        waiter: ReceiveFuture<'static, CriticalSectionRawMutex, ReadingResult<Samples>, 1>,
-    },
-    #[doc(hidden)]
-    Err(ReadingError),
-    #[doc(hidden)]
-    Resolved,
+pub struct ReadingWaiter {
+    inner: ReadingWaiterInner,
+}
+
+impl ReadingWaiter {
+    /// Creates a new [`Future`] to send back [`Samples`].
+    ///
+    /// # Note
+    ///
+    /// For sensor driver implementors only.
+    pub fn new(fut: signal::ReceiveFuture<'static, ReadingResult<Samples>>) -> Self {
+        Self {
+            inner: ReadingWaiterInner::Waiter { waiter: fut },
+        }
+    }
+
+    /// Creates a new [`Future`] to send back an error that happened when obtaining a reading.
+    ///
+    /// # Note
+    ///
+    /// For sensor driver implementors only.
+    pub fn new_err(err: ReadingError) -> Self {
+        Self {
+            inner: ReadingWaiterInner::Err(err),
+        }
+    }
 }
 
 impl Future for ReadingWaiter {
     type Output = ReadingResult<Samples>;
 
     fn poll(mut self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Self::Output> {
+        core::pin::pin!(&mut self.inner).poll(cx)
+    }
+}
+
+#[must_use = "futures do nothing unless you `.await` or poll them"]
+#[pin_project::pin_project(project = ReadingWaiterInnerProj)]
+enum ReadingWaiterInner {
+    Waiter {
+        #[pin]
+        waiter: signal::ReceiveFuture<'static, ReadingResult<Samples>>,
+    },
+    Err(ReadingError),
+    Resolved,
+}
+
+impl Future for ReadingWaiterInner {
+    type Output = ReadingResult<Samples>;
+
+    fn poll(mut self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Self::Output> {
         let this = self.as_mut().project();
         match this {
-            ReadingWaiterProj::Waiter { waiter } => waiter.poll(cx),
-            ReadingWaiterProj::Err(err) => {
+            ReadingWaiterInnerProj::Waiter { waiter } => waiter.poll(cx),
+            ReadingWaiterInnerProj::Err(err) => {
                 // Replace the error with a dummy error value, crafted from thin air, and mark the
                 // future as resolved, so that we do not take this dummy value into account later.
                 // This avoids requiring `Clone` on `ReadingError`.
                 let err = core::mem::replace(err, ReadingError::NonEnabled);
-                *self = ReadingWaiter::Resolved;
+                *self = Self::Resolved;
 
                 Poll::Ready(Err(err))
             }
-            ReadingWaiterProj::Resolved => unreachable!(),
+            ReadingWaiterInnerProj::Resolved => unreachable!(),
         }
     }
 }
