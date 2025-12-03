@@ -797,6 +797,10 @@ criteria = "safe-to-deploy"
 version = "0.8.0"
 criteria = "safe-to-deploy"
 
+[[exemptions.heapless]]
+version = "0.9.1"
+criteria = "safe-to-deploy"
+
 [[exemptions.hermit-abi]]
 version = "0.5.1"
 criteria = "safe-to-deploy"
@@ -894,11 +898,11 @@ version = "0.19.1"
 criteria = "safe-to-deploy"
 
 [[exemptions.minicbor]]
-version = "0.24.4"
+version = "0.26.5"
 criteria = "safe-to-deploy"
 
 [[exemptions.minicbor]]
-version = "0.26.5"
+version = "2.1.3"
 criteria = "safe-to-deploy"
 
 [[exemptions.minicbor-adapters]]
@@ -906,11 +910,11 @@ version = "0.0.4"
 criteria = "safe-to-deploy"
 
 [[exemptions.minicbor-derive]]
-version = "0.15.3"
+version = "0.16.2"
 criteria = "safe-to-deploy"
 
 [[exemptions.minicbor-derive]]
-version = "0.16.2"
+version = "0.18.3"
 criteria = "safe-to-deploy"
 
 [[exemptions.minijinja]]
