@@ -66,6 +66,7 @@ mod measurement_unit;
 pub mod registry;
 mod sample;
 pub mod sensor;
+pub mod signal;
 
 pub use category::Category;
 pub use label::Label;
