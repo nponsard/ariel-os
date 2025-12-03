@@ -1,10 +1,35 @@
 
 # cargo-vet audits file
 
+[[audits.coap-handler]]
+who = "chrysn <chrysn@fsfe.org>"
+criteria = "safe-to-deploy"
+version = "0.2.1"
+
+[[audits.coap-handler-implementations]]
+who = "chrysn <chrysn@fsfe.org>"
+criteria = "safe-to-deploy"
+version = "0.6.2"
+
+[[audits.coap-scroll-ring-server]]
+who = "chrysn <chrysn@fsfe.org>"
+criteria = "safe-to-deploy"
+version = "0.2.1"
+
+[[audits.extra-embedded-io-adapters]]
+who = "chrysn <chrysn@fsfe.org>"
+criteria = "safe-to-deploy"
+version = "0.1.0"
+
 [[audits.log]]
 who = "chrysn <chrysn@fsfe.org>"
 criteria = "safe-to-deploy"
 delta = "0.4.27 -> 0.4.28"
+
+[[audits.minicbor-adapters]]
+who = "chrysn <chrysn@fsfe.org>"
+criteria = "safe-to-deploy"
+delta = "0.0.4 -> 0.0.8"
 
 [[audits.rand_pcg]]
 who = "chrysn <chrysn@fsfe.org>"
@@ -17,11 +42,21 @@ criteria = "safe-to-deploy"
 delta = "0.1.2 -> 0.1.3"
 notes = "Changes affect only a dependency version, whose safety is out of scope (vetted independently), and will not affect the operation of this crate."
 
+[[audits.tee-embedded-io]]
+who = "chrysn <chrysn@fsfe.org>"
+criteria = "safe-to-deploy"
+version = "0.1.0"
+
 [[audits.try-lock-portable-atomic]]
 who = "chrysn <chrysn@fsfe.org>"
 criteria = "safe-to-deploy"
 version = "0.2.5-patch0"
 notes = "Note that there are several deprecated functions that are documented to not be sound and deprecated; users need to heed those deprecation warnings to use the crate soundly."
+
+[[audits.windowed-infinity]]
+who = "chrysn <chrysn@fsfe.org>"
+criteria = "safe-to-deploy"
+version = "0.2.0"
 
 [[trusted.aho-corasick]]
 criteria = "safe-to-deploy"
