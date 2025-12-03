@@ -110,6 +110,7 @@ jobs:
             /opt/ghc \
             /opt/hostedtoolcache/CodeQL \
             /usr/lib/jvm \
+            /usr/local/.ghcup \
             /usr/local/julia* \
             /usr/local/lib/android \
             /usr/local/share/chromium \
