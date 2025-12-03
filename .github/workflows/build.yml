@@ -197,7 +197,7 @@ jobs:
       - name: Install stable toolchain
         if: steps.should-skip.outputs.result != 'true'
         # configure MSRV here:
-        uses: dtolnay/rust-toolchain@1.85
+        uses: dtolnay/rust-toolchain@1.90
         with:
           targets: riscv32imc-unknown-none-elf,riscv32imac-unknown-none-elf,thumbv6m-none-eabi,thumbv7m-none-eabi,thumbv7em-none-eabi,thumbv7em-none-eabihf,thumbv8m.main-none-eabi,thumbv8m.main-none-eabihf
           # rust-src: Used for -Zbuild-std.
@@ -209,7 +209,7 @@ jobs:
         # No tag yet after https://github.com/esp-rs/xtensa-toolchain/pull/38 (will probably be @v1.5.5)
         uses: esp-rs/xtensa-toolchain@main
         with:
-          version: "1.85.0.0"
+          version: "1.90.0.0"
           buildtargets: esp32,esp32s2,esp32s3
           override: false
           export: false
