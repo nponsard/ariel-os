@@ -99,6 +99,18 @@ impl<T> Signal<T> {
             }
         })
     }
+
+    /// Removes any pending value from the signal
+    pub fn clear(&self) {
+        self.inner.lock(|cell| {
+            let state = cell.take();
+            match state {
+                // Do nothing, `cell.take()` already set the state to `SignalState::None`
+                SignalState::None | SignalState::Ready(_) => {}
+                SignalState::Waiting(waker) => cell.set(SignalState::Waiting(waker)),
+            }
+        });
+    }
 }
 
 /// A future that will resolve once a signal is sent.
@@ -179,5 +191,32 @@ mod tests {
         signal.signal(wanted);
 
         assert_eq!(embassy_futures::block_on(future), wanted);
+    }
+
+    #[test]
+    fn clear_value() {
+        static SIGNAL: StaticCell<Signal<u8>> = StaticCell::new();
+        let signal = &*SIGNAL.init(Signal::new());
+        let mut receive_future = signal.wait();
+
+        // arbitrary amount of polling, should always return Poll::Pending
+        for _ in 0..10 {
+            assert_eq!(
+                embassy_futures::poll_once(&mut receive_future),
+                Poll::Pending
+            );
+        }
+
+        signal.signal(3);
+
+        signal.clear();
+
+        // arbitrary amount of polling, should always return Poll::Pending
+        for _ in 0..10 {
+            assert_eq!(
+                embassy_futures::poll_once(&mut receive_future),
+                Poll::Pending
+            );
+        }
     }
 }
