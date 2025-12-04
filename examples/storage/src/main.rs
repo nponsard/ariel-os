@@ -12,7 +12,7 @@ use serde::{Deserialize, Serialize};
 
 /// Example object.
 ///
-/// The serde Serialize / Deserialize traits are required for storage
+/// The serde Serialize / Deserialize traits are required for storage.
 #[derive(Serialize, Deserialize, Debug, defmt::Format)]
 struct MyConfig {
     val_one: heapless::String<64>,

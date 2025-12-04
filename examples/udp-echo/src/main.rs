@@ -48,7 +48,7 @@ async fn udp_echo() {
 
             info!("Received datagram from {:?}", remote_endpoint);
 
-            match socket.send_to(&buf[..n], remote_endpoint).await {
+            match socket.send_to(&buf.get(..n).unwrap(), remote_endpoint).await {
                 Ok(()) => {}
                 Err(e) => {
                     info!("write error: {:?}", e);

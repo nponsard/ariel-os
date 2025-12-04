@@ -46,7 +46,7 @@ async fn tcp_echo() {
                 }
             };
 
-            match socket.write_all(&buf[..n]).await {
+            match socket.write_all(&buf.get(..n).unwrap()).await {
                 Ok(()) => {}
                 Err(e) => {
                     info!("write error: {:?}", e);

@@ -51,7 +51,7 @@ impl Arch for Cpu {
     /// |   LR    |
     /// |   PC    |
     /// |   PSR   |
-    /// +---------+
+    /// +---------+.
     fn setup_stack(thread: &mut Thread, stack: &mut [u8], func: fn(), arg: Option<usize>) {
         let stack_start = stack.as_ptr() as usize;
 

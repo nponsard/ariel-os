@@ -17,7 +17,7 @@ async fn main() {
     let mut some_vec = Vec::new();
     some_vec.push(i);
 
-    info!("some_vec[0]={}", some_vec[0]);
+    info!("some_vec[0]={}", some_vec.get(0).unwrap());
 
     exit(ExitCode::SUCCESS);
 }

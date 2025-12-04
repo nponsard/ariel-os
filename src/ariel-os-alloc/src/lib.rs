@@ -43,6 +43,7 @@ mod alloc {
     ///
     /// Call only once!
     #[cfg(context = "cortex-m")]
+    #[allow(clippy::absurd_extreme_comparisons)]
     unsafe fn init_embedded_alloc() {
         use ariel_os_debug::log::debug;
 

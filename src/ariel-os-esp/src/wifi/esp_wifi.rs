@@ -28,7 +28,7 @@ pub fn init(peripherals: &mut crate::OptionalPeripherals, spawner: Spawner) -> N
 
     controller.set_power_saving(PowerSaveMode::None).unwrap();
 
-    spawner.spawn(connection(controller)).ok();
+    let _ = spawner.spawn(connection(controller));
 
     device
 }
