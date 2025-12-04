@@ -1,8 +1,8 @@
 #![expect(unsafe_code)]
 
 use crate::{Arch, SCHEDULER, Thread, cleanup};
+use ariel_os_debug::log::{debug, info};
 use core::arch::global_asm;
-use ariel_os_debug::log::{debug,info};
 #[cfg(context = "esp32c6")]
 use esp_hal::peripherals::INTPRI as SYSTEM;
 #[cfg(context = "esp32c3")]
@@ -86,34 +86,34 @@ const fn default_trap_frame() -> ThreadData {
 //     dst.mtval = mtval;
 // }
 
-// global_asm!(
-//     "
-//     .global FROM_CPU_INTR0
-//     FROM_CPU_INTR0:
-//         j {sched}
+global_asm!(
+    r#"
 
-
-
-
-//     ",
-//     sched= sym sched
-// );
+    .section .text          // FIXME: is this right ?
+    .globl FROM_CPU_INTR0
+    .align 4
+    FROM_CPU_INTR0:
+        call {sched}
+        call {sched}
+    "#,
+    sched = sym sched
+);
 
 /// Handler for software interrupt 0, which we use for context switching.
 // SAFETY: symbol required by `esp-pacs`.
-#[allow(non_snake_case)]
-#[unsafe(no_mangle)]
-fn FROM_CPU_INTR0() {
-    debug!("interrupt !");
-    unsafe {
-        // clear FROM_CPU_INTR0
-        (&*SYSTEM::PTR)
-            .cpu_intr_from_cpu(0)
-            .modify(|_, w| w.cpu_intr().clear_bit());
+// #[allow(non_snake_case)]
+// #[unsafe(no_mangle)]
+// fn FROM_CPU_INTR0() {
+//     debug!("interrupt !");
+//     unsafe {
+//         // clear FROM_CPU_INTR0
+//         (&*SYSTEM::PTR)
+//             .cpu_intr_from_cpu(0)
+//             .modify(|_, w| w.cpu_intr().clear_bit());
 
-        sched();
-    }
-}
+//         sched();
+//     }
+// }
 
 /// Probes the runqueue for the next thread and switches context if needed.
 ///
