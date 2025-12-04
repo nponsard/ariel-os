@@ -251,3 +251,194 @@ impl<I2C: Send> Sensor for Stts22h<I2C> {
         0
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use embedded_hal_async::i2c::{ErrorKind, Operation};
+
+    use super::*;
+
+    #[derive(Debug)]
+    enum Error {}
+
+    impl embedded_hal_async::i2c::Error for Error {
+        fn kind(&self) -> ErrorKind {
+            ErrorKind::Other
+        }
+    }
+
+    #[derive(Default)]
+    struct I2cDeviceMock {
+        reading_count: usize,
+    }
+
+    impl embedded_hal_async::i2c::ErrorType for I2cDeviceMock {
+        type Error = Error;
+    }
+
+    impl I2c for I2cDeviceMock {
+        async fn transaction(
+            &mut self,
+            _address: embedded_hal_async::i2c::SevenBitAddress,
+            operations: &mut [Operation<'_>],
+        ) -> Result<(), Self::Error> {
+            match operations {
+                [Operation::Write(wbuf), Operation::Read(rbuf)] => match wbuf[0] {
+                    addr if addr == Register::StatusRegAddr as u8 => {}
+                    addr if addr == Register::TempLOutRegAddr as u8 => {
+                        // Provide different samples for consecutive readings.
+                        let sample: i32 = match self.reading_count {
+                            0 => 2500,
+                            1 => 1800,
+                            _ => panic!("too many readings"),
+                        };
+                        rbuf.copy_from_slice(&sample.to_le_bytes()[..rbuf.len()]);
+                        self.reading_count += 1;
+                    }
+                    addr => {
+                        panic!("unknown register: {addr:#x}")
+                    }
+                },
+                _ => {}
+            }
+
+            Ok(())
+        }
+    }
+
+    #[test]
+    fn fetch_temperature_reading() {
+        use ariel_os_sensors::{Reading, sensor::SampleMetadata};
+
+        static STTS22H: Stts22h<I2cDeviceMock> = Stts22h::<I2cDeviceMock>::new(Some("label"));
+
+        init_sensor(&STTS22H);
+
+        embassy_futures::block_on(async {
+            embassy_futures::select::select(STTS22H.run(), async {
+                STTS22H.trigger_measurement().unwrap();
+
+                let reading = STTS22H.wait_for_reading().await.unwrap();
+                let (channel, sample) = reading.sample();
+
+                assert_eq!(channel.label(), Label::Temperature);
+
+                assert_eq!(sample.value(), Ok(2500));
+                assert_eq!(
+                    sample.metadata(),
+                    SampleMetadata::SymmetricalError {
+                        deviation: 50,
+                        bias: 0,
+                        scaling: -2,
+                    }
+                );
+
+                STTS22H.trigger_measurement().unwrap();
+
+                let reading = STTS22H.wait_for_reading().await.unwrap();
+                let (_channel, sample) = reading.sample();
+
+                assert_eq!(sample.value(), Ok(1800));
+            })
+            .await;
+        });
+    }
+
+    #[test]
+    fn awaited_before_triggered() {
+        static STTS22H: Stts22h<I2cDeviceMock> = Stts22h::<I2cDeviceMock>::new(Some("label"));
+
+        init_sensor(&STTS22H);
+
+        embassy_futures::block_on(async {
+            embassy_futures::select::select(STTS22H.run(), async {
+                assert!(matches!(
+                    STTS22H.wait_for_reading().await,
+                    Err(ReadingError::NotMeasuring)
+                ));
+            })
+            .await
+        });
+    }
+
+    #[test]
+    fn cleared_when_double_triggered() {
+        use ariel_os_sensors::Reading;
+
+        static STTS22H: Stts22h<I2cDeviceMock> = Stts22h::<I2cDeviceMock>::new(Some("label"));
+
+        init_sensor(&STTS22H);
+
+        embassy_futures::block_on(async {
+            embassy_futures::select::select(STTS22H.run(), async {
+                STTS22H.trigger_measurement().unwrap();
+
+                // The mock reading counter does not get incremented otherwise.
+                embassy_futures::yield_now().await;
+
+                // Should clear the first reading.
+                STTS22H.trigger_measurement().unwrap();
+
+                let reading = STTS22H.wait_for_reading().await.unwrap();
+                let (_channel, sample) = reading.sample();
+
+                // Should return the second reading.
+                assert_eq!(sample.value(), Ok(1800));
+            })
+            .await
+        });
+    }
+
+    #[test]
+    fn multiple_waiters() {
+        use ReadingError::NotMeasuring;
+
+        static STTS22H: Stts22h<I2cDeviceMock> = Stts22h::<I2cDeviceMock>::new(Some("label"));
+
+        init_sensor(&STTS22H);
+
+        embassy_futures::block_on(async {
+            embassy_futures::select::select(STTS22H.run(), async {
+                STTS22H.trigger_measurement().unwrap();
+
+                let join = embassy_futures::join::join(
+                    STTS22H.wait_for_reading(),
+                    STTS22H.wait_for_reading(),
+                )
+                .await;
+                // Exactly one of them must be `Ok` and the other `Err`.
+                assert!(matches!(
+                    join,
+                    (Ok(_), Err(NotMeasuring)) | (Err(NotMeasuring), Ok(_))
+                ));
+
+                STTS22H.trigger_measurement().unwrap();
+
+                let join = embassy_futures::join::join3(
+                    STTS22H.wait_for_reading(),
+                    STTS22H.wait_for_reading(),
+                    STTS22H.wait_for_reading(),
+                )
+                .await;
+                // Exactly one of them must be `Ok` and the others `Err`.
+                assert!(matches!(
+                    join,
+                    (Ok(_), Err(NotMeasuring), Err(NotMeasuring))
+                        | (Err(NotMeasuring), Ok(_), Err(NotMeasuring))
+                        | (Err(NotMeasuring), Err(NotMeasuring), Ok(_))
+                ));
+            })
+            .await
+        });
+    }
+
+    fn init_sensor(stts22h: &'static Stts22h<I2cDeviceMock>) {
+        embassy_futures::block_on(async {
+            let peripherals = Peripherals {};
+            let i2c_device = I2cDeviceMock::default();
+            let config = Config::default();
+
+            stts22h.init(peripherals, i2c_device, config).await;
+        });
+    }
+}
