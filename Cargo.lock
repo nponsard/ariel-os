@@ -521,6 +521,7 @@ dependencies = [
 name = "ariel-os-runqueue"
 version = "0.2.0"
 dependencies = [
+ "ariel-os-debug",
  "defmt 1.0.1",
  "hax-lib",
 ]

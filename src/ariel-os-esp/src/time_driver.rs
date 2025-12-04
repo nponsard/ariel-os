@@ -151,6 +151,7 @@ impl TimerQueue {
     }
 
     pub(crate) fn handle_alarm(&self, now: u64) {
+        ariel_os_debug::log::debug!("handle_alarm() at {}", now);
         self.inner.with(|inner| {
             inner.handle_alarm(now);
         });
@@ -166,7 +167,7 @@ impl embassy_time_driver::Driver for TimerQueue {
     #[inline]
     fn schedule_wake(&self, at: u64, waker: &Waker) {
         if self.inner.with(|inner| inner.schedule_wake(at, waker)) {
-            ariel_os_debug::log::info!("schedule wake at {}", at);
+            ariel_os_debug::log::debug!("schedule wake at {}", at);
             TIMER_DRIVER.with(|timer_driver| {
                 if let Some(driver) = timer_driver.as_mut() {
                     driver.arm_next_wakeup(at);
