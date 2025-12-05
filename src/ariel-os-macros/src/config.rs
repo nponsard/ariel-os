@@ -39,8 +39,8 @@
 ///
 /// # Panics
 ///
-/// This macro panics when the `ariel-os` crate cannot be found as a dependency of the crate where
-/// this macro is used.
+/// The `ariel-os` crate (or `ariel-os-embassy`, for use in crates which `ariel-os` depends on)
+/// must be a dependency of the crate where this macro is used, otherwise this macro panics.
 #[proc_macro_attribute]
 pub fn config(args: TokenStream, item: TokenStream) -> TokenStream {
     #[allow(clippy::wildcard_imports)]
@@ -55,7 +55,7 @@ pub fn config(args: TokenStream, item: TokenStream) -> TokenStream {
     let config_const = syn::parse_macro_input!(item as syn::ItemConst);
     let config_const_name = &config_const.ident;
 
-    let ariel_os_crate = utils::ariel_os_crate();
+    let ariel_os_crate = utils::ariel_os_crate_or_internal(Some("ariel-os-embassy"));
 
     let (config_fn_name, return_type) = match attrs.kind {
         Some(ConfigKind::Network) => (
