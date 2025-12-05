@@ -61,6 +61,7 @@ pub mod events {
     pub static THREAD_START_EVENT: Event = Event::new();
 }
 
+use ariel_os_debug::log::{debug, info};
 pub use ariel_os_runqueue::{RunqueueId, ThreadId};
 pub use thread_flags as flags;
 
@@ -288,17 +289,40 @@ impl Scheduler {
     ///
     /// Panics if `tid` is >= [`THREAD_COUNT`].
     fn set_state(&mut self, tid: ThreadId, state: ThreadState) -> ThreadState {
+        debug!("scheduler::set_state");
+        use core::arch::asm;
+        let mstatus_value: usize;
+        unsafe {
+            asm!(
+                "
+            csrr t0, mstatus
+            mv {0}, t0
+            ",
+                out(reg) mstatus_value,
+                options(nomem, nostack, preserves_flags)
+            );
+        }
+
+        debug!(
+            "scheduler::set_state: Content of mstatus register: {:#x}",
+            mstatus_value
+        );
+
         let thread = self.get_unchecked_mut(tid);
+
         let old_state = core::mem::replace(&mut thread.state, state);
         let prio = thread.prio;
         if state == ThreadState::Running {
+            debug!("current state is running");
             #[cfg(not(feature = "infini-core"))]
             self.runqueue.add(tid, prio);
+            debug!("scheduling higher prio");
             self.schedule_if_higher_prio(tid, prio);
 
             #[cfg(feature = "infini-core")]
             Cpu::set_running(tid);
         } else if old_state == ThreadState::Running {
+            debug!("only old state was running");
             // A running thread is only set to a non-running state
             // if it itself initiated it.
             debug_assert_eq!(Some(tid), self.current_tid());
@@ -311,8 +335,10 @@ impl Scheduler {
             // On infini-core, there's no runqueue.
             #[cfg(not(any(feature = "multi-core", feature = "infini-core")))]
             self.runqueue.pop_head(tid, prio);
-
+            debug!("calling schedule");
             schedule();
+        } else {
+            // panic!("aaaaa");
         }
         old_state
     }
@@ -718,6 +744,7 @@ pub fn is_valid_tid(thread_id: ThreadId) -> bool {
 /// Panics if this is called outside of a thread context.
 #[allow(unused)]
 fn cleanup() -> ! {
+    info!("cleanup called");
     SCHEDULER.with_mut(|mut scheduler| {
         let thread_id = scheduler.current_tid().unwrap();
         scheduler.set_state(thread_id, ThreadState::Invalid);

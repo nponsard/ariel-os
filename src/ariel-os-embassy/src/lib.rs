@@ -149,6 +149,20 @@ compile_error!(r#""executor-single-thread" and "threading" are mutually exclusiv
 #[cfg(feature = "executor-interrupt")]
 #[distributed_slice(ariel_os_rt::INIT_FUNCS)]
 pub(crate) fn init() {
+    // use core::arch::asm;
+    // let ra_value: usize;
+    // unsafe {
+    //     asm!(
+    //         "mv {0}, ra",
+    //         out(reg) ra_value,
+    //         options(nomem, nostack, preserves_flags)
+    //     );
+    // }
+
+    // debug!(
+    //     "ariel-os-embassy::init(): Content of ra register: {}",
+    //     ra_value
+    // );
     debug!("ariel-os-embassy::init(): using interrupt mode executor");
     let p = hal::init();
 
@@ -189,6 +203,24 @@ fn init() -> ! {
 fn init() {
     use static_cell::StaticCell;
 
+    use core::arch::asm;
+    let mstatus_value: usize;
+    unsafe {
+        asm!(
+            "
+            csrr t0, mstatus
+            mv {0}, t0
+            ",
+            out(reg) mstatus_value,
+            options(nomem, nostack, preserves_flags)
+        );
+    }
+
+    debug!(
+        "ariel-os-embassy::init(): Content of mstatus register: {:#x}",
+        mstatus_value
+    );
+
     debug!(
         "ariel-os-embassy::init(): using thread executor with thread stack size {}",
         executor_thread::STACKSIZE
@@ -199,11 +231,38 @@ fn init() {
     EXECUTOR
         .init_with(thread_executor::Executor::new)
         .run(|spawner| spawner.must_spawn(init_task(p)));
+
+    debug!("falling out of executor-thread init()");
 }
 
 #[embassy_executor::task]
 #[allow(clippy::too_many_lines)]
 async fn init_task(mut peripherals: hal::OptionalPeripherals) {
+    use core::arch::asm;
+    #[cfg(context = "esp32c6")]
+    use esp_hal::peripherals::INTPRI as SYSTEM;
+    #[cfg(context = "esp32c3")]
+    use esp_hal::peripherals::SYSTEM;
+    let mstatus_value: usize;
+    unsafe {
+        asm!(
+            "
+            csrr t0, mstatus
+            mv {0}, t0
+            ",
+            out(reg) mstatus_value,
+            options(nomem, nostack, preserves_flags)
+        );
+    }
+
+    debug!(
+        "ariel-os-embassy::init_task(): Content of mstatus register: {:#x}",
+        mstatus_value
+    );
+    let b = unsafe { (&*SYSTEM::PTR).cpu_intr_from_cpu(0).read().cpu_intr().bit() };
+
+    debug!("thread_flag::wait_any::loop: cpu_intr: {}", b);
+
     // SAFETY: safe unless intentionally exploited.
     let spawner = unsafe { asynch::Spawner::for_current_executor().await };
     asynch::set_spawner(spawner.make_send());

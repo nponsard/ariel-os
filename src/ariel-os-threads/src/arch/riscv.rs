@@ -26,6 +26,20 @@ impl Arch for Cpu {
 
     /// Triggers software interrupt for the context switch.
     fn schedule() {
+        info!("risscv::schedule()");
+        let mstatus_st = esp_hal::riscv::register::mstatus::read();
+        let mstatus = mstatus_st.bits();
+
+        info!(
+            "mstatus.mie: {} mstatus.mpie: {} ",
+            mstatus_st.mie(),
+            mstatus_st.mpie()
+        );
+
+        info!("mstatus: {:#x}", mstatus);
+        let e = interrupt::enable(Interrupt::FROM_CPU_INTR0, interrupt::Priority::min());
+        debug!("e : {:?}", e);
+
         unsafe {
             (&*SYSTEM::PTR)
                 .cpu_intr_from_cpu(0)
@@ -33,8 +47,6 @@ impl Arch for Cpu {
         }
     }
 
-    /// On RISC-V (ESP32), the stack doesn't need to be set up with any register values since
-    /// they are restored from the stored [`TrapFrame`].
     fn setup_stack(thread: &mut Thread, stack: &mut [u8], func: fn(), arg: Option<usize>) {
         let stack_start = stack.as_ptr() as usize;
         // 16 byte alignment.
@@ -44,6 +56,8 @@ impl Arch for Cpu {
         thread.data.saved_registers[12] = stack_pos;
         // a0
         thread.data.saved_registers[13] = arg.unwrap_or_default();
+
+        info!("cleanup addr: {}", cleanup as usize);
         // ra
         thread.data.saved_registers[14] = cleanup as usize;
         // pc
@@ -101,7 +115,13 @@ global_asm!(
     .globl FROM_CPU_INTR0
     .align 4
     FROM_CPU_INTR0:
+
+        // unset mie
+        csrc mstatus, 0x8
+
         call {sched}
+
+        // if a0 is null, no need to save
         beqz    a0, restore
         // save registers
         sw s0, 0(a0)
@@ -140,13 +160,20 @@ global_asm!(
         lw s9, 36(a1)
         lw s10, 40(a1)
         lw s11, 44(a1)
+
         lw sp, 48(a1)
         lw a0, 52(a1)
-        lw ra, 56(a1)
+        // lw ra, 56(a1)
         lw t0, 60(a1)
-        lw t1, 64(a1)
         csrw mepc,t0
-        // csrw mstatus, t1
+        lw t1, 64(a1)
+        csrw mstatus, t1
+
+        // set mpie an mie
+        csrr t0, mstatus
+        ori t0, t0, 0x88
+        csrw mstatus, t0
+
 
         mret
     "#,
@@ -179,7 +206,30 @@ global_asm!(
 /// context switching.
 unsafe extern "C" fn sched() -> u64 {
     info!("sched !");
+    let mstatus_st = esp_hal::riscv::register::mstatus::read();
+    let mstatus = mstatus_st.bits();
+
+    info!(
+        "mstatus.mie: {} mstatus.mpie: {} ",
+        mstatus_st.mie(),
+        mstatus_st.mpie()
+    );
+
+    info!("mstatus: {:#x}", mstatus);
     unsafe {
+        // esp_hal::riscv::register::mstatus::write(
+        //     esp_hal::riscv::register::mstatus::Mstatus::from_bits(mstatus & !(1 << 7)),
+        // );
+
+        let mstatus_st = esp_hal::riscv::register::mstatus::read();
+        let mstatus = mstatus_st.bits();
+
+        info!(
+            "mstatus.mie: {} mstatus.mpie: {} ",
+            mstatus_st.mie(),
+            mstatus_st.mpie()
+        );
+
         // clear FROM_CPU_INTR0
         (&*SYSTEM::PTR)
             .cpu_intr_from_cpu(0)
@@ -212,20 +262,21 @@ unsafe extern "C" fn sched() -> u64 {
             } else {
                 *scheduler.current_tid_mut() = Some(next_tid);
             }
-            let next = scheduler.get_unchecked(next_tid);
+            let next = scheduler.get_unchecked_mut(next_tid);
+            next.data.saved_registers[16] = mstatus;
 
             let next_high_regs = next.data.saved_registers.as_ptr();
-
+            info!("next cleanup: {}", next.data.saved_registers[14]);
             Some((current_high_regs as u32, next_high_regs as u32))
         }) {
             break res;
         }
     };
 
-    info!("result: {:?}-{:?}",current_high_regs,next_high_regs);
+    info!("result: {:?}-{:?}", current_high_regs, next_high_regs);
+
     // The caller expects these two pointers in a0 and a1:
     // a0 = &current.data.high_regs (or 0)
     // a1 = &next.data.high_regs
-    (current_high_regs as u64)
-        | (next_high_regs as u64) << 32
+    (current_high_regs as u64) | (next_high_regs as u64) << 32
 }

@@ -1,6 +1,7 @@
 #![expect(unsafe_code)]
 
 use crate::{Arch, SCHEDULER, Thread, cleanup};
+use ariel_os_debug::log::info;
 use core::{arch::global_asm, ptr::write_volatile};
 use cortex_m::peripheral::{SCB, scb::SystemHandler};
 
@@ -85,6 +86,8 @@ impl Arch for Cpu {
     /// Triggers a PendSV exception.
     #[inline(always)]
     fn schedule() {
+        info!("Cpu::schedule called");
+
         SCB::set_pendsv();
         cortex_m::asm::isb();
     }

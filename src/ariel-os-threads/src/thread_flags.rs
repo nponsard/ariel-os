@@ -1,5 +1,11 @@
 //! Thread flags.
+use ariel_os_debug::log::debug;
+
 use crate::{SCHEDULER, Scheduler, ThreadId, ThreadState};
+#[cfg(context = "esp32c6")]
+use esp_hal::peripherals::INTPRI as SYSTEM;
+#[cfg(context = "esp32c3")]
+use esp_hal::peripherals::SYSTEM;
 
 /// Bitmask that represent the flags that are set for a thread.
 pub type ThreadFlags = u16;
@@ -49,10 +55,51 @@ pub fn wait_all(mask: ThreadFlags) -> ThreadFlags {
 ///
 /// Panics if this is called outside of a thread context.
 pub fn wait_any(mask: ThreadFlags) -> ThreadFlags {
+    debug!("thread_flag::wait_any");
+    use core::arch::asm;
+    let mstatus_value: usize;
+    unsafe {
+        asm!(
+            "
+            csrr t0, mstatus
+            mv {0}, t0
+            ",
+            out(reg) mstatus_value,
+            options(nomem, nostack, preserves_flags)
+        );
+    }
+
+    debug!(
+        "thread_flag::wait_any: Content of mstatus register: {:#x}",
+        mstatus_value
+    );
+
     loop {
         if let Some(flags) = SCHEDULER.with_mut(|mut scheduler| scheduler.flag_wait_any(mask)) {
             return flags;
         }
+
+        let b = unsafe { (&*SYSTEM::PTR).cpu_intr_from_cpu(0).read().cpu_intr().bit() };
+
+        debug!("thread_flag::wait_any::loop: cpu_intr: {}", b);
+
+        use core::arch::asm;
+        let mstatus_value: usize;
+        unsafe {
+            asm!(
+                "
+            csrr t0, mstatus
+            mv {0}, t0
+            ",
+                out(reg) mstatus_value,
+                options(nomem, nostack, preserves_flags)
+            );
+        }
+
+        debug!(
+            "thread_flag::wait_any::loop: Content of mstatus register: {:#x}",
+            mstatus_value
+        );
     }
 }
 
@@ -128,12 +175,34 @@ impl Scheduler {
     ///
     /// Panics if called outside a thread context.
     fn flag_wait_any(&mut self, mask: ThreadFlags) -> Option<ThreadFlags> {
+        use core::arch::asm;
+        let mstatus_value: usize;
+        unsafe {
+            asm!(
+                "
+            csrr t0, mstatus
+            mv {0}, t0
+            ",
+                out(reg) mstatus_value,
+                options(nomem, nostack, preserves_flags)
+            );
+        }
+
+        debug!(
+            "scheduler::flag_wait_any: Content of mstatus register: {:#x}",
+            mstatus_value
+        );
+
         let thread = self.current().unwrap();
         if thread.flags & mask != 0 {
             let res = thread.flags & mask;
             thread.flags &= !res;
+            debug!("current thread flag unblocked");
+
             Some(res)
         } else {
+            debug!("current thread blocked on flag");
+
             let thread_id = thread.tid;
             self.set_state(thread_id, ThreadState::FlagBlocked(WaitMode::Any(mask)));
             None

@@ -102,6 +102,18 @@ pub fn task(args: TokenStream, item: TokenStream) -> TokenStream {
                 spawner: #ariel_os_crate::asynch::Spawner,
                 mut peripherals: &mut #ariel_os_crate::hal::OptionalPeripherals,
             ) {
+                    use core::arch::asm;
+                    let ra_value: usize;
+                    unsafe {
+                        asm!(
+                            "mv {0}, ra",
+                            out(reg) ra_value,
+                            options(nomem, nostack, preserves_flags)
+                        );
+                    }
+
+                    info!("Content of ra register: {}", ra_value);
+
                 use #ariel_os_crate::hal::TakePeripherals;
                 let task = #task_function_name(#peripheral_param);
                 spawner.spawn(task).unwrap();
