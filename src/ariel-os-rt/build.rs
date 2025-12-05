@@ -14,7 +14,7 @@ fn main() {
     // Put the linker scripts somewhere the linker can find them
     let out = &PathBuf::from(env::var_os("OUT_DIR").unwrap());
 
-    if let Some(context) = context_any(&["esp32c3", "cortex-m", "riscv", "xtensa"]) {
+    if let Some(context) = context_any(&["esp32c3", "cortex-m", "riscv"]) {
         let insert_somewhere = match context {
             "esp32c3" => "INSERT AFTER .rwdata_dummy;",
             "cortex-m" => "INSERT BEFORE .data;",
@@ -24,7 +24,7 @@ fn main() {
 
         let region = match context {
             "cortex-m" => "RAM",
-            "riscv" | "xtensa" | "esp32c3" => "RWDATA",
+            "riscv" | "esp32c3" => "RWDATA",
             _ => unreachable!(),
         };
 
@@ -44,6 +44,16 @@ fn main() {
             panic!("unexpected riscv platform");
         };
         std::fs::write(out.join("linkme-region-alias.x"), region_alias).unwrap();
+    }
+
+    if context("xtensa") {
+        let isr_stacksize =
+            std::env::var("CONFIG_ISR_STACKSIZE").expect("CONFIG_ISR_STACKSIZE env var not set");
+        let template = std::fs::read_to_string("isr_stack_xtensa.ld.in")
+            .unwrap()
+            .replace("${ISR_STACKSIZE}", &isr_stacksize);
+        std::fs::write(out.join("isr_stack_xtensa.x"), &template).unwrap();
+        println!("cargo:rerun-if-changed=isr_stack_xtensa.ld.in");
     }
 
     std::fs::copy("linkme.x", out.join("linkme.x")).unwrap();

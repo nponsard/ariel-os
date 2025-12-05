@@ -392,7 +392,6 @@ contexts:
     parent: esp
     selects:
       - xtensa
-      - currently-broken # `isr_stack` is not placed at the right location
     env:
       RUSTC_TARGET: xtensa-esp32-none-elf
       CARGO_TARGET_PREFIX: CARGO_TARGET_XTENSA_ESP32_NONE_ELF
@@ -845,7 +844,7 @@ modules:
         RUSTFLAGS:
           - --cfg context=\"xtensa\"
           - --cfg nightly
-          - -Clink-arg=-Tisr_stack.x
+          - -Clink-arg=-Tisr_stack_xtensa.x
         CFLAGS:
           - -mlongcalls
         CARGO_ARGS:
