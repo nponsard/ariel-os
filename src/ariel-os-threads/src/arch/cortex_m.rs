@@ -42,6 +42,7 @@ impl Arch for Cpu {
     /// The exact order in which Cortex-M pushes the registers to the stack when
     /// entering the ISR is:
     ///
+    /// ```text
     /// +---------+ <- sp
     /// |   r0    |
     /// |   r1    |
@@ -52,6 +53,7 @@ impl Arch for Cpu {
     /// |   PC    |
     /// |   PSR   |
     /// +---------+
+    /// ```
     fn setup_stack(thread: &mut Thread, stack: &mut [u8], func: fn(), arg: Option<usize>) {
         let stack_start = stack.as_ptr() as usize;
 

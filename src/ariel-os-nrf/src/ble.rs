@@ -234,7 +234,7 @@ async fn mpsl_task(mpsl: &'static MultiprotocolServiceLayer<'static>) -> ! {
 /// # Errors
 ///
 /// An error is returned if the SDC cannot be built with the provided configuration.
-/// The meaning of the errors code can be found in [nrfxlib](https://github.com/nrfconnect/sdk-nrfxlib/blob/3a14dbc326c385a0161fc122f72b6d9be308f7d6/softdevice_controller/include/sdc.h)
+/// The meaning of the errors code can be found in [nrfxlib](https://github.com/nrfconnect/sdk-nrfxlib/blob/3a14dbc326c385a0161fc122f72b6d9be308f7d6/softdevice_controller/include/sdc.h).
 #[expect(
     clippy::doc_markdown,
     reason = "gets wrongly triggered for 'SoftDevice'"

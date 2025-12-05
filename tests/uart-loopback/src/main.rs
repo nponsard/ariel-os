@@ -1,4 +1,4 @@
-//! This is a test for UART loopback operation
+//! This is a test for UART loopback operation.
 
 #![no_main]
 #![no_std]

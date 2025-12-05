@@ -150,7 +150,7 @@ async fn coap_run_impl(handler: impl coap_handler::Handler + coap_handler::Repor
     coap_run_udp(handler).await;
 }
 
-/// Runs the CoAP handler on CoAP-over-UDP indefinitely
+/// Runs the CoAP handler on CoAP-over-UDP indefinitely.
 ///
 /// # Panics
 ///
