@@ -647,12 +647,10 @@ impl<
                 return Err(CoAPError::bad_request());
             };
 
-            if let Some(ead_3) = ead_3 {
-                if ead_3.is_critical {
-                    error!("Critical EAD3 item received, aborting");
-                    // FIXME: send error message
-                    return Err(CoAPError::bad_request());
-                }
+            if let Some(ead_3) = ead_3 && ead_3.is_critical {
+                error!("Critical EAD3 item received, aborting");
+                // FIXME: send error message
+                return Err(CoAPError::bad_request());
             }
 
             let (responder, _prk_out) =
@@ -1139,12 +1137,12 @@ impl<
             .ignore_elective_others();
         let state = state.unwrap();
 
-        if state.errors_handled_here() {
-            if let Err(error) = extra_options {
-                // Critical options in all other cases are handled by the Unencrypted or Oscore
-                // handlers
-                return Err(Own(error));
-            }
+        if state.errors_handled_here()
+            && let Err(error) = extra_options
+        {
+            // Critical options in all other cases are handled by the Unencrypted or Oscore
+            // handlers
+            return Err(Own(error));
         }
 
         let require_post = || {
