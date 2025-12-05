@@ -261,6 +261,10 @@ mod define_count_adjusted_enum {
         let count = 8;
         #[cfg(feature = "max-sample-min-count-9")]
         let count = 9;
+        #[cfg(feature = "max-sample-min-count-10")]
+        let count = 10;
+        #[cfg(feature = "max-sample-min-count-11")]
+        let count = 11;
         #[cfg(feature = "max-sample-min-count-12")]
         let count = 12;
 
