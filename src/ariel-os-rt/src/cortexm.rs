@@ -238,7 +238,7 @@ pub(crate) fn stack() -> crate::stack::Stack {
     Stack::new(lowest, highest)
 }
 
-/// Returns the current `SP` register value
+/// Returns the current `SP` register value.
 pub(crate) fn sp() -> usize {
     let sp: usize;
     // Safety: reading SP is safe

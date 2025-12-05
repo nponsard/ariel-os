@@ -1,4 +1,4 @@
-//! Adapted from the example in `trouble_host`
+//! Adapted from the example in `trouble_host`.
 #![no_main]
 #![no_std]
 
