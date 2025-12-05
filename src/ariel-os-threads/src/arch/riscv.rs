@@ -16,7 +16,9 @@ use esp_hal::{
 pub struct Cpu;
 
 #[derive(Debug)]
-pub struct ThreadData {}
+pub struct ThreadData {
+    saved_registers: [usize; 17],
+}
 
 impl Arch for Cpu {
     type ThreadData = ThreadData;
@@ -38,13 +40,17 @@ impl Arch for Cpu {
         // 16 byte alignment.
         let stack_pos = (stack_start + stack.len()) & 0xFFFFFFE0;
         // Set up PC, SP, RA and first argument for function.
-        // thread.data.sp = stack_pos;
-        // thread.data.a0 = arg.unwrap_or_default();
-        // thread.data.ra = cleanup as usize;
-        // thread.data.pc = func as usize;
+        // sp
+        thread.data.saved_registers[12] = stack_pos;
+        // a0
+        thread.data.saved_registers[13] = arg.unwrap_or_default();
+        // ra
+        thread.data.saved_registers[14] = cleanup as usize;
+        // pc
+        thread.data.saved_registers[15] = func as usize;
 
-        // thread.stack_lowest = stack_start;
-        // thread.stack_highest = stack_pos;
+        thread.stack_lowest = stack_start;
+        thread.stack_highest = stack_pos;
 
         // Safety: This is the place to initialize stack painting.
         // unsafe { thread.stack_paint_init(stack_pos) };
@@ -71,7 +77,9 @@ impl Arch for Cpu {
 }
 
 const fn default_trap_frame() -> ThreadData {
-    ThreadData {}
+    ThreadData {
+        saved_registers: [0usize; 17],
+    }
 }
 
 /// Copies the register state from `src` to `dst`.
@@ -94,7 +102,53 @@ global_asm!(
     .align 4
     FROM_CPU_INTR0:
         call {sched}
-        call {sched}
+        beqz    a0, restore
+        // save registers
+        sw s0, 0(a0)
+        sw s1, 4(a0)
+        sw s2, 8(a0)
+        sw s3, 12(a0)
+        sw s4, 16(a0)
+        sw s5, 20(a0)
+        sw s6, 24(a0)
+        sw s7, 28(a0)
+        sw s8, 32(a0)
+        sw s9, 36(a0)
+        sw s10, 40(a0)
+        sw s11, 44(a0)
+        sw sp, 48(a0)
+        sw a0, 52(a0)
+        sw ra, 56(a0)
+
+        csrr t0, mepc
+        csrr t1, mstatus
+
+        sw t0, 60(a0)
+        sw t1, 64(a0)
+
+    restore:
+        // load registers
+        lw s0, 0(a1)
+        lw s1, 4(a1)
+        lw s2, 8(a1)
+        lw s3, 12(a1)
+        lw s4, 16(a1)
+        lw s5, 20(a1)
+        lw s6, 24(a1)
+        lw s7, 28(a1)
+        lw s8, 32(a1)
+        lw s9, 36(a1)
+        lw s10, 40(a1)
+        lw s11, 44(a1)
+        lw sp, 48(a1)
+        lw a0, 52(a1)
+        lw ra, 56(a1)
+        lw t0, 60(a1)
+        lw t1, 64(a1)
+        csrw mepc,t0
+        // csrw mstatus, t1
+
+        mret
     "#,
     sched = sym sched
 );
@@ -125,35 +179,53 @@ global_asm!(
 /// context switching.
 unsafe extern "C" fn sched() -> u64 {
     info!("sched !");
-    0
-    // loop {
-    //     if SCHEDULER.with_mut(|mut scheduler| {
-    //         #[cfg(feature = "multi-core")]
-    //         scheduler.add_current_thread_to_rq();
+    unsafe {
+        // clear FROM_CPU_INTR0
+        (&*SYSTEM::PTR)
+            .cpu_intr_from_cpu(0)
+            .modify(|_, w| w.cpu_intr().clear_bit());
+    }
 
-    //         let next_tid = match scheduler.get_next_tid() {
-    //             Some(tid) => tid,
-    //             None => {
-    //                 Cpu::wfi();
-    //                 return false;
-    //             }
-    //         };
+    let (current_high_regs, next_high_regs) = loop {
+        if let Some(res) = SCHEDULER.with_mut(|mut scheduler| {
+            #[cfg(feature = "multi-core")]
+            scheduler.add_current_thread_to_rq();
 
-    //         if let Some(current_tid) = scheduler.current_tid() {
-    //             if next_tid == current_tid {
-    //                 return true;
-    //             }
-    //             copy_registers(
-    //                 trap_frame,
-    //                 &mut scheduler.threads[usize::from(current_tid)].data,
-    //             );
-    //         }
-    //         *scheduler.current_tid_mut() = Some(next_tid);
+            let next_tid = match scheduler.get_next_tid() {
+                Some(tid) => tid,
+                None => {
+                    Cpu::wfi();
+                    return None;
+                }
+            };
 
-    //         copy_registers(&scheduler.get_unchecked(next_tid).data, trap_frame);
-    //         true
-    //     }) {
-    //         break;
-    //     }
-    // }
+            let mut current_high_regs = core::ptr::null();
+
+            if let Some(current_tid_ref) = scheduler.current_tid_mut() {
+                if next_tid == *current_tid_ref {
+                    return Some((0, 0));
+                }
+                let current_tid = *current_tid_ref;
+                *current_tid_ref = next_tid;
+                let current = scheduler.get_unchecked_mut(current_tid);
+                current_high_regs = current.data.saved_registers.as_ptr();
+            } else {
+                *scheduler.current_tid_mut() = Some(next_tid);
+            }
+            let next = scheduler.get_unchecked(next_tid);
+
+            let next_high_regs = next.data.saved_registers.as_ptr();
+
+            Some((current_high_regs as u32, next_high_regs as u32))
+        }) {
+            break res;
+        }
+    };
+
+    info!("result: {:?}-{:?}",current_high_regs,next_high_regs);
+    // The caller expects these two pointers in a0 and a1:
+    // a0 = &current.data.high_regs (or 0)
+    // a1 = &next.data.high_regs
+    (current_high_regs as u64)
+        | (next_high_regs as u64) << 32
 }
