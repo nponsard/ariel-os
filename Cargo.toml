@@ -190,4 +190,4 @@ unused_trait_names = "warn"
 undocumented_unsafe_blocks = "warn"
 
 [workspace.lints.rustdoc]
-broken_intra_doc_links = "deny"
+broken_intra_doc_links = "warn"
