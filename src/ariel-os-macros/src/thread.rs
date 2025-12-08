@@ -86,9 +86,7 @@ pub fn thread(args: TokenStream, item: TokenStream) -> TokenStream {
 
         #[allow(non_snake_case)]
         fn #trampoline_function_name() {
-            ariel_os_debug::log::info!("waiting for thread start ");
             #maybe_wait_for_start_event;
-            ariel_os_debug::log::info!("thread start ok");
 
             #fn_name()
         }

@@ -338,7 +338,7 @@ impl Scheduler {
             debug!("calling schedule");
             schedule();
         } else {
-            // panic!("aaaaa");
+            panic!("aaaaa");
         }
         old_state
     }

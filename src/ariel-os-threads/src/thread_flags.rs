@@ -55,51 +55,10 @@ pub fn wait_all(mask: ThreadFlags) -> ThreadFlags {
 ///
 /// Panics if this is called outside of a thread context.
 pub fn wait_any(mask: ThreadFlags) -> ThreadFlags {
-    debug!("thread_flag::wait_any");
-    use core::arch::asm;
-    let mstatus_value: usize;
-    unsafe {
-        asm!(
-            "
-            csrr t0, mstatus
-            mv {0}, t0
-            ",
-            out(reg) mstatus_value,
-            options(nomem, nostack, preserves_flags)
-        );
-    }
-
-    debug!(
-        "thread_flag::wait_any: Content of mstatus register: {:#x}",
-        mstatus_value
-    );
-
     loop {
         if let Some(flags) = SCHEDULER.with_mut(|mut scheduler| scheduler.flag_wait_any(mask)) {
             return flags;
         }
-
-        let b = unsafe { (&*SYSTEM::PTR).cpu_intr_from_cpu(0).read().cpu_intr().bit() };
-
-        debug!("thread_flag::wait_any::loop: cpu_intr: {}", b);
-
-        use core::arch::asm;
-        let mstatus_value: usize;
-        unsafe {
-            asm!(
-                "
-            csrr t0, mstatus
-            mv {0}, t0
-            ",
-                out(reg) mstatus_value,
-                options(nomem, nostack, preserves_flags)
-            );
-        }
-
-        debug!(
-            "thread_flag::wait_any::loop: Content of mstatus register: {:#x}",
-            mstatus_value
-        );
     }
 }
 
