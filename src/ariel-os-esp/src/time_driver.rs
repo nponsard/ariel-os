@@ -26,6 +26,10 @@ use esp_hal::timer::systimer::Alarm as Timer;
 #[cfg(all(context = "xtensa", context = "esp32"))]
 use esp_hal::timer::timg::Timer;
 
+
+#[cfg(not(context = "xtensa"))]
+use esp_hal::timer::systimer::Alarm as Timer;
+
 pub(crate) fn init(timer: Timer<'static>) {
     let timer = TimeDriver::new(TimeBase::new(timer.degrade()));
     TIMER_DRIVER.with(|timer_driver| {
