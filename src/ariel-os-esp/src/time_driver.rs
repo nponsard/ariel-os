@@ -20,10 +20,10 @@ pub(crate) struct TimeDriver {
     current_alarm: u64,
 }
 
-#[cfg(all(context = "xtensa", not(context = "esp32")))]
+#[cfg(not(context = "esp32"))]
 use esp_hal::timer::systimer::Alarm as Timer;
 
-#[cfg(all(context = "xtensa", context = "esp32"))]
+#[cfg(context = "esp32")]
 use esp_hal::timer::timg::Timer;
 
 pub(crate) fn init(timer: Timer<'static>) {
