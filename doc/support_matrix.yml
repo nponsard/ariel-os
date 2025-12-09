@@ -75,6 +75,23 @@ functionalities:
 
 # Encodes support status for each chip.
 chips:
+  native-chip:
+    name: native
+    manufacturer: Ariel OS
+    support:
+      gpio: not_currently_supported
+      debug_output: supported
+      hwrng: supported
+      i2c_controller: not_currently_supported
+      spi_main: not_currently_supported
+      uart: not_currently_supported
+      logging: supported
+      storage: not_currently_supported
+      wifi: not_currently_supported
+      ble: not_currently_supported
+      user_usb: not_currently_supported
+      ethernet_over_usb: not_currently_supported
+
   nrf51822-xxaa:
     name: nRF51822-xxAA
     manufacturer: Nordic Semiconductor
@@ -761,6 +778,13 @@ boards:
     support:
       user_usb: not_available
       ethernet_over_usb: not_available
+
+  native:
+    name: native
+    url: "#"
+    chip: native-chip
+    tier: "1"
+    support:
 
   nordic-thingy-91-x-nrf9151:
     name: Nordic Thingy:91 X
