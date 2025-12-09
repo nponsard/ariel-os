@@ -1,4 +1,4 @@
-//! Items specific to the "native" implementation
+//! Items specific to the "native" implementation.
 
 #![cfg_attr(nightly, feature(doc_cfg))]
 
@@ -10,6 +10,7 @@ pub mod peripherals {}
 
 pub struct OptionalPeripherals {}
 
+#[must_use]
 pub fn init() -> OptionalPeripherals {
     OptionalPeripherals {}
 }

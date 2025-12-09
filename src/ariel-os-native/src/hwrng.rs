@@ -16,7 +16,7 @@ impl rand::rand_core::RngCore for Getrandom02Rng {
 
     fn fill_bytes(&mut self, dest: &mut [u8]) {
         if let Err(e) = getrandom::getrandom(dest) {
-            panic!("Error: {}", e);
+            panic!("Error: {e}");
         }
     }
 }
