@@ -213,10 +213,6 @@ criteria = "safe-to-deploy"
 version = "0.5.4"
 criteria = "safe-to-deploy"
 
-[[exemptions.build-rs]]
-version = "0.3.1"
-criteria = "safe-to-deploy"
-
 [[exemptions.bytemuck]]
 version = "1.23.0"
 criteria = "safe-to-deploy"
@@ -255,10 +251,6 @@ criteria = "safe-to-deploy"
 
 [[exemptions.chrono]]
 version = "0.4.41"
-criteria = "safe-to-deploy"
-
-[[exemptions.ciborium-io]]
-version = "0.2.2"
 criteria = "safe-to-deploy"
 
 [[exemptions.clang-sys]]
@@ -311,10 +303,6 @@ criteria = "safe-to-deploy"
 
 [[exemptions.coapcore]]
 version = "0.1.0"
-criteria = "safe-to-deploy"
-
-[[exemptions.cobs]]
-version = "0.3.0"
 criteria = "safe-to-deploy"
 
 [[exemptions.const-default]]
@@ -571,10 +559,6 @@ criteria = "safe-to-deploy"
 
 [[exemptions.embedded-hal-nb]]
 version = "1.0.0"
-criteria = "safe-to-deploy"
-
-[[exemptions.embedded-io]]
-version = "0.6.1"
 criteria = "safe-to-deploy"
 
 [[exemptions.embedded-io-async]]
@@ -1081,10 +1065,6 @@ criteria = "safe-to-deploy"
 version = "0.2.1"
 criteria = "safe-to-deploy"
 
-[[exemptions.postcard]]
-version = "1.1.3"
-criteria = "safe-to-deploy"
-
 [[exemptions.postcard-derive]]
 version = "0.2.2"
 criteria = "safe-to-deploy"
@@ -1307,10 +1287,6 @@ criteria = "safe-to-deploy"
 
 [[exemptions.trouble-host-macros]]
 version = "0.1.0"
-criteria = "safe-to-deploy"
-
-[[exemptions.try-lock]]
-version = "0.2.5@git:45c39685b56a4dba1b71bdbbbe5f731c3c77dc50"
 criteria = "safe-to-deploy"
 
 [[exemptions.typenum]]
