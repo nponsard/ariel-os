@@ -130,8 +130,7 @@ mod isr_stack {
 
 #[cfg(all(
     feature = "_panic-handler",
-    not(feature = "_test"),
-    not(context = "native")
+    any(context = "esp", context = "nrf", context = "rp", context = "stm32"),
 ))]
 #[panic_handler]
 fn panic(_info: &core::panic::PanicInfo<'_>) -> ! {
