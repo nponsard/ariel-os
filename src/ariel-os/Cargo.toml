@@ -229,6 +229,9 @@ executor-thread = ["ariel-os-embassy/executor-thread", "threading"]
 # *Used for internal testing only.*
 executor-none = ["ariel-os-embassy/executor-none"]
 
+# Enables embedded-test support. Selected by laze.
+embedded-test = ["ariel-os-rt/embedded-test"]
+
 # features needed for `cargo test`
 _test = [
   "i2c",
