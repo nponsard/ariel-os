@@ -80,7 +80,9 @@ The following steps must be followed when preparing a new release of `ariel-os`:
 1. Update the version numbers of the crates that need to be bumped.
 
     > [!IMPORTANT]
-    > - The crates in `/src/lib/` are managed separately and their version numbers should *not* be bumped.
+    > - The crates in the following directories are managed separately and their version numbers should *not* be bumped:
+    >   - `/src/lib/`
+    >   - `/src/sensors/`
     > - The `ariel-os-sensors` crate's version is decoupled from the rest of the OS, as every sensor driver relies on it, and bumping it may result in fragmenting the entire ecosystem of sensor drivers.
     > - The `ariel-os-sensors-utils` crate's version is also decoupled from the rest of the OS.
     > - There might be other crates whose versions are decoupled from the rest of the OS; do **check the manifests** for such an indication before bumping.
