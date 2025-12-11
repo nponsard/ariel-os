@@ -59,22 +59,11 @@ impl Arch for Cpu {
 
     /// Triggers software interrupt for the context switch.
     fn schedule() {
-        debug!("risscv::schedule()");
-        let mstatus_st = esp_hal::riscv::register::mstatus::read();
-        let mstatus = mstatus_st.bits();
-
-        debug!(
-            "mstatus.mie: {} mstatus.mpie: {} ",
-            mstatus_st.mie(),
-            mstatus_st.mpie()
-        );
-
         unsafe {
             (&*SYSTEM::PTR)
                 .cpu_intr_from_cpu(0)
                 .modify(|_, w| w.cpu_intr().set_bit());
         }
-        debug!("mstatus: {:#x}", mstatus);
     }
 
     fn setup_stack(thread: &mut Thread, stack: &mut [u8], func: fn(), arg: Option<usize>) {
@@ -350,39 +339,11 @@ global_asm!(
 );
 
 /// Probes the runqueue for the next thread and switches context if needed.
-///
-/// # Safety
-///
-/// This method might switch the current register state that is saved in the
-/// `trap_frame`.
-/// It should only be called from inside the trap handler that is responsible for
-/// context switching.
 unsafe extern "C" fn sched() -> u64 {
-    debug!("sched !");
     let mstatus_st = esp_hal::riscv::register::mstatus::read();
     let mstatus = mstatus_st.bits();
 
-    trace!(
-        "mstatus.mie: {} mstatus.mpie: {} ",
-        mstatus_st.mie(),
-        mstatus_st.mpie()
-    );
-
-    trace!("mstatus: {:#x}", mstatus);
     unsafe {
-        // esp_hal::riscv::register::mstatus::write(
-        //     esp_hal::riscv::register::mstatus::Mstatus::from_bits(mstatus & !(1 << 3)),
-        // );
-
-        let mstatus_st = esp_hal::riscv::register::mstatus::read();
-        let mstatus = mstatus_st.bits();
-
-        trace!(
-            "mstatus.mie: {} mstatus.mpie: {} ",
-            mstatus_st.mie(),
-            mstatus_st.mpie()
-        );
-
         // clear FROM_CPU_INTR0
         (&*SYSTEM::PTR)
             .cpu_intr_from_cpu(0)
