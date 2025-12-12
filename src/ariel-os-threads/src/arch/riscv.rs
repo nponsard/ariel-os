@@ -203,13 +203,20 @@ global_asm!(
         sw t5, 12(sp)
         sw t6, 8(sp)
 
+
+        csrr t0, mepc
+        sw t0, 4(sp)
+
+
+
         call {sched}
 
         // if a1 is null, we need to return to the previous task
         beqz    a1, restore_stack
         // if a0 is null, no need to save
         beqz    a0, restore
-        csrr t0, mepc
+        // mepc
+        lw t0, 4(sp)
         sw t0, 32*4(a0)
 
 
@@ -353,6 +360,11 @@ global_asm!(
 
         mret
     restore_stack:
+        mret
+        // mepc
+        lw t0, 4(sp)
+        csrw mepc,t0
+
         lw ra, 76(sp)
         lw gp, 72(sp)
         lw tp, 68(sp)
@@ -381,6 +393,9 @@ global_asm!(
 /// Probes the runqueue for the next thread and switches context if needed.
 unsafe extern "C" fn sched() -> u64 {
     info!("Sched called !");
+
+    let mepc = unsafe { esp_hal::riscv::register::mepc::read() };
+    debug!("sched start mepc: {}", mepc);
 
     let mut mstatus_st = esp_hal::riscv::register::mstatus::read();
     use crate::arch::riscv::riscv::register::mstatus::MPP;
@@ -423,9 +438,9 @@ unsafe extern "C" fn sched() -> u64 {
             let mut current_high_regs = core::ptr::null();
 
             if let Some(current_tid_ref) = scheduler.current_tid_mut() {
-                if next_tid == *current_tid_ref {
-                    return Some((0, 0));
-                }
+                // if next_tid == *current_tid_ref {
+                //     return Some((0, 0));
+                // }
                 let current_tid = *current_tid_ref;
                 *current_tid_ref = next_tid;
                 let current = scheduler.get_unchecked_mut(current_tid);
@@ -474,6 +489,9 @@ unsafe extern "C" fn sched() -> u64 {
         mstatus_st.mpie(),
         runlevel
     );
+
+    let mepc = unsafe { esp_hal::riscv::register::mepc::read() };
+    debug!("sched end mepc: {}", mepc);
     // The caller expects these two pointers in a0 and a1:
     // a0 = &current.data.high_regs (or 0)
     // a1 = &next.data.high_regs
