@@ -536,7 +536,7 @@ dependencies = [
  "ariel-os-sensors",
  "ariel-os-sensors-utils",
  "critical-section",
- "embassy-executor 0.9.1",
+ "embassy-executor",
  "embassy-futures",
  "embassy-sync 0.7.2",
  "embassy-time",
