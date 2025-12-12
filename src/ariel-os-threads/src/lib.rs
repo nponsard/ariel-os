@@ -64,6 +64,7 @@ pub mod events {
     pub static THREAD_START_EVENT: Event = Event::new();
 }
 
+use ariel_os_debug::log::debug;
 pub use ariel_os_runqueue::{RunqueueId, ThreadId};
 pub use blocker::block_on;
 pub use core_affinity::CoreAffinity;
@@ -283,6 +284,8 @@ impl Scheduler {
     ///
     /// Panics if `tid` is >= [`THREAD_COUNT`].
     fn set_state(&mut self, tid: ThreadId, state: ThreadState) -> ThreadState {
+        debug!("Scheduler::set_state");
+
         let thread = self.get_unchecked_mut(tid);
         let old_state = core::mem::replace(&mut thread.state, state);
         let prio = thread.prio;
@@ -306,6 +309,7 @@ impl Scheduler {
             // On infini-core, there's no runqueue.
             #[cfg(not(any(feature = "multi-core", feature = "infini-core")))]
             self.runqueue.pop_head(tid, prio);
+            debug!("Scheduler::set_state schedule");
 
             schedule();
         }
@@ -329,6 +333,8 @@ impl Scheduler {
 
     /// Changes the priority of a thread and triggers the scheduler if needed.
     fn set_priority(&mut self, thread_id: ThreadId, prio: RunqueueId) {
+        debug!("Scheduler::set_priority");
+
         if !self.is_valid_tid(thread_id) {
             return;
         }
@@ -370,6 +376,7 @@ impl Scheduler {
                 self.runqueue.del(thread_id);
             }
             self.runqueue.add(thread_id, prio);
+            debug!("Scheduler::set_priority schedule ?");
 
             // Check & handle if the thread is among the current threads for single-core,
             // analogous to the above multi-core implementation.

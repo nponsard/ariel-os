@@ -1,4 +1,6 @@
 //! Thread flags.
+use ariel_os_debug::log::info;
+
 use crate::{SCHEDULER, Scheduler, ThreadId, ThreadState};
 
 /// Bitmask that represent the flags that are set for a thread.
@@ -50,7 +52,10 @@ pub fn wait_all(mask: ThreadFlags) -> ThreadFlags {
 /// Panics if this is called outside of a thread context.
 pub fn wait_any(mask: ThreadFlags) -> ThreadFlags {
     loop {
+        info!("wait_any_loop");
+
         if let Some(flags) = SCHEDULER.with_mut(|mut scheduler| scheduler.flag_wait_any(mask)) {
+            info!("wait_any: returning flags");
             return flags;
         }
     }

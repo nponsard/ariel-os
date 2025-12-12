@@ -15,7 +15,30 @@ use esp_hal::{
     riscv,
     system::Cpu as EspHalCpu,
 };
+use portable_atomic::Ordering;
+
+static _CURRENT_CTX_PTR: portable_atomic::AtomicPtr<ThreadData> =
+    portable_atomic::AtomicPtr::new(core::ptr::null_mut());
+
+static _NEXT_CTX_PTR: portable_atomic::AtomicPtr<ThreadData> =
+    portable_atomic::AtomicPtr::new(core::ptr::null_mut());
 pub struct Cpu;
+
+fn idle_task() {
+    debug!("idle task");
+
+    loop {
+        riscv::asm::wfi();
+    }
+}
+
+static IDLE_STACK: [u8; 128] = [0; 128];
+
+static mut IDLE_THREAD_DATA: ThreadData = const {
+    ThreadData {
+        ..default_trap_frame()
+    }
+};
 
 #[derive(Debug, Default)]
 #[repr(C)]
@@ -61,6 +84,8 @@ impl Arch for Cpu {
 
     /// Triggers software interrupt for the context switch.
     fn schedule() {
+        info!("riscv::schedule()");
+
         unsafe {
             (&*SYSTEM::PTR)
                 .cpu_intr_from_cpu(0)
@@ -93,6 +118,12 @@ impl Arch for Cpu {
 
     /// Enable and trigger the appropriate software interrupt.
     fn start_threading() {
+        unsafe {
+            IDLE_THREAD_DATA.mepc = idle_task as usize;
+            IDLE_THREAD_DATA.sp = IDLE_STACK.as_ptr() as usize;
+            IDLE_THREAD_DATA.ra = cleanup as usize;
+        }
+
         debug!("riscv::start_threading");
         interrupt::disable(EspHalCpu::ProCpu, Interrupt::FROM_CPU_INTR0);
         debug!("interrupts disabled");
@@ -100,7 +131,7 @@ impl Arch for Cpu {
         Self::schedule();
         debug!("schedule done");
 
-        let cb: extern "C" fn() = unsafe { core::mem::transmute(FROM_CPU_INTR0 as *const ()) };
+        let cb: extern "C" fn() = unsafe { core::mem::transmute(sched as *const ()) };
 
         let handler = InterruptHandler::new_not_nested(cb, interrupt::Priority::Priority1);
 
@@ -118,11 +149,31 @@ impl Arch for Cpu {
         // Panics if `FROM_CPU_INTR0` is among `esp_hal::interrupt::RESERVED_INTERRUPTS`,
         // which isn't the case.
         let e = interrupt::enable(Interrupt::FROM_CPU_INTR0, handler.priority());
-        // debug!("e : {:?}", e);
+        debug!("e : {:?}", e);
         debug!("interrupt enabled");
     }
 
     fn wfi() {
+        let mut mstatus_st = esp_hal::riscv::register::mstatus::read();
+
+        let runlevel = esp_hal::interrupt::current_runlevel();
+        debug!(
+            "WFI mie: {}, mpie: {}, runlevel: {:?}",
+            mstatus_st.mie(),
+            mstatus_st.mpie(),
+            runlevel
+        );
+        let mstatus = mstatus_st.bits();
+
+        mstatus_st.set_mie(true);
+
+        unsafe {
+            // esp_hal::riscv::register::mstatus::write(mstatus_st);
+            //     esp_hal::peripherals::PLIC_MX::regs()
+            //         .mxint_thresh()
+            //         .write(|w| unsafe { w.cpu_mxint_thresh().bits(0) });
+        }
+
         riscv::asm::wfi();
     }
 }
@@ -166,18 +217,18 @@ const fn default_trap_frame() -> ThreadData {
 }
 
 unsafe extern "C" {
-    fn FROM_CPU_INTR0();
+    fn RESTORE_TASK_SWITCH();
 }
 
 global_asm!(
     r#"
 
-    .section .trap.rust, "ax"          // FIXME: is this right ?
-    .globl FROM_CPU_INTR0
+    .section .trap, "ax"          // FIXME: is this right ?
+    .globl RESTORE_TASK_SWITCH
     .align 4
-    FROM_CPU_INTR0:
+    RESTORE_TASK_SWITCH:
         // unset mie
-        csrc mstatus, 0x8
+        // csrc mstatus, 0x8
 
         // save non callee-saved registers
         addi sp, sp, -80
@@ -200,12 +251,15 @@ global_asm!(
         sw t5, 12(sp)
         sw t6, 8(sp)
 
-        call {sched}
+
+        la a0, {_CURRENT_CTX_PTR}
+        lw a0, 0(a0)
+
 
         // if a0 is null, no need to save
         beqz    a0, restore
-        csrr t0, mepc
-        sw t0, 32*4(a0)
+        // csrr t0, mepc
+        // sw t0, 32*4(a0)
 
 
         // save registers
@@ -301,6 +355,9 @@ global_asm!(
 
     restore:
 
+        la a1, {_NEXT_CTX_PTR}
+        lw a1, 0(a1)
+
         // restore mepc and mstatus
         lw t0, 31*4(a1)
         csrw mstatus, t0
@@ -341,16 +398,19 @@ global_asm!(
 
 
         lw a1, 10*4(a1)
-        csrs mstatus, 0x8
+        // csrs mstatus, 0x8
 
 
         mret
     "#,
-    sched = sym sched
+    _CURRENT_CTX_PTR = sym _CURRENT_CTX_PTR,
+    _NEXT_CTX_PTR = sym _NEXT_CTX_PTR,
 );
 
 /// Probes the runqueue for the next thread and switches context if needed.
-unsafe extern "C" fn sched() -> u64 {
+///
+#[esp_hal::ram]
+extern "C" fn sched() {
     let mut mstatus_st = esp_hal::riscv::register::mstatus::read();
     use crate::arch::riscv::riscv::register::mstatus::MPP;
     // mstatus_st.set_mie(true);
@@ -367,7 +427,10 @@ unsafe extern "C" fn sched() -> u64 {
     let mstatus = mstatus_st.bits();
 
     debug!("sched mstatus: {:#x}", mstatus);
-
+    unsafe {
+        mstatus_st.set_mie(true);
+        esp_hal::riscv::register::mstatus::write(mstatus_st);
+    }
     unsafe {
         // clear FROM_CPU_INTR0
         (&*SYSTEM::PTR)
@@ -375,10 +438,14 @@ unsafe extern "C" fn sched() -> u64 {
             .modify(|_, w| w.cpu_intr().clear_bit());
     }
 
-    let (current_high_regs, next_high_regs) = loop {
+    let (old_ctx, new_ctx) = loop {
+        info!("sched loop");
         if let Some(res) = SCHEDULER.with_mut(|mut scheduler| {
             #[cfg(feature = "multi-core")]
             scheduler.add_current_thread_to_rq();
+            let mepc = unsafe { esp_hal::riscv::register::mepc::read() };
+
+            info!("sched mepc: {}", mepc);
 
             let next_tid = match scheduler.get_next_tid() {
                 Some(tid) => tid,
@@ -388,15 +455,21 @@ unsafe extern "C" fn sched() -> u64 {
                 }
             };
 
-            let mut current_high_regs = core::ptr::null();
+            let mut current_high_regs = core::ptr::null_mut();
 
             if let Some(current_tid_ref) = scheduler.current_tid_mut() {
                 if next_tid == *current_tid_ref {
-                    return Some((0, 0));
+                    return Some((core::ptr::null_mut(), core::ptr::null_mut()));
                 }
+                // let same = ;
+
                 let current_tid = *current_tid_ref;
+
                 *current_tid_ref = next_tid;
                 let current = scheduler.get_unchecked_mut(current_tid);
+                unsafe {
+                    current.data.mepc = esp_hal::riscv::register::mepc::read();
+                }
                 current_high_regs = &raw mut current.data;
             } else {
                 *scheduler.current_tid_mut() = Some(next_tid);
@@ -406,13 +479,40 @@ unsafe extern "C" fn sched() -> u64 {
 
             let next_high_regs = &raw mut next.data;
             trace!("next cleanup: {}", next.data.ra);
-            Some((current_high_regs as u32, next_high_regs as u32))
+            Some((current_high_regs, next_high_regs))
         }) {
             break res;
+        } else {
+            let mut mstatus_st = esp_hal::riscv::register::mstatus::read();
+            debug!(
+                "sched loop mie: {}, mpie: {}",
+                mstatus_st.mie(),
+                mstatus_st.mpie(),
+            );
+            // esp_hal::peripherals::PLIC_MX::regs()
+            //     .mxint_thresh()
+            //     .write(|w| unsafe { w.cpu_mxint_thresh().bits(0) });
         }
     };
 
-    trace!("result: {:?}-{:?}", current_high_regs, next_high_regs);
+    if new_ctx == core::ptr::null_mut() {
+        debug!("null ptr");
+        return;
+    }
+
+    _CURRENT_CTX_PTR.store(old_ctx, Ordering::SeqCst);
+    _NEXT_CTX_PTR.store(new_ctx, Ordering::SeqCst);
+
+    unsafe {
+        // set MPIE in MSTATUS to 0 to disable interrupts while task switching
+        esp_hal::riscv::register::mstatus::write(
+            esp_hal::riscv::register::mstatus::Mstatus::from_bits(mstatus & !(1 << 7)),
+        );
+
+        // load address of sys_switch into MEPC - will run after all registers are restored
+        esp_hal::riscv::register::mepc::write(RESTORE_TASK_SWITCH as *const () as usize);
+    }
+    info!("result: {},{}", old_ctx as u32, new_ctx as u32);
 
     // unsafe {
     //     esp_hal::peripherals::PLIC_MX::regs()
@@ -423,5 +523,5 @@ unsafe extern "C" fn sched() -> u64 {
     // The caller expects these two pointers in a0 and a1:
     // a0 = &current.data.high_regs (or 0)
     // a1 = &next.data.high_regs
-    (current_high_regs as u64) | (next_high_regs as u64) << 32
+    // (current_high_regs as u64) | (next_high_regs as u64) << 32
 }

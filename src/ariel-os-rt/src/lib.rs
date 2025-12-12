@@ -124,7 +124,7 @@ mod isr_stack {
         crate::debug!("ariel-os-rt: ISR stacksize: {}", stack.size());
 
         // initial stack paint
-        stack.repaint();
+        // stack.repaint();
     }
 }
 
