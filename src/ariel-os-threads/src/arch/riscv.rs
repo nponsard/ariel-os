@@ -103,18 +103,21 @@ impl Arch for Cpu {
         let cb: extern "C" fn() = unsafe { core::mem::transmute(FROM_CPU_INTR0 as *const ()) };
 
         let handler = InterruptHandler::new_not_nested(cb, interrupt::Priority::Priority1);
+        // let handler = InterruptHandler::new(cb, interrupt::Priority::Priority1);
 
-        unsafe {
-            interrupt::bind_interrupt(Interrupt::FROM_CPU_INTR0, handler.handler());
-        }
+        // unsafe {
+        //     interrupt::bind_interrupt(Interrupt::FROM_CPU_INTR0, handler.handler());
+        // }
 
-        // interrupt::enable_direct(
-        //     Interrupt::FROM_CPU_INTR0,
-        //     esp_hal::interrupt::Priority::Priority1,
-        //     esp_hal::interrupt::CpuInterrupt::Interrupt20,
-        //     FROM_CPU_INTR0,
-        // )
-        // .unwrap();
+        info!("FROM_CPU_INTR0 : {}", FROM_CPU_INTR0 as usize);
+        interrupt::enable_direct(
+            Interrupt::FROM_CPU_INTR0,
+            esp_hal::interrupt::Priority::Priority1,
+            esp_hal::interrupt::CpuInterrupt::Interrupt20,
+            FROM_CPU_INTR0,
+        )
+        .unwrap();
+
         // Panics if `FROM_CPU_INTR0` is among `esp_hal::interrupt::RESERVED_INTERRUPTS`,
         // which isn't the case.
         let e = interrupt::enable(Interrupt::FROM_CPU_INTR0, handler.priority());
@@ -177,7 +180,7 @@ global_asm!(
     .align 4
     FROM_CPU_INTR0:
         // unset mie
-        csrc mstatus, 0x8
+        // csrc mstatus, 0x8
 
         // save non callee-saved registers
         addi sp, sp, -80
@@ -301,6 +304,8 @@ global_asm!(
 
     restore:
 
+        beqz    a1, restore_stack
+
         // restore mepc and mstatus
         lw t0, 31*4(a1)
         csrw mstatus, t0
@@ -345,12 +350,36 @@ global_asm!(
 
 
         mret
+    restore_stack:
+        lw ra, 76(sp)
+        lw gp, 72(sp)
+        lw tp, 68(sp)
+        lw t0, 64(sp)
+        lw t1, 60(sp)
+        lw t2, 56(sp)
+        lw a0, 52(sp)
+        lw a1, 48(sp)
+        lw a2, 44(sp)
+        lw a3, 40(sp)
+        lw a4, 36(sp)
+        lw a5, 32(sp)
+        lw a6, 28(sp)
+        lw a7, 24(sp)
+        lw t3, 20(sp)
+        lw t4, 16(sp)
+        lw t5, 12(sp)
+        lw t6, 8(sp)
+        addi sp, sp, 80
+
+        mret
     "#,
     sched = sym sched
 );
 
 /// Probes the runqueue for the next thread and switches context if needed.
 unsafe extern "C" fn sched() -> u64 {
+    info!("Sched called !");
+
     let mut mstatus_st = esp_hal::riscv::register::mstatus::read();
     use crate::arch::riscv::riscv::register::mstatus::MPP;
     // mstatus_st.set_mie(true);
@@ -377,13 +406,14 @@ unsafe extern "C" fn sched() -> u64 {
 
     let (current_high_regs, next_high_regs) = loop {
         if let Some(res) = SCHEDULER.with_mut(|mut scheduler| {
+            debug!("scheduler loop");
+
             #[cfg(feature = "multi-core")]
             scheduler.add_current_thread_to_rq();
 
             let next_tid = match scheduler.get_next_tid() {
                 Some(tid) => tid,
                 None => {
-                    Cpu::wfi();
                     return None;
                 }
             };
@@ -409,6 +439,19 @@ unsafe extern "C" fn sched() -> u64 {
             Some((current_high_regs as u32, next_high_regs as u32))
         }) {
             break res;
+        } else {
+            let mut mstatus_st = esp_hal::riscv::register::mstatus::read();
+            mstatus_st.set_mie(true);
+            unsafe {
+                esp_hal::riscv::register::mstatus::write(mstatus_st);
+            }
+            debug!("scheduler wfi");
+            Cpu::wfi();
+            let mut mstatus_st = esp_hal::riscv::register::mstatus::read();
+            mstatus_st.set_mie(false);
+            unsafe {
+                esp_hal::riscv::register::mstatus::write(mstatus_st);
+            }
         }
     };
 
@@ -417,9 +460,18 @@ unsafe extern "C" fn sched() -> u64 {
     // unsafe {
     //     esp_hal::peripherals::PLIC_MX::regs()
     //         .mxint_thresh()
-    //         .write(|w| unsafe { w.cpu_mxint_thresh().bits(0) });
+    //         .write(|w| unsafe { w.cpu_mxint_thresh().bits(1) });
     // }
+    let mut mstatus_st = esp_hal::riscv::register::mstatus::read();
 
+    let runlevel = esp_hal::interrupt::current_runlevel();
+
+    debug!(
+        "sched2 mie: {}, mpie: {}, runlevel: {:?}",
+        mstatus_st.mie(),
+        mstatus_st.mpie(),
+        runlevel
+    );
     // The caller expects these two pointers in a0 and a1:
     // a0 = &current.data.high_regs (or 0)
     // a1 = &next.data.high_regs
