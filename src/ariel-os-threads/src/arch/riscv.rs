@@ -102,7 +102,7 @@ impl Arch for Cpu {
 
         let cb: extern "C" fn() = unsafe { core::mem::transmute(FROM_CPU_INTR0 as *const ()) };
 
-        let handler = InterruptHandler::new_not_nested(cb, interrupt::Priority::Priority1);
+        // let handler = InterruptHandler::new(cb, interrupt::Priority::Priority1);
         // let handler = InterruptHandler::new(cb, interrupt::Priority::Priority1);
 
         // unsafe {
@@ -120,7 +120,7 @@ impl Arch for Cpu {
 
         // Panics if `FROM_CPU_INTR0` is among `esp_hal::interrupt::RESERVED_INTERRUPTS`,
         // which isn't the case.
-        let e = interrupt::enable(Interrupt::FROM_CPU_INTR0, handler.priority());
+        let e = interrupt::enable(Interrupt::FROM_CPU_INTR0, interrupt::Priority::Priority1);
         // debug!("e : {:?}", e);
         debug!("interrupt enabled");
     }
@@ -205,6 +205,8 @@ global_asm!(
 
         call {sched}
 
+        // if a1 is null, we need to return to the previous task
+        beqz    a1, restore_stack
         // if a0 is null, no need to save
         beqz    a0, restore
         csrr t0, mepc
