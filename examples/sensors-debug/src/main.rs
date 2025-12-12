@@ -98,9 +98,9 @@ fn print_sample(sensor: &dyn Sensor, sample: Sample, reading_channel: ReadingCha
 
     let channel_scaling = reading_channel.scaling();
     let value = if channel_scaling < 0 {
-        value as f32 / 10i32.pow(-channel_scaling as u32) as f32
+        value as f32 / 10i32.pow(u32::from((-channel_scaling).cast_unsigned())) as f32
     } else {
-        value as f32 * 10i32.pow(channel_scaling as u32) as f32
+        value as f32 * 10i32.pow(u32::from(channel_scaling.cast_unsigned())) as f32
     };
 
     match sample.metadata() {
@@ -113,9 +113,9 @@ fn print_sample(sensor: &dyn Sensor, sample: Sample, reading_channel: ReadingCha
                 .max((i16::from(bias) - i16::from(deviation)).abs())
                 as f32;
             let accuracy = if scaling < 0 {
-                raw_accuracy / 10i32.pow(-scaling as u32) as f32
+                raw_accuracy / 10i32.pow(u32::from((-scaling).cast_unsigned())) as f32
             } else {
-                raw_accuracy * 10i32.pow(scaling as u32) as f32
+                raw_accuracy * 10i32.pow(u32::from(scaling.cast_unsigned())) as f32
             };
 
             info!(
