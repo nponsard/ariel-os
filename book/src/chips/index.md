@@ -2,6 +2,10 @@
 
 Here is the list of supported chips in Ariel OS.
 
+## Ariel OS
+  
+- [native](./native-chip.md)
+
 ## Espressif
   
 - [ESP32-C3](./esp32c3.md)

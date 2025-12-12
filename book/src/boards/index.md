@@ -8,6 +8,7 @@ Tier 1 hardware gets regularly tested, either automatically or manually.
 - [Espressif ESP32-C3-LCDkit](./espressif-esp32-c3-lcdkit.md)
 - [Espressif ESP32-C6-DevKitC-1](./espressif-esp32-c6-devkitc-1.md)
 - [Espressif ESP32-S3-DevKitC-1](./espressif-esp32-s3-devkitc-1.md)
+- [native](./native.md)
 - [nRF52840-DK](./nrf52840dk.md)
 - [nRF5340-DK](./nrf5340dk.md)
 - [Raspberry Pi Pico](./rpi-pico.md)
