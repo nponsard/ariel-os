@@ -44,6 +44,8 @@ impl WaitQueueImplementation for ArielWaitQueue {
     }
 
     unsafe fn notify(queue: WaitQueuePtr) {
+
+
         #[expect(unused_unsafe)]
         let queue = unsafe { ArielWaitQueue::from_ptr(queue) };
         queue.inner.notify_one();

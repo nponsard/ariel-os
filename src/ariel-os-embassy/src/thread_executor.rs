@@ -6,6 +6,7 @@
 
 use core::marker::PhantomData;
 
+use ariel_os_debug::log::debug;
 use ariel_os_threads::{ThreadId, current_tid, thread_flags, thread_flags::ThreadFlags};
 use embassy_executor::{Spawner, raw};
 
@@ -20,6 +21,7 @@ fn __pender(context: *mut ()) {
     // SAFETY: `context` is a `ThreadId` passed by `ThreadExecutor::new`.
     let thread_id = ThreadId::new(context as usize as u8);
 
+    debug!("pender {:?}", thread_id);
     thread_flags::set(thread_id, THREAD_FLAG_WAKEUP);
 }
 

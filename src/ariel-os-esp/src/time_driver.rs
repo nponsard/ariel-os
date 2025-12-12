@@ -1,6 +1,6 @@
 use core::task::Waker;
 
-use ariel_os_debug::log::trace;
+use ariel_os_debug::log::{debug, trace};
 use esp_hal::{
     Blocking,
     interrupt::{InterruptHandler, Priority},
@@ -26,7 +26,6 @@ use esp_hal::timer::systimer::Alarm as Timer;
 #[cfg(all(context = "xtensa", context = "esp32"))]
 use esp_hal::timer::timg::Timer;
 
-
 #[cfg(not(context = "xtensa"))]
 use esp_hal::timer::systimer::Alarm as Timer;
 
@@ -41,7 +40,7 @@ impl TimeDriver {
     pub(crate) fn new(mut timer: TimeBase) -> Self {
         // The timer needs to tick at Priority 1 to prevent accidentally interrupting
         // priority limited locks.
-        let timer_priority = Priority::Priority1;
+        let timer_priority = Priority::Priority3;
 
         let cb: extern "C" fn() = unsafe { core::mem::transmute(timer_handler as *const ()) };
 
@@ -80,6 +79,8 @@ impl TimeDriver {
         let mut timeout = sleep_duration & ((1 << 52) - 1);
 
         trace!("Arming timer for {} (target = {})", timeout, next_wakeup);
+
+
         loop {
             match self.timer.schedule(Duration::from_micros(timeout)) {
                 Ok(_) => break,

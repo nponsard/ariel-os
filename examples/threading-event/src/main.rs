@@ -7,6 +7,16 @@ use ariel_os::thread::{ThreadId, sync::Event};
 static EVENT: Event = Event::new();
 
 fn waiter() {
+    let runlevel = esp_hal::interrupt::current_runlevel();
+
+    let mstatus_st = esp_hal::riscv::register::mstatus::read();
+
+    debug!(
+        "mie: {}, mpie: {}, runlevel: {:?}",
+        mstatus_st.mie(),
+        mstatus_st.mpie(),
+        runlevel
+    );
     let my_id = ariel_os::thread::current_tid().unwrap();
     let my_prio = ariel_os::thread::get_priority(my_id).unwrap();
     info!("[{:?}@{:?}] Waiting for event...", my_id, my_prio);

@@ -22,12 +22,26 @@ pub type NetworkDevice = WifiDevice<'static>;
 
 pub fn init(peripherals: &mut crate::OptionalPeripherals, spawner: Spawner) -> NetworkDevice {
     let config = Config::default();
+
     let wifi = peripherals.WIFI.take().unwrap();
 
+    debug!("creating wifi controller");
+    let runlevel = esp_hal::interrupt::current_runlevel();
+
+    let mstatus_st = esp_hal::riscv::register::mstatus::read();
+
+    debug!(
+        "mie: {}, mpie: {}, runlevel: {:?}",
+        mstatus_st.mie(),
+        mstatus_st.mpie(),
+        runlevel
+    );
     let (controller, interfaces) = esp_radio::wifi::new(wifi, config).unwrap();
 
-    spawner.spawn(connection(controller)).ok();
+    debug!("spawning wifi connection task");
 
+    spawner.spawn(connection(controller)).ok();
+    debug!("Wi-Fi task spawned");
     interfaces.station
 }
 

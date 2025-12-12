@@ -3,6 +3,8 @@
 use crate::{Arch, SCHEDULER, Thread, cleanup};
 use ariel_os_debug::log::{debug, info, trace};
 use core::arch::global_asm;
+use esp_hal::interrupt::InterruptHandler;
+use esp_hal::interrupt::Priority;
 #[cfg(context = "esp32c6")]
 use esp_hal::peripherals::INTPRI as SYSTEM;
 #[cfg(context = "esp32c3")]
@@ -98,17 +100,25 @@ impl Arch for Cpu {
         Self::schedule();
         debug!("schedule done");
 
-        interrupt::enable_direct(
-            Interrupt::FROM_CPU_INTR0,
-            esp_hal::interrupt::Priority::Priority3,
-            esp_hal::interrupt::CpuInterrupt::Interrupt20,
-            FROM_CPU_INTR0,
-        )
-        .unwrap();
+        let cb: extern "C" fn() = unsafe { core::mem::transmute(FROM_CPU_INTR0 as *const ()) };
+
+        let handler = InterruptHandler::new_not_nested(cb, interrupt::Priority::Priority1);
+
+        unsafe {
+            interrupt::bind_interrupt(Interrupt::FROM_CPU_INTR0, handler.handler());
+        }
+
+        // interrupt::enable_direct(
+        //     Interrupt::FROM_CPU_INTR0,
+        //     esp_hal::interrupt::Priority::Priority1,
+        //     esp_hal::interrupt::CpuInterrupt::Interrupt20,
+        //     FROM_CPU_INTR0,
+        // )
+        // .unwrap();
         // Panics if `FROM_CPU_INTR0` is among `esp_hal::interrupt::RESERVED_INTERRUPTS`,
         // which isn't the case.
-        let e = interrupt::enable(Interrupt::FROM_CPU_INTR0, interrupt::Priority::min());
-        debug!("e : {:?}", e);
+        let e = interrupt::enable(Interrupt::FROM_CPU_INTR0, handler.priority());
+        // debug!("e : {:?}", e);
         debug!("interrupt enabled");
     }
 
@@ -331,6 +341,7 @@ global_asm!(
 
 
         lw a1, 10*4(a1)
+        csrs mstatus, 0x8
 
 
         mret
@@ -340,8 +351,22 @@ global_asm!(
 
 /// Probes the runqueue for the next thread and switches context if needed.
 unsafe extern "C" fn sched() -> u64 {
-    let mstatus_st = esp_hal::riscv::register::mstatus::read();
+    let mut mstatus_st = esp_hal::riscv::register::mstatus::read();
+    use crate::arch::riscv::riscv::register::mstatus::MPP;
+    // mstatus_st.set_mie(true);
+    // mstatus_st.set_mpie(true);
+    // mstatus_st.set_mpp(MPP::Machine);
+    let runlevel = esp_hal::interrupt::current_runlevel();
+
+    debug!(
+        "sched mie: {}, mpie: {}, runlevel: {:?}",
+        mstatus_st.mie(),
+        mstatus_st.mpie(),
+        runlevel
+    );
     let mstatus = mstatus_st.bits();
+
+    debug!("sched mstatus: {:#x}", mstatus);
 
     unsafe {
         // clear FROM_CPU_INTR0
@@ -388,6 +413,12 @@ unsafe extern "C" fn sched() -> u64 {
     };
 
     trace!("result: {:?}-{:?}", current_high_regs, next_high_regs);
+
+    // unsafe {
+    //     esp_hal::peripherals::PLIC_MX::regs()
+    //         .mxint_thresh()
+    //         .write(|w| unsafe { w.cpu_mxint_thresh().bits(0) });
+    // }
 
     // The caller expects these two pointers in a0 and a1:
     // a0 = &current.data.high_regs (or 0)

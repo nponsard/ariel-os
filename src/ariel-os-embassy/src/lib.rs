@@ -213,6 +213,8 @@ async fn init_task(mut peripherals: hal::OptionalPeripherals) {
 
     debug!("ariel-os-embassy::init_task()");
 
+
+
     #[cfg(board_init)]
     ariel_os_boards::init(&mut peripherals);
 

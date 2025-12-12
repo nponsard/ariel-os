@@ -886,6 +886,7 @@ version = "0.0.0"
 dependencies = [
  "ariel-os",
  "ariel-os-boards",
+ "esp-hal",
 ]
 
 [[package]]
@@ -2511,7 +2512,6 @@ dependencies = [
 [[package]]
 name = "esp-alloc"
 version = "0.9.0"
-source = "git+https://github.com/ariel-os/esp-hal?rev=8946029ffa852b2e7c41cca87d62efbeb374dee4#8946029ffa852b2e7c41cca87d62efbeb374dee4"
 dependencies = [
  "allocator-api2",
  "cfg-if",
@@ -2526,7 +2526,6 @@ dependencies = [
 [[package]]
 name = "esp-bootloader-esp-idf"
 version = "0.4.0"
-source = "git+https://github.com/ariel-os/esp-hal?rev=8946029ffa852b2e7c41cca87d62efbeb374dee4#8946029ffa852b2e7c41cca87d62efbeb374dee4"
 dependencies = [
  "cfg-if",
  "document-features",
@@ -2542,7 +2541,6 @@ dependencies = [
 [[package]]
 name = "esp-config"
 version = "0.6.1"
-source = "git+https://github.com/ariel-os/esp-hal?rev=8946029ffa852b2e7c41cca87d62efbeb374dee4#8946029ffa852b2e7c41cca87d62efbeb374dee4"
 dependencies = [
  "document-features",
  "esp-metadata-generated",
@@ -2554,7 +2552,6 @@ dependencies = [
 [[package]]
 name = "esp-hal"
 version = "1.0.0"
-source = "git+https://github.com/ariel-os/esp-hal?rev=8946029ffa852b2e7c41cca87d62efbeb374dee4#8946029ffa852b2e7c41cca87d62efbeb374dee4"
 dependencies = [
  "bitfield 0.19.4",
  "bitflags 2.9.1",
@@ -2613,7 +2610,6 @@ dependencies = [
 [[package]]
 name = "esp-hal-procmacros"
 version = "0.21.0"
-source = "git+https://github.com/ariel-os/esp-hal?rev=8946029ffa852b2e7c41cca87d62efbeb374dee4#8946029ffa852b2e7c41cca87d62efbeb374dee4"
 dependencies = [
  "document-features",
  "object",
@@ -2627,12 +2623,10 @@ dependencies = [
 [[package]]
 name = "esp-metadata-generated"
 version = "0.3.0"
-source = "git+https://github.com/ariel-os/esp-hal?rev=8946029ffa852b2e7c41cca87d62efbeb374dee4#8946029ffa852b2e7c41cca87d62efbeb374dee4"
 
 [[package]]
 name = "esp-phy"
 version = "0.1.1"
-source = "git+https://github.com/ariel-os/esp-hal?rev=8946029ffa852b2e7c41cca87d62efbeb374dee4#8946029ffa852b2e7c41cca87d62efbeb374dee4"
 dependencies = [
  "cfg-if",
  "defmt 1.0.1",
@@ -2652,7 +2646,6 @@ dependencies = [
 [[package]]
 name = "esp-println"
 version = "0.16.1"
-source = "git+https://github.com/ariel-os/esp-hal?rev=8946029ffa852b2e7c41cca87d62efbeb374dee4#8946029ffa852b2e7c41cca87d62efbeb374dee4"
 dependencies = [
  "defmt 1.0.1",
  "document-features",
@@ -2665,7 +2658,6 @@ dependencies = [
 [[package]]
 name = "esp-radio"
 version = "0.17.0"
-source = "git+https://github.com/ariel-os/esp-hal?rev=8946029ffa852b2e7c41cca87d62efbeb374dee4#8946029ffa852b2e7c41cca87d62efbeb374dee4"
 dependencies = [
  "allocator-api2",
  "bt-hci",
@@ -2704,7 +2696,6 @@ dependencies = [
 [[package]]
 name = "esp-radio-rtos-driver"
 version = "0.2.0"
-source = "git+https://github.com/ariel-os/esp-hal?rev=8946029ffa852b2e7c41cca87d62efbeb374dee4#8946029ffa852b2e7c41cca87d62efbeb374dee4"
 dependencies = [
  "cfg-if",
  "esp-sync",
@@ -2714,7 +2705,6 @@ dependencies = [
 [[package]]
 name = "esp-riscv-rt"
 version = "0.13.0"
-source = "git+https://github.com/ariel-os/esp-hal?rev=8946029ffa852b2e7c41cca87d62efbeb374dee4#8946029ffa852b2e7c41cca87d62efbeb374dee4"
 dependencies = [
  "defmt 1.0.1",
  "document-features",
@@ -2725,7 +2715,6 @@ dependencies = [
 [[package]]
 name = "esp-rom-sys"
 version = "0.1.3"
-source = "git+https://github.com/ariel-os/esp-hal?rev=8946029ffa852b2e7c41cca87d62efbeb374dee4#8946029ffa852b2e7c41cca87d62efbeb374dee4"
 dependencies = [
  "cfg-if",
  "document-features",
@@ -2735,7 +2724,6 @@ dependencies = [
 [[package]]
 name = "esp-sync"
 version = "0.1.1"
-source = "git+https://github.com/ariel-os/esp-hal?rev=8946029ffa852b2e7c41cca87d62efbeb374dee4#8946029ffa852b2e7c41cca87d62efbeb374dee4"
 dependencies = [
  "cfg-if",
  "defmt 1.0.1",
@@ -2826,8 +2814,7 @@ dependencies = [
 [[package]]
 name = "esp32"
 version = "0.39.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b76170a463d18f888a1ad258031901036fd827a9ef126733053ba5f8739fb0c8"
+source = "git+https://github.com/esp-rs/esp-pacs?rev=3605286#3605286a7bafca1576a164b43c488ab870f3da71"
 dependencies = [
  "critical-section",
  "defmt 1.0.1",
@@ -2837,8 +2824,7 @@ dependencies = [
 [[package]]
 name = "esp32c2"
 version = "0.28.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e62cf8932966b8d445b6f1832977b468178f0a84effb2e9fda89f60c24d45aa3"
+source = "git+https://github.com/esp-rs/esp-pacs?rev=3605286#3605286a7bafca1576a164b43c488ab870f3da71"
 dependencies = [
  "critical-section",
  "defmt 1.0.1",
@@ -2848,8 +2834,7 @@ dependencies = [
 [[package]]
 name = "esp32c3"
 version = "0.31.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "356af3771d0d6536c735bf71136594f4d1cbb506abf6e0c51a6639e9bf4e7988"
+source = "git+https://github.com/esp-rs/esp-pacs?rev=3605286#3605286a7bafca1576a164b43c488ab870f3da71"
 dependencies = [
  "critical-section",
  "defmt 1.0.1",
@@ -2859,8 +2844,7 @@ dependencies = [
 [[package]]
 name = "esp32c6"
 version = "0.22.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8f5e511df672d79cd63365c92045135e01ba952b6bddd25b660baff5e1110f6b"
+source = "git+https://github.com/esp-rs/esp-pacs?rev=3605286#3605286a7bafca1576a164b43c488ab870f3da71"
 dependencies = [
  "critical-section",
  "defmt 1.0.1",
@@ -2870,8 +2854,7 @@ dependencies = [
 [[package]]
 name = "esp32h2"
 version = "0.18.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ed4a50bbd1380931e095e0973b9b12f782a9c481f2edf1f7c42e7eb4ff736d6d"
+source = "git+https://github.com/esp-rs/esp-pacs?rev=3605286#3605286a7bafca1576a164b43c488ab870f3da71"
 dependencies = [
  "critical-section",
  "defmt 1.0.1",
@@ -2881,8 +2864,7 @@ dependencies = [
 [[package]]
 name = "esp32s2"
 version = "0.30.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "98574d4c577fbe888fe3e6df7fc80d25a05624d9998f7d7de1500ae21fcca78f"
+source = "git+https://github.com/esp-rs/esp-pacs?rev=3605286#3605286a7bafca1576a164b43c488ab870f3da71"
 dependencies = [
  "critical-section",
  "defmt 1.0.1",
@@ -2892,8 +2874,7 @@ dependencies = [
 [[package]]
 name = "esp32s3"
 version = "0.34.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "1810d8ee4845ef87542af981e38eb80ab531d0ef1061e1486014ab7af74c337a"
+source = "git+https://github.com/esp-rs/esp-pacs?rev=3605286#3605286a7bafca1576a164b43c488ab870f3da71"
 dependencies = [
  "critical-section",
  "defmt 1.0.1",
@@ -5896,6 +5877,7 @@ version = "0.0.0"
 dependencies = [
  "ariel-os",
  "ariel-os-boards",
+ "esp-hal",
 ]
 
 [[package]]
@@ -6710,7 +6692,6 @@ checksum = "ea2f10b9bb0928dfb1b42b65e1f9e36f7f54dbdf08457afefb38afcdec4fa2bb"
 [[package]]
 name = "xtensa-lx"
 version = "0.13.0"
-source = "git+https://github.com/ariel-os/esp-hal?rev=8946029ffa852b2e7c41cca87d62efbeb374dee4#8946029ffa852b2e7c41cca87d62efbeb374dee4"
 dependencies = [
  "critical-section",
 ]
@@ -6718,7 +6699,6 @@ dependencies = [
 [[package]]
 name = "xtensa-lx-rt"
 version = "0.21.0"
-source = "git+https://github.com/ariel-os/esp-hal?rev=8946029ffa852b2e7c41cca87d62efbeb374dee4#8946029ffa852b2e7c41cca87d62efbeb374dee4"
 dependencies = [
  "defmt 1.0.1",
  "document-features",
@@ -6729,7 +6709,6 @@ dependencies = [
 [[package]]
 name = "xtensa-lx-rt-proc-macros"
 version = "0.5.0"
-source = "git+https://github.com/ariel-os/esp-hal?rev=8946029ffa852b2e7c41cca87d62efbeb374dee4#8946029ffa852b2e7c41cca87d62efbeb374dee4"
 dependencies = [
  "proc-macro2",
  "quote",

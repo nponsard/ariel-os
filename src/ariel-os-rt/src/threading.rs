@@ -1,5 +1,6 @@
 #![expect(unsafe_code)]
 
+use ariel_os_debug::log::debug;
 use ariel_os_threads::{THREAD_FNS, start_threading};
 
 /// # Safety
@@ -16,5 +17,7 @@ pub unsafe fn start() -> ! {
     }
 
     #[allow(clippy::empty_loop)]
-    loop {}
+    loop {
+        debug!("empty loop");
+    }
 }
