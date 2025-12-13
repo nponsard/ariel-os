@@ -22,7 +22,6 @@ pub struct Chip;
 
 impl Multicore for Chip {
     const CORES: u32 = 2;
-    const IDLE_THREAD_STACK_SIZE: usize = 2048;
     type Stack = Stack<ISR_STACKSIZE_CORE1>;
 
     fn core_id() -> CoreId {

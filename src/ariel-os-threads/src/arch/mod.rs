@@ -4,6 +4,10 @@ use crate::Thread;
 pub trait Arch {
     const DEFAULT_THREAD_DATA: Self::ThreadData;
 
+    /// Stack size for the idle threads.
+    #[cfg(feature = "idle-threads")]
+    const IDLE_THREAD_STACK_SIZE: usize = 256;
+
     type ThreadData;
 
     /// Sets up the stack for newly created threads and returns the sp.
