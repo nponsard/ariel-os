@@ -1,6 +1,12 @@
 // @generated
 
 pub fn main() {
+    println!(
+        "cargo::rustc-check-cfg=cfg(context, values(\"adafruit-feather-nrf52840-express\"))"
+    );
+    println!(
+        "cargo::rustc-check-cfg=cfg(context, values(\"adafruit-feather-nrf52840-sense\"))"
+    );
     println!("cargo::rustc-check-cfg=cfg(context, values(\"ai-c3\"))");
     println!("cargo::rustc-check-cfg=cfg(context, values(\"bbc-microbit-v1\"))");
     println!("cargo::rustc-check-cfg=cfg(context, values(\"bbc-microbit-v2\"))");
