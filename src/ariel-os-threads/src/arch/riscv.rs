@@ -419,9 +419,9 @@ unsafe extern "C" fn sched() -> u64 {
             let mut current_high_regs = core::ptr::null();
 
             if let Some(current_tid_ref) = scheduler.current_tid_mut() {
-                // if next_tid == *current_tid_ref {
-                //    return Some((0, 0));
-                // }
+                if next_tid == *current_tid_ref {
+                   return Some((0, 0));
+                }
                 let current_tid = *current_tid_ref;
                 *current_tid_ref = next_tid;
                 let current = scheduler.get_unchecked_mut(current_tid);
