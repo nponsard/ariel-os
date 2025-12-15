@@ -1,18 +1,20 @@
 #![expect(unsafe_code)]
 
-use crate::{Arch, SCHEDULER, Thread, cleanup};
-use ariel_os_debug::log::{debug, info, trace};
+use ariel_os_debug::log::{debug, trace};
 use core::arch::global_asm;
 #[cfg(context = "esp32c6")]
 use esp_hal::peripherals::INTPRI as SYSTEM;
 #[cfg(context = "esp32c3")]
 use esp_hal::peripherals::SYSTEM;
 use esp_hal::{
-    interrupt::{self},
+    interrupt::{self, InterruptHandler, Priority},
     peripherals::Interrupt,
     riscv,
     system::Cpu as EspHalCpu,
 };
+
+use crate::{Arch, SCHEDULER, Thread, cleanup};
+
 pub struct Cpu;
 
 #[derive(Debug, Default)]
@@ -91,23 +93,21 @@ impl Arch for Cpu {
 
     /// Enable and trigger the appropriate software interrupt.
     fn start_threading() {
-        debug!("riscv::start_threading");
         interrupt::disable(EspHalCpu::ProCpu, Interrupt::FROM_CPU_INTR0);
-        debug!("interrupts disabled");
 
         Self::schedule();
-        debug!("schedule done");
 
         interrupt::enable_direct(
             Interrupt::FROM_CPU_INTR0,
-            esp_hal::interrupt::Priority::Priority3,
-            esp_hal::interrupt::CpuInterrupt::Interrupt20,
+            Priority::Priority1,
+            interrupt::CpuInterrupt::Interrupt20,
             FROM_CPU_INTR0,
         )
         .unwrap();
+
         // Panics if `FROM_CPU_INTR0` is among `esp_hal::interrupt::RESERVED_INTERRUPTS`,
         // which isn't the case.
-        let e = interrupt::enable(Interrupt::FROM_CPU_INTR0, interrupt::Priority::min());
+        let e = interrupt::enable(Interrupt::FROM_CPU_INTR0, interrupt::Priority::Priority1);
         debug!("e : {:?}", e);
         debug!("interrupt enabled");
     }
@@ -166,9 +166,6 @@ global_asm!(
     .globl FROM_CPU_INTR0
     .align 4
     FROM_CPU_INTR0:
-        // unset mie
-        csrc mstatus, 0x8
-
         // save non callee-saved registers
         addi sp, sp, -80
         sw ra, 76(sp)
@@ -190,15 +187,25 @@ global_asm!(
         sw t5, 12(sp)
         sw t6, 8(sp)
 
+
+        csrr t0, mepc
+        sw t0, 4(sp)
+
+
+
         call {sched}
 
+        // if a1 is null, we need to return to the previous task
+        beqz    a1, restore_stack
         // if a0 is null, no need to save
         beqz    a0, restore
-        csrr t0, mepc
-        sw t0, 32*4(a0)
 
 
         // save registers
+
+        // mepc
+        lw t0, 4(sp)
+        sw t0, 32*4(a0)
 
         //ra
         lw t0, 76(sp)
@@ -291,6 +298,8 @@ global_asm!(
 
     restore:
 
+        beqz    a1, restore_stack
+
         // restore mepc and mstatus
         lw t0, 31*4(a1)
         csrw mstatus, t0
@@ -331,7 +340,35 @@ global_asm!(
 
 
         lw a1, 10*4(a1)
+        csrs mstatus, 0x8
 
+        mret
+
+    restore_stack:
+
+        // mepc
+        lw t0, 4(sp)
+        csrw mepc,t0
+
+        lw ra, 76(sp)
+        lw gp, 72(sp)
+        lw tp, 68(sp)
+        lw t0, 64(sp)
+        lw t1, 60(sp)
+        lw t2, 56(sp)
+        lw a0, 52(sp)
+        lw a1, 48(sp)
+        lw a2, 44(sp)
+        lw a3, 40(sp)
+        lw a4, 36(sp)
+        lw a5, 32(sp)
+        lw a6, 28(sp)
+        lw a7, 24(sp)
+        lw t3, 20(sp)
+        lw t4, 16(sp)
+        lw t5, 12(sp)
+        lw t6, 8(sp)
+        addi sp, sp, 80
 
         mret
     "#,
@@ -340,7 +377,18 @@ global_asm!(
 
 /// Probes the runqueue for the next thread and switches context if needed.
 unsafe extern "C" fn sched() -> u64 {
-    let mstatus_st = esp_hal::riscv::register::mstatus::read();
+    let mepc = unsafe { esp_hal::riscv::register::mepc::read() };
+    trace!("sched start mepc: {}", mepc);
+
+    let mut mstatus_st = esp_hal::riscv::register::mstatus::read();
+    let runlevel = esp_hal::interrupt::current_runlevel();
+
+    trace!(
+        "sched mie: {}, mpie: {}, runlevel: {:?}",
+        mstatus_st.mie(),
+        mstatus_st.mpie(),
+        runlevel
+    );
     let mstatus = mstatus_st.bits();
 
     unsafe {
@@ -358,7 +406,6 @@ unsafe extern "C" fn sched() -> u64 {
             let next_tid = match scheduler.get_next_tid() {
                 Some(tid) => tid,
                 None => {
-                    Cpu::wfi();
                     return None;
                 }
             };
@@ -366,9 +413,9 @@ unsafe extern "C" fn sched() -> u64 {
             let mut current_high_regs = core::ptr::null();
 
             if let Some(current_tid_ref) = scheduler.current_tid_mut() {
-                if next_tid == *current_tid_ref {
-                    return Some((0, 0));
-                }
+                // if next_tid == *current_tid_ref {
+                //    return Some((0, 0));
+                // }
                 let current_tid = *current_tid_ref;
                 *current_tid_ref = next_tid;
                 let current = scheduler.get_unchecked_mut(current_tid);
@@ -384,11 +431,37 @@ unsafe extern "C" fn sched() -> u64 {
             Some((current_high_regs as u32, next_high_regs as u32))
         }) {
             break res;
+        } else {
+            // Returned None, meaning we should wait for an interrupt
+
+            let mut mstatus_st = esp_hal::riscv::register::mstatus::read();
+            mstatus_st.set_mie(true);
+            unsafe {
+                esp_hal::riscv::register::mstatus::write(mstatus_st);
+            }
+            trace!("Scheduler wfi");
+            Cpu::wfi();
+            let mut mstatus_st = esp_hal::riscv::register::mstatus::read();
+            mstatus_st.set_mie(false);
+            unsafe {
+                esp_hal::riscv::register::mstatus::write(mstatus_st);
+            }
         }
     };
 
-    trace!("result: {:?}-{:?}", current_high_regs, next_high_regs);
+    trace!(
+        "Scheduler result: {:?}-{:?}",
+        current_high_regs, next_high_regs
+    );
 
+    // unsafe {
+    //     esp_hal::peripherals::PLIC_MX::regs()
+    //         .mxint_thresh()
+    //         .write(|w| unsafe { w.cpu_mxint_thresh().bits(1) });
+    // }
+
+    let mepc = unsafe { esp_hal::riscv::register::mepc::read() };
+    trace!("Scheduler end mepc: {}", mepc);
     // The caller expects these two pointers in a0 and a1:
     // a0 = &current.data.high_regs (or 0)
     // a1 = &next.data.high_regs
