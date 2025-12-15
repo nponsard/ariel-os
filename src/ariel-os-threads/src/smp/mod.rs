@@ -48,8 +48,6 @@ impl CoreId {
 pub trait Multicore {
     /// Number of available core.
     const CORES: u32;
-    /// Stack size for the idle threads.
-    const IDLE_THREAD_STACK_SIZE: usize = 256;
     type Stack;
 
     /// Returns the ID of the current core.

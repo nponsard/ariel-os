@@ -228,6 +228,9 @@ executor-thread = ["ariel-os-embassy/executor-thread", "threading"]
 # *Used for internal testing only.*
 executor-none = ["ariel-os-embassy/executor-none"]
 
+# Enables idle threads. Selected by laze if needed.
+idle-threads = ["ariel-os-threads/idle-threads"]
+
 # features needed for `cargo test`
 _test = [
   "i2c",

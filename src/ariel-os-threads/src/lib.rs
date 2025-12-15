@@ -81,7 +81,7 @@ use thread::{Thread, ThreadState};
 
 #[cfg(feature = "multi-core")]
 use smp::{Multicore, schedule_on_core};
-#[cfg(feature = "multi-core")]
+#[cfg(any(feature = "multi-core", feature = "idle-threads"))]
 use static_cell::ConstStaticCell;
 
 /// Dummy type that is needed because [`CoreAffinity`] is part of the general API.
@@ -107,9 +107,6 @@ pub const CORE_COUNT: usize = {
     const CORE_COUNT: usize = smp::Chip::CORES as usize;
     CORE_COUNT
 };
-/// Stack size of the idle threads (in bytes).
-#[cfg(feature = "multi-core")]
-pub const IDLE_THREAD_STACK_SIZE: usize = smp::Chip::IDLE_THREAD_STACK_SIZE;
 
 static SCHEDULER: EnsureOnce<Scheduler> = EnsureOnce::new(Scheduler::new());
 
@@ -549,31 +546,16 @@ impl From<CoreId> for usize {
 /// - Cortex-M: to be called from the reset handler while MSP is active
 #[doc(hidden)]
 pub unsafe fn start_threading() {
+    #[cfg(feature = "idle-threads")]
+    setup_idle_threads();
+
     #[cfg(feature = "multi-core")]
     {
         ariel_os_debug::log::debug!("ariel-os-threads: SMP mode with {} cores", CORE_COUNT);
 
-        // Idle thread that prompts the core to enter deep sleep.
-        fn idle_thread() {
-            loop {
-                Cpu::wfi();
-            }
-        }
-
         // ISR stack for the second core
         static ISR_STACK_CORE1: ConstStaticCell<smp::StackType> =
             ConstStaticCell::new(smp::StackType::new());
-
-        // Stacks for the idle threads.
-        // Creating them inside the below for-loop is not possible because it would result in
-        // duplicate identifiers for the created `static`.
-        static IDLE_THREAD_STACKS: [ConstStaticCell<[u8; IDLE_THREAD_STACK_SIZE]>; CORE_COUNT] =
-            [const { ConstStaticCell::new([0u8; IDLE_THREAD_STACK_SIZE]) }; CORE_COUNT];
-
-        // Create one idle thread for each core with lowest priority.
-        for stack in &IDLE_THREAD_STACKS {
-            create_noarg(idle_thread, stack.take(), 0, None);
-        }
 
         let isr_stack_core1 = ISR_STACK_CORE1.take();
 
@@ -582,6 +564,32 @@ pub unsafe fn start_threading() {
         smp::Chip::startup_other_cores(isr_stack_core1);
     }
     Cpu::start_threading();
+}
+
+#[cfg(feature = "idle-threads")]
+fn setup_idle_threads() {
+    ariel_os_debug::log::debug!(
+        "ariel-os-threads: setting up {} idle thread(s) with stack size {}",
+        CORE_COUNT,
+        Cpu::IDLE_THREAD_STACK_SIZE
+    );
+    // Idle thread that prompts the core to enter deep sleep.
+    fn idle_thread() {
+        loop {
+            Cpu::wfi();
+        }
+    }
+
+    // Stacks for the idle threads.
+    // Creating them inside the below for-loop is not possible because it would result in
+    // duplicate identifiers for the created `static`.
+    static IDLE_THREAD_STACKS: [ConstStaticCell<[u8; Cpu::IDLE_THREAD_STACK_SIZE]>; CORE_COUNT] =
+        [const { ConstStaticCell::new([0u8; Cpu::IDLE_THREAD_STACK_SIZE]) }; CORE_COUNT];
+
+    // Create one idle thread for each core with lowest priority.
+    for stack in &IDLE_THREAD_STACKS {
+        create_noarg(idle_thread, stack.take(), 0, None);
+    }
 }
 
 /// Trait for types that can be used as argument for threads.

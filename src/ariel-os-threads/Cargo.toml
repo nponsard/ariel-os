@@ -68,8 +68,10 @@ multi-core = [
   "dep:rp-pac",
   "dep:embassy-rp",
   "embassy-rp/fifo-handler",
+  "idle-threads",
 ]
 infini-core = []
 core-affinity = ["multi-core"]
+idle-threads = []
 
 _test = ["single-core"]

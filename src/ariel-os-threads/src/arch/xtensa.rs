@@ -13,6 +13,9 @@ pub struct Cpu;
 impl Arch for Cpu {
     type ThreadData = TrapFrame;
     const DEFAULT_THREAD_DATA: Self::ThreadData = default_trap_frame();
+    /// Stack size for the idle threads.
+    #[cfg(feature = "idle-threads")]
+    const IDLE_THREAD_STACK_SIZE: usize = 2048;
 
     fn schedule() {
         #[cfg(not(feature = "multi-core"))]
