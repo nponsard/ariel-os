@@ -191,6 +191,8 @@ global_asm!(
         csrr t0, mepc
         sw t0, 4(sp)
 
+        csrr t0, mstatus
+        sw t0, 0(sp)
 
 
         call {sched}
@@ -346,9 +348,13 @@ global_asm!(
 
     restore_stack:
 
-        // mepc
+        // restore mepc
         lw t0, 4(sp)
         csrw mepc,t0
+
+        // restore mstatus
+        lw t0, 0(sp)
+        csrw mstatus,t0
 
         lw ra, 76(sp)
         lw gp, 72(sp)
