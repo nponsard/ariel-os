@@ -21,6 +21,9 @@ boards:
           - D4 # LED part designator in schematic
           - LED2 # bus name in schematic
           - Conn # name on silkscreen
+
+          # Workaround-for: https://github.com/adrienverge/yamllint/issues/384
+          # yamllint disable-line rule:comments-indentation
       # To be mapped:
       # * neopixel style RGB LED (WS2812B) on P0_16
       # Only to be mapped if we start expressing aspects that are not user controllable:
@@ -37,5 +40,8 @@ boards:
           - UserSw # silkscreen label
           - SW2 # button part designator in schematic
           - SWITCH # bus name in schematic
+
+          # Workaround-for: https://github.com/adrienverge/yamllint/issues/384
+          # yamllint disable-line rule:comments-indentation
       # Only to be mapped if we start expressing aspects that are not user controllable:
       # * SW1 is a reset pin at P0_18/RESET
