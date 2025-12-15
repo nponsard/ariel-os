@@ -96,11 +96,12 @@ fn print_sample(sensor: &dyn Sensor, sample: Sample, reading_channel: ReadingCha
         }
     };
 
-    let channel_scaling = reading_channel.scaling();
+    let channel_scaling = i32::from(reading_channel.scaling());
+    let factor = 10i32.pow(channel_scaling.unsigned_abs()) as f32;
     let value = if channel_scaling < 0 {
-        value as f32 / 10i32.pow(u32::from((-channel_scaling).cast_unsigned())) as f32
+        value as f32 / factor
     } else {
-        value as f32 * 10i32.pow(u32::from(channel_scaling.cast_unsigned())) as f32
+        value as f32 * factor
     };
 
     match sample.metadata() {
