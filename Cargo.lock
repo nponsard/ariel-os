@@ -164,6 +164,7 @@ dependencies = [
  "ariel-os-random",
  "ariel-os-rt",
  "ariel-os-sensors",
+ "ariel-os-sensors-registry",
  "ariel-os-storage",
  "ariel-os-threads",
  "ariel-os-utils",
@@ -550,9 +551,16 @@ dependencies = [
  "defmt 1.0.1",
  "embassy-futures",
  "embassy-sync 0.6.2",
- "linkme",
  "pin-project",
  "static_cell",
+]
+
+[[package]]
+name = "ariel-os-sensors-registry"
+version = "0.1.0"
+dependencies = [
+ "ariel-os-sensors",
+ "linkme",
 ]
 
 [[package]]

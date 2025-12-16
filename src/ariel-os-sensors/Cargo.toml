@@ -13,7 +13,6 @@ license.workspace = true
 ariel-os-macros = { workspace = true }
 defmt = { workspace = true, optional = true }
 embassy-sync = { workspace = true }
-linkme = { workspace = true }
 pin-project = { workspace = true }
 
 [dev-dependencies]

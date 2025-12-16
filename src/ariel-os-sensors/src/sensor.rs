@@ -22,9 +22,9 @@ pub trait Sensor: Send + Sync {
     /// Clears the previous reading.
     ///
     /// To obtain readings from every sensor drivers this method can be called in a loop over all
-    /// sensors returned by [`Registry::sensors()`](crate::registry::Registry::sensors), before
-    /// obtaining the readings with [`Self::wait_for_reading()`] in a second loop, so that the
-    /// measurements happen concurrently.
+    /// sensors returned by `Registry::sensors()`, before obtaining the readings with
+    /// [`Self::wait_for_reading()`] in a second loop, so that the measurements happen
+    /// concurrently.
     ///
     /// # For implementors
     ///

@@ -1,9 +1,12 @@
 //! Provides a sensor driver instance registry, allowing to register sensor driver instances and
 //! access them in a centralized location.
 
+#![no_std]
+#![deny(missing_docs)]
+
 use core::iter::FusedIterator;
 
-use crate::Sensor;
+use ariel_os_sensors::Sensor;
 
 /// Stores references to registered sensor driver instances.
 ///

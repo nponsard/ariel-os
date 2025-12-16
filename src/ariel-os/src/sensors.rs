@@ -25,6 +25,13 @@
 //! - Making it easy and as transparent as possible to substitute a specific sensor device by a
 //!   similar one from the same category.
 //!
+//! # Accessing sensor driver instances
+//!
+//! Registered sensor driver instances can be accessed using
+//! [`REGISTRY::sensors()`](registry::Registry::sensors).
+//! Sensor drivers implement the [`Sensor`] trait, which allows to trigger measurements and obtain
+//! the resulting readings.
+//!
 //! # Obtaining a sensor reading
 //!
 //! After triggering a measurement with [`Sensor::trigger_measurement()`], a reading can be
@@ -35,33 +42,23 @@
 //! - [`Sensor::wait_for_reading()`] returns a [`Samples`](sensor::Samples), a data "tuple"
 //!   containing values returned by the sensor driver.
 //! - [`Sensor::reading_channels()`] returns a [`ReadingChannels`](sensor::ReadingChannels) which
-//!   indicates which physical quantity each [`Sample`](sample::Sample) from that tuple corresponds
+//!   indicates which physical quantity each [`Sample`] from that tuple corresponds
 //!   to, using a [`Label`].
 //!   For instance, this allows to disambiguate the values provided by a temperature & humidity
 //!   sensor.
 //!
-//! To avoid handling floats, [`Sample`](sample::Sample)s returned by [`Sensor::wait_for_reading()`]
+//! To avoid handling floats, [`Sample`]s returned by [`Sensor::wait_for_reading()`]
 //! are integers, and a fixed scaling value is provided in
-//! [`ReadingChannel`](sensor::ReadingChannel), for each [`Sample`](sample::Sample) returned.
-//! See [`Sample`](sample::Sample) for more details.
+//! [`ReadingChannel`](sensor::ReadingChannel), for each [`Sample`] returned.
+//! See [`Sample`] for more details.
 //!
 //! # For implementors
 //!
 //! Sensor drivers must implement the [`Sensor`] trait.
 //!
-#![no_std]
-#![deny(clippy::pedantic)]
-#![deny(missing_docs)]
+//! [`Sample`]: ariel_os_sensors::sensor::Sample
 
-mod category;
-mod label;
-mod measurement_unit;
-mod sample;
-pub mod sensor;
-pub mod signal;
-
-pub use category::Category;
-pub use label::Label;
-pub use measurement_unit::MeasurementUnit;
-pub use sample::Reading;
-pub use sensor::Sensor;
+pub use ariel_os_sensors::*;
+#[doc(inline)]
+pub use ariel_os_sensors_registry as registry;
+pub use ariel_os_sensors_registry::{REGISTRY, SENSOR_REFS};
