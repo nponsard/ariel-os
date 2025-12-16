@@ -63,6 +63,8 @@ pub enum MeasurementUnit {
     Newton,
     /// Ohm (Ω).
     Ohm,
+    /// Parts per million (ppm).
+    PartsPerMillion,
     /// Pascal (Pa).
     Pascal,
     /// Percent (%).
@@ -119,6 +121,7 @@ macro_rules! provide_unit_fmt {
             Self::Mole => write!($f, "mol"),
             Self::Newton => write!($f, "N"),
             Self::Ohm => write!($f, "Ω"),
+            Self::PartsPerMillion => write!($f, "ppm"),
             Self::Pascal => write!($f, "Pa"),
             Self::Percent => write!($f, "%"),
             Self::PercentageRelativeHumidity => write!($f, "%RH"),

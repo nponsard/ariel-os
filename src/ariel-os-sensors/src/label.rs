@@ -23,6 +23,8 @@ pub enum Label {
     AngularVelocityY,
     /// Angular velocity about the Z axis.
     AngularVelocityZ,
+    /// CO<sub>2</sub> concentration.
+    Co2,
     /// Ground speed.
     GroundSpeed,
     /// Latitude.
@@ -57,6 +59,7 @@ impl core::fmt::Display for Label {
             Self::AngularVelocityX => write!(f, "Angular velocity X"),
             Self::AngularVelocityY => write!(f, "Angular velocity Y"),
             Self::AngularVelocityZ => write!(f, "Angular velocity Z"),
+            Self::Co2 => write!(f, "CO2 concentration"),
             Self::GroundSpeed => write!(f, "Ground speed"),
             Self::Latitude => write!(f, "Latitude"),
             Self::Longitude => write!(f, "Longitude"),
