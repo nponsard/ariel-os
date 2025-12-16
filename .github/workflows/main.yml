@@ -156,6 +156,7 @@ jobs:
             -p ariel-os-random
             -p ariel-os-rt
             -p ariel-os-sensors
+            -p ariel-os-sensors-registry
             -p ariel-os-sensors-utils
             -p ariel-os-storage
             -p ariel-os-threads
@@ -435,7 +436,7 @@ jobs:
           tool: cargo-manifest-check@0.2
 
       - name: cargo-manifest-check
-        run: cargo manifest-check src/ariel-os-identity src/ariel-os-buildinfo src/ariel-os-debug-log src/ariel-os-coap src/ariel-os-macros src/ariel-os-power src/ariel-os-runqueue src/ariel-os-sensors src/ariel-os-sensors-utils src/ariel-os-stm32-mapping src/ariel-os-utils tests/ examples/
+        run: cargo manifest-check src/ariel-os-identity src/ariel-os-buildinfo src/ariel-os-debug-log src/ariel-os-coap src/ariel-os-macros src/ariel-os-power src/ariel-os-runqueue src/ariel-os-sensors src/ariel-os-sensors-registry src/ariel-os-sensors-utils src/ariel-os-stm32-mapping src/ariel-os-utils tests/ examples/
 
   lint-ruff:
     runs-on: ubuntu-latest
