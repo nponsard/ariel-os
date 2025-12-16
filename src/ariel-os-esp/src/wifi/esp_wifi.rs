@@ -35,6 +35,10 @@ pub fn init(peripherals: &mut crate::OptionalPeripherals, spawner: Spawner) -> N
 async fn connection(mut controller: WifiController<'static>) {
     debug!("start connection task");
 
+    controller
+        .set_power_saving(esp_radio::wifi::PowerSaveMode::None)
+        .unwrap();
+
     #[cfg(not(feature = "defmt"))]
     debug!("Device capabilities: {:?}", controller.capabilities());
 

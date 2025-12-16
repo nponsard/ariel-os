@@ -95,7 +95,7 @@ impl SchedulerImplementation for ArielScheduler {
         pin_to_core: Option<u32>,
         task_stack_size: usize,
     ) -> ThreadPtr {
-        trace!("{}:{} task_create()", file!(), line!());
+        trace!("{}:{} task_create()", file!(), line!(),);
 
         let stack_slice = alloc_aligned_leaked_buffer(task_stack_size, 8);
 
@@ -116,6 +116,14 @@ impl SchedulerImplementation for ArielScheduler {
             )
         };
 
+        ariel_os_debug::log::debug!(
+            "{}:{} task_create() name={} priority={} thread_id={:?}",
+            file!(),
+            line!(),
+            _name,
+            priority,
+            thread_id
+        );
         thread_id_to_ptr(thread_id)
     }
 

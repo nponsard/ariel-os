@@ -3,6 +3,7 @@
 
 use ariel_os::debug::{ExitCode, log::*};
 use ariel_os::thread::{ThreadId, sync::WaitQueue};
+use ariel_os::time::{Duration, Instant};
 
 static WAITQUEUE: WaitQueue = WaitQueue::new();
 
@@ -39,6 +40,12 @@ fn thread3() {
 fn thread4() {
     let my_id = ariel_os::thread::current_tid().unwrap();
     let my_prio = ariel_os::thread::get_priority(my_id).unwrap();
+    info!(
+        "[{:?}@{:?}] Notifying waiting for queue for 1s...",
+        my_id, my_prio
+    );
+    WAITQUEUE.wait_until(Instant::now() + Duration::from_millis(1000));
+    info!("[{:?}@{:?}] Notifying returned", my_id, my_prio);
     info!("[{:?}@{:?}] Notifying wait queue...", my_id, my_prio);
     WAITQUEUE.notify_one();
     info!("[{:?}@{:?}] Wait queue notified.", my_id, my_prio);

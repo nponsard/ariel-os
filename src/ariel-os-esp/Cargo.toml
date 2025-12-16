@@ -138,7 +138,13 @@ time = [
 ]
 
 ## Enables defmt support.
-defmt = ["dep:defmt", "esp-hal/defmt", "esp-radio?/defmt", "fugit?/defmt"]
+defmt = [
+  "dep:defmt",
+  "esp-hal/defmt",
+  "esp-radio?/defmt",
+  "esp-radio-rtos-driver?/defmt",
+  "fugit?/defmt",
+]
 ## Enables log support.
 log = ["esp-hal/log-04", "esp-radio?/log-04"]
 

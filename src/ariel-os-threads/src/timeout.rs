@@ -14,6 +14,12 @@ fn wake(ptr: *const ()) {
         if let Some(deadline) = scheduler.threads[usize::from(thread_id)].deadline {
             let now = embassy_time_driver::now();
             if now >= deadline {
+                ariel_os_debug::log::debug!(
+                    "timer for {:?} expired, triggering thread (deadline={:?}, now={:?})",
+                    thread_id,
+                    deadline,
+                    now
+                );
                 scheduler.threads[usize::from(thread_id)].deadline = None;
                 scheduler.flag_set(thread_id, THREAD_FLAG_TIMEOUT);
                 match scheduler.get_state(thread_id) {
@@ -22,6 +28,13 @@ fn wake(ptr: *const ()) {
                         scheduler.set_state(thread_id, ThreadState::Running);
                     }
                 }
+            } else {
+                ariel_os_debug::log::debug!(
+                    "timer for {:?} not due yet (deadline={:?}, now={:?})",
+                    thread_id,
+                    deadline,
+                    now
+                );
             }
         }
     });
@@ -98,6 +111,7 @@ pub(crate) unsafe fn with_deadline(
             true
         } else {
             // The deadline was in the past, so we don't run the function
+            ariel_os_debug::log::debug!("XXX with_deadline: deadline was in the past");
             false
         }
     }) && critical_section::with(|cs| {

@@ -351,7 +351,7 @@ dependencies = [
  "esp-bootloader-esp-idf",
  "esp-hal",
  "esp-radio",
- "esp-radio-rtos-driver",
+ "esp-radio-rtos-driver 0.2.0",
  "esp-rom-sys",
  "esp-sync",
  "fugit",
@@ -2693,7 +2693,7 @@ dependencies = [
  "esp-hal-procmacros",
  "esp-metadata-generated",
  "esp-phy",
- "esp-radio-rtos-driver",
+ "esp-radio-rtos-driver 0.2.0 (git+https://github.com/ariel-os/esp-hal?rev=7a8436fe3ce6e6b8194a5c2d4259638b699fb331)",
  "esp-sync",
  "esp-wifi-sys-esp32",
  "esp-wifi-sys-esp32c2",
@@ -2711,6 +2711,16 @@ dependencies = [
  "portable_atomic_enum",
  "smoltcp",
  "xtensa-lx-rt",
+]
+
+[[package]]
+name = "esp-radio-rtos-driver"
+version = "0.2.0"
+dependencies = [
+ "cfg-if",
+ "defmt 1.0.1",
+ "esp-sync",
+ "portable-atomic",
 ]
 
 [[package]]

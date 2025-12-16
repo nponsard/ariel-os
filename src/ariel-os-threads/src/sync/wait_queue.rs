@@ -47,6 +47,7 @@ impl WaitQueue {
     ///
     /// Panics if this is called outside of a thread context.
     pub fn wait_until(&self, deadline: embassy_time::Instant) -> bool {
+        ariel_os_debug::log::trace!("WaitQueue::wait_until()");
         // Safety:
         // `on_timeout` takes care of removing the thread from the threadlist.
         unsafe {
@@ -56,6 +57,7 @@ impl WaitQueue {
                     self.wait();
                 },
                 |cs| {
+                    ariel_os_debug::log::trace!("WaitQueue::wait_until() timeout");
                     #[expect(unused_unsafe)]
                     let waiters = unsafe { &mut *self.waiters.get() };
                     waiters.remove_current(cs)

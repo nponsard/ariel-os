@@ -73,6 +73,9 @@ impl TimeDriver {
         // assume 52-bit underlying timer. it's not a big deal to sleep for a shorter time
         let mut timeout = sleep_duration & ((1 << 52) - 1);
 
+        if timeout == 0 {
+            timeout = 100;
+        }
         trace!("Arming timer for {} (target = {})", timeout, next_wakeup);
         loop {
             match self.timer.schedule(Duration::from_micros(timeout)) {
@@ -93,11 +96,12 @@ extern "C" fn timer_handler() {
 
     let now = now();
 
-    TIMER_QUEUE.handle_alarm(now);
+    let next_wakeup = TIMER_QUEUE.handle_alarm(now);
 
     TIMER_DRIVER.with(|timer| {
         if let Some(timer) = timer {
             timer.timer.clear_interrupt();
+            timer.arm_next_wakeup(next_wakeup);
         }
     });
 }
@@ -121,10 +125,12 @@ impl TimerQueueInner {
         }
     }
 
-    pub(crate) fn handle_alarm(&mut self, now: u64) {
+    pub(crate) fn handle_alarm(&mut self, now: u64) -> u64 {
         if now >= self.next_wakeup {
             self.next_wakeup = self.queue.next_expiration(now);
         }
+
+        self.next_wakeup
     }
 
     fn schedule_wake(&mut self, at: u64, waker: &Waker) -> bool {
@@ -148,11 +154,9 @@ impl TimerQueue {
         }
     }
 
-    pub(crate) fn handle_alarm(&self, now: u64) {
+    pub(crate) fn handle_alarm(&self, now: u64) -> u64 {
         ariel_os_debug::log::debug!("handle_alarm() at {}", now);
-        self.inner.with(|inner| {
-            inner.handle_alarm(now);
-        });
+        self.inner.with(|inner| inner.handle_alarm(now))
     }
 }
 
