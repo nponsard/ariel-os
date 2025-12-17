@@ -432,6 +432,36 @@ mod tests {
         });
     }
 
+    #[test]
+    fn cancel_safety() {
+        use ariel_os_sensors::Reading;
+
+        static STTS22H: Stts22h<I2cDeviceMock> = Stts22h::<I2cDeviceMock>::new(Some("label"));
+
+        init_sensor(&STTS22H);
+
+        embassy_futures::block_on(async {
+            embassy_futures::select::select(STTS22H.run(), async {
+                STTS22H.trigger_measurement().unwrap();
+
+                // The mock reading counter does not get incremented otherwise.
+                embassy_futures::yield_now().await;
+
+                let waiter = STTS22H.wait_for_reading();
+                // Cancel the Future.
+                drop(waiter);
+
+                STTS22H.trigger_measurement().unwrap();
+
+                let reading = STTS22H.wait_for_reading().await.unwrap();
+                let (_channel, sample) = reading.sample();
+
+                assert_eq!(sample.value(), Ok(2500));
+            })
+            .await
+        });
+    }
+
     fn init_sensor(stts22h: &'static Stts22h<I2cDeviceMock>) {
         embassy_futures::block_on(async {
             let peripherals = Peripherals {};
