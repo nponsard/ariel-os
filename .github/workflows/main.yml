@@ -19,7 +19,7 @@ jobs:
 
     steps:
       - name: Check out repository code
-        uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6
 
       - id: get_toolchain
         run: echo "toolchain=$(scripts/rust-toolchain.sh)" >> $GITHUB_OUTPUT
@@ -48,7 +48,7 @@ jobs:
 
     steps:
       - name: Check out repository code
-        uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6
 
       # "Obfuscate" the search query with concatenation so it does not self-trigger.
       - name: Check for leftover occurrences of the old project name
@@ -278,7 +278,7 @@ jobs:
 
     steps:
       - name: Check out repository code
-        uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6
 
       - id: get_toolchain
         run: echo "toolchain=$(scripts/rust-toolchain.sh)" >> $GITHUB_OUTPUT
@@ -389,7 +389,7 @@ jobs:
 
     steps:
       - name: Check out repository code
-        uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6
 
       - name: rustfmt
         run: cargo fmt --check --all -- --config format_generated_files=false
@@ -399,7 +399,7 @@ jobs:
 
     steps:
       - name: Check out repository code
-        uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6
 
       - name: yamllint
         uses: karancode/yamllint-github-action@master
@@ -412,7 +412,7 @@ jobs:
 
     steps:
       - name: Check out repository code
-        uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6
 
       - name: Install taplo
         uses: taiki-e/install-action@62da238c048aa0f865cc5a322082957d34e7fc1a # v2
@@ -428,7 +428,7 @@ jobs:
 
     steps:
       - name: Check out repository code
-        uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6
 
       - name: Install cargo-manifest-check
         uses: taiki-e/install-action@62da238c048aa0f865cc5a322082957d34e7fc1a # v2
@@ -443,7 +443,7 @@ jobs:
 
     steps:
       - name: Check out repository code
-        uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6
 
       - name: Ruff
         uses: chartboost/ruff-action@e18ae971ccee1b2d7bbef113930f00c670b78da4 # v1
@@ -455,7 +455,7 @@ jobs:
 
     steps:
       - name: Check out repository code
-        uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6
 
       - name: typos
         uses: crate-ci/typos@2d0ce569feab1f8752f1dde43cc2f2aa53236e06 # v1.40.0
@@ -504,7 +504,7 @@ jobs:
 
     steps:
       - name: Check out repository code
-        uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6
 
       - name: Install sbd-gen
         uses: taiki-e/install-action@62da238c048aa0f865cc5a322082957d34e7fc1a # v2
