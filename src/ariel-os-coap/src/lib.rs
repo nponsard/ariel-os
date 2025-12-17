@@ -19,6 +19,7 @@ mod stored;
 mod transport_udp;
 
 use ariel_os_embassy::cell::SameExecutorCell;
+#[cfg(feature = "coap-server")]
 use coap_handler_implementations::ReportingHandlerBuilder as _;
 use embassy_sync::watch::Watch;
 
@@ -124,11 +125,12 @@ async fn coap_run_impl(handler: impl coap_handler::Handler + coap_handler::Repor
         } else if #[cfg(feature = "coap-server-config-demokeys")] {
             let security_config = demo_setup::build_demo_ssc();
         } else if #[cfg(feature = "coap-server-config-unprotected")] {
-            let security_config = coapcore::seccfg::AllowAll;
+            // Not setting the config to `coapcore::seccfg::AllowAll` because it won't be taken up
+            // by a security context anyway (handler is not wrapped in an OscoreEdhocHandler).
         } else {
-            // We could pick another policy too to get 4.04 errors, but "there may be something but
-            // I won't tell you" is just as good an answer, and may prune some more branches even.
-            let security_config = coapcore::seccfg::DenyAll;
+            // Not setting the config to `coapcore::seccfg::DenyAll` because it won't be taken up
+            // by a security context anyway -- and as there is no sever configured, there is no
+            // resource to which the policy would be applied.
 
             #[cfg(all(feature = "coap-server", not(feature = "doc")))]
             compile_error!("No CoAP server configuration chosen out of the coap-server-config-* features.");
@@ -137,8 +139,12 @@ async fn coap_run_impl(handler: impl coap_handler::Handler + coap_handler::Repor
 
     // FIXME: Should we allow users to override that? After all, this is just convenience and may
     // be limiting in special applications.
+    #[cfg(feature = "coap-server")]
     let handler = handler.with_wkc();
-    #[cfg(not(feature = "coap-server-config-unprotected"))]
+    #[cfg(any(
+        feature = "coap-server-config-storage",
+        feature = "coap-server-config-demokeys"
+    ))]
     let handler = coapcore::OscoreEdhocHandler::new(
         handler,
         security_config,
