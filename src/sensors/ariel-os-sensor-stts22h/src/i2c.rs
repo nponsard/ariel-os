@@ -176,10 +176,10 @@ impl<I2C: I2c + Send> Stts22h<I2C> {
 
 impl<I2C: Send> Sensor for Stts22h<I2C> {
     fn trigger_measurement(&self) -> Result<(), TriggerMeasurementError> {
+        self.reading.clear();
+
         match self.state.get() {
-            State::Measuring => {
-                self.reading.clear();
-            }
+            State::Measuring => {}
             State::Enabled => {
                 self.state.set(State::Measuring);
             }
@@ -456,7 +456,7 @@ mod tests {
                 let reading = STTS22H.wait_for_reading().await.unwrap();
                 let (_channel, sample) = reading.sample();
 
-                assert_eq!(sample.value(), Ok(2500));
+                assert_eq!(sample.value(), Ok(1800));
             })
             .await
         });
