@@ -57,6 +57,12 @@ user-id = 3618
 user-login = "dtolnay"
 user-name = "David Tolnay"
 
+[[publisher.build-rs]]
+version = "0.3.2"
+when = "2025-09-18"
+user-id = 55123
+user-login = "rust-lang-owner"
+
 [[publisher.bumpalo]]
 version = "3.17.0"
 when = "2025-01-28"
