@@ -763,6 +763,24 @@ chips:
 # Encodes support status for each board.
 # Boards inherit support statuses of their chip, but can also override them.
 boards:
+  adafruit-feather-nrf52840-express:
+    name: Adafruit Feather nRF52840 Express
+    url: https://web.archive.org/web/20251022231757/https://www.adafruit.com/product/4062
+    chip: nrf52840
+    tier: "2"
+    support:
+      user_usb: supported
+      ethernet_over_usb: supported
+
+  adafruit-feather-nrf52840-sense:
+    name: Adafruit Feather nRF52840 Sense
+    url: https://web.archive.org/web/20251022231756/https://www.adafruit.com/product/4516
+    chip: nrf52840
+    tier: "3"
+    support:
+      user_usb: needs_testing
+      ethernet_over_usb: needs_testing
+
   bbc-microbit-v1:
     name: BBC micro:bit V1
     url: https://web.archive.org/web/20250109121140/https://microbit.org/get-started/features/overview/#original-micro:bit

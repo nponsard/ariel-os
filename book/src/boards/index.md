@@ -24,6 +24,7 @@ Tier 1 hardware gets regularly tested, either automatically or manually.
 
 Tier 2 hardware only gets tested infrequently, but Ariel OS maintainers do have access to the hardware.
 
+- [Adafruit Feather nRF52840 Express](./adafruit-feather-nrf52840-express.md)
 - [DFRobot FireBeetle 2 ESP32-C6](./dfrobot-firebeetle2-esp32-c6.md)
 - [Nordic Thingy:91 X](./nordic-thingy-91-x-nrf9151.md)
 - [nRF52-DK](./nrf52dk.md)
@@ -38,6 +39,7 @@ Tier 2 hardware only gets tested infrequently, but Ariel OS maintainers do have 
 
 Tier 3 hardware is build-tested only, as Ariel OS maintainers do not have access to the hardware.
 
+- [Adafruit Feather nRF52840 Sense](./adafruit-feather-nrf52840-sense.md)
 - [BBC micro:bit V1](./bbc-microbit-v1.md)
 - [Espressif ESP32-C3-DevKit-RUST-1](./espressif-esp32-c3-devkit-rust-1.md)
 - [Espressif ESP32-S2-DevKitC-1](./espressif-esp32-s2-devkitc-1.md)
