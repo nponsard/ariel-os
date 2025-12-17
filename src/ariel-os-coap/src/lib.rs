@@ -9,19 +9,19 @@
 #![deny(missing_docs)]
 
 // Moving work from https://github.com/embassy-rs/embassy/pull/2519 in here for the time being
+#[cfg(feature = "coap-transport-udp")]
 mod udp_nal;
 
 #[cfg(feature = "coap-server-config-storage")]
 mod stored;
 
-use core::net::{Ipv6Addr, SocketAddr};
+#[cfg(feature = "coap-transport-udp")]
+mod transport_udp;
 
-use ariel_os_debug::log::info;
 use ariel_os_embassy::cell::SameExecutorCell;
+#[cfg(feature = "coap-server")]
 use coap_handler_implementations::ReportingHandlerBuilder as _;
-use embassy_net::udp::{PacketMetadata, UdpSocket};
 use embassy_sync::watch::Watch;
-use static_cell::StaticCell;
 
 const CONCURRENT_REQUESTS: usize = 3;
 
@@ -125,11 +125,12 @@ async fn coap_run_impl(handler: impl coap_handler::Handler + coap_handler::Repor
         } else if #[cfg(feature = "coap-server-config-demokeys")] {
             let security_config = demo_setup::build_demo_ssc();
         } else if #[cfg(feature = "coap-server-config-unprotected")] {
-            let security_config = coapcore::seccfg::AllowAll;
+            // Not setting the config to `coapcore::seccfg::AllowAll` because it won't be taken up
+            // by a security context anyway (handler is not wrapped in an OscoreEdhocHandler).
         } else {
-            // We could pick another policy too to get 4.04 errors, but "there may be something but
-            // I won't tell you" is just as good an answer, and may prune some more branches even.
-            let security_config = coapcore::seccfg::DenyAll;
+            // Not setting the config to `coapcore::seccfg::DenyAll` because it won't be taken up
+            // by a security context anyway -- and as there is no sever configured, there is no
+            // resource to which the policy would be applied.
 
             #[cfg(all(feature = "coap-server", not(feature = "doc")))]
             compile_error!("No CoAP server configuration chosen out of the coap-server-config-* features.");
@@ -138,7 +139,12 @@ async fn coap_run_impl(handler: impl coap_handler::Handler + coap_handler::Repor
 
     // FIXME: Should we allow users to override that? After all, this is just convenience and may
     // be limiting in special applications.
+    #[cfg(feature = "coap-server")]
     let handler = handler.with_wkc();
+    #[cfg(any(
+        feature = "coap-server-config-storage",
+        feature = "coap-server-config-demokeys"
+    ))]
     let handler = coapcore::OscoreEdhocHandler::new(
         handler,
         security_config,
@@ -147,72 +153,15 @@ async fn coap_run_impl(handler: impl coap_handler::Handler + coap_handler::Repor
         coapcore::time::TimeUnknown,
     );
 
-    coap_run_udp(handler).await;
-}
-
-/// Runs the CoAP handler on CoAP-over-UDP indefinitely.
-///
-/// # Panics
-///
-/// This can only be run once, as it sets up a system wide CoAP handler.
-async fn coap_run_udp(mut handler: impl coap_handler::Handler) -> ! {
-    static COAP: StaticCell<embedded_nal_coap::CoAPShared<CONCURRENT_REQUESTS>> = StaticCell::new();
-
-    let stack = ariel_os_embassy::net::network_stack().await.unwrap();
-
-    // There's no strong need to wait this early (it matters that we wait before populating
-    // CLIENT_READY), but this is a convenient place in the code (we have a `stack` now, to populate
-    // CLIENT_READY after the server, we'd have to poll the server and `wait_config_up` in parallel), and
-    // it's not like we'd expect requests to come in before everything is up. (Not even a loopback
-    // request, because we shouldn't hand out a client early).
-    stack.wait_config_up().await;
-
-    // FIXME trim to CoAP requirements (those values are just a likely good starting point for "we
-    // process any message immediately anyway")
-    let mut rx_meta = [PacketMetadata::EMPTY; 2];
-    let mut rx_buffer = [0; 1500];
-    let mut tx_meta = [PacketMetadata::EMPTY; 2];
-    let mut tx_buffer = [0; 1500];
-
-    let socket = UdpSocket::new(
-        stack,
-        &mut rx_meta,
-        &mut rx_buffer,
-        &mut tx_meta,
-        &mut tx_buffer,
-    );
-
-    info!("Starting up CoAP server");
-
-    let local_any = SocketAddr::new(Ipv6Addr::UNSPECIFIED.into(), 5683);
-    let mut unconnected = udp_nal::UnconnectedUdp::bind_multiple(socket, local_any)
-        .await
-        .unwrap();
-
-    info!("Server is ready.");
-
-    let coap = COAP.init_with(embedded_nal_coap::CoAPShared::new);
-    let (client, server) = coap.split();
-    #[expect(
-        clippy::items_after_statements,
-        reason = "This is the item's place in the workflow."
-    )]
-    static CLIENT: StaticCell<embedded_nal_coap::CoAPRuntimeClient<'static, CONCURRENT_REQUESTS>> =
-        StaticCell::new();
-
-    CLIENT_READY
-        .sender()
-        .send(SameExecutorCell::new_async(&*CLIENT.init(client)).await);
-
-    server
-        .run(
-            &mut unconnected,
-            &mut handler,
-            &mut ariel_os_random::fast_rng(),
-        )
-        .await
-        .expect("UDP error");
-    unreachable!("embassy-net's sockets do not get closed (but embedded-nal-coap can't know that)");
+    cfg_if::cfg_if! {
+        if #[cfg(feature = "coap-transport-udp")] {
+            transport_udp::coap_run_udp(handler).await
+        } else if #[cfg(feature = "doc")] {
+            loop {}
+        } else {
+            compile_error!("No CoAP transport configuration was chosen out of the coap-transport-* features.")
+        }
+    }
 }
 
 /// Returns a CoAP client requester.
