@@ -87,7 +87,7 @@ jobs:
 
       - name: Report failure
         if: failure() && github.event_name == 'schedule' && github.repository == 'ariel-os/ariel-os'
-        uses: s3krit/matrix-message-action@v0.0.3
+        uses: s3krit/matrix-message-action@70ad3fb812ee0e45ff8999d6af11cafad11a6ecf # v0.0.3
         with:
           room_id: ${{ secrets.MATRIX_ROOM_ID }}
           access_token: ${{ secrets.MATRIX_ACCESS_TOKEN }}
