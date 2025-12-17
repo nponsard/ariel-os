@@ -13,6 +13,8 @@ use embassy_rp::{
 use rpi_pico_w::{CywSpi, DEFAULT_CLOCK_DIVIDER, Irqs};
 use static_cell::StaticCell;
 
+use ariel_os_embassy_common::cell::SameExecutorCell;
+
 #[cfg(feature = "ble-cyw43")]
 use bt_hci::controller::ExternalController;
 #[cfg(feature = "wifi")]
@@ -103,7 +105,9 @@ pub async fn device<'a, 'b: 'a>(
         let stack = trouble_host::new(controller, resources)
             .set_random_generator_seed(&mut rng)
             .set_random_address(config.address);
-        let _ = ble::STACK.init(stack);
+        let stackref = ble::STACK.init(SameExecutorCell::new(stack, *spawner));
+        // Error case is unreachable: just init'ed another once item.
+        let _ = ble::STACKREF.init(Some(stackref).into());
 
         (net_device, control, runner)
     };
