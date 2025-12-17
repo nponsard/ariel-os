@@ -38,7 +38,7 @@ jobs:
         run: sudo apt-get install ninja-build gcc-arm-none-eabi
 
       - name: rust cache
-        uses: Swatinem/rust-cache@98c8021b550208e191a6a3145459bfc9fb29c4c0 # v2
+        uses: Swatinem/rust-cache@779680da715d629ac1d338a641029a2f4372abb5 # v2
 
       - name: Run host-side crate tests
         run: laze build -DCARGO_ARGS+='--locked' --builders host --multiple-tasks --global --keep-going=0 test
@@ -89,7 +89,7 @@ jobs:
         run: sudo apt-get install gcc-arm-none-eabi
 
       - name: rust cache
-        uses: Swatinem/rust-cache@98c8021b550208e191a6a3145459bfc9fb29c4c0 # v2
+        uses: Swatinem/rust-cache@779680da715d629ac1d338a641029a2f4372abb5 # v2
 
       - name: Install cargo-deny
         uses: taiki-e/install-action@62da238c048aa0f865cc5a322082957d34e7fc1a # v2
@@ -291,7 +291,7 @@ jobs:
           components: rust-src
 
       - name: rust cache
-        uses: Swatinem/rust-cache@98c8021b550208e191a6a3145459bfc9fb29c4c0 # v2
+        uses: Swatinem/rust-cache@779680da715d629ac1d338a641029a2f4372abb5 # v2
 
       - name: rustdoc
         run: |
