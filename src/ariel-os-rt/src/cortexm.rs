@@ -82,7 +82,6 @@ unsafe fn HardFault(ef: &ExceptionFrame) -> ! {
 
     panic!(
         "{} HardFault.\r\n\
-         \tKernel version {}\r\n\
          \tr0  0x{:x}\r\n\
          \tr1  0x{:x}\r\n\
          \tr2  0x{:x}\r\n\
@@ -120,7 +119,6 @@ unsafe fn HardFault(ef: &ExceptionFrame) -> ! {
          \tBus Fault Address:       (valid: {}) {:#010X}\r\n\
          ",
         mode_str,
-        option_env!("RIOTCORE_KERNEL_VERSION").unwrap_or("unknown"),
         ef.r0(),
         ef.r1(),
         ef.r2(),
