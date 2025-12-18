@@ -737,8 +737,11 @@ fn cleanup() -> ! {
 }
 
 /// "Yields" to another thread with the same priority.
-#[cfg(not(feature = "infini-core"))]
 pub fn yield_same() {
+    // Nothing to do for infini-core, because all threads run in *parallel* from the point of view
+    // of Ariel OS.
+
+    #[cfg(not(feature = "infini-core"))]
     SCHEDULER.with_mut(|mut scheduler| {
         #[allow(unused_variables, reason = "prio only used outside clippy")]
         let Some(&mut Thread {
@@ -775,12 +778,6 @@ pub fn yield_same() {
             }
         }
     });
-}
-
-#[allow(missing_docs)]
-#[cfg(feature = "infini-core")]
-pub fn yield_same() {
-    // Not much to do here.
 }
 
 /// Suspends/ pauses the current thread's execution.
