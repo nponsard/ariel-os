@@ -22,6 +22,12 @@ Currently only GNU/Linux on x86-64 is supported.
 
 See [the support info of `native`][native-builder-support] for details.
 
+## Multithreading Behavior
+
+Native itself enables [multithreading][multithreading-book], and creates one "virtual core" per Ariel OS thread using host threads.
+This means that threads all run in *parallel* from the point of view of Ariel OS and of the application.
+
 [native-builder-support]: ./boards/native.html
 [laze-builders-book]: ./build-system.md#laze-builders
 [laze-tasks-book]: ./build-system.md#laze-tasks
+[multithreading-book]: ./multithreading.md
