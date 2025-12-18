@@ -176,10 +176,10 @@ impl<I2C: I2c + Send> Stts22h<I2C> {
 
 impl<I2C: Send> Sensor for Stts22h<I2C> {
     fn trigger_measurement(&self) -> Result<(), TriggerMeasurementError> {
+        self.reading.clear();
+
         match self.state.get() {
-            State::Measuring => {
-                self.reading.clear();
-            }
+            State::Measuring => {}
             State::Enabled => {
                 self.state.set(State::Measuring);
             }
@@ -427,6 +427,36 @@ mod tests {
                         | (Err(NotMeasuring), Ok(_), Err(NotMeasuring))
                         | (Err(NotMeasuring), Err(NotMeasuring), Ok(_))
                 ));
+            })
+            .await
+        });
+    }
+
+    #[test]
+    fn cancel_safety() {
+        use ariel_os_sensors::Reading;
+
+        static STTS22H: Stts22h<I2cDeviceMock> = Stts22h::<I2cDeviceMock>::new(Some("label"));
+
+        init_sensor(&STTS22H);
+
+        embassy_futures::block_on(async {
+            embassy_futures::select::select(STTS22H.run(), async {
+                STTS22H.trigger_measurement().unwrap();
+
+                // The mock reading counter does not get incremented otherwise.
+                embassy_futures::yield_now().await;
+
+                let waiter = STTS22H.wait_for_reading();
+                // Cancel the Future.
+                drop(waiter);
+
+                STTS22H.trigger_measurement().unwrap();
+
+                let reading = STTS22H.wait_for_reading().await.unwrap();
+                let (_channel, sample) = reading.sample();
+
+                assert_eq!(sample.value(), Ok(1800));
             })
             .await
         });
