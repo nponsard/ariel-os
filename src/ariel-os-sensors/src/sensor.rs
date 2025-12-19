@@ -138,17 +138,19 @@ impl Future for ReadingWaiter {
     }
 }
 
-#[must_use = "futures do nothing unless you `.await` or poll them"]
-#[pin_project::pin_project(project = ReadingWaiterInnerProj)]
-enum ReadingWaiterInner {
-    Waiter {
-        #[pin]
-        waiter: signal::ReceiveFuture<'static, ReadingResult<Samples>>,
-    },
-    Resolved,
-    Err {
-        err: ReadingError,
-    },
+pin_project_lite::pin_project! {
+    #[must_use = "futures do nothing unless you `.await` or poll them"]
+    #[project = ReadingWaiterInnerProj]
+    enum ReadingWaiterInner {
+        Waiter {
+            #[pin]
+            waiter: signal::ReceiveFuture<'static, ReadingResult<Samples>>,
+        },
+        Err {
+            err: ReadingError,
+        },
+        Resolved,
+    }
 }
 
 impl Future for ReadingWaiterInner {
