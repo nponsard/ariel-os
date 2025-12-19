@@ -1040,7 +1040,6 @@ impl<
     type BuildResponseError<M: MinimalWritableMessage> =
         OrInner<Result<CoAPError, M::UnionError>, H::BuildResponseError<M>>;
 
-    #[expect(clippy::too_many_lines, reason = "no good refactoring point known")]
     fn extract_request_data<M: ReadableMessage>(
         &mut self,
         request: &M,
