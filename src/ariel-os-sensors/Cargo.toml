@@ -10,7 +10,6 @@ repository.workspace = true
 license.workspace = true
 
 [dependencies]
-ariel-os-macros = { workspace = true }
 defmt = { workspace = true, optional = true }
 embassy-sync = { workspace = true }
 pin-project-lite = { workspace = true }
