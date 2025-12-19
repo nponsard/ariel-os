@@ -187,6 +187,7 @@ indexing_slicing = "deny"
 missing_safety_doc = { level = "warn" }
 pedantic = { level = "warn", priority = -1 }
 too_long_first_doc_paragraph = "warn"
+too_many_lines = "allow"
 unused_result_ok = "deny"
 unused_trait_names = "warn"
 undocumented_unsafe_blocks = "warn"

@@ -202,7 +202,6 @@ fn init() {
 }
 
 #[embassy_executor::task]
-#[allow(clippy::too_many_lines)]
 async fn init_task(mut peripherals: hal::OptionalPeripherals) {
     let spawner = asynch::Spawner::for_current_executor().await;
     asynch::set_spawner(spawner.make_send());

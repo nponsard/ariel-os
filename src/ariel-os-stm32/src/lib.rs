@@ -89,7 +89,6 @@ fn board_config(config: &mut Config) {
 }
 
 // TODO: find better place for this
-#[expect(clippy::too_many_lines)]
 fn rcc_config() -> embassy_stm32::rcc::Config {
     #[allow(unused_mut, reason = "conditional compilation")]
     let mut rcc = embassy_stm32::rcc::Config::default();
