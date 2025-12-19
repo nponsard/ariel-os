@@ -97,10 +97,12 @@ pub fn define_count_adjusted_sensor_enums(_item: TokenStream) -> TokenStream {
         ///
         /// This type implements [`Reading`] to iterate over the samples.
         ///
-        /// # Note
+        /// # For implementors
         ///
-        /// This type is automatically generated, the number of [`Sample`]s that can be stored is
-        /// automatically adjusted.
+        /// Sensor driver crates must enable the appropriate `max-sample-min-count-*` Cargo feature
+        /// on this crate.
+        /// For instance, a 3-axis accelerometer driver crate must enable `max-sample-min-count-3`
+        /// to be able to return 3 [`Sample`]s using [`Samples::from_3()`].
         #[derive(Copy, Clone)]
         pub struct Samples {
             samples: InnerSamples,
