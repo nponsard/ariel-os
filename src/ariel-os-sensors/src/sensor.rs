@@ -125,7 +125,7 @@ impl ReadingWaiter {
     /// For sensor driver implementors only.
     pub fn new_err(err: ReadingError) -> Self {
         Self {
-            inner: ReadingWaiterInner::Err(err),
+            inner: ReadingWaiterInner::Err { err },
         }
     }
 }
@@ -145,8 +145,10 @@ enum ReadingWaiterInner {
         #[pin]
         waiter: signal::ReceiveFuture<'static, ReadingResult<Samples>>,
     },
-    Err(ReadingError),
     Resolved,
+    Err {
+        err: ReadingError,
+    },
 }
 
 impl Future for ReadingWaiterInner {
@@ -156,7 +158,7 @@ impl Future for ReadingWaiterInner {
         let this = self.as_mut().project();
         match this {
             ReadingWaiterInnerProj::Waiter { waiter } => waiter.poll(cx),
-            ReadingWaiterInnerProj::Err(err) => {
+            ReadingWaiterInnerProj::Err { err } => {
                 // Replace the error with a dummy error value, crafted from thin air, and mark the
                 // future as resolved, so that we do not take this dummy value into account later.
                 // This avoids requiring `Clone` on `ReadingError`.
