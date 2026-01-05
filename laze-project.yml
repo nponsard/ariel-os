@@ -1181,6 +1181,7 @@ modules:
   - name: network-config-ipv4-dhcp
     help: use DHCPv4 for network configuration
     selects:
+      - ipv4
       - network
       # Needed for aliasing.
       - network-config-dhcp
@@ -1199,6 +1200,7 @@ modules:
   - name: network-config-ipv4-static
     help: use static IPv4 network configuration
     selects:
+      - ipv4
       - network
       # Needed for aliasing.
       - network-config-static
