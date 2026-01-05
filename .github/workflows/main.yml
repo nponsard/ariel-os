@@ -436,7 +436,7 @@ jobs:
       - name: Install cargo-manifest-check
         uses: taiki-e/install-action@d850aa816998e5cf15f67a78c7b933f2a5033f8a # v2
         with:
-          tool: cargo-manifest-check@0.2
+          tool: cargo-manifest-check@0.3
 
       - name: cargo-manifest-check
         run: cargo manifest-check src/ariel-os-identity src/ariel-os-buildinfo src/ariel-os-debug-log src/ariel-os-coap src/ariel-os-macros src/ariel-os-power src/ariel-os-runqueue src/ariel-os-sensors src/ariel-os-sensors-registry src/ariel-os-sensors-utils src/ariel-os-stm32-mapping src/ariel-os-utils tests/ examples/
