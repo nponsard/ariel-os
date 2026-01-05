@@ -4,7 +4,7 @@ boards:
     flags:
       - has_usb_device_port
     leds:
-      # FIXME: led0/led1 names are purely synethetic to work with the current
+      # FIXME: led0/led1 names are purely synthetic to work with the current
       # sbd::ariel convention of naming them sequentially.
       led0:
         color: red
@@ -28,7 +28,7 @@ boards:
       # * orange D3 is hardwired to LiPo charge port STAT
 
     buttons:
-      # FIXME: "button0" name is purely synethetic to work with the current
+      # FIXME: "button0" name is purely synthetic to work with the current
       # sbd::ariel convention of naming them sequentially.
       button0:
         pin: P1_02
