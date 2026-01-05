@@ -52,7 +52,7 @@ The configuration can be customized with the following environment variables:
 Support for IPv6 is not currently enabled by default, but can be enabled by selecting the `ipv6` [laze module](./build-system.md#laze-modules).
 IPv4 and IPv6 can both be enabled at the same time.
 
-IPv6 currently only supports static configuration, which can be selected with the `network-config-ipv6-static` [laze module](./build-system.md#laze-modules).
+IPv6 currently only supports static configuration, which is therefore enabled by default; it can also be explicitly selected with the `network-config-ipv6-static` [laze module](./build-system.md#laze-modules).
 
 The configuration must be customized with the following environment variables:
 
