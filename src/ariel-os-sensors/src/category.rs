@@ -49,6 +49,8 @@ pub enum Category {
     Ph,
     /// Pressure sensor.
     Pressure,
+    /// Pressure & temperature sensor.
+    PressureTemperature,
     /// Push button.
     PushButton,
     /// Temperature sensor.
