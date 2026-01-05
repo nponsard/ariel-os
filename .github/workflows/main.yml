@@ -30,7 +30,7 @@ jobs:
           toolchain: ${{ steps.get_toolchain.outputs.toolchain }}
 
       - name: Install laze
-        uses: taiki-e/install-action@d850aa816998e5cf15f67a78c7b933f2a5033f8a # v2
+        uses: taiki-e/install-action@0e76c5c569f13f7eb21e8e5b26fe710062b57b62 # v2
         with:
           tool: laze@0.1
 
@@ -92,7 +92,7 @@ jobs:
         uses: Swatinem/rust-cache@779680da715d629ac1d338a641029a2f4372abb5 # v2
 
       - name: Install cargo-deny
-        uses: taiki-e/install-action@d850aa816998e5cf15f67a78c7b933f2a5033f8a # v2
+        uses: taiki-e/install-action@0e76c5c569f13f7eb21e8e5b26fe710062b57b62 # v2
         with:
           tool: cargo-deny
 
@@ -418,7 +418,7 @@ jobs:
         uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6
 
       - name: Install taplo
-        uses: taiki-e/install-action@d850aa816998e5cf15f67a78c7b933f2a5033f8a # v2
+        uses: taiki-e/install-action@0e76c5c569f13f7eb21e8e5b26fe710062b57b62 # v2
         with:
           tool: taplo
           fallback: none
@@ -434,7 +434,7 @@ jobs:
         uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6
 
       - name: Install cargo-manifest-check
-        uses: taiki-e/install-action@d850aa816998e5cf15f67a78c7b933f2a5033f8a # v2
+        uses: taiki-e/install-action@0e76c5c569f13f7eb21e8e5b26fe710062b57b62 # v2
         with:
           tool: cargo-manifest-check@0.3
 
@@ -487,7 +487,7 @@ jobs:
           ./doc/gen_book.rs chip-index doc/support_matrix.yml book/src/chips/index.md --template-path book/templates/chip-index.md.tmpl --check
 
       - name: Install mdbook
-        uses: taiki-e/install-action@d850aa816998e5cf15f67a78c7b933f2a5033f8a # v2
+        uses: taiki-e/install-action@0e76c5c569f13f7eb21e8e5b26fe710062b57b62 # v2
         with:
           tool: mdbook@0.5.0-alpha.1
 
@@ -510,7 +510,7 @@ jobs:
         uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6
 
       - name: Install sbd-gen
-        uses: taiki-e/install-action@d850aa816998e5cf15f67a78c7b933f2a5033f8a # v2
+        uses: taiki-e/install-action@0e76c5c569f13f7eb21e8e5b26fe710062b57b62 # v2
         with:
           tool: sbd-gen@0.1.9
 
