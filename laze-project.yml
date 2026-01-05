@@ -1228,6 +1228,7 @@ modules:
   - name: network-config-ipv6-static
     help: use static IPv6 network configuration
     selects:
+      - ipv6
       - network
     provides_unique:
       - network-config-ipv6
