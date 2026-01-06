@@ -7,12 +7,12 @@ license.workspace = true
 
 [dependencies]
 ariel-os-alloc = { workspace = true, optional = true }
-ariel-os-macros = { path = "../ariel-os-macros", optional = true }
 ariel-os-debug = { workspace = true }
+ariel-os-macros = { path = "../ariel-os-macros", optional = true }
 ariel-os-threads = { path = "../ariel-os-threads", optional = true }
 ariel-os-utils = { workspace = true }
-embedded-test = { workspace = true, optional = true }
 cfg-if = { workspace = true }
+embedded-test = { workspace = true, optional = true }
 linkme = { workspace = true }
 
 [build-dependencies]
