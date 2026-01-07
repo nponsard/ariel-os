@@ -1,6 +1,10 @@
 //! Stack usage helpers.
 
 #![expect(unsafe_code)]
+#![expect(
+    clippy::inline_always,
+    reason = "otherwise usage reporting functions influence the result"
+)]
 
 use core::{marker::PhantomData, ptr::write_volatile};
 
@@ -94,18 +98,21 @@ impl Stack {
 
     /// Returns the total size of the current stack.
     #[must_use]
+    #[inline(always)]
     pub fn size(&self) -> usize {
         self.highest - self.lowest
     }
 
     /// Returns the amount of currently free stack space.
     #[must_use]
+    #[inline(always)]
     pub fn free(&self) -> usize {
         self.size() - self.used()
     }
 
     /// Returns the amount of currently used stack space.
     #[must_use]
+    #[inline(always)]
     pub fn used(&self) -> usize {
         self.highest - sp()
     }
@@ -135,6 +142,7 @@ impl Stack {
     ///
     /// This re-calculates and thus runs in `O(n)`!
     #[must_use]
+    #[inline(always)]
     pub fn used_max(&self) -> usize {
         self.size() - self.free_min()
     }
