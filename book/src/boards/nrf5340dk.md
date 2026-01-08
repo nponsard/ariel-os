@@ -4,7 +4,7 @@
 
 - **Tier:** 1
 - **Ariel OS Name:** `nrf5340dk`
-- **Chip:** [nRF5340](../chips/nrf5340.md)
+- **Chip:** [nRF5340 application core](../chips/nrf5340.md)
 - **Chip Ariel OS Name:** `nrf5340`
 
 ### References
@@ -23,7 +23,7 @@
 |Logging|<span title="supported">✅</span>|
 |User USB|<span title="supported">✅</span>|
 |Wi-Fi|<span title="not available on this piece of hardware">–</span>|
-|Bluetooth Low Energy|<span title="supported">✅</span>|
+|Bluetooth Low Energy|<span title="not available on this piece of hardware">–</span>|
 |Ethernet over USB|<span title="supported">✅</span>|
 |Hardware Random Number Generator|<span title="available in hardware, but not currently supported by Ariel OS">❌</span>[^no-standalone-rng-in-the-application-core-only-in-the-cryptocell-which-is-not-currently-supported]|
 |Persistent Storage|<span title="supported">✅</span>|
