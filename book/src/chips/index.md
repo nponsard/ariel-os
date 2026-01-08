@@ -25,7 +25,8 @@ Here is the list of supported chips in Ariel OS.
 - [nRF52832](./nrf52832.md)
 - [nRF52833](./nrf52833.md)
 - [nRF52840](./nrf52840.md)
-- [nRF5340](./nrf5340.md)
+- [nRF5340 application core](./nrf5340.md)
+- [nRF5340 network core](./nrf5340-net.md)
 - [nRF9151](./nrf9151.md)
 - [nRF9160](./nrf9160.md)
 
