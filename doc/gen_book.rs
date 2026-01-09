@@ -104,8 +104,23 @@ impl SubCommandMatrix {
 
         let mut board_info = gen_board_functionalities(&matrix)?;
 
-        // TODO: read the order from the YAML file instead?
-        board_info.sort_unstable_by_key(|b| b.name.to_lowercase());
+        for board in board_info.iter_mut() {
+            board
+                .builders
+                .sort_unstable_by_key(|builder| builder.tier.clone());
+        }
+        board_info.sort_unstable_by_key(|board| {
+            (
+                board
+                    .builders
+                    .iter()
+                    .min_by_key(|builder| builder.tier.clone())
+                    .unwrap()
+                    .tier
+                    .clone(),
+                board.name.to_lowercase(),
+            )
+        });
 
         let mut env = Environment::new();
         env.add_template("matrix", &matrix_template).unwrap();
