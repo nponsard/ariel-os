@@ -1,17 +1,25 @@
-# Raspberry Pi Pico
+# BBC micro:bit V2
 
-## Board Info
+## References
+
+- [Manufacturer link](https://web.archive.org/web/20250109121140/https://microbit.org/new-microbit/)
+
+## laze Builders
+
+For more information on laze builders, check out [this page](../build-system.md#laze-builders).
+### `bbc-microbit-v2`
 
 - **Tier:** 1
-- **Ariel OS Name:** `rpi-pico`
-- **Chip:** [RP2040](../chips/rp2040.md)
-- **Chip Ariel OS Name:** `rp2040`
+- **Chip:** [nRF52833](../chips/nrf52833.md)
+- **Chip Ariel OS Name:** `nrf52833`
 
-### References
+To target this laze builder, run the following command in the root of your Ariel OS app:
 
-- [Manufacturer link](https://web.archive.org/web/20250101022830/https://www.raspberrypi.com/products/raspberry-pi-pico/)
+```bash
+laze build -b bbc-microbit-v2
+```
 
-## Support Matrix
+#### Support Matrix
 
 |Functionality|Support Status|
 |---|:---:|
@@ -21,10 +29,10 @@
 |SPI Main Mode|<span title="supported">✅</span>|
 |UART|<span title="supported">✅</span>|
 |Logging|<span title="supported">✅</span>|
-|User USB|<span title="supported">✅</span>|
+|User USB|<span title="not available on this piece of hardware">–</span>|
 |Wi-Fi|<span title="not available on this piece of hardware">–</span>|
-|Bluetooth Low Energy|<span title="not available on this piece of hardware">–</span>|
-|Ethernet over USB|<span title="supported">✅</span>|
+|Bluetooth Low Energy|<span title="supported">✅</span>|
+|Ethernet over USB|<span title="not available on this piece of hardware">–</span>|
 |Hardware Random Number Generator|<span title="supported">✅</span>|
 |Persistent Storage|<span title="supported">✅</span>|
 
@@ -52,3 +60,6 @@ dt, dd {
   display: inline;
 }
 </style>
+
+
+  

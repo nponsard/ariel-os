@@ -1,17 +1,25 @@
 # Espressif ESP32-C3-LCDkit
 
-## Board Info
-
-- **Tier:** 1
-- **Ariel OS Name:** `espressif-esp32-c3-lcdkit`
-- **Chip:** [ESP32-C3](../chips/esp32c3.md)
-- **Chip Ariel OS Name:** `esp32c3`
-
-### References
+## References
 
 - [Manufacturer link](https://web.archive.org/web/20250408100740/https://www.espressif.com/en/dev-board/esp32-c3-lcdkit-en)
 
-## Support Matrix
+## laze Builders
+
+For more information on laze builders, check out [this page](../build-system.md#laze-builders).
+### `espressif-esp32-c3-lcdkit`
+
+- **Tier:** 1
+- **Chip:** [ESP32-C3](../chips/esp32c3.md)
+- **Chip Ariel OS Name:** `esp32c3`
+
+To target this laze builder, run the following command in the root of your Ariel OS app:
+
+```bash
+laze build -b espressif-esp32-c3-lcdkit
+```
+
+#### Support Matrix
 
 |Functionality|Support Status|
 |---|:---:|
@@ -53,5 +61,7 @@ dt, dd {
 }
 </style>
 
+
+  
 [^no-generic-usb-peripheral]: No generic USB peripheral.
 [^requires-partitioning-support]: Requires partitioning support.

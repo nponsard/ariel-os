@@ -1,17 +1,25 @@
 # Nordic Thingy:91 X
 
-## Board Info
-
-- **Tier:** 2
-- **Ariel OS Name:** `nordic-thingy-91-x-nrf9151`
-- **Chip:** [nRF9151](../chips/nrf9151.md)
-- **Chip Ariel OS Name:** `nrf9151`
-
-### References
+## References
 
 - [Manufacturer link](https://web.archive.org/web/20250329185651/https://www.nordicsemi.com/Products/Development-hardware/Nordic-Thingy-91-X)
 
-## Support Matrix
+## laze Builders
+
+For more information on laze builders, check out [this page](../build-system.md#laze-builders).
+### `nordic-thingy-91-x-nrf9151`
+
+- **Tier:** 2
+- **Chip:** [nRF9151](../chips/nrf9151.md)
+- **Chip Ariel OS Name:** `nrf9151`
+
+To target this laze builder, run the following command in the root of your Ariel OS app:
+
+```bash
+laze build -b nordic-thingy-91-x-nrf9151
+```
+
+#### Support Matrix
 
 |Functionality|Support Status|
 |---|:---:|
@@ -53,5 +61,7 @@ dt, dd {
 }
 </style>
 
+
+  
 [^requires-supporting-the-onboard-nrf7002-chip]: Requires supporting the onboard nRF7002 chip.
 [^only-available-through-the-cryptocell]: Only available through the CryptoCell.

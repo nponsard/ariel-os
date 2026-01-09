@@ -1,17 +1,25 @@
 # ST NUCLEO-F401RE
 
-## Board Info
-
-- **Tier:** 2
-- **Ariel OS Name:** `st-nucleo-f401re`
-- **Chip:** [STM32F401RE](../chips/stm32f401re.md)
-- **Chip Ariel OS Name:** `stm32f401re`
-
-### References
+## References
 
 - [Manufacturer link](https://web.archive.org/web/20250115005425/https://www.st.com/en/evaluation-tools/nucleo-f401re.html)
 
-## Support Matrix
+## laze Builders
+
+For more information on laze builders, check out [this page](../build-system.md#laze-builders).
+### `st-nucleo-f401re`
+
+- **Tier:** 2
+- **Chip:** [STM32F401RE](../chips/stm32f401re.md)
+- **Chip Ariel OS Name:** `stm32f401re`
+
+To target this laze builder, run the following command in the root of your Ariel OS app:
+
+```bash
+laze build -b st-nucleo-f401re
+```
+
+#### Support Matrix
 
 |Functionality|Support Status|
 |---|:---:|
@@ -53,4 +61,6 @@ dt, dd {
 }
 </style>
 
+
+  
 [^unsupported-heterogeneous-flash-organization]: Unsupported heterogeneous flash organization.

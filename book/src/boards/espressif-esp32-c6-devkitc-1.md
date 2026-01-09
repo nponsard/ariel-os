@@ -1,17 +1,25 @@
 # Espressif ESP32-C6-DevKitC-1
 
-## Board Info
-
-- **Tier:** 1
-- **Ariel OS Name:** `espressif-esp32-c6-devkitc-1`
-- **Chip:** [ESP32-C6](../chips/esp32c6.md)
-- **Chip Ariel OS Name:** `esp32c6`
-
-### References
+## References
 
 - [Manufacturer link](https://web.archive.org/web/20250122153727/https://www.espressif.com/en/dev-board/esp32-c6-devkitc-1-en)
 
-## Support Matrix
+## laze Builders
+
+For more information on laze builders, check out [this page](../build-system.md#laze-builders).
+### `espressif-esp32-c6-devkitc-1`
+
+- **Tier:** 1
+- **Chip:** [ESP32-C6](../chips/esp32c6.md)
+- **Chip Ariel OS Name:** `esp32c6`
+
+To target this laze builder, run the following command in the root of your Ariel OS app:
+
+```bash
+laze build -b espressif-esp32-c6-devkitc-1
+```
+
+#### Support Matrix
 
 |Functionality|Support Status|
 |---|:---:|
@@ -53,5 +61,7 @@ dt, dd {
 }
 </style>
 
+
+  
 [^no-generic-usb-peripheral]: No generic USB peripheral.
 [^requires-partitioning-support]: Requires partitioning support.

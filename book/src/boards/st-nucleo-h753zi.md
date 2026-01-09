@@ -1,17 +1,25 @@
 # ST NUCLEO-H753ZI
 
-## Board Info
-
-- **Tier:** 3
-- **Ariel OS Name:** `st-nucleo-h753zi`
-- **Chip:** [STM32H753ZI](../chips/stm32h753zi.md)
-- **Chip Ariel OS Name:** `stm32h753zi`
-
-### References
+## References
 
 - [Manufacturer link](https://web.archive.org/web/20240625050043/https://www.st.com/en/evaluation-tools/nucleo-h753zi.html)
 
-## Support Matrix
+## laze Builders
+
+For more information on laze builders, check out [this page](../build-system.md#laze-builders).
+### `st-nucleo-h753zi`
+
+- **Tier:** 3
+- **Chip:** [STM32H753ZI](../chips/stm32h753zi.md)
+- **Chip Ariel OS Name:** `stm32h753zi`
+
+To target this laze builder, run the following command in the root of your Ariel OS app:
+
+```bash
+laze build -b st-nucleo-h753zi
+```
+
+#### Support Matrix
 
 |Functionality|Support Status|
 |---|:---:|
@@ -53,6 +61,8 @@ dt, dd {
 }
 </style>
 
+
+  
 [^usb-does-not-enumerate]: USB does not enumerate.
 [^see-also-https-github-com-embassy-rs-embassy-issues-2376]: See also: https://github.com/embassy-rs/embassy/issues/2376.
 [^workaround-in-https-github-com-ariel-os-ariel-os-pull-1126]: Workaround in: https://github.com/ariel-os/ariel-os/pull/1126.

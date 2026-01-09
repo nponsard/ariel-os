@@ -1,17 +1,25 @@
 # Raspberry Pi Pico 2 W
 
-## Board Info
-
-- **Tier:** 1
-- **Ariel OS Name:** `rpi-pico2-w`
-- **Chip:** [RP235xa](../chips/rp235xa.md)
-- **Chip Ariel OS Name:** `rp235xa`
-
-### References
+## References
 
 - [Manufacturer link](https://web.archive.org/web/20250130144056/https://www.raspberrypi.com/products/raspberry-pi-pico-2/)
 
-## Support Matrix
+## laze Builders
+
+For more information on laze builders, check out [this page](../build-system.md#laze-builders).
+### `rpi-pico2-w`
+
+- **Tier:** 1
+- **Chip:** [RP235xa](../chips/rp235xa.md)
+- **Chip Ariel OS Name:** `rp235xa`
+
+To target this laze builder, run the following command in the root of your Ariel OS app:
+
+```bash
+laze build -b rpi-pico2-w
+```
+
+#### Support Matrix
 
 |Functionality|Support Status|
 |---|:---:|
@@ -53,5 +61,7 @@ dt, dd {
 }
 </style>
 
+
+  
 [^uart-loopback-test-only-works-once-after-a-power-cycle]: Uart-loopback test only works once after a power cycle.
 [^see-also-https-github-com-ariel-os-ariel-os-pull-1368-issuecomment-3406073140]: See also: https://github.com/ariel-os/ariel-os/pull/1368#issuecomment-3406073140.

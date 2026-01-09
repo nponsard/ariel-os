@@ -1,17 +1,25 @@
 # nRF9151-DK
 
-## Board Info
-
-- **Tier:** 2
-- **Ariel OS Name:** `nrf9151-dk`
-- **Chip:** [nRF9151](../chips/nrf9151.md)
-- **Chip Ariel OS Name:** `nrf9151`
-
-### References
+## References
 
 - [Manufacturer link](https://web.archive.org/web/20250622211955/https://www.nordicsemi.com/Products/Development-hardware/nRF9151-DK)
 
-## Support Matrix
+## laze Builders
+
+For more information on laze builders, check out [this page](../build-system.md#laze-builders).
+### `nrf9151-dk`
+
+- **Tier:** 2
+- **Chip:** [nRF9151](../chips/nrf9151.md)
+- **Chip Ariel OS Name:** `nrf9151`
+
+To target this laze builder, run the following command in the root of your Ariel OS app:
+
+```bash
+laze build -b nrf9151-dk
+```
+
+#### Support Matrix
 
 |Functionality|Support Status|
 |---|:---:|
@@ -53,4 +61,6 @@ dt, dd {
 }
 </style>
 
+
+  
 [^only-available-through-the-cryptocell]: Only available through the CryptoCell.

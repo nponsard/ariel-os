@@ -1,17 +1,25 @@
-# Raspberry Pi Pico W
+# Raspberry Pi Pico
 
-## Board Info
-
-- **Tier:** 1
-- **Ariel OS Name:** `rpi-pico-w`
-- **Chip:** [RP2040](../chips/rp2040.md)
-- **Chip Ariel OS Name:** `rp2040`
-
-### References
+## References
 
 - [Manufacturer link](https://web.archive.org/web/20250101022830/https://www.raspberrypi.com/products/raspberry-pi-pico/)
 
-## Support Matrix
+## laze Builders
+
+For more information on laze builders, check out [this page](../build-system.md#laze-builders).
+### `rpi-pico`
+
+- **Tier:** 1
+- **Chip:** [RP2040](../chips/rp2040.md)
+- **Chip Ariel OS Name:** `rp2040`
+
+To target this laze builder, run the following command in the root of your Ariel OS app:
+
+```bash
+laze build -b rpi-pico
+```
+
+#### Support Matrix
 
 |Functionality|Support Status|
 |---|:---:|
@@ -22,8 +30,8 @@
 |UART|<span title="supported">✅</span>|
 |Logging|<span title="supported">✅</span>|
 |User USB|<span title="supported">✅</span>|
-|Wi-Fi|<span title="supported">✅</span>|
-|Bluetooth Low Energy|<span title="supported">✅</span>|
+|Wi-Fi|<span title="not available on this piece of hardware">–</span>|
+|Bluetooth Low Energy|<span title="not available on this piece of hardware">–</span>|
 |Ethernet over USB|<span title="supported">✅</span>|
 |Hardware Random Number Generator|<span title="supported">✅</span>|
 |Persistent Storage|<span title="supported">✅</span>|
@@ -52,3 +60,6 @@ dt, dd {
   display: inline;
 }
 </style>
+
+
+  
