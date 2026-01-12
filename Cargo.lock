@@ -1241,7 +1241,7 @@ dependencies = [
  "embedded-io-adapters",
  "extra-embedded-io-adapters",
  "minicbor 2.1.3",
- "minicbor-adapters 0.0.8",
+ "minicbor-adapters",
  "tee-embedded-io",
  "windowed-infinity",
 ]
@@ -1269,7 +1269,7 @@ dependencies = [
  "coap-request",
  "heapless 0.9.1",
  "minicbor 2.1.3",
- "minicbor-adapters 0.0.8",
+ "minicbor-adapters",
 ]
 
 [[package]]
@@ -1352,13 +1352,13 @@ dependencies = [
  "defmt 1.0.1",
  "defmt-or-log",
  "document-features",
- "heapless 0.8.0",
+ "heapless 0.9.1",
  "lakers",
  "lakers-crypto-rustcrypto",
  "liboscore",
  "log",
- "minicbor 0.26.5",
- "minicbor-adapters 0.0.4",
+ "minicbor 2.1.3",
+ "minicbor-adapters",
  "p256",
  "rand_core 0.9.3",
 ]
@@ -3906,17 +3906,6 @@ dependencies = [
 
 [[package]]
 name = "minicbor-adapters"
-version = "0.0.4"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "548808f4038a8f55c06ee593d5732b0132459e719a6bbffc0db9c93101c56e7a"
-dependencies = [
- "cboritem",
- "heapless 0.8.0",
- "minicbor 0.26.5",
-]
-
-[[package]]
-name = "minicbor-adapters"
 version = "0.0.8"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "d3658ff955d05287ab2d54356081d34ecfbd0c02c3b319f8561d95cb79d43021"
@@ -4877,7 +4866,7 @@ dependencies = [
  "embedded-hal-async",
  "heapless 0.9.1",
  "minicbor 2.1.3",
- "minicbor-adapters 0.0.8",
+ "minicbor-adapters",
  "switch-hal",
  "try-lock-portable-atomic",
 ]

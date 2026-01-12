@@ -67,8 +67,8 @@ impl From<minicbor::decode::Error> for CredentialError {
     }
 }
 
-impl From<minicbor::encode::Error<minicbor_adapters::OutOfSpace>> for CredentialError {
-    fn from(_: minicbor::encode::Error<minicbor_adapters::OutOfSpace>) -> Self {
+impl From<minicbor::encode::Error<heapless::CapacityError>> for CredentialError {
+    fn from(_: minicbor::encode::Error<heapless::CapacityError>) -> Self {
         Self {
             detail: CredentialErrorDetail::ConstraintExceeded,
             position: None,
