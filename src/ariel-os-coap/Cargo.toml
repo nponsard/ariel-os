@@ -50,7 +50,7 @@ embedded-io-async = { workspace = true }
 build-rs = "0.3.0"
 cbor-edn = "0.0.9"
 coap-numbers = "0.2"
-minicbor = { version = "0.26", features = ["std"] }
+minicbor = { version = "2", features = ["std"] }
 serde = "1"
 serde_yaml = "0.9.34"
 
