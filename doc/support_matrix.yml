@@ -20,6 +20,14 @@ support_keys:
 
 # Defines existing pieces of functionality, hardware or software.
 functionalities:
+  - name: debug_output
+    title: Debug Output
+    support_criteria: example-log
+    description:
+  - name: logging
+    title: Logging
+    support_criteria: example-log
+    description:
   - name: gpio
     title: GPIO
     # Name of the laze app (as defined in the app's laze.yml)
@@ -27,10 +35,6 @@ functionalities:
     # that must be built for the functionality to be marked
     # as supported for a specific piece of hardware.
     support_criteria: tests_gpio
-    description:
-  - name: debug_output
-    title: Debug Output
-    support_criteria: example-log
     description:
   - name: i2c_controller
     title: I2C Controller Mode
@@ -44,13 +48,13 @@ functionalities:
     title: UART
     support_criteria: uart-loopback
     description: UART
-  - name: logging
-    title: Logging
-    support_criteria: example-log
-    description:
   - name: user_usb
     title: User USB
     support_criteria: example-usb-serial
+    description:
+  - name: ethernet_over_usb
+    title: Ethernet over USB
+    support_criteria: usb-ethernet
     description:
   - name: wifi
     title: Wi-Fi
@@ -59,10 +63,6 @@ functionalities:
   - name: ble
     title: Bluetooth Low Energy
     support_criteria: ble-scanner
-    description:
-  - name: ethernet_over_usb
-    title: Ethernet over USB
-    support_criteria: usb-ethernet
     description:
   - name: hwrng
     title: Hardware Random Number Generator
