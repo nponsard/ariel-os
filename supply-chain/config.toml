@@ -1049,6 +1049,10 @@ criteria = "safe-to-deploy"
 version = "1.11.1"
 criteria = "safe-to-deploy"
 
+[[exemptions.portable-atomic]]
+version = "1.13.0"
+criteria = "safe-to-deploy"
+
 [[exemptions.portable_atomic_enum]]
 version = "0.3.1"
 criteria = "safe-to-deploy"
