@@ -63,7 +63,7 @@ impl<T> SameExecutorCell<T> {
     ///
     /// Despite being async, this function never blocks/yields, it returns instantly.
     pub async fn new_async(inner: T) -> Self {
-        // SAFETY: safe unless intentionally exploited.
+        // SAFETY: TODO(`for_current_executore()` unsoundness)
         let spawner = unsafe { Spawner::for_current_executor().await };
         SameExecutorCell::new(inner, spawner)
     }
@@ -72,7 +72,7 @@ impl<T> SameExecutorCell<T> {
     ///
     /// Despite being async, this function never blocks/yields, it returns instantly.
     pub async fn get_async(&self) -> Option<&T> {
-        // SAFETY: safe unless intentionally exploited.
+        // SAFETY: TODO(`for_current_executore()` unsoundness)
         let spawner = unsafe { Spawner::for_current_executor().await };
         self.get(spawner)
     }
@@ -81,7 +81,7 @@ impl<T> SameExecutorCell<T> {
     ///
     /// Despite being async, this function never blocks/yields, it returns instantly.
     pub async fn get_mut_async(&mut self) -> Option<&mut T> {
-        // SAFETY: safe unless intentionally exploited.
+        // SAFETY: TODO(`for_current_executore()` unsoundness)
         let spawner = unsafe { Spawner::for_current_executor().await };
         self.get_mut(spawner)
     }

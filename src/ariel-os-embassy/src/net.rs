@@ -34,7 +34,7 @@ pub(crate) static STACK: OnceLock<Mutex<CriticalSectionRawMutex, SameExecutorCel
 ///
 /// Returns [`None`] if networking is not yet initialized.
 pub async fn network_stack() -> Option<NetworkStack> {
-    // SAFETY: safe unless intentionally exploited.
+    // SAFETY: TODO(`for_current_executore()` unsoundness)
     let spawner = unsafe { crate::asynch::Spawner::for_current_executor().await };
     STACK.get().await.lock(|inner| inner.get(spawner).copied())
 }
