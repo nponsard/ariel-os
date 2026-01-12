@@ -241,6 +241,7 @@ global_asm!(
         //
         // In both cases, storing and loading of r4-r11 can be skipped.
         cmp r0, #0
+        beq 99f
 
         //stmia r1!, {{r4-r7}}
         str r4, [r0, #16]
