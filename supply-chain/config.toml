@@ -425,10 +425,6 @@ criteria = "safe-to-deploy"
 version = "0.13.3"
 criteria = "safe-to-deploy"
 
-[[exemptions.der]]
-version = "0.7.10"
-criteria = "safe-to-deploy"
-
 [[exemptions.digest]]
 version = "0.10.7"
 criteria = "safe-to-deploy"
@@ -487,10 +483,6 @@ criteria = "safe-to-deploy"
 
 [[exemptions.embassy-stm32]]
 version = "0.2.0@git:90c8da09646d5fd97b7d416720688dcd3da1ecfb"
-criteria = "safe-to-deploy"
-
-[[exemptions.embassy-sync]]
-version = "0.3.0"
 criteria = "safe-to-deploy"
 
 [[exemptions.embassy-sync]]
@@ -890,23 +882,11 @@ version = "0.8.0"
 criteria = "safe-to-deploy"
 
 [[exemptions.minicbor]]
-version = "0.19.1"
-criteria = "safe-to-deploy"
-
-[[exemptions.minicbor]]
-version = "0.26.5"
-criteria = "safe-to-deploy"
-
-[[exemptions.minicbor]]
 version = "2.1.3"
 criteria = "safe-to-deploy"
 
 [[exemptions.minicbor-adapters]]
 version = "0.0.4"
-criteria = "safe-to-deploy"
-
-[[exemptions.minicbor-derive]]
-version = "0.16.2"
 criteria = "safe-to-deploy"
 
 [[exemptions.minicbor-derive]]
@@ -1017,14 +997,6 @@ criteria = "safe-to-deploy"
 version = "0.1.3"
 criteria = "safe-to-deploy"
 
-[[exemptions.pin-project]]
-version = "1.1.10"
-criteria = "safe-to-deploy"
-
-[[exemptions.pin-project-internal]]
-version = "1.1.10"
-criteria = "safe-to-deploy"
-
 [[exemptions.pio]]
 version = "0.3.0"
 criteria = "safe-to-deploy"
@@ -1047,10 +1019,6 @@ criteria = "safe-to-deploy"
 
 [[exemptions.polyval]]
 version = "0.6.2"
-criteria = "safe-to-deploy"
-
-[[exemptions.portable-atomic]]
-version = "1.11.1"
 criteria = "safe-to-deploy"
 
 [[exemptions.portable-atomic]]
