@@ -893,11 +893,6 @@ criteria = "safe-to-deploy"
 version = "1.0.0"
 notes = "I am the author of this crate."
 
-[[audits.bytecode-alliance.audits.ciborium-io]]
-who = "Pat Hickey <phickey@fastly.com>"
-criteria = "safe-to-deploy"
-version = "0.2.0"
-
 [[audits.bytecode-alliance.audits.cipher]]
 who = "Andrew Brown <andrew.brown@intel.com>"
 criteria = "safe-to-deploy"
@@ -926,6 +921,12 @@ notes = "This library uses `forbid(unsafe_code)` and has no filesystem or networ
 who = "Benjamin Bouvier <public@benj.me>"
 criteria = "safe-to-deploy"
 version = "0.1.3"
+
+[[audits.bytecode-alliance.audits.der]]
+who = "Chris Fallin <chris@cfallin.org>"
+criteria = "safe-to-deploy"
+version = "0.7.10"
+notes = "No unsafe code aside from transmutes for transparent newtypes."
 
 [[audits.bytecode-alliance.audits.embedded-io]]
 who = "Alex Crichton <alex@alexcrichton.com>"
@@ -3140,12 +3141,6 @@ criteria = "safe-to-deploy"
 delta = "0.10.3 -> 0.10.4"
 notes = "Adds panics to prevent a block size of zero from causing unsoundness."
 aggregated-from = "https://raw.githubusercontent.com/zcash/zcash/master/qa/supply-chain/audits.toml"
-
-[[audits.zcash.audits.ciborium-io]]
-who = "Jack Grigg <jack@electriccoin.co>"
-criteria = "safe-to-deploy"
-delta = "0.2.0 -> 0.2.2"
-aggregated-from = "https://raw.githubusercontent.com/zcash/librustzcash/main/supply-chain/audits.toml"
 
 [[audits.zcash.audits.errno]]
 who = "Jack Grigg <jack@electriccoin.co>"
