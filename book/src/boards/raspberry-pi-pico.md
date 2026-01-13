@@ -23,16 +23,16 @@ laze build -b rpi-pico
 
 |Functionality|Support Status|
 |---|:---:|
-|GPIO|<span title="supported">✅</span>|
 |Debug Output|<span title="supported">✅</span>|
+|Logging|<span title="supported">✅</span>|
+|GPIO|<span title="supported">✅</span>|
 |I2C Controller Mode|<span title="supported">✅</span>|
 |SPI Main Mode|<span title="supported">✅</span>|
 |UART|<span title="supported">✅</span>|
-|Logging|<span title="supported">✅</span>|
 |User USB|<span title="supported">✅</span>|
+|Ethernet over USB|<span title="supported">✅</span>|
 |Wi-Fi|<span title="not available on this piece of hardware">–</span>|
 |Bluetooth Low Energy|<span title="not available on this piece of hardware">–</span>|
-|Ethernet over USB|<span title="supported">✅</span>|
 |Hardware Random Number Generator|<span title="supported">✅</span>|
 |Persistent Storage|<span title="supported">✅</span>|
 

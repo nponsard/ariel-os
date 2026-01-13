@@ -23,16 +23,16 @@ laze build -b espressif-esp32-c3-lcdkit
 
 |Functionality|Support Status|
 |---|:---:|
-|GPIO|<span title="supported">✅</span>|
 |Debug Output|<span title="supported">✅</span>|
+|Logging|<span title="supported">✅</span>|
+|GPIO|<span title="supported">✅</span>|
 |I2C Controller Mode|<span title="supported">✅</span>|
 |SPI Main Mode|<span title="supported">✅</span>|
 |UART|<span title="supported">✅</span>|
-|Logging|<span title="supported">✅</span>|
 |User USB|<span title="not available on this piece of hardware">–</span>[^no-generic-usb-peripheral]|
+|Ethernet over USB|<span title="not available on this piece of hardware">–</span>|
 |Wi-Fi|<span title="supported">✅</span>|
 |Bluetooth Low Energy|<span title="available in hardware, but not currently supported by Ariel OS">❌</span>|
-|Ethernet over USB|<span title="not available on this piece of hardware">–</span>|
 |Hardware Random Number Generator|<span title="supported">✅</span>|
 |Persistent Storage|<span title="available in hardware, but not currently supported by Ariel OS">❌</span>[^requires-partitioning-support]|
 

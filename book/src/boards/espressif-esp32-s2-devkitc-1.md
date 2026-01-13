@@ -23,16 +23,16 @@ laze build -b espressif-esp32-s2-devkitc-1
 
 |Functionality|Support Status|
 |---|:---:|
-|GPIO|<span title="supported">✅</span>|
 |Debug Output|<span title="supported">✅</span>|
+|Logging|<span title="supported">✅</span>|
+|GPIO|<span title="supported">✅</span>|
 |I2C Controller Mode|<span title="needs testing">🚦</span>|
 |SPI Main Mode|<span title="needs testing">🚦</span>|
 |UART|<span title="supported">✅</span>|
-|Logging|<span title="supported">✅</span>|
 |User USB|<span title="available in hardware, but not currently supported by Ariel OS">❌</span>[^usb-does-not-enumerate][^see-also-https-github-com-ariel-os-ariel-os-issues-903]|
+|Ethernet over USB|<span title="available in hardware, but not currently supported by Ariel OS">❌</span>|
 |Wi-Fi|<span title="supported">✅</span>|
 |Bluetooth Low Energy|<span title="not available on this piece of hardware">–</span>|
-|Ethernet over USB|<span title="available in hardware, but not currently supported by Ariel OS">❌</span>|
 |Hardware Random Number Generator|<span title="supported">✅</span>|
 |Persistent Storage|<span title="available in hardware, but not currently supported by Ariel OS">❌</span>[^requires-partitioning-support]|
 
