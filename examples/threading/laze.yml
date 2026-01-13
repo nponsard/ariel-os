@@ -1,4 +1,6 @@
 apps:
   - name: example-threading
+    conflicts:
+      - context::st-nucleo-f042k6
     selects:
       - sw/threading
