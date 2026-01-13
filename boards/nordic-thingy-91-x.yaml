@@ -7,3 +7,8 @@ boards:
     buttons:
       button0:
         pin: P0_26
+
+  nordic-thingy-91-x-nrf5340-net:
+    chip: nrf5340-net
+    flags:
+      - has_nrf_ble
