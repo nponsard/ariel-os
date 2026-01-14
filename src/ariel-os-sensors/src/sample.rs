@@ -11,6 +11,17 @@ pub enum SampleError {
     ChannelDisabled,
 }
 
+impl core::fmt::Display for SampleError {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+        match self {
+            Self::TemporarilyUnavailable => write!(f, "sample is temporarily unavailable"),
+            Self::ChannelDisabled => write!(f, "channel is disabled"),
+        }
+    }
+}
+
+impl core::error::Error for SampleError {}
+
 #[expect(clippy::doc_markdown)]
 /// Represents a value obtained from a sensor device, along with its metadata.
 ///
