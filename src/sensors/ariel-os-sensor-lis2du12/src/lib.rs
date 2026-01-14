@@ -16,12 +16,12 @@ const PART_NUMBER: &str = "LIS2DU12";
 #[expect(dead_code)]
 #[derive(Copy, Clone, PartialEq, Eq)]
 enum Register {
-    Ctrl1Addr = 0x10,
-    Ctrl4Addr = 0x13,
-    Ctrl5Addr = 0x14,
-    StatusAddr = 0x25,
-    OutXLAddr = 0x28,
-    WhoAmIRegAddr = 0x43,
+    Ctrl1 = 0x10,
+    Ctrl4 = 0x13,
+    Ctrl5 = 0x14,
+    Status = 0x25,
+    OutXL = 0x28,
+    WhoAmI = 0x43,
 }
 
 // Table 37 of the datasheet.
