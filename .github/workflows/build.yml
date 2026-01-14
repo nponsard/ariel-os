@@ -122,17 +122,20 @@ jobs:
       - name: Check out repository code
         uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6
 
-      - name: Get git tree hash
-        id: get-tree-hash
+      - name: Get tree hashes
+        id: get-tree-hashes
         run: |
-            git rev-parse HEAD^{tree} > .tree-hash
-            echo "hash=$(cat .tree-hash)" >> $GITHUB_OUTPUT
+            git rev-parse HEAD^{tree} > .git-tree-hash
+            echo "git_hash=$(cat .git-tree-hash)" >> $GITHUB_OUTPUT
 
+      # Merely checks *whether* the workflow with the same hash has run
+      # successfully in the past, restores nothing more than the file containing
+      # the hash value.
       - uses: actions/cache@9255dc7a253b0ccc959486e2bca901246202afeb # v5
-        id: result-cache
+        id: git-result-cache
         with:
-          path: .tree-hash
-          key: success-${{ steps.get-tree-hash.outputs.hash }}-${{ matrix.partition }}-${{ github.event_name == 'schedule' && 'full' || needs.check-labels.outputs.label }}
+          path: .git-tree-hash
+          key: success-${{ steps.get-tree-hashes.outputs.git_hash }}-${{ matrix.partition }}-${{ github.event_name == 'schedule' && 'full' || needs.check-labels.outputs.label }}
 
       - name: Whether to skip next steps
         id: should-skip
