@@ -35,7 +35,7 @@ enum AccelFullScale {
 }
 
 impl AccelFullScale {
-    fn from_lsb_to_microg(self, lsb: i16) -> i32 {
+    fn to_microg_from_lsb(self, lsb: i16) -> i32 {
         // Table 2 of the datasheet.
         let sensitivity = match self {
             Self::_2g => 976,
@@ -81,7 +81,7 @@ const BDU_BITS: u8 = 1 << 5;
 const DRDY_BITS: u8 = 1 << 0;
 
 #[expect(dead_code)]
-const DEVICE_ID: u8 = 0b01000101;
+const DEVICE_ID: u8 = 0b0100_0101;
 
 fn accel_accuracy() -> SampleMetadata {
     // `TyOff` from Table 2 of the datasheet.
