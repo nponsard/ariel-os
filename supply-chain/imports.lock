@@ -391,8 +391,8 @@ user-login = "dtolnay"
 user-name = "David Tolnay"
 
 [[publisher.syn]]
-version = "2.0.106"
-when = "2025-08-16"
+version = "2.0.114"
+when = "2026-01-07"
 user-id = 3618
 user-login = "dtolnay"
 user-name = "David Tolnay"
