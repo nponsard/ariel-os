@@ -40,6 +40,15 @@ pub enum GnssTimeExtError {
     InvalidSensor,
 }
 
+impl core::fmt::Display for GnssTimeExtError {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+        match self {
+            GnssTimeExtError::Reading(e) => write!(f, "reading error: {e}"),
+            GnssTimeExtError::InvalidSensor => write!(f, "invalid sensor"),
+        }
+    }
+}
+
 /// Trait to use to access time information on [`Samples`] coming from a GNSS sensor.
 pub trait GnssTimeExt {
     /// Returns the UTC time in seconds since UNIX epoch.
