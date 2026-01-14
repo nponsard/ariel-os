@@ -128,6 +128,10 @@ jobs:
             git rev-parse HEAD^{tree} > .git-tree-hash
             echo "git_hash=$(cat .git-tree-hash)" >> $GITHUB_OUTPUT
 
+            echo '${{ hashFiles('**', '!.git', '!book', '!supply-chain') }}' > .partial-tree-hash
+            echo "partial_hash=$(cat .partial-tree-hash)" # For debugging
+            echo "partial_hash=$(cat .partial-tree-hash)" >> $GITHUB_OUTPUT
+
       # Merely checks *whether* the workflow with the same hash has run
       # successfully in the past, restores nothing more than the file containing
       # the hash value.
@@ -137,10 +141,19 @@ jobs:
           path: .git-tree-hash
           key: success-${{ steps.get-tree-hashes.outputs.git_hash }}-${{ matrix.partition }}-${{ github.event_name == 'schedule' && 'full' || needs.check-labels.outputs.label }}
 
+      # Merely checks *whether* the workflow with the same hash has run
+      # successfully in the past, restores nothing more than the file containing
+      # the hash value.
+      - uses: actions/cache@9255dc7a253b0ccc959486e2bca901246202afeb # v5
+        id: partial-result-cache
+        with:
+          path: .partial-tree-hash
+          key: success-${{ steps.get-tree-hashes.outputs.partial_hash }}-${{ matrix.partition }}-${{ github.event_name == 'schedule' && 'full' || needs.check-labels.outputs.label }}
+
       - name: Whether to skip next steps
         id: should-skip
         run: |
-          result="result=${{ steps.result-cache.outputs.cache-hit == 'true' }}"
+          result="result=${{ steps.partial-result-cache.outputs.cache-hit == 'true'  || steps.git-result-cache.outputs.cache-hit == 'true' }}"
           echo "${result}"
           echo "${result}" >> $GITHUB_OUTPUT
 
