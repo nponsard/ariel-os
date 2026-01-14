@@ -18,8 +18,9 @@
 //!
 //! Get parts with [`convert_datetime_to_parts()`].
 //! You need to return a channel with the label [`Label::OpaqueGnssTime`] containing the first
-//! part followed by a channel with the label [`Label::Opaque`] containing the second part.
-#![cfg_attr(not(context = "native"), no_std)]
+//! part *directly followed* by a channel with the label [`Label::Opaque`] containing the second part.
+#![cfg_attr(not(any(test, context = "native")), no_std)]
+#![deny(missing_docs)]
 
 use ariel_os_sensors::{
     Label, Reading as _,
@@ -27,8 +28,10 @@ use ariel_os_sensors::{
 };
 use time::{UtcDateTime, macros::utc_datetime};
 
-const ARIEL_EPOCH: UtcDateTime = utc_datetime!(2024-01-01 0:00);
+const ARIEL_EPOCH: UtcDateTime = utc_datetime!(2025-01-01 0:00);
 
+
+/// Error returned when trying to access the time information on [`Samples`] coming from a GNSS sensor.
 #[derive(Debug, Copy, Clone, PartialEq, Eq)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub enum GnssTimeExtError {
@@ -38,6 +41,7 @@ pub enum GnssTimeExtError {
     InvalidSensor,
 }
 
+/// Trait to use to access time information on [`Samples`] coming from a GNSS sensor.
 pub trait GnssTimeExt {
     /// Returns the UTC time in seconds since UNIX epoch.
     ///

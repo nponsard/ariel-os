@@ -364,7 +364,6 @@ dependencies = [
 name = "ariel-os-gnss-time-extension"
 version = "0.1.0"
 dependencies = [
- "ariel-os-debug",
  "ariel-os-sensors",
  "defmt 1.0.1",
  "time",
@@ -1837,9 +1836,9 @@ dependencies = [
 
 [[package]]
 name = "deranged"
-version = "0.5.3"
+version = "0.5.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d630bccd429a5bb5a64b5e94f693bfc48c9f8566418fda4c494cc94f911f87cc"
+checksum = "ececcb659e7ba858fb4f10388c250a7252eb0a27373f1a72b8748afdd248e587"
 dependencies = [
  "powerfmt",
 ]
