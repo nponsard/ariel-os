@@ -26,10 +26,9 @@ use ariel_os_sensors::{
     Label, Reading as _,
     sensor::{ReadingChannel, Sample, SampleError, Samples},
 };
-use time::{UtcDateTime, macros::utc_datetime};
 
-const ARIEL_EPOCH: UtcDateTime = utc_datetime!(2025-01-01 0:00);
-
+// 2025-01-01T00:00:00.000Z in nanoseconds
+const ARIEL_EPOCH: i64 = 1_735_689_600_000_000;
 
 /// Error returned when trying to access the time information on [`Samples`] coming from a GNSS sensor.
 #[derive(Debug, Copy, Clone, PartialEq, Eq)]
@@ -78,7 +77,7 @@ impl GnssTimeExt for Samples {
             .ok_or(GnssTimeExtError::InvalidSensor)?;
 
         let since_ariel_epoch: i64 = sample.1.value().map_err(GnssTimeExtError::Reading)?.into();
-        Ok(ARIEL_EPOCH.unix_timestamp() + since_ariel_epoch)
+        Ok(ARIEL_EPOCH + since_ariel_epoch)
     }
     fn time_of_fix_delta_ns(&self) -> Result<i64, GnssTimeExtError> {
         let sample = get_element_after_marker(self.samples(), Label::OpaqueGnssTime, 1)
@@ -90,13 +89,26 @@ impl GnssTimeExt for Samples {
 
 /// Convert time to parts to be put into Samples.
 ///
+/// `utc_datetime` is an UTC timestamp as nanoseconds since UNIX epoch.
+///
 /// # Panics
-/// Panics if the seconds since Ariel's epoch overflow.
+/// Panics if the seconds since Ariel's epoch overflow or the nanoseconds in a second overflow,
+/// the first panic would happen if the timestamp is too far in the future or too far in the past.
+///
+/// The Ariel epoch needs to be changed before this happens.
+///
+/// For the second panic, it should never happen unless something went very wrong,
+/// as the value range should be between 1,000,000 and -1,000,000.
 #[must_use]
-pub fn convert_datetime_to_parts(utc_datetime: UtcDateTime) -> (i32, i32) {
-    let seconds_since_epoch = (utc_datetime - ARIEL_EPOCH).whole_seconds();
-    let nanoseconds = utc_datetime.nanosecond().cast_signed();
-    (seconds_since_epoch.try_into().unwrap(), nanoseconds)
+pub fn convert_datetime_to_parts(utc_datetime: i64) -> (i32, i32) {
+    let nanoseconds_since_epoch = utc_datetime - ARIEL_EPOCH;
+    let seconds_since_epoch = nanoseconds_since_epoch / 1_000_000;
+    let nanoseconds = nanoseconds_since_epoch - seconds_since_epoch * 1_000_000;
+
+    (
+        seconds_since_epoch.try_into().unwrap(),
+        nanoseconds.try_into().unwrap(),
+    )
 }
 
 fn get_element_after_marker(
