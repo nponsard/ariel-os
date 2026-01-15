@@ -48,9 +48,9 @@ fn accuracy(temp: i32) -> SampleMetadata {
     }
 
     // Accuracy of 1.0 °C otherwise.
-    return SampleMetadata::SymmetricalError {
+    SampleMetadata::SymmetricalError {
         deviation: 100,
         bias: 0,
         scaling: -2,
-    };
+    }
 }
