@@ -138,19 +138,19 @@ pub fn convert_datetime_to_parts(
     let seconds_since_epoch = i64::try_from(utc_datetime / 1_000_000_000)
         .map_err(|_| GnssTimeExtConvertError::Overflow)?
         - ARIEL_EPOCH;
-    let nanoseconds = nanoseconds_since_epoch
+    let seconds_since_epoch = seconds_since_epoch
+        .try_into()
+        .map_err(|_| GnssTimeExtConvertError::Overflow)?;
+    let mut nanoseconds: i32 = nanoseconds_since_epoch
         .checked_sub(i128::from(seconds_since_epoch) * 1_000_000_000)
         .ok_or(GnssTimeExtConvertError::Overflow)?
-        .abs();
+        .try_into()
+        .map_err(|_| GnssTimeExtConvertError::Overflow)?;
+    if nanoseconds < 0 {
+        nanoseconds += 1_000_000_000;
+    }
 
-    Ok((
-        seconds_since_epoch
-            .try_into()
-            .map_err(|_| GnssTimeExtConvertError::Overflow)?,
-        nanoseconds
-            .try_into()
-            .map_err(|_| GnssTimeExtConvertError::Overflow)?,
-    ))
+    Ok((seconds_since_epoch, nanoseconds))
 }
 
 fn get_element_after_marker(
@@ -177,8 +177,9 @@ fn get_element_after_marker(
     }
 }
 
-// To obtain a timestamp with nanoseconds
+// To obtain a timestamp with nanoseconds (works only for positive timestamps)
 // date --date "2038-01-19T04:04:04.040404Z" -u +%s%N
+// for negative timestamp you will need to subtract `date --date "2038-01-19T04:04:04.040404Z" -u +%N` to 1_000_000_000
 
 #[cfg(test)]
 mod tests {
@@ -219,7 +220,7 @@ mod tests {
 
         fn set_mode(
             &self,
-            mode: ariel_os_sensors::sensor::Mode,
+            _mode: ariel_os_sensors::sensor::Mode,
         ) -> Result<ariel_os_sensors::sensor::State, ariel_os_sensors::sensor::SetModeError>
         {
             unimplemented!()
@@ -274,7 +275,7 @@ mod tests {
             // Lower limit
             // 1956-12-13T20:45:54.543210Z
             TestData {
-                timestamp_ns: -411794046543210000,
+                timestamp_ns: -411794046456790000,
                 expected_first: -2147483646,
                 expected_second: 543210000,
             },
