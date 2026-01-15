@@ -18,4 +18,4 @@ e.g., `telnet`:
 
     telnet 10.42.0.61 1234
 
-Look [here](../README.md#networking) or more information about network configuration.
+Look [here](../README.md#networking) for more information about network configuration.
