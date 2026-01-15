@@ -361,14 +361,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "ariel-os-gnss-time-extension"
-version = "0.1.0"
-dependencies = [
- "ariel-os-sensors",
- "defmt 1.0.1",
-]
-
-[[package]]
 name = "ariel-os-hal"
 version = "0.2.0"
 dependencies = [
@@ -575,6 +567,14 @@ dependencies = [
  "embassy-sync 0.7.2",
  "pin-project-lite",
  "static_cell",
+]
+
+[[package]]
+name = "ariel-os-sensors-gnss-time-ext"
+version = "0.1.0"
+dependencies = [
+ "ariel-os-sensors",
+ "defmt 1.0.1",
 ]
 
 [[package]]
