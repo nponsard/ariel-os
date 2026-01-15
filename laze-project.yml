@@ -384,8 +384,6 @@ contexts:
       RUSTFLAGS:
         # linkall first
         - -Clink-arg=-Tlinkall.x
-        # this might be needed for backtraces. it is needed for probe-rs.
-        - -C force-frame-pointers
 
   - name: esp32
     parent: esp
@@ -866,6 +864,8 @@ modules:
         # riscv needs a bit more isr stack.
         isr_stacksize_required_default: "4096"
         RUSTFLAGS:
+          # this might be needed for backtraces. it is needed for probe-rs.
+          - -C force-frame-pointers
           - --cfg context=\"riscv\"
           - -Clink-arg=-Tisr_stack.x
           - -Clink-arg=-Tlinkme-region-alias.x
