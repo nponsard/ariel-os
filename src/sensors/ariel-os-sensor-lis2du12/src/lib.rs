@@ -16,12 +16,12 @@ const PART_NUMBER: &str = "LIS2DU12";
 #[expect(dead_code)]
 #[derive(Copy, Clone, PartialEq, Eq)]
 enum Register {
-    Ctrl1Addr = 0x10,
-    Ctrl4Addr = 0x13,
-    Ctrl5Addr = 0x14,
-    StatusAddr = 0x25,
-    OutXLAddr = 0x28,
-    WhoAmIRegAddr = 0x43,
+    Ctrl1 = 0x10,
+    Ctrl4 = 0x13,
+    Ctrl5 = 0x14,
+    Status = 0x25,
+    OutXL = 0x28,
+    WhoAmI = 0x43,
 }
 
 // Table 37 of the datasheet.
@@ -35,7 +35,7 @@ enum AccelFullScale {
 }
 
 impl AccelFullScale {
-    fn from_lsb_to_microg(self, lsb: i16) -> i32 {
+    fn to_microg_from_lsb(self, lsb: i16) -> i32 {
         // Table 2 of the datasheet.
         let sensitivity = match self {
             Self::_2g => 976,
@@ -81,7 +81,7 @@ const BDU_BITS: u8 = 1 << 5;
 const DRDY_BITS: u8 = 1 << 0;
 
 #[expect(dead_code)]
-const DEVICE_ID: u8 = 0b01000101;
+const DEVICE_ID: u8 = 0b0100_0101;
 
 fn accel_accuracy() -> SampleMetadata {
     // `TyOff` from Table 2 of the datasheet.

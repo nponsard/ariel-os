@@ -58,7 +58,6 @@ pub struct Stts22h<I2C> {
 
 impl<I2C: I2c + Send> Stts22h<I2C> {
     /// Creates an uninitialized driver.
-    #[expect(clippy::new_without_default)]
     #[must_use]
     pub const fn new(label: Option<&'static str>) -> Self {
         Self {
@@ -91,12 +90,17 @@ impl<I2C: I2c + Send> Stts22h<I2C> {
         }
     }
 
+    /// Resets the sensor device.
+    ///
+    /// # Errors
+    ///
+    /// Returns `Err(())` in case of a communication error with the sensor device.
     async fn reset(i2c_device: &mut I2C, address: I2cAddress) -> Result<(), ()> {
         // Set IF_ADD_INC first to reset the thresholds registers in one transaction.
         i2c_device
             .write(
                 address as u8,
-                &[Register::CtrlRegAddr as u8, crate::IF_ADD_INC_BITS],
+                &[Register::Ctrl as u8, crate::IF_ADD_INC_BITS],
             )
             .await
             .map_err(|_| ())?;
@@ -126,6 +130,12 @@ impl<I2C: I2c + Send> Stts22h<I2C> {
         }
     }
 
+    /// Triggers a measurement and asynchronously returns the readings when available.
+    ///
+    /// # Errors
+    ///
+    /// Returns `ReadingError::SensorAccess` in case of a communication error with the sensor
+    /// device.
     async fn measure(&'static self) -> ReadingResult<Samples> {
         let mut i2c = self.i2c.get().await.lock().await;
         let address = self.address.load(Ordering::Acquire);
@@ -137,14 +147,14 @@ impl<I2C: I2c + Send> Stts22h<I2C> {
         ctrl |= crate::BDU_BITS;
 
         // Trigger a one-shot measurement.
-        i2c.write(address, &[Register::CtrlRegAddr as u8, ctrl])
+        i2c.write(address, &[Register::Ctrl as u8, ctrl])
             .await
             .map_err(|_| ReadingError::SensorAccess)?;
 
         // Wait for the measurement.
         loop {
             let mut buf = [0u8];
-            i2c.write_read(address, &[Register::StatusRegAddr as u8], &mut buf)
+            i2c.write_read(address, &[Register::Status as u8], &mut buf)
                 .await
                 .map_err(|_| ReadingError::SensorAccess)?;
 
@@ -159,7 +169,7 @@ impl<I2C: I2c + Send> Stts22h<I2C> {
 
         // Reads both temperature bytes thanks to IF_ADD_INC.
         let mut buf = [0u8; 2];
-        i2c.write_read(address, &[Register::TempLOutRegAddr as u8], &mut buf)
+        i2c.write_read(address, &[Register::TempLOut as u8], &mut buf)
             .await
             .map_err(|_| ReadingError::SensorAccess)?;
 
@@ -200,11 +210,9 @@ impl<I2C: Send> Sensor for Stts22h<I2C> {
 
                 ReadingWaiter::new(self.reading.wait())
             }
-            State::Enabled => {
-                return ReadingWaiter::new_err(ReadingError::NotMeasuring);
-            }
+            State::Enabled => ReadingWaiter::new_err(ReadingError::NotMeasuring),
             State::Uninitialized | State::Disabled | State::Sleeping => {
-                return ReadingWaiter::new_err(ReadingError::NonEnabled);
+                ReadingWaiter::new_err(ReadingError::NonEnabled)
             }
         }
     }
@@ -284,8 +292,8 @@ mod tests {
         ) -> Result<(), Self::Error> {
             match operations {
                 [Operation::Write(wbuf), Operation::Read(rbuf)] => match wbuf[0] {
-                    addr if addr == Register::StatusRegAddr as u8 => {}
-                    addr if addr == Register::TempLOutRegAddr as u8 => {
+                    addr if addr == Register::Status as u8 => {}
+                    addr if addr == Register::TempLOut as u8 => {
                         // Provide different samples for consecutive readings.
                         let sample: i32 = match self.reading_count {
                             0 => 2500,

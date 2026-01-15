@@ -22,10 +22,10 @@ use crate::{AccelFullScale, PART_NUMBER, Register};
 #[derive(Debug, Copy, Clone, PartialEq, Eq, Default)]
 pub enum I2cAddress {
     /// The SA0 pin is pulled low.
-    Sa0Gnd = 0b0011000,
+    Sa0Gnd = 0b001_1000,
     /// The SA0 pin is pulled high.
     #[default]
-    Sa0Vdd = 0b0011001,
+    Sa0Vdd = 0b001_1001,
 }
 
 /// Configuration of the sensor driver and device.
@@ -54,7 +54,6 @@ pub struct Lis2du12<I2C> {
 
 impl<I2C: I2c + Send> Lis2du12<I2C> {
     /// Creates an uninitialized driver.
-    #[expect(clippy::new_without_default)]
     #[must_use]
     pub const fn new(label: Option<&'static str>) -> Self {
         Self {
@@ -90,12 +89,17 @@ impl<I2C: I2c + Send> Lis2du12<I2C> {
         }
     }
 
+    /// Resets the sensor device.
+    ///
+    /// # Errors
+    ///
+    /// Returns `Err(())` in case of a communication error with the sensor device.
     async fn reset(i2c_device: &mut I2C, address: I2cAddress) -> Result<(), ()> {
         let address = address as u8;
 
         // The device is always in power-down mode as we are only using the one-shot mode.
         i2c_device
-            .write(address, &[Register::Ctrl1Addr as u8, crate::SW_RESET])
+            .write(address, &[Register::Ctrl1 as u8, crate::SW_RESET])
             .await
             .map_err(|_| ())?;
 
@@ -104,13 +108,13 @@ impl<I2C: I2c + Send> Lis2du12<I2C> {
             // Enable address auto-increment on serial interface.
             let ctrl = crate::IF_ADD_INC_BITS;
             i2c_device
-                .write(address, &[Register::Ctrl1Addr as u8, ctrl])
+                .write(address, &[Register::Ctrl1 as u8, ctrl])
                 .await
                 .map_err(|_| ())?;
 
             let ctrl = crate::Odr::OneShotInterface as u8;
             i2c_device
-                .write(address, &[Register::Ctrl5Addr as u8, ctrl])
+                .write(address, &[Register::Ctrl5 as u8, ctrl])
                 .await
                 .map_err(|_| ())?;
         }
@@ -135,20 +139,26 @@ impl<I2C: I2c + Send> Lis2du12<I2C> {
         }
     }
 
+    /// Triggers a measurement and asynchronously returns the readings when available.
+    ///
+    /// # Errors
+    ///
+    /// Returns `ReadingError::SensorAccess` in case of a communication error with the sensor
+    /// device.
     async fn measure(&'static self) -> ReadingResult<Samples> {
         let mut i2c = self.i2c.get().await.lock().await;
         let address = self.address.load(Ordering::Acquire);
 
         // Trigger acceleration measurement.
         let ctrl = crate::BDU_BITS | crate::SOC_BITS;
-        i2c.write(address, &[Register::Ctrl4Addr as u8, ctrl])
+        i2c.write(address, &[Register::Ctrl4 as u8, ctrl])
             .await
             .map_err(|_| ReadingError::SensorAccess)?;
 
         // Wait for the measurement.
         loop {
             let mut buf = [0u8];
-            i2c.write_read(address, &[Register::StatusAddr as u8], &mut buf)
+            i2c.write_read(address, &[Register::Status as u8], &mut buf)
                 .await
                 .map_err(|_| ReadingError::SensorAccess)?;
 
@@ -164,19 +174,19 @@ impl<I2C: I2c + Send> Lis2du12<I2C> {
 
         // Read all acceleration registers.
         let mut buf = [0u8; 3 * 2];
-        i2c.write_read(address, &[Register::OutXLAddr as u8], &mut buf)
+        i2c.write_read(address, &[Register::OutXL as u8], &mut buf)
             .await
             .map_err(|_| ReadingError::SensorAccess)?;
 
         let accel_x = self
             .full_scale
-            .from_lsb_to_microg(i16::from_be_bytes([buf[1], buf[0]]));
+            .to_microg_from_lsb(i16::from_be_bytes([buf[1], buf[0]]));
         let accel_y = self
             .full_scale
-            .from_lsb_to_microg(i16::from_be_bytes([buf[3], buf[2]]));
+            .to_microg_from_lsb(i16::from_be_bytes([buf[3], buf[2]]));
         let accel_z = self
             .full_scale
-            .from_lsb_to_microg(i16::from_be_bytes([buf[5], buf[4]]));
+            .to_microg_from_lsb(i16::from_be_bytes([buf[5], buf[4]]));
 
         let accel_accuracy = crate::accel_accuracy();
 
@@ -219,11 +229,9 @@ impl<I2C: Send> Sensor for Lis2du12<I2C> {
 
                 ReadingWaiter::new(self.reading.wait())
             }
-            State::Enabled => {
-                return ReadingWaiter::new_err(ReadingError::NotMeasuring);
-            }
+            State::Enabled => ReadingWaiter::new_err(ReadingError::NotMeasuring),
             State::Uninitialized | State::Disabled | State::Sleeping => {
-                return ReadingWaiter::new_err(ReadingError::NonEnabled);
+                ReadingWaiter::new_err(ReadingError::NonEnabled)
             }
         }
     }
