@@ -13,7 +13,7 @@ use ariel_os_gnss_time_extension::GnssTimeExt;
 
 #[ariel_os::task(autostart)]
 async fn main() {
-    let spawner = Spawner::for_current_executor().await;
+    let spawner = unsafe { Spawner::for_current_executor().await };
 
     sensors::NRF91_GNSS
         .init(ariel_os_nrf91_gnss::config::Config::default())
