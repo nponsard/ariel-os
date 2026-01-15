@@ -16,13 +16,13 @@ const PART_NUMBER: &str = "STTS22H";
 #[expect(dead_code)]
 #[derive(Copy, Clone, PartialEq, Eq)]
 enum Register {
-    WhoAmIRegAddr = 0x01,
+    Whoami = 0x01,
     TempHLimit = 0x02,
     TempLLimit = 0x03,
-    CtrlRegAddr = 0x04,
-    StatusRegAddr = 0x05,
-    TempLOutRegAddr = 0x06,
-    TempHOutRegAddr = 0x07,
+    Ctrl = 0x04,
+    Status = 0x05,
+    TempLOut = 0x06,
+    TempHOut = 0x07,
 }
 
 // CTRL register bits.
