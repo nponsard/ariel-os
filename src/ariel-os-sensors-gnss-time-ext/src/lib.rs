@@ -127,7 +127,7 @@ impl GnssTimeExt for Samples {
 /// `utc_datetime` is an UTC timestamp as nanoseconds since UNIX epoch.
 ///
 /// # Errors
-/// Returns an erro when `utc_datetime` is either too far in the past or too far in the future.
+/// Returns an error when `utc_datetime` is either too far in the past or too far in the future.
 ///
 pub fn convert_datetime_to_parts(
     utc_datetime: i128,
