@@ -64,7 +64,7 @@ Ariel OS is licensed under either of
 
 at your option.
 
-Copyright (C) 2020–2026 Freie Universität Berlin, Inria, Kaspar Schleiser
+Copyright (C) 2020-2026 Freie Universität Berlin, Inria, Kaspar Schleiser
 
 ## Contributing
 
