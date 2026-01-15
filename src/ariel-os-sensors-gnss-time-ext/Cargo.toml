@@ -12,6 +12,12 @@ license.workspace = true
 ariel-os-sensors = { path = "../ariel-os-sensors" }
 defmt = { workspace = true, optional = true }
 
+[dev-dependencies]
+ariel-os-sensors = { path = "../ariel-os-sensors", features = [
+  "max-sample-min-count-4",
+] }
+static_cell = { workspace = true }
+
 [features]
 defmt = ["dep:defmt", "ariel-os-sensors/defmt"]
 

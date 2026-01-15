@@ -575,6 +575,7 @@ version = "0.1.0"
 dependencies = [
  "ariel-os-sensors",
  "defmt 1.0.1",
+ "static_cell",
 ]
 
 [[package]]
