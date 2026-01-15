@@ -17,4 +17,4 @@ A GET request will be made every 3 seconds, even in case of failure and the
 response body will be printed as a string, along with some relevant HTTP
 response headers.
 
-Look [here](../README.md#networking) or more information about network configuration.
+Look [here](../README.md#networking) for more information about network configuration.

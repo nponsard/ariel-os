@@ -14,4 +14,4 @@ In this directory, run
 With the device USB cable connected, a USB Ethernet device should pop up.
 Ariel OS will reply to ping requests on 10.42.0.61.
 
-Look [here](../README.md#networking) or more information about network configuration.
+Look [here](../README.md#networking) for more information about network configuration.
