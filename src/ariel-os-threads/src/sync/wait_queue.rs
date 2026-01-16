@@ -66,6 +66,43 @@ impl WaitQueue {
         }
     }
 
+    /// Waits for this [`WaitQueue`] to be notified, with deadline and check fn (blocking).
+    ///
+    /// This function:
+    /// 1. calls `check()`
+    /// 2. if `check()` has returned true, returns true
+    /// 3. else, waits on `Self` until `deadline` (or notification)
+    /// 4. calls `check()` again, returns its result
+    ///
+    /// # Panics
+    ///
+    /// Panics if this is called outside of a thread context.
+    pub fn wait_until_with_check(
+        &self,
+        deadline: embassy_time::Instant,
+        check: impl Fn(CriticalSection<'_>) -> bool,
+    ) -> bool {
+        ariel_os_debug::log::trace!("WaitQueue::wait_until_with_check()");
+        // Safety:
+        // `on_timeout` takes care of removing the thread from the threadlist.
+        unsafe {
+            crate::timeout::with_deadline_check(
+                deadline,
+                check,
+                |cs| {
+                    self.wait_cs(cs);
+                },
+                |cs| {
+                    ariel_os_debug::log::trace!("WaitQueue::wait_until_with_check() timeout");
+                    // Safety: the critical section is used to uphold aliasing rules.
+                    #[expect(unused_unsafe)]
+                    let waiters = unsafe { &mut *self.waiters.get() };
+                    waiters.remove_current(cs);
+                },
+            )
+        }
+    }
+
     /// Notify all waiters.
     pub fn notify_all(&self) {
         critical_section::with(|cs| {

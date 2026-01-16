@@ -38,7 +38,7 @@ fn wake(ptr: *const ()) {
             }
         } else {
             ariel_os_debug::log::debug!(
-                "timer for {:?} now={:?} no deadline set)",
+                "timer for {:?} now={:?} (no deadline set)",
                 thread_id,
                 embassy_time_driver::now()
             );
@@ -143,6 +143,66 @@ pub(crate) unsafe fn with_deadline(
             on_timeout(cs)
         }
     })
+}
+
+/// Runs a custom wait function with check function.
+///
+/// 1. Calls `check()`. If that returns true, early out returning `true`
+/// 2. If `deadline` is in the past, return false
+/// 3. If `deadline` is in the future, set the thread's deadline and call `wait()`.
+/// 4. On return, if `deadline` has expired, call `on_timeout()`.
+/// 5. Call `check()`, return its result.
+///
+/// # Safety
+/// This will set the calling thread to `Runnable` after the timeout expires. Caller must ensure safety implications of that.
+pub(crate) unsafe fn with_deadline_check(
+    deadline: embassy_time::Instant,
+    check: impl Fn(CriticalSection<'_>) -> bool,
+    wait: impl FnOnce(CriticalSection<'_>),
+    on_timeout: impl FnOnce(CriticalSection<'_>),
+) -> bool {
+    let deadline = deadline.as_ticks();
+    let initial = critical_section::with(|cs| {
+        if check(cs) {
+            ariel_os_debug::log::debug!(
+                "with_deadline_check: initial check succeeded, early out for deadline={}",
+                deadline
+            );
+            Some(true)
+        } else if set_deadline(cs, deadline) {
+            ariel_os_debug::log::debug!(
+                "with_deadline_check: initial check failed, calling wait() for deadline={}",
+                deadline
+            );
+            wait(cs);
+            None
+        } else {
+            ariel_os_debug::log::debug!(
+                "with_deadline_check: initial check failed, deadline in past, early out for deadline={}",
+                deadline
+            );
+            Some(false)
+        }
+    });
+
+    match initial {
+        Some(val) => val,
+        None => critical_section::with(|cs| {
+            if clear_deadline(cs) {
+                ariel_os_debug::log::debug!(
+                    "with_deadline_check: timeout was not hit for deadline={}",
+                    deadline
+                );
+            } else {
+                ariel_os_debug::log::debug!(
+                    "with_deadline_check: timeout was hit for deadline={}, calling on_timeout",
+                    deadline
+                );
+                on_timeout(cs);
+            }
+            check(cs)
+        }),
+    }
 }
 
 /// Put the current thread to sleep for the given duration.
