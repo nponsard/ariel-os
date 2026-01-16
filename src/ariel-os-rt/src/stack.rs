@@ -13,6 +13,15 @@ use crate::arch::sp;
 /// Bytes that's used to pain stacks.
 const STACK_PAINT_COLOR: u8 = 0xCC;
 
+/// Number of bytes to ignore when painting / measuring.
+/// Will only paint from `stack_lowest` to `sp()-STACK_PAINT_IGNORE`.
+#[cfg(not(context = "xtensa"))]
+const STACK_PAINT_IGNORE: usize = 0;
+// Xtensa Windowed Register ABI needs 4 words register spill
+// area.
+#[cfg(context = "xtensa")]
+const STACK_PAINT_IGNORE: usize = 16;
+
 /// Struct representing the currently active stack.
 ///
 /// # Stack painting
@@ -114,7 +123,7 @@ impl Stack {
     #[must_use]
     #[inline(always)]
     pub fn used(&self) -> usize {
-        self.highest - sp()
+        self.highest - (sp() - STACK_PAINT_IGNORE)
     }
 
     /// Returns the minimum free stack space since last repaint.
@@ -154,7 +163,7 @@ impl Stack {
     /// Only panics if its internal sanity check fails, which would
     /// point to a bug.
     pub fn repaint(&self) {
-        let sp = crate::arch::sp();
+        let sp = crate::arch::sp() - STACK_PAINT_IGNORE;
         if self.is_empty() {
             return;
         }
@@ -169,7 +178,7 @@ impl Stack {
             // from the stack `self` was created on and belongs to. The assert above double-checks
             // this.
             // Given that `lowest` doesn't change (which it never does in Ariel OS while a stack is
-            // in use), overwriting `lowest..sp` is safe on all our platforms, when `sp` points to the
+            // in use), overwriting `lowest..sp(-STACK_PAINT_IGNORE on xtensa)` is safe on all our platforms, when `sp` points to the
             // current stack frame's stack pointer.
             // This does not prevent this from being interrupted by an ISR, in which case
             // the stack is dirtied again, but that doesn't cause any unsafety and just
