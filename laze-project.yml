@@ -484,8 +484,8 @@ contexts:
       CARGO_TARGET_PREFIX: CARGO_TARGET_XTENSA_ESP32S3_NONE_ELF
       CC: xtensa-esp32s3-elf-gcc
       CARGO_ENV:
-      - TARGET_CC="${CC}"
-      - TARGET_CFLAGS="${CFLAGS}"
+        - TARGET_CC="${CC}"
+        - TARGET_CFLAGS="${CFLAGS}"
 
   - name: esp32s3fx8
     parent: esp32s3
