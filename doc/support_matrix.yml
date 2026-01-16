@@ -826,6 +826,16 @@ builders:
           - requires supporting the onboard nRF7002 chip
       ble: not_available
 
+  nordic-thingy-91-x-nrf5340-net:
+    chip: nrf5340-net
+    tier: "2"
+    support:
+      wifi:
+        status: not_currently_supported
+        comments:
+          - requires supporting the onboard nRF7002 chip
+      ble: supported
+
   nrf52dk:
     chip: nrf52832
     tier: "2"
@@ -1082,6 +1092,7 @@ boards:
     url: https://web.archive.org/web/20250329185651/https://www.nordicsemi.com/Products/Development-hardware/Nordic-Thingy-91-X
     builders:
       - nordic-thingy-91-x-nrf9151
+      - nordic-thingy-91-x-nrf5340-net
 
   - name: nRF52-DK
     url: https://web.archive.org/web/20250311221943/https://www.nordicsemi.com/Products/Development-hardware/nRF52-DK
