@@ -7,16 +7,16 @@
 ## laze Builders
 
 For more information on laze builders, check out [this page](../build-system.md#laze-builders).
-### `nrf5340dk`
+### `nrf5340dk-app`
 
 - **Tier:** 1
-- **Chip:** [nRF5340 application core](../chips/nrf5340.md)
-- **Chip Ariel OS Name:** `nrf5340`
+- **Chip:** [nRF5340 application core](../chips/nrf5340-app.md)
+- **Chip Ariel OS Name:** `nrf5340-app`
 
 To target this laze builder, run the following command in the root of your Ariel OS app:
 
 ```bash
-laze build -b nrf5340dk
+laze build -b nrf5340dk-app
 ```
 
 #### Support Matrix
