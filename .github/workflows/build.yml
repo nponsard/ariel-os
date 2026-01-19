@@ -135,7 +135,7 @@ jobs:
       # Merely checks *whether* the workflow with the same hash has run
       # successfully in the past, restores nothing more than the file containing
       # the hash value.
-      - uses: actions/cache@9255dc7a253b0ccc959486e2bca901246202afeb # v5
+      - uses: actions/cache@8b402f58fbc84540c8b491a91e594a4576fec3d7 # v5
         id: git-result-cache
         with:
           path: .git-tree-hash
@@ -144,7 +144,7 @@ jobs:
       # Merely checks *whether* the workflow with the same hash has run
       # successfully in the past, restores nothing more than the file containing
       # the hash value.
-      - uses: actions/cache@9255dc7a253b0ccc959486e2bca901246202afeb # v5
+      - uses: actions/cache@8b402f58fbc84540c8b491a91e594a4576fec3d7 # v5
         id: partial-result-cache
         with:
           path: .partial-tree-hash
