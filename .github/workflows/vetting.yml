@@ -23,7 +23,7 @@ jobs:
       - name: Install cargo-vet
         uses: taiki-e/install-action@3522286d40783523f9c7880e33f785905b4c20d0 # v2
         with:
-          tool: cargo-vet@0.10.0
+          tool: cargo-vet@0.10.2
 
       - name: Invoke cargo-vet
         run: cargo vet --locked
