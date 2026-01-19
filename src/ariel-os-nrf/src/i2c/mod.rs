@@ -13,7 +13,7 @@ pub fn init(peripherals: &mut crate::OptionalPeripherals) {
         } else if #[cfg(context = "nrf52840")] {
             let _ = peripherals.TWISPI0.take().unwrap();
             let _ = peripherals.TWISPI1.take().unwrap();
-        } else if #[cfg(context = "nrf5340")] {
+        } else if #[cfg(context = "nrf5340-app")] {
             let _ = peripherals.SERIAL0.take().unwrap();
             let _ = peripherals.SERIAL1.take().unwrap();
         } else if #[cfg(context = "nrf91")] {

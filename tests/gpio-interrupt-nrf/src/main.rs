@@ -33,7 +33,7 @@ ariel_os::hal::define_peripherals!(ButtonPeripherals {
     btn_8: P0_08,
 });
 
-#[cfg(context = "nrf5340")]
+#[cfg(context = "nrf5340-app")]
 ariel_os::hal::define_peripherals!(ButtonPeripherals {
     btn_0: P0_20,
     btn_1: P0_22,

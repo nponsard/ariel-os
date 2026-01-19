@@ -276,7 +276,7 @@ contexts:
   - name: nrf53
     parent: nrf
 
-  - name: nrf5340
+  - name: nrf5340-app
     parent: nrf53
     selects:
       - cortex-m33f

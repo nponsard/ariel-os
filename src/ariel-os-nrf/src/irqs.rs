@@ -11,7 +11,7 @@ bind_interrupts!(pub(crate) struct Irqs {
     #[cfg(feature = "usb")]
     USBD => embassy_nrf::usb::InterruptHandler<embassy_nrf::peripherals::USBD>;
 
-    #[cfg(all(feature = "usb", context = "nrf5340"))]
+    #[cfg(all(feature = "usb", context = "nrf5340-app"))]
     USBREGULATOR => embassy_nrf::usb::vbus_detect::InterruptHandler;
 
     CLOCK_POWER =>

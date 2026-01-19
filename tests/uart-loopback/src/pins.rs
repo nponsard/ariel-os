@@ -32,9 +32,9 @@ ariel_os::hal::define_peripherals!(Peripherals {
     uart_tx: P1_02,
 });
 
-#[cfg(context = "nrf5340")]
+#[cfg(context = "nrf5340-app")]
 pub type TestUart<'a> = uart::SERIAL3<'a>;
-#[cfg(context = "nrf5340")]
+#[cfg(context = "nrf5340-app")]
 ariel_os::hal::define_peripherals!(Peripherals {
     uart_rx: P1_00,
     uart_tx: P1_01,
