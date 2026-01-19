@@ -158,7 +158,7 @@ chips:
       wifi: not_available
       ble: supported
 
-  nrf5340:
+  nrf5340-app:
     name: nRF5340 application core
     manufacturer: Nordic Semiconductor
     support:
@@ -849,8 +849,8 @@ builders:
       user_usb: supported
       ethernet_over_usb: supported
 
-  nrf5340dk:
-    chip: nrf5340
+  nrf5340dk-app:
+    chip: nrf5340-app
     tier: "1"
     support:
       user_usb: supported
@@ -1107,7 +1107,7 @@ boards:
   - name: nRF5340-DK
     url: https://web.archive.org/web/20250115224621/https://www.nordicsemi.com/Products/Development-hardware/nrf5340-dk
     builders:
-      - nrf5340dk
+      - nrf5340dk-app
       - nrf5340dk-net
 
   - name: nRF9151-DK
