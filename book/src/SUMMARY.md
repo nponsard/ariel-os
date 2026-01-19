@@ -57,7 +57,7 @@
   - [nRF52832](./chips/nrf52832.md)
   - [nRF52833](./chips/nrf52833.md)
   - [nRF52840](./chips/nrf52840.md)
-  - [nRF5340 application core](./chips/nrf5340.md)
+  - [nRF5340 application core](./chips/nrf5340-app.md)
   - [nRF5340 network core](./chips/nrf5340-net.md)
   - [nRF9151](./chips/nrf9151.md)
   - [nRF9160](./chips/nrf9160.md)
