@@ -1307,6 +1307,10 @@ criteria = "safe-to-deploy"
 version = "4.0.1"
 criteria = "safe-to-deploy"
 
+[[exemptions.sequential-storage]]
+version = "6.0.1"
+criteria = "safe-to-deploy"
+
 [[exemptions.serde-json-core]]
 version = "0.6.0"
 criteria = "safe-to-deploy"
