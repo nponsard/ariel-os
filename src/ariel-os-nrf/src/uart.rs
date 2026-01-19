@@ -317,7 +317,7 @@ define_uart_drivers!(
    UARTE0 => UARTE0 + TIMER3 + PPI_CH13 + PPI_CH14 + PPI_GROUP4,
    UARTE1 => UARTE1 + TIMER4 + PPI_CH15 + PPI_CH16 + PPI_GROUP5,
 );
-#[cfg(context = "nrf5340")]
+#[cfg(context = "nrf5340-app")]
 define_uart_drivers!(
    SERIAL3 => SERIAL3 + TIMER2 + PPI_CH18 + PPI_CH19 + PPI_GROUP5,
 );
@@ -360,7 +360,7 @@ pub fn init(peripherals: &mut crate::OptionalPeripherals) {
             let _ = peripherals.PPI_CH15.take().unwrap();
             let _ = peripherals.PPI_CH16.take().unwrap();
             let _ = peripherals.PPI_GROUP5.take().unwrap();
-        } else if #[cfg(context = "nrf5340")] {
+        } else if #[cfg(context = "nrf5340-app")] {
             let _ = peripherals.SERIAL3.take().unwrap();
             let _ = peripherals.TIMER2.take().unwrap();
             let _ = peripherals.PPI_CH18.take().unwrap();

@@ -30,7 +30,7 @@ pub fn init(peripherals: &mut crate::OptionalPeripherals) {
         } else if #[cfg(context = "nrf52840")] {
             let _ = peripherals.SPI2.take().unwrap();
             let _ = peripherals.SPI3.take().unwrap();
-        } else if #[cfg(context = "nrf5340")] {
+        } else if #[cfg(context = "nrf5340-app")] {
             let _ = peripherals.SERIAL2.take().unwrap();
             // Used by UART
             // let _ = peripherals.SERIAL3.take().unwrap();

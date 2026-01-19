@@ -85,7 +85,7 @@ fn write_memoryx() {
         (128, 512)
     } else if context("nrf52840") {
         (256, 1024)
-    } else if context("nrf5340") {
+    } else if context("nrf5340-app") {
         (512, 1024)
     } else if context("nrf5340-net") {
         (64, 256)

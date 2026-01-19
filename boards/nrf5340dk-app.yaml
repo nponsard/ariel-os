@@ -1,6 +1,6 @@
 boards:
-  nrf5340dk:
-    chip: nrf5340
+  nrf5340dk-app:
+    chip: nrf5340-app
     flags:
       - has_usb_device_port
     leds:
