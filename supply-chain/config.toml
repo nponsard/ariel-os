@@ -484,14 +484,6 @@ version = "0.13.8"
 criteria = "safe-to-deploy"
 
 [[exemptions.embassy-embedded-hal]]
-version = "0.3.2"
-criteria = "safe-to-deploy"
-
-[[exemptions.embassy-embedded-hal]]
-version = "0.4.0"
-criteria = "safe-to-deploy"
-
-[[exemptions.embassy-embedded-hal]]
 version = "0.5.0"
 criteria = "safe-to-deploy"
 
@@ -509,10 +501,6 @@ criteria = "safe-to-deploy"
 
 [[exemptions.embassy-futures]]
 version = "0.1.2"
-criteria = "safe-to-deploy"
-
-[[exemptions.embassy-hal-internal]]
-version = "0.2.0"
 criteria = "safe-to-deploy"
 
 [[exemptions.embassy-hal-internal]]
@@ -540,10 +528,6 @@ version = "0.8.0@git:0314802282e112a47b4ccb303c0e7f09cf33df53"
 criteria = "safe-to-deploy"
 
 [[exemptions.embassy-stm32]]
-version = "0.2.0"
-criteria = "safe-to-deploy"
-
-[[exemptions.embassy-stm32]]
 version = "0.4.0@git:1b75c3d6e61a99a312e2d12f039fa6e76e9c3a9c"
 criteria = "safe-to-deploy"
 
@@ -553,10 +537,6 @@ criteria = "safe-to-deploy"
 
 [[exemptions.embassy-sync]]
 version = "0.7.2"
-criteria = "safe-to-deploy"
-
-[[exemptions.embassy-time]]
-version = "0.4.0"
 criteria = "safe-to-deploy"
 
 [[exemptions.embassy-time]]
@@ -576,14 +556,6 @@ version = "0.5.1"
 criteria = "safe-to-deploy"
 
 [[exemptions.embassy-usb-driver]]
-version = "0.1.0"
-criteria = "safe-to-deploy"
-
-[[exemptions.embassy-usb-driver]]
-version = "0.2.0"
-criteria = "safe-to-deploy"
-
-[[exemptions.embassy-usb-synopsys-otg]]
 version = "0.2.0"
 criteria = "safe-to-deploy"
 
@@ -1276,10 +1248,6 @@ version = "0.1.2"
 criteria = "safe-to-deploy"
 
 [[exemptions.sdio-host]]
-version = "0.5.0"
-criteria = "safe-to-deploy"
-
-[[exemptions.sdio-host]]
 version = "0.9.0"
 criteria = "safe-to-deploy"
 
@@ -1301,10 +1269,6 @@ criteria = "safe-to-deploy"
 
 [[exemptions.separator]]
 version = "0.4.1"
-criteria = "safe-to-deploy"
-
-[[exemptions.sequential-storage]]
-version = "4.0.1"
 criteria = "safe-to-deploy"
 
 [[exemptions.sequential-storage]]
@@ -1361,10 +1325,6 @@ criteria = "safe-to-deploy"
 
 [[exemptions.stm32-fmc]]
 version = "0.3.2"
-criteria = "safe-to-deploy"
-
-[[exemptions.stm32-metapac]]
-version = "16.0.0"
 criteria = "safe-to-deploy"
 
 [[exemptions.stm32-metapac]]
