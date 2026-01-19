@@ -109,7 +109,7 @@ fn enable_flash_cache() {
                 .icachecnf()
                 .write(|w| w.set_cacheen(true));
         }
-        else if #[cfg(context = "nrf5340")] {
+        else if #[cfg(context = "nrf5340-app")] {
             embassy_nrf::pac::CACHE_S
                 .enable().write(|w| w.set_enable(true));
         }

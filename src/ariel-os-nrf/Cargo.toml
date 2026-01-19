@@ -53,7 +53,7 @@ nrf-sdc = { workspace = true, features = ["nrf52833"], optional = true }
 embassy-nrf = { workspace = true, features = ["nfc-pins-as-gpio", "nrf52840"] }
 nrf-sdc = { workspace = true, features = ["nrf52840"], optional = true }
 
-[target.'cfg(context = "nrf5340")'.dependencies]
+[target.'cfg(context = "nrf5340-app")'.dependencies]
 # Disable NFC support for now, as we do not support it yet.
 embassy-nrf = { workspace = true, features = [
   "nfc-pins-as-gpio",

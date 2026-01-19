@@ -133,7 +133,7 @@ apps:
     context:
       - bbc-microbit-v2
       - nrf52
-      - nrf5340
+      - nrf5340-app
       - rpi-pico-w
 ```
 

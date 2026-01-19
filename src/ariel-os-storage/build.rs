@@ -15,7 +15,7 @@ fn main() {
         "stm32wle5jc",
     ]) {
         (4 * KIBIBYTES, 2 * KIBIBYTES)
-    } else if is_in_current_contexts(&["nrf52", "nrf5340", "nrf91", "rp", "stm32wb55rg"]) {
+    } else if is_in_current_contexts(&["nrf52", "nrf5340-app", "nrf91", "rp", "stm32wb55rg"]) {
         (8 * KIBIBYTES, 4 * KIBIBYTES)
     } else if is_in_current_contexts(&["stm32u585ai"]) {
         (16 * KIBIBYTES, 8 * KIBIBYTES)

@@ -2,6 +2,6 @@ apps:
   - name: usb-keyboard
     context:
       - nrf52840dk
-      - nrf5340dk
+      - nrf5340dk-app
     selects:
       - usb
