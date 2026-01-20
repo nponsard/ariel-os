@@ -42,7 +42,10 @@ exceptions = [
 ]
 
 [bans]
-deny = [{ crate = "serde_yml", reason = "unsound and unmaintained" }]
+deny = [
+  { crate = "proc-macro-error", reason = "unmaintained: https://rustsec.org/advisories/RUSTSEC-2024-0370" },
+  { crate = "serde_yml", reason = "unsound and unmaintained" },
+]
 
 # This section is considered when running `cargo deny check sources`.
 # More documentation about the 'sources' section can be found here:
