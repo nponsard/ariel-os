@@ -40,7 +40,7 @@ esp-radio = { workspace = true, default-features = false, features = [
   "esp-alloc",
   "wifi",
   "sys-logs",
-  "unstable",
+  # "unstable",
 ], optional = true }
 esp-radio-rtos-driver = { workspace = true, default-features = false, features = [
   "ipc-implementations",

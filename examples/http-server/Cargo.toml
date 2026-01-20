@@ -5,7 +5,7 @@ license.workspace = true
 publish = false
 
 [dependencies]
-ariel-os = { path = "../../src/ariel-os" }
+ariel-os = { path = "../../src/ariel-os" ,features = ["idle-threads"]}
 ariel-os-boards = { path = "../../src/ariel-os-boards" }
 embassy-sync = { workspace = true }
 picoserve = { version = "0.14.1", default-features = false, features = [

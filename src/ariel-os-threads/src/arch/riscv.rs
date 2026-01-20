@@ -54,7 +54,6 @@ pub struct ThreadData {
 pub fn interrupt_status() {
     let mstatus_st = esp_hal::riscv::register::mstatus::read();
     trace!(
-
         "mstatus.mie {}, mstatus.mpie {}",
         mstatus_st.mie(),
         mstatus_st.mpie()
@@ -206,12 +205,12 @@ global_asm!(
         csrr t0, mstatus
         sw t0, 0(sp)
 
-        add a0, x0, sp
-        fence
+        // add a0, x0, sp
+        // fence
 
         call {sched}
 
-        fence
+        // fence
 
         // add a0, x0, sp
 
@@ -367,20 +366,20 @@ global_asm!(
         lw a1, 10*4(a1)
         // csrsi mstatus, 0x80
 
-        fence
+        // fence
 
         mret
 
     restore_stack:
 
-        beqz sp, l_sp
-        fence
+        // beqz sp, l_sp
+        // fence
 
 
         // restore mepc
         lw t0, 4(sp)
-        fence
-        beqz t0, l_mepc
+        // fence
+        // beqz t0, l_mepc
         csrw mepc,t0
 
         // restore mstatus
@@ -409,41 +408,32 @@ global_asm!(
 
 
         // csrsi mstatus, 0x80
-        fence
+        // fence
 
         mret
 
-    l_sp:
-        call {log_sp_zero}
-    l_mepc:
-        call {log_mepc_zero}
 
-    "#,
-    sched = sym sched,
-    log_sp_zero = sym log_sp_zero,
-    log_mepc_zero = sym log_mepc_zero
+        "#,
+        sched = sym sched,
+        // l_sp:
+        //     call {log_sp_zero}
+        // l_mepc:
+        //     call {log_mepc_zero}
+        // log_sp_zero = sym log_sp_zero,
+    // log_mepc_zero = sym log_mepc_zero
 
 );
 
 /// Probes the runqueue for the next thread and switches context if needed.
 // #[esp_hal::ram]
 unsafe extern "C" fn sched(coming_sp: u32) -> u64 {
-    trace!("coming sp : {:#x}", coming_sp);
-    let coming_mepc = unsafe { *((coming_sp + 4) as *const u32) };
-    trace!("coming mepc : {:#x}", coming_mepc);
-
-    trace!("sched start sp {:#x}", sp());
-
-    let mepc = esp_hal::riscv::register::mepc::read();
-    trace!("sched start mepc: {:#x}", mepc);
-
-    interrupt_status();
-
+    // unsafe {
+    //     esp_hal::peripherals::PLIC_MX::regs()
+    //         .mxint_thresh()
+    //         .write(|w| unsafe { w.cpu_mxint_thresh().bits(4) });
+    // }
     let mstatus_st = esp_hal::riscv::register::mstatus::read();
     let mstatus = mstatus_st.bits();
-    interrupt_status();
-
-    debug!("sched mstatus {:#x}", mstatus);
 
     // clear FROM_CPU_INTR0
     // SAFETY: `steal().reset()` is safe on an initialized software interrupt
@@ -490,11 +480,11 @@ unsafe extern "C" fn sched(coming_sp: u32) -> u64 {
             unsafe {
                 esp_hal::riscv::register::mstatus::write(mstatus_st);
             }
-            // unsafe {
-            //     esp_hal::peripherals::PLIC_MX::regs()
-            //         .mxint_thresh()
-            //         .write(|w| unsafe { w.cpu_mxint_thresh().bits(0) });
-            // }
+            unsafe {
+                esp_hal::peripherals::PLIC_MX::regs()
+                    .mxint_thresh()
+                    .write(|w| unsafe { w.cpu_mxint_thresh().bits(0) });
+            }
 
             // unsafe {
             //     core::arch::asm!("nop");
@@ -522,38 +512,44 @@ unsafe extern "C" fn sched(coming_sp: u32) -> u64 {
         }
     };
 
-    debug!(
-        "Scheduler result: {:?}-{:?}",
-        current_high_regs, next_high_regs
-    );
+    // info!(
+    //     "Scheduler result: {:?}-{:?}",
+    //     current_high_regs, next_high_regs
+    // );
 
-    let mepc = esp_hal::riscv::register::mepc::read();
-    trace!("sched end mepc: {:#x}", mepc);
+    // let mepc = esp_hal::riscv::register::mepc::read();
+    // trace!("sched end mepc: {:#x}", mepc);
 
-    interrupt_status();
+    // interrupt_status();
 
     // The caller expects these two pointers in a0 and a1:
     // a0 = &current.data.high_regs (or 0)
     // a1 = &next.data.high_regs
 
-    trace!("sched end sp {:#x}", sp());
-    trace!("sched end ra: {:#x}", ra());
-    trace!("coming sp : {:#x}", coming_sp);
+    // trace!("sched end sp {:#x}", sp());
+    // trace!("sched end ra: {:#x}", ra());
+    // trace!("coming sp : {:#x}", coming_sp);
 
-    if next_high_regs == 0 {
-        for i in 0..20 {
-            unsafe {
-                let offset = i * 4;
+    // if next_high_regs == 0 {
+    //     for i in 0..20 {
+    //         unsafe {
+    //             let offset = i * 4;
 
-                trace!(
-                    "stack +{} ({:#x}): {:#x}",
-                    offset,
-                    coming_sp + offset,
-                    *((coming_sp + offset) as *const u32)
-                );
-            }
-        }
-    }
+    //             trace!(
+    //                 "stack +{} ({:#x}): {:#x}",
+    //                 offset,
+    //                 coming_sp + offset,
+    //                 *((coming_sp + offset) as *const u32)
+    //             );
+    //         }
+    //     }
+    // }
+
+    // unsafe {
+    //     esp_hal::peripherals::PLIC_MX::regs()
+    //         .mxint_thresh()
+    //         .write(|w| unsafe { w.cpu_mxint_thresh().bits(0) });
+    // }
 
     (current_high_regs as u64) | (next_high_regs as u64) << 32
 }
