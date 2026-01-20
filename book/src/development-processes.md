@@ -76,6 +76,7 @@ We may also introduce a [custom criteria][cargo-vet-custom-criteria] to reflect 
 
 The following steps must be followed when preparing a new release of `ariel-os`:
 
+1. Verify there are no [release blocking bugs](https://github.com/ariel-os/ariel-os/issues?q=state%3Aopen%20label%3Arelease-blocker).
 1. Check whether deprecated items should be removed, if any.
 1. Update the version numbers of the crates that need to be bumped.
 
