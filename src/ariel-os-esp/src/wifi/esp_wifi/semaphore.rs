@@ -15,7 +15,7 @@
 use alloc::boxed::Box;
 use core::ptr::NonNull;
 
-use ariel_os_debug::log::{debug, trace};
+use ariel_os_debug::log::{debug, info, trace};
 use ariel_os_threads::sync::WaitQueue;
 use esp_radio_rtos_driver::{
     ThreadPtr, current_task, now,
@@ -337,8 +337,13 @@ impl SemaphoreImplementation for CompatSemaphore {
     }
 
     unsafe fn delete(semaphore: SemaphorePtr) {
+        info!("delete {:?}", semaphore);
+
         let sem = unsafe { Box::from_raw(semaphore.cast::<Self>().as_ptr()) };
+        info!("delete2 {:?}", semaphore);
         core::mem::drop(sem);
+        info!("deleted {:?}", semaphore);
+
     }
 
     unsafe fn take(semaphore: SemaphorePtr, timeout_us: Option<u32>) -> bool {

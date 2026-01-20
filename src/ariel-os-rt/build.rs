@@ -17,6 +17,7 @@ fn main() {
     if let Some(context) = context_any(&["esp32c3", "cortex-m", "riscv"]) {
         let insert_somewhere = match context {
             "esp32c3" => "INSERT AFTER .rwdata_dummy;",
+            // "riscv" => "INSERT AFTER .rwdata_dummy;",
             "cortex-m" => "INSERT BEFORE .data;",
             "riscv" => "INSERT BEFORE .trap;",
             _ => "",

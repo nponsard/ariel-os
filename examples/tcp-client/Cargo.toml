@@ -5,7 +5,7 @@ license.workspace = true
 publish = false
 
 [dependencies]
-ariel-os = { path = "../../src/ariel-os", features = ["tcp", "time"] }
+ariel-os = { path = "../../src/ariel-os", features = ["tcp", "time", "idle-threads"] }
 ariel-os-boards = { path = "../../src/ariel-os-boards" }
 embedded-io-async = { workspace = true }
 

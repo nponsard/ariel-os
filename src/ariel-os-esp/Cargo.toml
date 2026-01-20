@@ -39,6 +39,8 @@ esp-hal = { workspace = true, default-features = false, features = [
 esp-radio = { workspace = true, default-features = false, features = [
   "esp-alloc",
   "wifi",
+  "sys-logs",
+  "unstable",
 ], optional = true }
 esp-radio-rtos-driver = { workspace = true, default-features = false, features = [
   "ipc-implementations",
@@ -131,7 +133,7 @@ defmt = [
   "fugit?/defmt",
 ]
 ## Enables log support.
-log = ["esp-hal/log-04", "esp-radio?/log-04"]
+log = ["esp-hal/log-04", "esp-radio?/log-04", "esp-radio-rtos-driver?/log-04"]
 
 # Enables USB support.
 usb = []

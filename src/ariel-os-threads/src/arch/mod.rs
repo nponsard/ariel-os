@@ -46,6 +46,7 @@ cfg_if::cfg_if! {
         pub use cortex_m::Cpu;
     } else if #[cfg(context = "riscv")] {
         mod riscv;
+        pub use riscv::interrupt_status;
         pub use riscv::Cpu;
     } else if #[cfg(context = "xtensa")] {
         mod xtensa;
@@ -76,7 +77,7 @@ cfg_if::cfg_if! {
 }
 
 pub type ThreadData = <Cpu as Arch>::ThreadData;
-
+/// hahaha
 pub fn schedule() {
     Cpu::schedule();
 }

@@ -4,13 +4,17 @@
 
 use core::cell::UnsafeCell;
 
+use ariel_os_debug::log::debug;
 use critical_section::CriticalSection;
 
-use crate::{ThreadState, threadlist::ThreadList};
+use crate::{ThreadState, threadlist::ThreadList, yield_same};
 
 /// An [`WaitQueue`], allowing threads to wait for or be notified by other threads.
 ///
 /// Similar to [`Event`], but without any state.
+///
+///
+#[derive(Debug)]
 pub struct WaitQueue {
     waiters: UnsafeCell<ThreadList>,
 }
@@ -104,10 +108,15 @@ impl WaitQueue {
 
     /// Notify all waiters.
     pub fn notify_all(&self) {
-        critical_section::with(|cs| {
+        critical_section::with(|cs: CriticalSection<'_>| {
+            debug!("WaitQueue::notify_all");
             let waiters = unsafe { &mut *self.waiters.get() };
-            while waiters.pop(cs).is_some() {}
+            while let Some(a) = waiters.pop(cs) {
+                // yield_same();
+                debug!("WaitQueue: tid {:?}", a.0);
+            }
         });
+        // crate::arch::schedule();
     }
     /// Notify one waiter.
     pub fn notify_one(&self) {
@@ -117,6 +126,10 @@ impl WaitQueue {
             let res = waiters.pop(cs);
             ariel_os_debug::log::trace!("WaitQueue::notify_one() notifying {:?}", res);
         });
+
+
+        // crate::arch::schedule();
+
     }
 }
 

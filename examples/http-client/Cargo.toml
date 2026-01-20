@@ -11,6 +11,7 @@ ariel-os = { path = "../../src/ariel-os", features = [
   "mdns",
   "tcp",
   "time",
+  "idle-threads",
 ] }
 ariel-os-boards = { path = "../../src/ariel-os-boards" }
 rand_core = { workspace = true }

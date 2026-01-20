@@ -2,6 +2,7 @@
 #![no_std]
 
 use ariel_os::{
+    asynch::yield_now,
     config,
     debug::{ExitCode, exit, log::*},
     net,
@@ -37,33 +38,36 @@ const ENDPOINT_URL: &str = config::str_from_env_or!(
 
 #[ariel_os::task(autostart)]
 async fn main() {
-    let stack = net::network_stack().await.unwrap();
-
-    let tcp_client_state =
-        TcpClientState::<MAX_CONCURRENT_CONNECTIONS, TCP_BUFFER_SIZE, TCP_BUFFER_SIZE>::new();
-    let tcp_client = TcpClient::new(stack, &tcp_client_state);
-    let dns_client = DnsSocket::new(stack);
-
-    let tls_seed: u64 = rand_core::RngCore::next_u64(&mut ariel_os::random::crypto_rng());
-
-    let mut tls_rx_buffer = [0; TLS_READ_BUFFER_SIZE];
-    let mut tls_tx_buffer = [0; TLS_WRITE_BUFFER_SIZE];
-
-    // We do not authenticate the server in this example, as that would require setting up a PSK
-    // with the server.
-    let tls_verify = TlsVerify::None;
-    let tls_config = TlsConfig::new(tls_seed, &mut tls_rx_buffer, &mut tls_tx_buffer, tls_verify);
-
-    let mut client = HttpClient::new_with_tls(&tcp_client, &dns_client, tls_config);
-
-    stack.wait_config_up().await;
-
-    if let Err(err) = send_http_get_request(&mut client, ENDPOINT_URL).await {
-        error!(
-            "Error while sending an HTTP request: {:?}",
-            Debug2Format(&err)
-        );
+    loop {
+        yield_now().await;
     }
+    // let stack = net::network_stack().await.unwrap();
+
+    // let tcp_client_state =
+    //     TcpClientState::<MAX_CONCURRENT_CONNECTIONS, TCP_BUFFER_SIZE, TCP_BUFFER_SIZE>::new();
+    // let tcp_client = TcpClient::new(stack, &tcp_client_state);
+    // let dns_client = DnsSocket::new(stack);
+
+    // let tls_seed: u64 = rand_core::RngCore::next_u64(&mut ariel_os::random::crypto_rng());
+
+    // let mut tls_rx_buffer = [0; TLS_READ_BUFFER_SIZE];
+    // let mut tls_tx_buffer = [0; TLS_WRITE_BUFFER_SIZE];
+
+    // // We do not authenticate the server in this example, as that would require setting up a PSK
+    // // with the server.
+    // let tls_verify = TlsVerify::None;
+    // let tls_config = TlsConfig::new(tls_seed, &mut tls_rx_buffer, &mut tls_tx_buffer, tls_verify);
+
+    // let mut client = HttpClient::new_with_tls(&tcp_client, &dns_client, tls_config);
+
+    // stack.wait_config_up().await;
+
+    // if let Err(err) = send_http_get_request(&mut client, ENDPOINT_URL).await {
+    //     error!(
+    //         "Error while sending an HTTP request: {:?}",
+    //         Debug2Format(&err)
+    //     );
+    // }
 
     exit(ExitCode::SUCCESS);
 }

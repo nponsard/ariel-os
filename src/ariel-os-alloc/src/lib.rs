@@ -15,6 +15,8 @@ pub use alloc::init;
 
 #[cfg(not(test))]
 mod alloc {
+    use ariel_os_debug::log::{debug, info};
+
     const CONFIG_HEAPSIZE: usize =
         ariel_os_utils::usize_from_env_or!("CONFIG_HEAPSIZE", 2048, "heap size (in bytes)");
 
@@ -28,6 +30,7 @@ mod alloc {
     pub unsafe fn init() {
         // SAFETY: Propagates the call-only-once requirement.
         unsafe {
+            info!("alloc init");
             #[cfg(context = "cortex-m")]
             init_embedded_alloc();
             #[cfg(context = "esp")]
@@ -78,7 +81,9 @@ mod alloc {
     /// Call only once!
     #[cfg(context = "esp")]
     unsafe fn init_esp_alloc() {
-        use ariel_os_debug::log::debug;
+        // esp_alloc::heap_allocator!(#[esp_hal::ram(reclaimed)] size: 64 * 1024);
+        // esp_alloc::heap_allocator!(size: 36 * 1024);
+        use ariel_os_debug::log::{debug, warn};
 
         const RECLAIMED_SIZE: usize = const {
             let range = esp_metadata_generated::memory_range!("DRAM2_UNINIT");
@@ -93,7 +98,7 @@ mod alloc {
             }
         };
 
-        debug!(
+        warn!(
             "ariel-os-alloc: initializing heap with {} bytes from DRAM2_UNINIT",
             RECLAIMED_SIZE
         );

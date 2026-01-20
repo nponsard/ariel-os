@@ -13,7 +13,7 @@ use core::{
 use ariel_os_debug::log::{debug, trace};
 use ariel_os_threads::{
     CoreAffinity, CoreId, RunqueueId, THREAD_COUNT, ThreadId, create_raw, current_tid,
-    get_priority, set_priority, yield_same,
+    get_priority, schedule, set_priority, yield_same,
 };
 use esp_radio_rtos_driver::{SchedulerImplementation, ThreadPtr};
 
@@ -106,6 +106,8 @@ impl SchedulerImplementation for ArielScheduler {
         let task =
             unsafe { core::mem::transmute::<extern "C" fn(*mut c_void), extern "Rust" fn()>(task) };
 
+        debug!("task pointer = {}", task as u32);
+
         // SAFETY: Upholding `create_raw()` invariants: We know what we are doing.
         let thread_id = unsafe {
             create_raw(
@@ -113,6 +115,7 @@ impl SchedulerImplementation for ArielScheduler {
                 Some(param as usize),
                 stack_slice,
                 priority as u8,
+                // 15,
                 core_affinity,
             )
         };

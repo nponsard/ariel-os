@@ -35,6 +35,7 @@
 )]
 
 mod arch;
+// pub use arch::interrupt_status;
 mod autostart_thread;
 mod blocker;
 mod core_affinity;
@@ -64,6 +65,7 @@ pub mod events {
     pub static THREAD_START_EVENT: Event = Event::new();
 }
 
+use ariel_os_debug::log::debug;
 pub use ariel_os_runqueue::{RunqueueId, ThreadId};
 pub use blocker::block_on;
 pub use core_affinity::CoreAffinity;
@@ -73,7 +75,8 @@ pub use timeout::{sleep, sleep_until};
 #[cfg(feature = "multi-core")]
 pub use smp::isr_stack_core1_get_limits;
 
-use arch::{Arch, Cpu, ThreadData, schedule};
+pub use arch::schedule;
+use arch::{Arch, Cpu, ThreadData};
 
 #[cfg(not(feature = "infini-core"))]
 use ariel_os_runqueue::RunQueue;
@@ -87,7 +90,7 @@ use smp::{Multicore, schedule_on_core};
 use static_cell::ConstStaticCell;
 
 /// The number of possible priority levels.
-pub const SCHED_PRIO_LEVELS: usize = THREAD_COUNT;
+pub const SCHED_PRIO_LEVELS: usize = 32;
 
 /// The maximum number of concurrent threads that can be created.
 pub const THREAD_COUNT: usize = 16;
@@ -280,8 +283,12 @@ impl Scheduler {
     ///
     /// Panics if `tid` is >= [`THREAD_COUNT`].
     fn set_state(&mut self, tid: ThreadId, state: ThreadState) -> ThreadState {
+        use ariel_os_debug::log::debug;
+        debug!("Set tid {:?}, to {:?}", tid, state);
+
         let thread = self.get_unchecked_mut(tid);
         let old_state = core::mem::replace(&mut thread.state, state);
+        debug!("old_state: {:?}", old_state);
         let prio = thread.prio;
         if state == ThreadState::Running {
             #[cfg(not(feature = "infini-core"))]
@@ -692,6 +699,7 @@ pub unsafe fn create_raw(
     prio: u8,
     core_affinity: Option<CoreAffinity>,
 ) -> ThreadId {
+    debug!("create_raw(), fn {}, priority={}", func as u32, prio);
     SCHEDULER.with_mut(|mut scheduler| {
         let thread_id = scheduler
             .create(func, arg, stack, RunqueueId::new(prio), core_affinity)

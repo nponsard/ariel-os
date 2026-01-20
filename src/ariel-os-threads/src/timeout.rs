@@ -3,6 +3,8 @@ use core::task::{RawWaker, RawWakerVTable, Waker};
 use critical_section::CriticalSection;
 use embassy_time::Duration;
 
+use ariel_os_debug::log::trace;
+
 use crate::{SCHEDULER, ThreadId, ThreadState, thread_flags::ThreadFlags};
 
 const THREAD_FLAG_TIMEOUT: ThreadFlags = 2; // TODO: find more appropriate value
@@ -55,6 +57,7 @@ static VTABLE: RawWakerVTable = RawWakerVTable::new(
 );
 
 fn schedule_thread_wakeup(thread_id: ThreadId, deadline: u64) {
+    trace!("schedule_thread_wakeup {:?}", thread_id);
     let raw_waker = RawWaker::new(usize::from(thread_id) as *const (), &VTABLE);
     let waker = unsafe { Waker::from_raw(raw_waker) };
     embassy_time_driver::schedule_wake(deadline, &waker);
@@ -66,6 +69,8 @@ fn schedule_thread_wakeup(thread_id: ThreadId, deadline: u64) {
 /// # Panics
 /// - panics when not called from a thread
 fn set_deadline(cs: CriticalSection<'_>, deadline: u64) -> bool {
+    trace!("set_deadline");
+
     // The two `SCHEDULER.with_mut_cs()` calls are necessary because schedule_thread_wakeup() might
     // call `wake()` on the waker, which also accesses SCHEDULER.
     let thread_id = SCHEDULER.with_mut_cs(cs, |mut scheduler| {
@@ -90,13 +95,15 @@ fn set_deadline(cs: CriticalSection<'_>, deadline: u64) -> bool {
 /// # Panics
 /// - panics when not called from a thread
 fn clear_deadline(cs: CriticalSection<'_>) -> bool {
+    trace!("clear_deadline");
+
     let (did_clear, thread_id) = SCHEDULER.with_mut_cs(cs, |mut scheduler| {
         let thread = scheduler.current().expect("must be called from a thread");
         let did_clear = thread.deadline.take().is_some();
         ariel_os_debug::log::debug!(
             "clear_deadline() for {:?}: {} at {}",
             thread.tid,
-            true,
+            did_clear,
             embassy_time_driver::now()
         );
         (did_clear, thread.tid)

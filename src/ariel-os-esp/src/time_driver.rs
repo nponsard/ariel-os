@@ -8,7 +8,7 @@ use esp_hal::{
 };
 use esp_sync::NonReentrantMutex;
 
-use ariel_os_debug::log::trace;
+use ariel_os_debug::log::{debug, trace};
 
 use crate::TIMER_QUEUE;
 
@@ -39,15 +39,17 @@ impl TimeDriver {
         // priority limited locks.
         let timer_priority = Priority::Priority1;
 
-        cfg_if::cfg_if! {
-            if #[cfg(riscv)] {
-                // Register the interrupt handler without nesting to satisfy the requirements of the
-                // task switching code
-                let handler = InterruptHandler::new_not_nested(timer_handler, timer_priority);
-            } else {
-                let handler = InterruptHandler::new(timer_handler, timer_priority);
-            }
-        };
+        // cfg_if::cfg_if! {
+        //     if #[cfg(riscv)] {
+        //         // Register the interrupt handler without nesting to satisfy the requirements of the
+        //         // task switching code
+        //         let handler = InterruptHandler::new_not_nested(timer_handler, timer_priority);
+        //     } else {
+        //         let handler = InterruptHandler::new(timer_handler, timer_priority);
+        //     }
+        // };
+
+        let handler = InterruptHandler::new(timer_handler, timer_priority);
 
         timer.set_interrupt_handler(handler);
         timer.listen();
@@ -71,6 +73,7 @@ impl TimeDriver {
             match self.timer.schedule(Duration::from_micros(timeout)) {
                 Ok(()) => break,
                 Err(esp_hal::timer::Error::InvalidTimeout) if timeout != 0 => {
+                    // debug!("invalid timeout {}", timeout);
                     timeout /= 2;
                 }
                 Err(e) => panic!("Failed to schedule timer: {:?}", e),

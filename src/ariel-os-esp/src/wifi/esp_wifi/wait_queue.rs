@@ -1,9 +1,11 @@
 use alloc::boxed::Box;
 use core::ptr::NonNull;
 
+use ariel_os_debug::log::{debug, trace};
 use ariel_os_threads::sync::WaitQueue;
 use esp_radio_rtos_driver::wait_queue::{WaitQueueImplementation, WaitQueuePtr};
 
+#[derive(Debug)]
 pub(crate) struct ArielWaitQueue {
     inner: WaitQueue,
 }
@@ -32,6 +34,8 @@ impl WaitQueueImplementation for ArielWaitQueue {
     }
 
     unsafe fn wait_until(queue: WaitQueuePtr, deadline_instant: Option<u64>) {
+        trace!("ArielWaitQueue::wait_until {:?}", deadline_instant);
+
         let queue = ArielWaitQueue::from_ptr(queue);
         if let Some(micros) = deadline_instant {
             queue
@@ -43,12 +47,15 @@ impl WaitQueueImplementation for ArielWaitQueue {
     }
 
     unsafe fn notify(queue: WaitQueuePtr) {
+        debug!("ArielWaitQueue notify {}", queue.as_ptr() as u32);
         let queue = ArielWaitQueue::from_ptr(queue);
-        queue.inner.notify_one();
+
+        queue.inner.notify_all();
+        debug!("ArielWaitQueue notified");
     }
 
     unsafe fn notify_from_isr(queue: WaitQueuePtr, _higher_prio_task_waken: Option<&mut bool>) {
         let queue = ArielWaitQueue::from_ptr(queue);
-        queue.inner.notify_one();
+        queue.inner.notify_all();
     }
 }

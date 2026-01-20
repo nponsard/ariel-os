@@ -1,3 +1,4 @@
+use ariel_os_debug::log::{debug, trace,error};
 use critical_section::CriticalSection;
 
 use crate::{RunqueueId, SCHEDULER, Scheduler, ThreadId, ThreadState, thread::Thread};
@@ -31,15 +32,23 @@ impl ThreadList {
             let &mut Thread { tid, prio, .. } = scheduler
                 .current()
                 .expect("Function should be called inside a thread context.");
+
+            debug!("Adding task to ThreadList : {:?}", tid);
+
             let mut curr = None;
             let mut next = self.head;
             while let Some(n) = next {
                 if scheduler.get_unchecked_mut(n).prio < prio {
                     break;
                 }
+                if curr == next {
+                    error!("curr==next !");
+                    loop {}
+                }
                 curr = next;
                 next = scheduler.thread_blocklist[usize::from(n)];
             }
+            debug!("Setting {:?} as {:?} blocklist", next, tid);
             scheduler.thread_blocklist[usize::from(tid)] = next;
             let inherit_priority = if let Some(curr) = curr {
                 scheduler.thread_blocklist[usize::from(curr)] = Some(tid);
@@ -49,6 +58,8 @@ impl ThreadList {
                 Some(prio)
             };
             scheduler.set_state(tid, state);
+            debug!("Added task to ThreadList : {:?}", tid);
+
             inherit_priority
         })
     }

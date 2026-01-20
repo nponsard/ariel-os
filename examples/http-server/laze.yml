@@ -3,7 +3,12 @@ apps:
     env:
       global:
         executor_stacksize_required:
-          - "16384"
+          # - "16384"
+          - "65536"
+        isr_stacksize_required:
+          - "65536"
+        esp_wifi_heapsize_required: $(72*1024)
+
     selects:
       - network
       - ?button-reading

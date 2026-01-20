@@ -3,6 +3,8 @@
 
 use core::mem;
 
+use ariel_os_debug::log::debug;
+
 use self::clist::CList;
 
 const USIZE_BITS: usize = mem::size_of::<usize>() * 8;
@@ -121,7 +123,9 @@ impl<const N_QUEUES: usize, const N_THREADS: usize> RunQueue<{ N_QUEUES }, { N_T
     /// the runqueue with the highest index.
     #[must_use]
     pub fn get_next(&self) -> Option<ThreadId> {
-        self.get_next_with_rq().map(|(tid, _)| tid)
+        let tid = self.get_next_with_rq().map(|(tid, _)| tid);
+        debug!("restarting tid {:?}", tid);
+        tid
     }
 
     /// Returns the tid that should run next and the runqueue it is in.
@@ -252,6 +256,8 @@ mod clist {
     //!
     //! The array is used for "next" pointers, so each integer value in the array
     //! corresponds to one element, which can only be in one of the lists.
+
+    use ariel_os_debug::log::debug;
     #[derive(Debug, Copy, Clone)]
     pub struct CList<const N_QUEUES: usize, const N_THREADS: usize> {
         tail: [u8; N_QUEUES],
@@ -284,12 +290,15 @@ mod clist {
 
         #[expect(clippy::missing_panics_doc, reason = "internal")]
         pub fn push(&mut self, n: u8, rq: u8) {
+            debug!("CList::push");
             assert!(n < Self::sentinel());
             if self.next_idxs[n as usize] != Self::sentinel() {
                 return;
             }
 
             if let Some(head) = self.peek_head(rq) {
+                debug!("CList::push, rq has entry already");
+
                 // rq has an entry already, so
                 // 1. n.next = old_tail.next ("first" in list)
                 self.next_idxs[n as usize] = head;
@@ -298,6 +307,8 @@ mod clist {
                 // 3. tail = n
                 self.tail[rq as usize] = n;
             } else {
+                debug!("CList::push, rq is empty");
+
                 // rq is empty, link both tail and n.next to n
                 self.tail[rq as usize] = n;
                 self.next_idxs[n as usize] = n;

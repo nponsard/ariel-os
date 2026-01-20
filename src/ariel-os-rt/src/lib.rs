@@ -15,7 +15,7 @@ compile_error!(
     "feature \"single-core\" and feature \"multi-core\" cannot be enabled at the same time"
 );
 
-use ariel_os_debug::log::debug;
+use ariel_os_debug::log::{debug, info};
 
 cfg_if::cfg_if! {
     if #[cfg(context = "cortex-m")] {
@@ -157,7 +157,7 @@ fn startup() -> ! {
     #[cfg(feature = "debug-console")]
     ariel_os_debug::init();
 
-    debug!("ariel_os_rt::startup()");
+    info!("ariel_os_rt::startup()");
 
     #[cfg(any(context = "cortex-m", context = "riscv", context = "xtensa"))]
     crate::isr_stack::init();

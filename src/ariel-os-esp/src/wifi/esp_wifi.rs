@@ -9,6 +9,7 @@ use embassy_time::{Duration, Timer};
 use esp_radio::wifi::{
     Config, ModeConfig, WifiController, WifiDevice, WifiEvent, WifiStationState, sta::StationConfig,
 };
+use esp_radio::wifi::{Protocol, ScanConfig};
 use esp_radio_rtos_driver::{
     queue::CompatQueue, register_queue_implementation, register_scheduler_implementation,
     register_semaphore_implementation, register_timer_implementation,
@@ -26,7 +27,7 @@ pub fn init(peripherals: &mut crate::OptionalPeripherals, spawner: Spawner) -> N
 
     let (controller, interfaces) = esp_radio::wifi::new(wifi, config).unwrap();
 
-    spawner.spawn(connection(controller)).ok();
+    spawner.spawn(connection(controller)).expect("connection task should be started");
 
     interfaces.station
 }
@@ -34,6 +35,8 @@ pub fn init(peripherals: &mut crate::OptionalPeripherals, spawner: Spawner) -> N
 #[embassy_executor::task]
 async fn connection(mut controller: WifiController<'static>) {
     debug!("start connection task");
+    let caps = controller.capabilities();
+    info!("Device capabilities: {:?}", controller.capabilities());
 
     #[cfg(not(feature = "defmt"))]
     debug!("Device capabilities: {:?}", controller.capabilities());
@@ -54,12 +57,27 @@ async fn connection(mut controller: WifiController<'static>) {
             let client_config = ModeConfig::Station(
                 StationConfig::default()
                     .with_ssid(crate::wifi::WIFI_NETWORK.try_into().unwrap())
-                    .with_password(crate::wifi::WIFI_PASSWORD.try_into().unwrap()),
+                    .with_password(crate::wifi::WIFI_PASSWORD.try_into().unwrap())
+                    // .with_channel(6)
+                    // .with_protocols((Protocol::P802D11BGN).into())
+                    // .with_scan_method(ScanMethod::AllChannels),
             );
             controller.set_config(&client_config).unwrap();
             debug!("Starting Wi-Fi");
             controller.start_async().await.unwrap();
             debug!("Wi-Fi started!");
+            let scan_config = ScanConfig::default().with_max(10);
+
+            info!("starting scan");
+            let result = controller
+                .scan_with_config_async(scan_config)
+                .await
+                .unwrap();
+            info!("Scan finished");
+
+            for ap in result {
+                info!("scan result: {:?}", ap);
+            }
         }
         debug!("About to connect...");
 

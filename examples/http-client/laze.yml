@@ -2,8 +2,10 @@ apps:
   - name: http-client
     env:
       global:
-        executor_stacksize_required:
-          - "32768"
+        # executor_stacksize_required:
+        #   - "32768"
+        # isr_stacksize_required:
+        #   - "32768"
     selects:
       - network
       - random
