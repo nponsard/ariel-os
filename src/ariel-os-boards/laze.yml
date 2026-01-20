@@ -70,6 +70,11 @@ builders:
   provides:
   - has_buttons
   - has_leds
+- name: nordic-thingy-91-x-nrf5340-app
+  parent: nrf5340-app
+  provides:
+  - has_buttons
+  - has_leds
 - name: nordic-thingy-91-x-nrf5340-net
   parent: nrf5340-net
   provides:

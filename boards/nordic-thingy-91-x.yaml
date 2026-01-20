@@ -8,6 +8,15 @@ boards:
       button0:
         pin: P0_26
 
+  nordic-thingy-91-x-nrf5340-app:
+    chip: nrf5340-app
+    leds:
+      led0:
+        pin: P0_14
+    buttons:
+      button0:
+        pin: P0_24
+
   nordic-thingy-91-x-nrf5340-net:
     chip: nrf5340-net
     flags:
