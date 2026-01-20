@@ -156,10 +156,13 @@ global_asm!(
 
     .section .trap.rust, "ax"          // FIXME: is this right ?
     .globl FROM_CPU_INTR0
-    .align 4
+    .align 0x4
     FROM_CPU_INTR0:
+        // disable interrupts
+        csrci mstatus, 0x8
+
         // save non callee-saved registers
-        addi sp, sp, -80
+        addi sp, sp, -0x50
         sw ra, 76(sp)
         sw gp, 72(sp)
         sw tp, 68(sp)
@@ -287,12 +290,15 @@ global_asm!(
         lw t6, 8(sp)
         sw t6, 30*4(a0)
 
-        addi sp, sp, 80
-        sw sp, 1*4(a0)
+        addi t0, sp, 0x50
+        sw t0, 1*4(a0)
 
     restore:
 
         beqz    a1, restore_stack
+
+        // we stored some stuff on the stack before, we can ignore it now
+        addi sp, sp, 0x50
 
         // restore mepc and mstatus
         lw t0, 31*4(a1)
@@ -334,7 +340,7 @@ global_asm!(
 
 
         lw a1, 10*4(a1)
-        csrs mstatus, 0x8
+        // csrsi mstatus, 0x80
 
         mret
 
@@ -366,7 +372,10 @@ global_asm!(
         lw t4, 16(sp)
         lw t5, 12(sp)
         lw t6, 8(sp)
-        addi sp, sp, 80
+        addi sp, sp, 0x50
+
+
+        // csrsi mstatus, 0x80
 
         mret
     "#,
