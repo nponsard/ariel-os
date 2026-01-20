@@ -35,6 +35,34 @@ laze build -b nordic-thingy-91-x-nrf9151
 |Bluetooth Low Energy|<span title="not available on this piece of hardware">–</span>|
 |Hardware Random Number Generator|<span title="available in hardware, but not currently supported by Ariel OS">❌</span>[^only-available-through-the-cryptocell]|
 |Persistent Storage|<span title="supported">✅</span>|
+### `nordic-thingy-91-x-nrf5340-app`
+
+- **Tier:** 2
+- **Chip:** [nRF5340 application core](../chips/nrf5340-app.md)
+- **Chip Ariel OS Name:** `nrf5340-app`
+
+To target this laze builder, run the following command in the root of your Ariel OS app:
+
+```bash
+laze build -b nordic-thingy-91-x-nrf5340-app
+```
+
+#### Support Matrix
+
+|Functionality|Support Status|
+|---|:---:|
+|Debug Output|<span title="supported">✅</span>|
+|Logging|<span title="supported">✅</span>|
+|GPIO|<span title="supported">✅</span>|
+|I2C Controller Mode|<span title="supported">✅</span>|
+|SPI Main Mode|<span title="supported">✅</span>|
+|UART|<span title="supported">✅</span>|
+|User USB|<span title="supported">✅</span>|
+|Ethernet over USB|<span title="supported">✅</span>|
+|Wi-Fi|<span title="available in hardware, but not currently supported by Ariel OS">❌</span>[^requires-supporting-the-onboard-nrf7002-chip]|
+|Bluetooth Low Energy|<span title="not available on this piece of hardware">–</span>|
+|Hardware Random Number Generator|<span title="available in hardware, but not currently supported by Ariel OS">❌</span>[^no-standalone-rng-in-the-application-core-only-in-the-cryptocell-which-is-not-currently-supported]|
+|Persistent Storage|<span title="supported">✅</span>|
 ### `nordic-thingy-91-x-nrf5340-net`
 
 - **Tier:** 2
@@ -93,6 +121,9 @@ dt, dd {
   
 [^requires-supporting-the-onboard-nrf7002-chip]: Requires supporting the onboard nRF7002 chip.
 [^only-available-through-the-cryptocell]: Only available through the CryptoCell.
+  
+[^requires-supporting-the-onboard-nrf7002-chip]: Requires supporting the onboard nRF7002 chip.
+[^no-standalone-rng-in-the-application-core-only-in-the-cryptocell-which-is-not-currently-supported]: No standalone RNG in the application core, only in the CryptoCell which is not currently supported.
   
 [^pins-need-to-be-assigned-to-the-network-core-from-the-application-core]: Pins need to be assigned to the network core from the application core.
 [^requires-supporting-the-onboard-nrf7002-chip]: Requires supporting the onboard nRF7002 chip.
