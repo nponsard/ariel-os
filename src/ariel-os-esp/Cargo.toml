@@ -39,7 +39,7 @@ esp-hal = { workspace = true, default-features = false, features = [
 esp-radio = { workspace = true, default-features = false, features = [
   "esp-alloc",
   "wifi",
-  "sys-logs",
+  # "sys-logs",
   # "unstable",
 ], optional = true }
 esp-radio-rtos-driver = { workspace = true, default-features = false, features = [
