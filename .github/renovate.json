@@ -18,23 +18,26 @@
     {
       // Disable renovate for the packages we have patches for
       "matchPackageNames": [
-        "embassy-embedded-hal",
-        "embassy-executor",
-        "embassy-executor-macros",
+        // embassy forks
+        "cyw43",
         "embassy-hal-internal",
         "embassy-nrf",
         "embassy-net",
         "embassy-rp",
         "embassy-stm32",
         "embassy-time",
+
+        // esp hal forks
         "esp-alloc",
+        "esp-bootloader-esp-idf",
         "esp-hal",
-        "esp-hal-embassy",
+        "esp-metadata-generated",
         "esp-println",
-        "esp-wifi",
-        "xtensa-lx-rt",
-        "try-lock",
-        "embedded-test"
+        "esp-radio",
+        "esp-radio-rtos-driver",
+        "esp-rom-sys",
+        "esp-sync",
+        "xtensa-lx-rt"
       ],
       "enabled": false
     },
