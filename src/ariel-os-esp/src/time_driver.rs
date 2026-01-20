@@ -39,15 +39,16 @@ impl TimeDriver {
         // priority limited locks.
         let timer_priority = Priority::Priority1;
 
-        cfg_if::cfg_if! {
-            if #[cfg(riscv)] {
-                // Register the interrupt handler without nesting to satisfy the requirements of the
-                // task switching code
-                let handler = InterruptHandler::new_not_nested(timer_handler, timer_priority);
-            } else {
-                let handler = InterruptHandler::new(timer_handler, timer_priority);
-            }
-        };
+        // cfg_if::cfg_if! {
+        //     if #[cfg(riscv)] {
+        //         // Register the interrupt handler without nesting to satisfy the requirements of the
+        //         // task switching code
+        //         let handler = InterruptHandler::new_not_nested(timer_handler, timer_priority);
+        //     } else {
+        //         let handler = InterruptHandler::new(timer_handler, timer_priority);
+        //     }
+        // };
+        let handler = InterruptHandler::new(timer_handler, timer_priority);
 
         timer.set_interrupt_handler(handler);
         timer.listen();

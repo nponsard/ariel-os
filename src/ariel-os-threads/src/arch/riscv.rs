@@ -13,6 +13,9 @@ use crate::{Arch, SCHEDULER, Thread, cleanup};
 
 pub struct Cpu;
 
+// Scheduler interrupt priority needs to be strictly superior to esp's time driver interrupt pirority
+const SCHEDULER_INTERRUPT_PRIORITY: Priority = Priority::Priority2;
+
 #[derive(Debug, Default)]
 #[repr(C)]
 pub struct ThreadData {
@@ -91,7 +94,7 @@ impl Arch for Cpu {
 
         interrupt::enable_direct(
             Interrupt::FROM_CPU_INTR0,
-            Priority::Priority1,
+            SCHEDULER_INTERRUPT_PRIORITY,
             interrupt::CpuInterrupt::Interrupt20,
             FROM_CPU_INTR0,
         )
@@ -99,7 +102,7 @@ impl Arch for Cpu {
 
         // Panics if `FROM_CPU_INTR0` is among `esp_hal::interrupt::RESERVED_INTERRUPTS`,
         // which isn't the case.
-        let e = interrupt::enable(Interrupt::FROM_CPU_INTR0, interrupt::Priority::Priority1);
+        let e = interrupt::enable(Interrupt::FROM_CPU_INTR0, SCHEDULER_INTERRUPT_PRIORITY);
         debug!("e : {:?}", e);
         debug!("interrupt enabled");
     }
@@ -189,8 +192,11 @@ global_asm!(
         csrr t0, mstatus
         sw t0, 0(sp)
 
+        fence
 
         call {sched}
+        fence
+
 
         // if a1 is null, we need to return to the previous task
         beqz    a1, restore_stack
@@ -381,12 +387,9 @@ global_asm!(
     "#,
     sched = sym sched
 );
-
+// #[esp_hal::ram]
 /// Probes the runqueue for the next thread and switches context if needed.
 unsafe extern "C" fn sched() -> u64 {
-    let mepc = esp_hal::riscv::register::mepc::read();
-    trace!("sched start mepc: {}", mepc);
-
     let mstatus_st = esp_hal::riscv::register::mstatus::read();
     let mstatus = mstatus_st.bits();
 
@@ -423,7 +426,7 @@ unsafe extern "C" fn sched() -> u64 {
             next.data.mstatus = mstatus;
 
             let next_high_regs = &raw mut next.data;
-            trace!("next cleanup: {}", next.data.ra);
+            // trace!("next cleanup: {}", next.data.ra);
             Some((current_high_regs as u32, next_high_regs as u32))
         }) {
             break res;
@@ -435,7 +438,7 @@ unsafe extern "C" fn sched() -> u64 {
             unsafe {
                 esp_hal::riscv::register::mstatus::write(mstatus_st);
             }
-            trace!("Scheduler wfi");
+            // trace!("Scheduler wfi");
             Cpu::wfi();
             let mut mstatus_st = esp_hal::riscv::register::mstatus::read();
             mstatus_st.set_mie(false);
@@ -445,13 +448,7 @@ unsafe extern "C" fn sched() -> u64 {
         }
     };
 
-    trace!(
-        "Scheduler result: {:?}-{:?}",
-        current_high_regs, next_high_regs
-    );
 
-    let mepc = esp_hal::riscv::register::mepc::read();
-    trace!("Scheduler end mepc: {}", mepc);
     // The caller expects these two pointers in a0 and a1:
     // a0 = &current.data.high_regs (or 0)
     // a1 = &next.data.high_regs

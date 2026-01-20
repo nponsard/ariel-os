@@ -7,7 +7,8 @@ use core::ffi::c_void;
 use embassy_executor::Spawner;
 use embassy_time::{Duration, Timer};
 use esp_radio::wifi::{
-    Config, ModeConfig, WifiController, WifiDevice, WifiEvent, WifiStationState, sta::StationConfig,
+    Config, ModeConfig, ScanConfig, WifiController, WifiDevice, WifiEvent, WifiStationState,
+    sta::StationConfig,
 };
 use esp_radio_rtos_driver::{
     queue::CompatQueue, register_queue_implementation, register_scheduler_implementation,
