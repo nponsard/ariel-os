@@ -859,6 +859,8 @@ modules:
           - . $\\${ESPUP_EXPORT_FILE:-~/export-esp.sh}
 
   - name: riscv
+    selects:
+      - idle-threads # risc-v scheduler needs idle threads
     env:
       global:
         # riscv needs a bit more isr stack.
@@ -1599,6 +1601,13 @@ modules:
           - ${esp_wifi_heapsize_required}
         FEATURES:
           - ariel-os/wifi-esp
+
+  - name: idle-threads
+    help: create idle-threads to be taken when no other threads are ready
+    env:
+      global:
+        FEATURES:
+          - ariel-os/idle-threads
 
   - name: executor-thread
     help: use embassy executor within ariel-os-threads thread
