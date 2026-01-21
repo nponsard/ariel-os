@@ -967,7 +967,7 @@ modules:
     env:
       global:
         # this pins our nightly version
-        CARGO_TOOLCHAIN: +nightly-2025-12-01
+        CARGO_TOOLCHAIN: +nightly-2026-01-20
         RUSTFLAGS:
           - --cfg nightly
 
