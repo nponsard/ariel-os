@@ -263,8 +263,7 @@ chips:
       uart:
         status: not_currently_supported
         comments:
-          - uart-loopback test only works once after a power cycle
-          - "See also: https://github.com/ariel-os/ariel-os/pull/1368#issuecomment-3406073140"
+          - "[uart-loopback test only works once after a power cycle](https://github.com/ariel-os/ariel-os/pull/1368#issuecomment-3406073140)"
       logging: supported
       storage: supported
       wifi: not_available
@@ -386,8 +385,7 @@ chips:
       user_usb:
         status: not_currently_supported
         comments:
-          - USB does not enumerate
-          - "See also: https://github.com/ariel-os/ariel-os/issues/903"
+          - "[USB does not enumerate](https://github.com/ariel-os/ariel-os/issues/903)"
       ethernet_over_usb: not_currently_supported
       wifi: supported
       ble: not_available
@@ -411,8 +409,7 @@ chips:
       user_usb:
         status: not_currently_supported
         comments:
-          - USB does not enumerate
-          - "See also: https://github.com/ariel-os/ariel-os/issues/903"
+          - "[USB does not enumerate](https://github.com/ariel-os/ariel-os/issues/903)"
       ethernet_over_usb: not_currently_supported
       wifi: supported
       ble: not_available
@@ -436,8 +433,7 @@ chips:
       user_usb:
         status: not_currently_supported
         comments:
-          - USB does not enumerate
-          - "See also: https://github.com/ariel-os/ariel-os/issues/903"
+          - "[USB does not enumerate](https://github.com/ariel-os/ariel-os/issues/903)"
       ethernet_over_usb: not_currently_supported
       wifi: supported
       ble: not_available
@@ -461,8 +457,7 @@ chips:
       user_usb:
         status: not_currently_supported
         comments:
-          - USB does not enumerate
-          - "See also: https://github.com/ariel-os/ariel-os/issues/903"
+          - "[USB does not enumerate](https://github.com/ariel-os/ariel-os/issues/903)"
       ethernet_over_usb: not_currently_supported
       wifi: supported
       ble: not_available
@@ -599,9 +594,7 @@ chips:
       ethernet_over_usb:
         status: not_currently_supported
         comments:
-          - USB does not enumerate
-          - "See also: https://github.com/embassy-rs/embassy/issues/2376"
-          - "Workaround in: https://github.com/ariel-os/ariel-os/pull/1126"
+          - "[USB does not enumerate](https://github.com/embassy-rs/embassy/issues/2376), [workaround](https://github.com/ariel-os/ariel-os/pull/1126)"
       hwrng: not_currently_supported
       i2c_controller: not_currently_supported
       spi_main: not_currently_supported
@@ -623,9 +616,7 @@ chips:
       ethernet_over_usb:
         status: not_currently_supported
         comments:
-          - USB does not enumerate
-          - "See also: https://github.com/embassy-rs/embassy/issues/2376"
-          - "Workaround in: https://github.com/ariel-os/ariel-os/pull/1126"
+          - "[USB does not enumerate](https://github.com/embassy-rs/embassy/issues/2376), [workaround](https://github.com/ariel-os/ariel-os/pull/1126)"
       hwrng: supported
       i2c_controller: supported
       spi_main: supported
@@ -647,9 +638,7 @@ chips:
       ethernet_over_usb:
         status: not_currently_supported
         comments:
-          - USB does not enumerate
-          - "See also: https://github.com/embassy-rs/embassy/issues/2376"
-          - "Workaround in: https://github.com/ariel-os/ariel-os/pull/1126"
+          - "[USB does not enumerate](https://github.com/embassy-rs/embassy/issues/2376), [workaround](https://github.com/ariel-os/ariel-os/pull/1126)"
       hwrng: supported
       i2c_controller: needs_testing
       spi_main: needs_testing
@@ -709,9 +698,7 @@ chips:
       ethernet_over_usb:
         status: not_currently_supported
         comments:
-          - USB does not enumerate
-          - "See also: https://github.com/embassy-rs/embassy/issues/2376"
-          - "Workaround in: https://github.com/ariel-os/ariel-os/pull/1126"
+          - "[USB does not enumerate](https://github.com/embassy-rs/embassy/issues/2376), [workaround](https://github.com/ariel-os/ariel-os/pull/1126)"
       hwrng: supported
       i2c_controller: supported
       spi_main: supported
@@ -969,9 +956,7 @@ builders:
       ethernet_over_usb:
         status: not_currently_supported
         comments:
-          - USB does not enumerate
-          - "See also: https://github.com/embassy-rs/embassy/issues/2376"
-          - "Workaround in: https://github.com/ariel-os/ariel-os/pull/1126"
+          - "[USB does not enumerate](https://github.com/embassy-rs/embassy/issues/2376), [workaround](https://github.com/ariel-os/ariel-os/pull/1126)"
 
   st-nucleo-c031c6:
     chip: stm32c031c6
@@ -1008,9 +993,7 @@ builders:
       ethernet_over_usb:
         status: not_currently_supported
         comments:
-          - USB does not enumerate
-          - "See also: https://github.com/embassy-rs/embassy/issues/2376"
-          - "Workaround in: https://github.com/ariel-os/ariel-os/pull/1126"
+          - "[USB does not enumerate](https://github.com/embassy-rs/embassy/issues/2376), [workaround](https://github.com/ariel-os/ariel-os/pull/1126)"
 
   st-nucleo-h755zi-q:
     chip: stm32h755zi
@@ -1021,9 +1004,7 @@ builders:
       ethernet_over_usb:
         status: not_currently_supported
         comments:
-          - USB does not enumerate
-          - "See also: https://github.com/embassy-rs/embassy/issues/2376"
-          - "Workaround in: https://github.com/ariel-os/ariel-os/pull/1126"
+          - "[USB does not enumerate](https://github.com/embassy-rs/embassy/issues/2376), [workaround](https://github.com/ariel-os/ariel-os/pull/1126)"
 
   st-nucleo-wb55:
     chip: stm32wb55rg
@@ -1048,9 +1029,7 @@ builders:
       ethernet_over_usb:
         status: not_currently_supported
         comments:
-          - USB does not enumerate
-          - "See also: https://github.com/embassy-rs/embassy/issues/2376"
-          - "Workaround in: https://github.com/ariel-os/ariel-os/pull/1126"
+          - "[USB does not enumerate](https://github.com/embassy-rs/embassy/issues/2376), [workaround](https://github.com/ariel-os/ariel-os/pull/1126)"
 
   stm32u083c-dk:
     chip: stm32u083mc
