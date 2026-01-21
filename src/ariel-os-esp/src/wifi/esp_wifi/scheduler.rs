@@ -6,11 +6,11 @@
 use alloc::alloc::{Layout, alloc, handle_alloc_error};
 use core::{
     ffi::c_void,
-    ptr::NonNull,
+    ptr::{self, NonNull},
     sync::atomic::{AtomicPtr, Ordering},
 };
 
-use ariel_os_debug::log::{debug, trace};
+use ariel_os_debug::log::{debug, info, trace};
 use ariel_os_threads::{
     CoreAffinity, CoreId, RunqueueId, THREAD_COUNT, ThreadId, create_raw, current_tid,
     get_priority, schedule, set_priority, yield_same,
@@ -21,6 +21,11 @@ use esp_radio_rtos_driver::{SchedulerImplementation, ThreadPtr};
 static THREAD_SEMAPHORES: [AtomicPtr<()>; THREAD_COUNT] =
     [const { AtomicPtr::new(core::ptr::null_mut()) }; THREAD_COUNT];
 
+pub(crate) fn clean_semaphores() {
+    for ptr in THREAD_SEMAPHORES.iter() {
+        ptr.store(ptr::null_mut(), Ordering::SeqCst);
+    }
+}
 pub(crate) struct ArielScheduler {}
 
 fn thread_id_to_ptr(thread_id: ThreadId) -> ThreadPtr {
@@ -101,6 +106,14 @@ impl SchedulerImplementation for ArielScheduler {
     ) -> ThreadPtr {
         trace!("task_create()");
 
+        // for (i, sem) in THREAD_SEMAPHORES.iter().enumerate() {
+        //     info!(
+        //         "Thread semaphore {} : {:#x}",
+        //         i,
+        //         sem.load(Ordering::SeqCst).addr()
+        //     )
+        // }
+
         // upstream uses 16b as minimum alignment on both architectures
         let stack_slice = alloc_aligned_leaked_buffer(task_stack_size, 16);
 
@@ -157,19 +170,38 @@ impl SchedulerImplementation for ArielScheduler {
         // panic.
         let tid = usize::from(current_tid().unwrap());
         critical_section::with(|_cs| {
-            let current = THREAD_SEMAPHORES[tid].load(Ordering::Acquire);
-            if current == core::ptr::null_mut() {
+            let current = THREAD_SEMAPHORES[tid].load(Ordering::SeqCst);
+
+            debug!(
+                "current_task_thread_semaphore THREAD_SEMAPHORES {:?}",
+                THREAD_SEMAPHORES.as_ptr()
+            );
+            debug!(
+                "current_task_thread_semaphore ({}): {:#x}",
+                tid,
+                current.addr()
+            );
+
+            let ret = if current == core::ptr::null_mut() {
                 let new = unsafe {
                     esp_rtos_semaphore_create(SemaphoreKind::Counting { max: 1, initial: 0 })
                 };
                 let ptr = new.addr().get() as *mut ();
-                THREAD_SEMAPHORES[tid].store(ptr, Ordering::Release);
+                THREAD_SEMAPHORES[tid].store(ptr, Ordering::SeqCst);
+                info!("current_task_thread_semaphore creating new semaphore");
                 new
             } else {
                 // Safety:
                 // * is not null, checked above
                 unsafe { NonNull::new_unchecked(current) }
-            }
+            };
+
+            debug!(
+                "current_task_thread_semaphore ({}) returning {:#x}",
+                tid,
+                ret.addr()
+            );
+            ret
         })
     }
 

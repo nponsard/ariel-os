@@ -90,7 +90,7 @@ use smp::{Multicore, schedule_on_core};
 use static_cell::ConstStaticCell;
 
 /// The number of possible priority levels.
-pub const SCHED_PRIO_LEVELS: usize = 32;
+pub const SCHED_PRIO_LEVELS: usize = 16;
 
 /// The maximum number of concurrent threads that can be created.
 pub const THREAD_COUNT: usize = 16;
@@ -284,11 +284,11 @@ impl Scheduler {
     /// Panics if `tid` is >= [`THREAD_COUNT`].
     fn set_state(&mut self, tid: ThreadId, state: ThreadState) -> ThreadState {
         use ariel_os_debug::log::debug;
-        debug!("Set tid {:?}, to {:?}", tid, state);
+        // debug!("Set tid {:?}, to {:?}", tid, state);
 
         let thread = self.get_unchecked_mut(tid);
         let old_state = core::mem::replace(&mut thread.state, state);
-        debug!("old_state: {:?}", old_state);
+        // debug!("old_state: {:?}", old_state);
         let prio = thread.prio;
         if state == ThreadState::Running {
             #[cfg(not(feature = "infini-core"))]

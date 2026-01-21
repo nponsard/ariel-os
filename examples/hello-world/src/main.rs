@@ -7,5 +7,7 @@ use ariel_os::debug::{ExitCode, exit, log::*};
 async fn main() {
     info!("Hello World!");
 
+    loop {}
+
     exit(ExitCode::SUCCESS);
 }

@@ -20,14 +20,17 @@ use scheduler::ArielScheduler;
 use wait_queue::ArielWaitQueue;
 
 pub type NetworkDevice = WifiDevice<'static>;
-
+use crate::wifi::esp_wifi::scheduler::clean_semaphores;
 pub fn init(peripherals: &mut crate::OptionalPeripherals, spawner: Spawner) -> NetworkDevice {
+    clean_semaphores();
     let config = Config::default();
     let wifi = peripherals.WIFI.take().unwrap();
 
     let (controller, interfaces) = esp_radio::wifi::new(wifi, config).unwrap();
 
-    spawner.spawn(connection(controller)).expect("connection task should be started");
+    spawner
+        .spawn(connection(controller))
+        .expect("connection task should be started");
 
     interfaces.station
 }
@@ -57,10 +60,9 @@ async fn connection(mut controller: WifiController<'static>) {
             let client_config = ModeConfig::Station(
                 StationConfig::default()
                     .with_ssid(crate::wifi::WIFI_NETWORK.try_into().unwrap())
-                    .with_password(crate::wifi::WIFI_PASSWORD.try_into().unwrap())
-                    // .with_channel(6)
-                    // .with_protocols((Protocol::P802D11BGN).into())
-                    // .with_scan_method(ScanMethod::AllChannels),
+                    .with_password(crate::wifi::WIFI_PASSWORD.try_into().unwrap()), // .with_channel(6)
+                                                                                    // .with_protocols((Protocol::P802D11BGN).into())
+                                                                                    // .with_scan_method(ScanMethod::AllChannels),
             );
             controller.set_config(&client_config).unwrap();
             debug!("Starting Wi-Fi");

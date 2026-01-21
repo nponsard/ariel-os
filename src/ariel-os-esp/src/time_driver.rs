@@ -84,7 +84,7 @@ impl TimeDriver {
 
 #[esp_hal::ram]
 extern "C" fn timer_handler() {
-    ariel_os_debug::log::debug!("timer_handler()");
+    // ariel_os_debug::log::debug!("timer_handler()");
 
     let now = now();
 
@@ -149,7 +149,7 @@ impl TimerQueue {
     }
 
     pub(crate) fn handle_alarm(&self, now: u64) -> u64 {
-        ariel_os_debug::log::debug!("handle_alarm() at {}", now);
+        // ariel_os_debug::log::debug!("handle_alarm() at {}", now);
         self.inner.with(|inner| inner.handle_alarm(now))
     }
 }
