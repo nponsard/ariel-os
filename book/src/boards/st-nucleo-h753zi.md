@@ -30,7 +30,7 @@ laze build -b st-nucleo-h753zi
 |SPI Main Mode|<span title="available in hardware, but not currently supported by Ariel OS">❌</span>|
 |UART|<span title="available in hardware, but not currently supported by Ariel OS">❌</span>|
 |User USB|<span title="supported">✅</span>|
-|Ethernet over USB|<span title="available in hardware, but not currently supported by Ariel OS">❌</span>[^usb-does-not-enumerate][^see-also-https-github-com-embassy-rs-embassy-issues-2376][^workaround-in-https-github-com-ariel-os-ariel-os-pull-1126]|
+|Ethernet over USB|<span title="available in hardware, but not currently supported by Ariel OS">❌</span>[^usb-does-not-enumerate-https-github-com-embassy-rs-embassy-issues-2376-workaround-https-github-com-ariel-os-ariel-os-pull-1126]|
 |Wi-Fi|<span title="not available on this piece of hardware">–</span>|
 |Bluetooth Low Energy|<span title="not available on this piece of hardware">–</span>|
 |Hardware Random Number Generator|<span title="available in hardware, but not currently supported by Ariel OS">❌</span>|
@@ -63,7 +63,5 @@ dt, dd {
 
 
   
-[^usb-does-not-enumerate]: USB does not enumerate.
-[^see-also-https-github-com-embassy-rs-embassy-issues-2376]: See also: https://github.com/embassy-rs/embassy/issues/2376.
-[^workaround-in-https-github-com-ariel-os-ariel-os-pull-1126]: Workaround in: https://github.com/ariel-os/ariel-os/pull/1126.
+[^usb-does-not-enumerate-https-github-com-embassy-rs-embassy-issues-2376-workaround-https-github-com-ariel-os-ariel-os-pull-1126]: [USB does not enumerate](https://github.com/embassy-rs/embassy/issues/2376), [workaround](https://github.com/ariel-os/ariel-os/pull/1126).
 [^removing-items-not-supported]: Removing items not supported.

@@ -29,7 +29,7 @@ laze build -b espressif-esp32-s2-devkitc-1
 |I2C Controller Mode|<span title="needs testing">🚦</span>|
 |SPI Main Mode|<span title="needs testing">🚦</span>|
 |UART|<span title="supported">✅</span>|
-|User USB|<span title="available in hardware, but not currently supported by Ariel OS">❌</span>[^usb-does-not-enumerate][^see-also-https-github-com-ariel-os-ariel-os-issues-903]|
+|User USB|<span title="available in hardware, but not currently supported by Ariel OS">❌</span>[^usb-does-not-enumerate-https-github-com-ariel-os-ariel-os-issues-903]|
 |Ethernet over USB|<span title="available in hardware, but not currently supported by Ariel OS">❌</span>|
 |Wi-Fi|<span title="supported">✅</span>|
 |Bluetooth Low Energy|<span title="not available on this piece of hardware">–</span>|
@@ -63,6 +63,5 @@ dt, dd {
 
 
   
-[^usb-does-not-enumerate]: USB does not enumerate.
-[^see-also-https-github-com-ariel-os-ariel-os-issues-903]: See also: https://github.com/ariel-os/ariel-os/issues/903.
+[^usb-does-not-enumerate-https-github-com-ariel-os-ariel-os-issues-903]: [USB does not enumerate](https://github.com/ariel-os/ariel-os/issues/903).
 [^requires-partitioning-support]: Requires partitioning support.

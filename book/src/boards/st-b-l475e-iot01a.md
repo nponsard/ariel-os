@@ -30,7 +30,7 @@ laze build -b st-b-l475e-iot01a
 |SPI Main Mode|<span title="needs testing">🚦</span>|
 |UART|<span title="needs testing">🚦</span>|
 |User USB|<span title="supported">✅</span>|
-|Ethernet over USB|<span title="available in hardware, but not currently supported by Ariel OS">❌</span>[^usb-does-not-enumerate][^see-also-https-github-com-embassy-rs-embassy-issues-2376][^workaround-in-https-github-com-ariel-os-ariel-os-pull-1126]|
+|Ethernet over USB|<span title="available in hardware, but not currently supported by Ariel OS">❌</span>[^usb-does-not-enumerate-https-github-com-embassy-rs-embassy-issues-2376-workaround-https-github-com-ariel-os-ariel-os-pull-1126]|
 |Wi-Fi|<span title="available in hardware, but not currently supported by Ariel OS">❌</span>[^an-external-wi-fi-module-is-present-on-the-board]|
 |Bluetooth Low Energy|<span title="available in hardware, but not currently supported by Ariel OS">❌</span>|
 |Hardware Random Number Generator|<span title="supported">✅</span>|
@@ -63,8 +63,6 @@ dt, dd {
 
 
   
-[^usb-does-not-enumerate]: USB does not enumerate.
-[^see-also-https-github-com-embassy-rs-embassy-issues-2376]: See also: https://github.com/embassy-rs/embassy/issues/2376.
-[^workaround-in-https-github-com-ariel-os-ariel-os-pull-1126]: Workaround in: https://github.com/ariel-os/ariel-os/pull/1126.
+[^usb-does-not-enumerate-https-github-com-embassy-rs-embassy-issues-2376-workaround-https-github-com-ariel-os-ariel-os-pull-1126]: [USB does not enumerate](https://github.com/embassy-rs/embassy/issues/2376), [workaround](https://github.com/ariel-os/ariel-os/pull/1126).
 [^an-external-wi-fi-module-is-present-on-the-board]: An external Wi-Fi module is present on the board.
 [^removing-items-not-supported]: Removing items not supported.
