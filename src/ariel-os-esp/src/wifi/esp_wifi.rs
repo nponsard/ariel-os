@@ -35,11 +35,11 @@ pub fn init(peripherals: &mut crate::OptionalPeripherals, spawner: Spawner) -> N
 #[embassy_executor::task]
 async fn connection(mut controller: WifiController<'static>) {
     debug!("start connection task");
-    let caps = controller.capabilities();
-    info!("Device capabilities: {:?}", controller.capabilities());
+    // let caps = controller.capabilities();
+    // info!("Device capabilities: {:?}", controller.capabilities());
 
-    #[cfg(not(feature = "defmt"))]
-    debug!("Device capabilities: {:?}", controller.capabilities());
+    // #[cfg(not(feature = "defmt"))]
+    // debug!("Device capabilities: {:?}", controller.capabilities());
 
     loop {
         match esp_radio::wifi::station_state() {

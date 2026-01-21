@@ -71,6 +71,7 @@ impl SemaphoreInner {
             } => {
                 let current = current_task();
                 if let Some(owner) = *owner {
+                    trace!("try_take owner {:?}", owner);
                     if owner == current && *recursive {
                         *lock_counter += 1;
                         true
@@ -85,6 +86,8 @@ impl SemaphoreInner {
                         false
                     }
                 } else {
+                    trace!("try_take current {:?}", current);
+
                     *owner = Some(current);
                     *lock_counter += 1;
                     *original_priority = unsafe { task_priority(current) };
@@ -114,6 +117,8 @@ impl SemaphoreInner {
                 // priority inheritance an we have to conjure up an owner.
                 let current = NonNull::dangling();
                 if let Some(owner) = owner {
+                    trace!("try_take_from_isr owner {:?}", owner);
+
                     if *owner == current && *recursive {
                         *lock_counter += 1;
                         true
@@ -121,6 +126,8 @@ impl SemaphoreInner {
                         false
                     }
                 } else {
+                    trace!("try_take_from_isr current {:?}", current);
+
                     *owner = Some(current);
                     *lock_counter += 1;
                     true
@@ -337,13 +344,12 @@ impl SemaphoreImplementation for CompatSemaphore {
     }
 
     unsafe fn delete(semaphore: SemaphorePtr) {
-        info!("delete {:?}", semaphore);
+        // info!("delete {:?}", semaphore);
 
         let sem = unsafe { Box::from_raw(semaphore.cast::<Self>().as_ptr()) };
-        info!("delete2 {:?}", semaphore);
+        // info!("delete2 {:?}", semaphore);
         core::mem::drop(sem);
-        info!("deleted {:?}", semaphore);
-
+        // info!("deleted {:?}", semaphore);
     }
 
     unsafe fn take(semaphore: SemaphorePtr, timeout_us: Option<u32>) -> bool {

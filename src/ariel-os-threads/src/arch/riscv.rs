@@ -1,17 +1,30 @@
 #![expect(unsafe_code)]
 
+use crate::arch::riscv::riscv::register;
 use ariel_os_debug::log::{debug, error, info, trace};
 use core::arch::global_asm;
 use esp_hal::{
-    interrupt::{self, Priority, software::SoftwareInterrupt},
+    interrupt::{self, InterruptHandler, Priority, software::SoftwareInterrupt},
     peripherals::Interrupt,
     riscv,
     system::Cpu as EspHalCpu,
 };
+use portable_atomic::Ordering;
+use core::ptr;
 
-use crate::{Arch, SCHEDULER, Thread, cleanup};
+use crate::{Arch, SCHEDULER, Thread, cleanup, schedule};
 
 pub struct Cpu;
+
+unsafe extern "C" {
+    fn sys_switch();
+}
+
+static _CURRENT_CTX_PTR: portable_atomic::AtomicPtr<ThreadData> =
+    portable_atomic::AtomicPtr::new(core::ptr::null_mut());
+
+static _NEXT_CTX_PTR: portable_atomic::AtomicPtr<ThreadData> =
+    portable_atomic::AtomicPtr::new(core::ptr::null_mut());
 
 #[derive(Debug, Default)]
 #[repr(C)]
@@ -66,12 +79,12 @@ impl Arch for Cpu {
 
     /// Triggers software interrupt for the context switch.
     fn schedule() {
-        let mstatus_st = esp_hal::riscv::register::mstatus::read();
-        trace!(
-            "schedule called, mstatus.mie {}, mstatus.mpie {}",
-            mstatus_st.mie(),
-            mstatus_st.mpie()
-        );
+        // let mstatus_st = esp_hal::riscv::register::mstatus::read();
+        // trace!(
+        //     "schedule called, mstatus.mie {}, mstatus.mpie {}",
+        //     mstatus_st.mie(),
+        //     mstatus_st.mpie()
+        // );
 
         // SAFETY: `steal().raise()` is safe on an initialized software interrupt
         unsafe { SoftwareInterrupt::<0>::steal().raise() }
@@ -96,27 +109,18 @@ impl Arch for Cpu {
         thread.stack_highest = stack_pos;
 
         // Safety: This is the place to initialize stack painting.
-        // unsafe { thread.stack_paint_init(stack_pos) };
+        unsafe { thread.stack_paint_init(stack_pos) };
     }
 
     /// Enable and trigger the appropriate software interrupt.
     fn start_threading() {
-        interrupt::disable(EspHalCpu::ProCpu, Interrupt::FROM_CPU_INTR0);
+        // TODO: check safety
+        unsafe {
+            SoftwareInterrupt::<0>::steal()
+                .set_interrupt_handler(InterruptHandler::new_not_nested(sched, Priority::min()));
+        }
 
-        Self::schedule();
-
-        interrupt::enable_direct(
-            Interrupt::FROM_CPU_INTR0,
-            Priority::Priority15,
-            interrupt::CpuInterrupt::Interrupt20,
-            FROM_CPU_INTR0,
-        )
-        .unwrap();
-
-        // Panics if `FROM_CPU_INTR0` is among `esp_hal::interrupt::RESERVED_INTERRUPTS`,
-        // which isn't the case.
-        let e = interrupt::enable(Interrupt::FROM_CPU_INTR0, Priority::Priority15);
-        debug!("e : {:?}", e);
+        schedule();
         debug!("interrupt enabled");
     }
 
@@ -163,57 +167,27 @@ const fn default_trap_frame() -> ThreadData {
     }
 }
 
-unsafe extern "C" {
-    fn FROM_CPU_INTR0();
-}
-
 global_asm!(
     r#"
 
     .section .trap, "ax"          // FIXME: is this right ?
-    .globl FROM_CPU_INTR0
-    .align 0x4
-    FROM_CPU_INTR0:
-        // disable interrupts
-        csrci mstatus, 0x8
-
-        // save non callee-saved registers
-        addi sp, sp, -0x50
-        sw ra, 76(sp)
-        sw gp, 72(sp)
-        sw tp, 68(sp)
-        sw t0, 64(sp)
-        sw t1, 60(sp)
-        sw t2, 56(sp)
-        sw a0, 52(sp)
-        sw a1, 48(sp)
-        sw a2, 44(sp)
-        sw a3, 40(sp)
-        sw a4, 36(sp)
-        sw a5, 32(sp)
-        sw a6, 28(sp)
-        sw a7, 24(sp)
-        sw t3, 20(sp)
-        sw t4, 16(sp)
-        sw t5, 12(sp)
-        sw t6, 8(sp)
+    .globl sys_switch
+    .align 4
+    sys_switch:
 
 
-        csrr t0, mepc
-        sw t0, 4(sp)
+        // save some registers for scratch space
+        addi sp, sp, -0x10
+        sw a0, 0(sp)
+        sw a1, 4(sp)
+        sw t0, 8(sp)
 
-        csrr t0, mstatus
-        sw t0, 0(sp)
 
-        // add a0, x0, sp
-        // fence
+        la a0, {_CURRENT_CTX_PTR}
+        lw a0, 0(a0)
 
-        call {sched}
-
-        // fence
-
-        // add a0, x0, sp
-
+        la a1, {_NEXT_CTX_PTR}
+        lw a1, 0(a1)
 
         // if a1 is null, we need to return to the previous task
         beqz    a1, restore_stack
@@ -223,68 +197,55 @@ global_asm!(
 
         // save registers
 
-        // mepc
-        lw t0, 4(sp)
-        sw t0, 32*4(a0)
+        // mepc is set by the "caller"
 
         //ra
-        lw t0, 76(sp)
-        sw t0, 0*4(a0)
+        sw ra, 0*4(a0)
 
         // gp
-        lw t0, 72(sp)
-        sw t0, 2*4(a0)
+        sw gp, 2*4(a0)
 
         // tp
-        lw t0, 68(sp)
-        sw t0, 3*4(a0)
+        sw tp, 3*4(a0)
 
         // t0
-        lw t0, 64(sp)
+        lw t0, 8(sp)
         sw t0, 4*4(a0)
 
         // t1
-        lw t0, 60(sp)
-        sw t0, 5*4(a0)
+        sw t1, 5*4(a0)
 
         // t2
-        lw t0, 56(sp)
-        sw t0, 6*4(a0)
+        sw t2, 6*4(a0)
 
         sw s0, 7*4(a0)
         sw s1, 8*4(a0)
 
         // a0
-        lw t0, 52(sp)
+        lw t0, 0(sp)
         sw t0, 9*4(a0)
 
         // a1
-        lw t0, 48(sp)
+        lw t0, 4(sp)
         sw t0, 10*4(a0)
 
         // a2
-        lw t0, 44(sp)
-        sw t0, 11*4(a0)
+        sw a2, 11*4(a0)
 
         // a3
-        lw t0, 40(sp)
-        sw t0, 12*4(a0)
+        sw a3, 12*4(a0)
 
         // a4
-        lw t0, 36(sp)
-        sw t0, 13*4(a0)
+        sw a4, 13*4(a0)
 
         // a5
-        lw t0, 32(sp)
-        sw t0, 14*4(a0)
+        sw a5, 14*4(a0)
 
         // a6
-        lw t0, 28(sp)
-        sw t0, 15*4(a0)
+        sw a6, 15*4(a0)
 
         // a7
-        lw t0, 24(sp)
-        sw t0, 16*4(a0)
+        sw a7, 16*4(a0)
 
         sw s2, 17*4(a0)
         sw s3, 18*4(a0)
@@ -298,37 +259,29 @@ global_asm!(
         sw s11, 26*4(a0)
 
         // t3
-        lw t3, 20(sp)
         sw t3, 27*4(a0)
 
         // t4
-        lw t4, 16(sp)
         sw t4, 28*4(a0)
 
         // t5
-        lw t5, 12(sp)
         sw t5, 29*4(a0)
 
         // t6
-        lw t6, 8(sp)
         sw t6, 30*4(a0)
 
-        addi t0, sp, 0x50
+        addi t0, sp, 0x10
         sw t0, 1*4(a0)
 
     restore:
 
         beqz    a1, restore_stack
 
-        // we stored some stuff on the stack before, we can ignore it now
-        addi sp, sp, 0x50
-
-
         // restore mepc and mstatus
         lw t0, 31*4(a1)
         csrw mstatus, t0
-        lw t1, 32*4(a1)
-        csrw mepc,t1
+        lw t0, 32*4(a1)
+        csrw mepc,t0
 
         // load registers
         lw ra, 0*4(a1)
@@ -362,71 +315,31 @@ global_asm!(
         lw t5, 29*4(a1)
         lw t6, 30*4(a1)
 
-
         lw a1, 10*4(a1)
-        // csrsi mstatus, 0x80
-
-        // fence
 
         mret
 
     restore_stack:
 
-        // beqz sp, l_sp
-        // fence
 
-
-        // restore mepc
-        lw t0, 4(sp)
-        // fence
-        // beqz t0, l_mepc
-        csrw mepc,t0
-
-        // restore mstatus
-        lw t0, 0(sp)
-        csrw mstatus,t0
-
-        lw ra, 76(sp)
-        lw gp, 72(sp)
-        lw tp, 68(sp)
-        lw t0, 64(sp)
-        lw t1, 60(sp)
-        lw t2, 56(sp)
-        lw a0, 52(sp)
-        lw a1, 48(sp)
-        lw a2, 44(sp)
-        lw a3, 40(sp)
-        lw a4, 36(sp)
-        lw a5, 32(sp)
-        lw a6, 28(sp)
-        lw a7, 24(sp)
-        lw t3, 20(sp)
-        lw t4, 16(sp)
-        lw t5, 12(sp)
-        lw t6, 8(sp)
-        addi sp, sp, 0x50
-
-
-        // csrsi mstatus, 0x80
-        // fence
+        // restore temporary registers
+        lw a0, 0(sp)
+        lw a1, 4(sp)
+        lw t0, 8(sp)
+        addi sp, sp, 0x10
 
         mret
 
 
         "#,
-        sched = sym sched,
-        // l_sp:
-        //     call {log_sp_zero}
-        // l_mepc:
-        //     call {log_mepc_zero}
-        // log_sp_zero = sym log_sp_zero,
-    // log_mepc_zero = sym log_mepc_zero
+        _CURRENT_CTX_PTR = sym _CURRENT_CTX_PTR,
+        _NEXT_CTX_PTR = sym _NEXT_CTX_PTR,
 
 );
 
 /// Probes the runqueue for the next thread and switches context if needed.
-// #[esp_hal::ram]
-unsafe extern "C" fn sched(coming_sp: u32) -> u64 {
+#[esp_hal::ram]
+extern "C" fn sched() {
     // unsafe {
     //     esp_hal::peripherals::PLIC_MX::regs()
     //         .mxint_thresh()
@@ -434,6 +347,8 @@ unsafe extern "C" fn sched(coming_sp: u32) -> u64 {
     // }
     let mstatus_st = esp_hal::riscv::register::mstatus::read();
     let mstatus = mstatus_st.bits();
+
+    debug!("sched mstatus {:#x}", mstatus);
 
     // clear FROM_CPU_INTR0
     // SAFETY: `steal().reset()` is safe on an initialized software interrupt
@@ -451,11 +366,11 @@ unsafe extern "C" fn sched(coming_sp: u32) -> u64 {
                 }
             };
 
-            let mut current_high_regs = core::ptr::null();
+            let mut current_high_regs = core::ptr::null_mut();
 
             if let Some(current_tid_ref) = scheduler.current_tid_mut() {
                 if next_tid == *current_tid_ref {
-                    return Some((0, 0));
+                    return Some((ptr::null_mut(), ptr::null_mut()));
                 }
                 let current_tid = *current_tid_ref;
                 *current_tid_ref = next_tid;
@@ -469,7 +384,7 @@ unsafe extern "C" fn sched(coming_sp: u32) -> u64 {
 
             let next_high_regs = &raw mut next.data;
             // trace!("next cleanup: {}", next.data.ra);
-            Some((current_high_regs as u32, next_high_regs as u32))
+            Some((current_high_regs, next_high_regs))
         }) {
             break res;
         } else {
@@ -480,11 +395,11 @@ unsafe extern "C" fn sched(coming_sp: u32) -> u64 {
             unsafe {
                 esp_hal::riscv::register::mstatus::write(mstatus_st);
             }
-            unsafe {
-                esp_hal::peripherals::PLIC_MX::regs()
-                    .mxint_thresh()
-                    .write(|w| unsafe { w.cpu_mxint_thresh().bits(0) });
-            }
+            // unsafe {
+            //     esp_hal::peripherals::PLIC_MX::regs()
+            //         .mxint_thresh()
+            //         .write(|w| unsafe { w.cpu_mxint_thresh().bits(0) });
+            // }
 
             // unsafe {
             //     core::arch::asm!("nop");
@@ -512,13 +427,13 @@ unsafe extern "C" fn sched(coming_sp: u32) -> u64 {
         }
     };
 
-    // info!(
-    //     "Scheduler result: {:?}-{:?}",
-    //     current_high_regs, next_high_regs
-    // );
+    debug!(
+        "Scheduler result: {:?}-{:?}",
+        current_high_regs, next_high_regs
+    );
 
-    // let mepc = esp_hal::riscv::register::mepc::read();
-    // trace!("sched end mepc: {:#x}", mepc);
+    let mepc = esp_hal::riscv::register::mepc::read();
+    trace!("sched end mepc: {:#x}", mepc);
 
     // interrupt_status();
 
@@ -551,7 +466,28 @@ unsafe extern "C" fn sched(coming_sp: u32) -> u64 {
     //         .write(|w| unsafe { w.cpu_mxint_thresh().bits(0) });
     // }
 
-    (current_high_regs as u64) | (next_high_regs as u64) << 32
+    _CURRENT_CTX_PTR.store(current_high_regs, Ordering::SeqCst);
+    _NEXT_CTX_PTR.store(next_high_regs, Ordering::SeqCst);
+
+    if !current_high_regs.is_null() {
+        unsafe {
+            (*current_high_regs).mepc = register::mepc::read();
+        }
+    }
+
+    let mstatus = register::mstatus::read().bits();
+    unsafe {
+        (*next_high_regs).mstatus = mstatus;
+    }
+    unsafe {
+        // set MPIE in MSTATUS to 0 to disable interrupts while task switching
+        register::mstatus::write(register::mstatus::Mstatus::from_bits(mstatus & !(1 << 7)));
+
+        // load address of sys_switch into MEPC - will run after all registers are restored
+        register::mepc::write(sys_switch as *const () as usize);
+    }
+
+    // (current_high_regs as u64) | (next_high_regs as u64) << 32
 }
 
 /// Returns the current `SP` register value.

@@ -124,7 +124,7 @@ impl<const N_QUEUES: usize, const N_THREADS: usize> RunQueue<{ N_QUEUES }, { N_T
     #[must_use]
     pub fn get_next(&self) -> Option<ThreadId> {
         let tid = self.get_next_with_rq().map(|(tid, _)| tid);
-        debug!("restarting tid {:?}", tid);
+        // debug!("restarting tid {:?}", tid);
         tid
     }
 
@@ -290,14 +290,14 @@ mod clist {
 
         #[expect(clippy::missing_panics_doc, reason = "internal")]
         pub fn push(&mut self, n: u8, rq: u8) {
-            debug!("CList::push");
+            // debug!("CList::push");
             assert!(n < Self::sentinel());
             if self.next_idxs[n as usize] != Self::sentinel() {
                 return;
             }
 
             if let Some(head) = self.peek_head(rq) {
-                debug!("CList::push, rq has entry already");
+                // debug!("CList::push, rq has entry already");
 
                 // rq has an entry already, so
                 // 1. n.next = old_tail.next ("first" in list)
@@ -307,7 +307,7 @@ mod clist {
                 // 3. tail = n
                 self.tail[rq as usize] = n;
             } else {
-                debug!("CList::push, rq is empty");
+                // debug!("CList::push, rq is empty");
 
                 // rq is empty, link both tail and n.next to n
                 self.tail[rq as usize] = n;

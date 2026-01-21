@@ -83,7 +83,11 @@ impl SchedulerImplementation for ArielScheduler {
     fn current_task(&self) -> ThreadPtr {
         // NOTE(no-panic): this is always called from within a thread, so the `unwrap()` doesn't
         // panic.
-        thread_id_to_ptr(current_tid().unwrap())
+
+        let current = current_tid().unwrap();
+        let ptr = thread_id_to_ptr(current);
+        debug!("current task : {:?} {:?}", current, ptr);
+        ptr
     }
 
     fn task_create(
@@ -127,7 +131,9 @@ impl SchedulerImplementation for ArielScheduler {
             priority,
             task_stack_size,
         );
-        thread_id_to_ptr(thread_id)
+        let thread_ptr = thread_id_to_ptr(thread_id);
+        ariel_os_debug::log::debug!("task_create() thread ptr {:?}", thread_ptr);
+        thread_ptr
     }
 
     fn schedule_task_deletion(&self, _task_handle: Option<ThreadPtr>) {
@@ -168,7 +174,10 @@ impl SchedulerImplementation for ArielScheduler {
     }
 
     unsafe fn task_priority(&self, task: ThreadPtr) -> u32 {
+        debug!("asking task priority of {:?}", task);
         let thread_id = thread_ptr_to_id(task);
+        debug!("asking task priority of thread id {:?}", task);
+
         usize::from(get_priority(thread_id).unwrap()) as u32
     }
 
