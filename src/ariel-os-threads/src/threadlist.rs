@@ -37,6 +37,7 @@ impl ThreadList {
                 if scheduler.get_unchecked_mut(n).prio < prio {
                     break;
                 }
+                assert!(curr != next, "Circular dependency detected in ThreadList");
                 curr = next;
                 next = scheduler.thread_blocklist[usize::from(n)];
             }
