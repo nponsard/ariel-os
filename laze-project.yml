@@ -861,6 +861,8 @@ modules:
           - . $\\${ESPUP_EXPORT_FILE:-~/export-esp.sh}
 
   - name: riscv
+    selects:
+      - idle-threads # risc-v scheduler needs idle threads
     env:
       global:
         # riscv needs a bit more isr stack.
