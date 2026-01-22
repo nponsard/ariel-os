@@ -4,6 +4,13 @@ boards:
     leds:
       led0:
         pin: P0_29
+        color: red
+      led1:
+        pin: P0_31
+        color: green
+      led2:
+        pin: P0_30
+        color: blue
     buttons:
       button0:
         pin: P0_26
@@ -13,6 +20,13 @@ boards:
     leds:
       led0:
         pin: P0_14
+        color: red
+      led1:
+        pin: P0_26
+        color: green
+      led2:
+        pin: P0_15
+        color: blue
     buttons:
       button0:
         pin: P0_24
