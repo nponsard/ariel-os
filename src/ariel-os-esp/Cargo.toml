@@ -131,7 +131,7 @@ defmt = [
   "fugit?/defmt",
 ]
 ## Enables log support.
-log = ["esp-hal/log-04", "esp-radio?/log-04"]
+log = ["esp-hal/log-04", "esp-radio-rtos-driver?/log-04", "esp-radio?/log-04"]
 
 # Enables USB support.
 usb = []

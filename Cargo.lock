@@ -2741,6 +2741,7 @@ dependencies = [
  "cfg-if",
  "defmt 1.0.1",
  "esp-sync",
+ "log",
  "portable-atomic",
 ]
 
