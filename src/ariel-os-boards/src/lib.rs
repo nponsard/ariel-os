@@ -23,10 +23,12 @@ cfg_if::cfg_if! {
     include!("heltec-wifi-lora-32-v3.rs"); } else if #[cfg(context = "native")] {
     include!("native.rs"); } else if #[cfg(context = "nordic-thingy-91-x-nrf9151")] {
     include!("nordic-thingy-91-x-nrf9151.rs"); } else if #[cfg(context =
-    "nordic-thingy-91-x-nrf5340-net")] { include!("nordic-thingy-91-x-nrf5340-net.rs"); }
-    else if #[cfg(context = "nrf52840-mdk")] { include!("nrf52840-mdk.rs"); } else if
-    #[cfg(context = "nrf52840dk")] { include!("nrf52840dk.rs"); } else if #[cfg(context =
-    "nrf52dk")] { include!("nrf52dk.rs"); } else if #[cfg(context = "nrf5340dk-app")] {
+    "nordic-thingy-91-x-nrf5340-app")] { include!("nordic-thingy-91-x-nrf5340-app.rs"); }
+    else if #[cfg(context = "nordic-thingy-91-x-nrf5340-net")] {
+    include!("nordic-thingy-91-x-nrf5340-net.rs"); } else if #[cfg(context =
+    "nrf52840-mdk")] { include!("nrf52840-mdk.rs"); } else if #[cfg(context =
+    "nrf52840dk")] { include!("nrf52840dk.rs"); } else if #[cfg(context = "nrf52dk")] {
+    include!("nrf52dk.rs"); } else if #[cfg(context = "nrf5340dk-app")] {
     include!("nrf5340dk-app.rs"); } else if #[cfg(context = "nrf5340dk-net")] {
     include!("nrf5340dk-net.rs"); } else if #[cfg(context = "nrf9151-dk")] {
     include!("nrf9151-dk.rs"); } else if #[cfg(context = "nrf9160dk-nrf9160")] {

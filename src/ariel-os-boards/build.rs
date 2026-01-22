@@ -36,6 +36,9 @@ pub fn main() {
         "cargo::rustc-check-cfg=cfg(context, values(\"nordic-thingy-91-x-nrf9151\"))"
     );
     println!(
+        "cargo::rustc-check-cfg=cfg(context, values(\"nordic-thingy-91-x-nrf5340-app\"))"
+    );
+    println!(
         "cargo::rustc-check-cfg=cfg(context, values(\"nordic-thingy-91-x-nrf5340-net\"))"
     );
     println!("cargo::rustc-check-cfg=cfg(context, values(\"nrf52840-mdk\"))");
