@@ -50,11 +50,6 @@ once_cell = { workspace = true }
 paste = { workspace = true }
 static_cell = { workspace = true }
 
-[target.'cfg(context = "cortex-m")'.dependencies]
-embassy-executor = { workspace = true, default-features = false, features = [
-  "arch-cortex-m",
-] }
-
 [target.'cfg(context = "esp32")'.dependencies]
 esp-bootloader-esp-idf = { workspace = true, features = ["esp32"] }
 esp-hal = { workspace = true, features = ["esp32"] }
