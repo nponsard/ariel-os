@@ -14,6 +14,9 @@ use portable_atomic::Ordering;
 
 use crate::{Arch, SCHEDULER, Thread, cleanup};
 
+const CONFIG_ISR_STACKSIZE: usize =
+    ariel_os_utils::usize_from_env_or!("CONFIG_ISR_STACKSIZE", 2048, "ISR stack size (in bytes)");
+
 static _CURRENT_CTX_PTR: portable_atomic::AtomicPtr<ThreadData> =
     portable_atomic::AtomicPtr::new(core::ptr::null_mut());
 
@@ -63,6 +66,12 @@ pub struct ThreadData {
 impl Arch for Cpu {
     type ThreadData = ThreadData;
     const DEFAULT_THREAD_DATA: Self::ThreadData = default_trap_frame();
+
+    /// Stack size for the idle threads.
+    /// On RISC-V (esp-hal), interrupts don't automatically change which stack they use,
+    /// idle thread stack needs to be sized accordingly.
+    #[cfg(feature = "idle-threads")]
+    const IDLE_THREAD_STACK_SIZE: usize = CONFIG_ISR_STACKSIZE;
 
     /// Triggers software interrupt for the context switch.
     fn schedule() {
