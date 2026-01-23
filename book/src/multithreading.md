@@ -18,7 +18,6 @@ The maximum number of threads is defined by the [`THREAD_COUNT`][max-thread-coun
 ### Multicore Support
 
 Ariel OS currently supports symmetric multiprocessing (SMP) on the following MCUs:
-  - ESP32-S3
   - RP2040
   - RP235XA
 
@@ -27,6 +26,13 @@ To disable multicore, disable the `multi-core` [laze module][laze-modules-book].
 
 > [!NOTE]
 > Porting single-core applications to support multicore requires no changes to them.
+
+> [!WARNING]
+> Ariel OS used to support multicore on ESP32-S3.
+> This is currently disabled because peripheral instances from esp-hal have to be pinned
+> to the core they've been initialized on, which Ariel OS's abstractions currently cannot
+> model.
+> See [#1716](https://github.com/ariel-os/ariel-os/issues/1716).
 
 ### Priority Scheduling
 
