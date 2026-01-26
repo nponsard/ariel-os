@@ -1221,7 +1221,7 @@ boards:
     builders:
       - st-nucleo-wba55
 
-  - name: STEVAL-MKBOXPRO
+  - name: ST STEVAL-MKBOXPRO
     url: https://web.archive.org/web/20250507145935/https://www.st.com/en/evaluation-tools/steval-mkboxpro.html
     builders:
       - st-steval-mkboxpro

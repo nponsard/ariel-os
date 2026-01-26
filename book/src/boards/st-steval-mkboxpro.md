@@ -1,4 +1,4 @@
-# STEVAL-MKBOXPRO
+# ST STEVAL-MKBOXPRO
 
 ## References
 

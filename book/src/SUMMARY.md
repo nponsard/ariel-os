@@ -39,7 +39,7 @@
   - [ST NUCLEO-H755ZI-Q](./boards/st-nucleo-h755zi-q.md)
   - [ST NUCLEO-WB55RG](./boards/st-nucleo-wb55rg.md)
   - [ST NUCLEO-WBA55CG](./boards/st-nucleo-wba55cg.md)
-  - [STEVAL-MKBOXPRO](./boards/steval-mkboxpro.md)
+  - [ST STEVAL-MKBOXPRO](./boards/st-steval-mkboxpro.md)
   - [STM32U083C-DK](./boards/stm32u083c-dk.md)
 - [Chips](./chips/index.md)
   - [ESP32-C3](./chips/esp32c3.md)
