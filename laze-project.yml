@@ -827,6 +827,8 @@ modules:
       - esp32
       - esp32s2
       - esp32s3
+    selects:
+      - idle-threads # Needed to avoid a stack overflow with wifi https://github.com/ariel-os/ariel-os/issues/1721
     provides_unique:
       - cargo-toolchain
       - nightly
@@ -1599,6 +1601,13 @@ modules:
           - ${esp_wifi_heapsize_required}
         FEATURES:
           - ariel-os/wifi-esp
+
+  - name: idle-threads
+    help: create idle-threads to be taken when no other threads are ready
+    env:
+      global:
+        FEATURES:
+          - ariel-os/idle-threads
 
   - name: executor-thread
     help: use embassy executor within ariel-os-threads thread
