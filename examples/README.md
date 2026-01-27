@@ -23,6 +23,7 @@ This directory contains example applications that showcase how to use Ariel OS.
 - [random/](./random): Demonstrates obtaining random values
 - [sensors-debug/](./sensors-debug): Demonstrates accessing the sensor API.
 - [storage/](./storage): Demonstrates persistent storage interaction
+- [tcp-client/](./tcp-client): Demonstrates basic Embassy TCP networking usage
 - [tcp-echo/](./tcp-echo): TCP echo example
 - [testing/](./testing): Demonstrates `embedded-test` integration
 - [thread-async-interop/](./thread-async-interop): How to make async tasks and preemptively scheduled threads interoperate
