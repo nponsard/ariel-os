@@ -185,7 +185,7 @@ unused_must_use = "deny"
 # across build configurations ...
 unexpected_cfgs = "allow"
 # When writing code, explicitly opt-out per module by adding `#[expect(unsafe_code)]`
-unsafe_code = "warn"
+unsafe_code = "deny"
 
 [workspace.lints.clippy]
 # Clippy lints are documented here: https://rust-lang.github.io/rust-clippy/master/index.html
