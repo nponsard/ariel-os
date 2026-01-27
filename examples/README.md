@@ -31,6 +31,7 @@ This directory contains example applications that showcase how to use Ariel OS.
 - [threading-channel/](./threading-channel): How to use `ariel_os::thread::sync::Channel` for passing messages between threads
 - [threading-event/](./threading-event): How to use `ariel_os::thread::sync::Event`
 - [threading-multicore/](./threading-multicore): Demonstrates basic threading on multicore
+- [threading-timers/](./threading-timers): Demonstrates how to use timers with threads
 - [udp-echo/](./udp-echo): UDP echo example
 - [usb-keyboard/](./usb-keyboard): USB HID example
 - [usb-serial/](./usb-serial): USB serial example
