@@ -98,7 +98,7 @@ external-interrupts = ["ariel-os-embassy-common/external-interrupts"]
 hwrng = ["dep:ariel-os-random"]
 
 ## Enables I2C support.
-i2c = ["dep:fugit", "ariel-os-embassy-common/i2c"]
+i2c = ["dep:fugit", "ariel-os-embassy-common/i2c", "time"]
 
 ## Enables SPI support.
 spi = ["dep:embassy-embedded-hal", "dep:fugit", "ariel-os-embassy-common/spi"]

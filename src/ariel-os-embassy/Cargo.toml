@@ -69,7 +69,7 @@ external-interrupts = [
   "ariel-os-embassy-common/external-interrupts",
   "ariel-os-hal/external-interrupts",
 ]
-time = ["dep:embassy-time", "dep:embassy-time-queue-utils"]
+time = ["dep:embassy-time", "dep:embassy-time-queue-utils", "ariel-os-hal/time"]
 
 ## Enables I2C support.
 i2c = [
