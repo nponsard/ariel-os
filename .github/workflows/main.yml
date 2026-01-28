@@ -477,7 +477,7 @@ jobs:
         run: ./doc/gen_book.rs board-pages doc/support_matrix.yml book/src/boards/ --check --template-path book/templates/board-page.md.tmpl
 
       - name: Check that the chip pages are all up-to-date
-        run: ./doc/gen_book.rs chip-pages doc/support_matrix.yml book/src/chips/ --check --template-path book/templates/chip-page.md.tmpl
+        run: ./doc/gen_book.rs chip-pages doc/support_matrix.yml book/src/chips/ --check --chip-template-path book/templates/chip-page.md.tmpl --matrix-template-path book/templates/support-matrix.html.tmpl
 
       - name: Check that the support matrix is up-to-date
         run: |

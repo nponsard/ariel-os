@@ -7,7 +7,7 @@
     </tr>
     <tr>
       <th>Manufacturer Name</th>
-      <th><a href="build-system.html#laze-builders">laze builders</a></th>
+      <th><a href="{{ url_prefix }}build-system.html#laze-builders">laze builders</a></th>
       <th>Tier</th>
       {%- for functionality in matrix.functionalities %}
       <th>{{ functionality.title }}</th>
@@ -18,7 +18,7 @@
     {%- for board in boards %}
 	<tbody class="{{ 'even' if loop.index % 2 == 0 else 'odd' }}">
       <tr>
-	    <td rowspan="{{ board.builders|length + 1 }}"><a href="{{ board.board_doc }}">{{ board.name }}</a></td>
+	    <td rowspan="{{ board.builders|length + 1 }}"><a href="{{ url_prefix }}{{ board.board_doc }}">{{ board.name }}</a></td>
 	  </tr>
       {%- for builder in board.builders %}
 	  <tr>
