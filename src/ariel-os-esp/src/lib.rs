@@ -7,7 +7,9 @@
 #[cfg(feature = "wifi")]
 extern crate alloc;
 
-esp_bootloader_esp_idf::esp_app_desc!();
+mod app_desc {
+    esp_bootloader_esp_idf::esp_app_desc!();
+}
 
 pub mod gpio;
 
