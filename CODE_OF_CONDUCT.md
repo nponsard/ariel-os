@@ -23,7 +23,7 @@ affect a person's ability to participate within them.
 
 If you believe someone is violating the code of conduct, we ask that you report
 it by emailing <conduct@ariel-os.org>. For more details please see our [Reporting
-Guidelines](https://ariel-os.github.io/ariel-os/dev/docs/book/COC_reporting.html).
+Guidelines](https://ariel-os.github.io/ariel-os/dev/docs/book/CODE_OF_CONDUCT.html#reporting-guidelines).
 
 -   **Be friendly and patient.**
 -   **Be welcoming.** We strive to be a community that welcomes and supports
