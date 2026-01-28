@@ -74,6 +74,7 @@ impl<'a, T: 'a> IntoPeripheral<'a, T> for T {
 pub fn init() -> OptionalPeripherals {
     let config = esp_hal::Config::default().with_cpu_clock(esp_hal::clock::CpuClock::max());
 
+    #[allow(unused_mut, reason = "mut only needed for some features")]
     let mut peripherals = OptionalPeripherals::from(esp_hal::init(config));
 
     #[cfg(feature = "hwrng")]
@@ -83,19 +84,22 @@ pub fn init() -> OptionalPeripherals {
         ariel_os_random::construct_rng(&mut ariel_os_random::RngAdapter(&mut rng));
     }
 
-    let embassy_timer = {
-        cfg_if::cfg_if! {
-            if #[cfg(context = "esp32")] {
-                use esp_hal::timer::timg::TimerGroup;
-                TimerGroup::new(peripherals.TIMG1.take().unwrap()).timer0
-            } else {
-                use esp_hal::timer::systimer::{SystemTimer};
-                SystemTimer::new(peripherals.SYSTIMER.take().unwrap()).alarm0
+    #[cfg(feature = "time")]
+    {
+        let embassy_timer = {
+            cfg_if::cfg_if! {
+                if #[cfg(context = "esp32")] {
+                    use esp_hal::timer::timg::TimerGroup;
+                    TimerGroup::new(peripherals.TIMG1.take().unwrap()).timer0
+                } else {
+                    use esp_hal::timer::systimer::{SystemTimer};
+                    SystemTimer::new(peripherals.SYSTIMER.take().unwrap()).alarm0
+                }
             }
-        }
-    };
+        };
 
-    crate::time_driver::init(embassy_timer);
+        crate::time_driver::init(embassy_timer);
+    }
 
     peripherals
 }
