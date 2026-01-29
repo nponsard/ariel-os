@@ -83,7 +83,7 @@ pub trait ServerSecurityConfig {
         Err(CredentialErrorDetail::KeyNotPresent.into())
     }
 
-    /// Verify the signature on a symmetrically encrypted token
+    /// Verifies the signature on a symmetrically encrypted token.
     ///
     /// `signed_payload` is the payload part of the signed CWT; while it is part of `signed_data` and
     /// can be recovered from it, `signed_data` currently typically resides in a copied buffer
@@ -198,9 +198,9 @@ impl ServerSecurityConfig for AllowAll {
 /// preconfigured EDHOC keys are regarded as important, and thus kept around even in the presence
 /// of multiple competing token based contexts.
 pub struct ConfigBuilder {
-    /// Symmetric used when tokens are symmetrically encrypted with AES-CCM-16-128-256
+    /// Symmetric key used when tokens are symmetrically encrypted with AES-CCM-16-128-256.
     as_key_31: Option<[u8; 32]>,
-    /// Asymmetric key used when tokens are signed with ES256
+    /// Asymmetric key used when tokens are signed with ES256.
     ///
     /// Along with the key, this also holds the audience value of this RS (as signed tokens only
     /// make sense when the same signing key is used with multiple recipients).

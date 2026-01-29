@@ -58,7 +58,6 @@
 #![cfg_attr(feature = "_nightly_docs", feature(doc_cfg))]
 #![deny(missing_docs)]
 #![expect(clippy::unused_trait_names)]
-#![expect(clippy::doc_paragraphs_missing_punctuation)]
 
 mod iana;
 

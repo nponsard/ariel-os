@@ -49,7 +49,7 @@ const EDHOC_COPY_BUFFER_SIZE: usize = 1152;
 type SecContextPool<Crypto, Claims> =
     crate::oluru::OrderedPool<SecContextState<Crypto, Claims>, MAX_CONTEXTS, LEVEL_COUNT>;
 
-/// Copy of the OSCORE option
+/// A copy of the OSCORE option.
 type OscoreOption = heapless::Vec<u8, 16>;
 
 struct SecContextState<Crypto: lakers::Crypto, GeneralClaims: generalclaims::GeneralClaims> {
@@ -328,7 +328,7 @@ impl<
     }
 
     /// Builds an EDHOC response message 2 after successful processing of a request in
-    /// [`Self::extract_edhoc()`]
+    /// [`Self::extract_edhoc()`].
     ///
     /// # Errors
     ///
@@ -888,9 +888,9 @@ impl<
 /// considered excessive at this point).
 #[doc(hidden)]
 pub enum AuthorizationChecked<I> {
-    /// Middleware checks were successful, data was extracted
+    /// Middleware checks were successful, data was extracted.
     Allowed(I),
-    /// Middleware checks failed, return a 4.01 Unauthorized
+    /// Middleware checks failed, return a 4.01 Unauthorized.
     NotAllowed,
 }
 
@@ -925,7 +925,7 @@ pub enum OwnRequestData<I> {
 /// should; maybe Request Entity Too Large or some error code about unusable credential.
 ///
 /// Places using this function may be simplified if From/Into is specified (possibly after
-/// enlarging the Error type)
+/// enlarging the Error type).
 #[track_caller]
 #[expect(
     clippy::needless_pass_by_value,
@@ -954,7 +954,7 @@ fn too_small(e: lakers::MessageBufferError) -> CoAPError {
 /// rather produce a generic response.
 ///
 /// Places using this function may be simplified if From/Into is specified (possibly after
-/// enlarging the Error type)
+/// enlarging the Error type).
 #[track_caller]
 #[expect(
     clippy::needless_pass_by_value,
@@ -1051,15 +1051,15 @@ impl<
         enum Recognition<SSC: ServerSecurityConfig> {
             #[default]
             Start,
-            /// Seen an OSCORE option
+            /// Seen an OSCORE option.
             Oscore { oscore: OscoreOption },
-            /// Seen an OSCORE option and an EDHOC option
+            /// Seen an OSCORE option and an EDHOC option.
             Edhoc { oscore: OscoreOption },
-            /// Seen path ".well-known" (after not having seen an OSCORE option)
+            /// Seen path ".well-known" (after not having seen an OSCORE option).
             WellKnown,
-            /// Seen path ".well-known" and "edhoc"
+            /// Seen path ".well-known" and "edhoc".
             WellKnownEdhoc,
-            /// Seen path "authz-info"
+            /// Seen path "authz-info".
             // FIXME: Should we allow arbitrary paths here?
             //
             // Also, in the !PARSES_TOKENS case, this would ideally be marked uninhabitable, but that's
@@ -1069,7 +1069,7 @@ impl<
             // be somewhere.
             AuthzInfo(PhantomData<SSC>),
             /// Seen anything else (where the request handler, or more likely the ACL filter, will
-            /// trip over the critical options)
+            /// trip over the critical options).
             Unencrypted,
         }
         #[allow(clippy::enum_glob_use, reason = "local use")]
@@ -1108,7 +1108,7 @@ impl<
                 }
             }
 
-            /// Return true if the options in a request are only handled by this handler
+            /// Returns true if the options in a request are only handled by this handler.
             ///
             /// In all other cases, critical options are allowed to be passed on; the next-stage
             /// processor check on its own.

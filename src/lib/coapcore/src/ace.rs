@@ -18,9 +18,9 @@ pub(crate) const OWN_NONCE_LEN: usize = 8;
 /// Size allocated for the ACE OSCORE nonces chosen by the peers.
 const MAX_SUPPORTED_PEER_NONCE_LEN: usize = 16;
 
-/// Maximum size a CWT processed by this module can have (at least when it needs to be copied)
+/// Maximum size a CWT processed by this module can have (at least when it needs to be copied).
 const MAX_SUPPORTED_ACCESSTOKEN_LEN: usize = 256;
-/// Maximum size of a `COSE_Encrypt0` protected header (used to size the AAD buffer)
+/// Maximum size of a `COSE_Encrypt0` protected header (used to size the AAD buffer).
 const MAX_SUPPORTED_ENCRYPT_PROTECTED_LEN: usize = 32;
 
 /// The content of an application/ace+cbor file.
@@ -114,7 +114,7 @@ pub(crate) struct CoseKey<'a> {
     pub(crate) y: Option<&'a [u8]>, // or bool (unsupported here so far)
 }
 
-/// A `COSE_Encrypt0` structure as defined in [RFC8152](https://www.rfc-editor.org/rfc/rfc8152)
+/// A `COSE_Encrypt0` structure as defined in [RFC8152](https://www.rfc-editor.org/rfc/rfc8152).
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 #[derive(minicbor::Decode, Debug)]
 #[cbor(tag(16))]
@@ -193,7 +193,7 @@ impl CoseEncrypt0<'_> {
 
 type EncryptedCwt<'a> = CoseEncrypt0<'a>;
 
-/// A `COSE_Sign1` structure as defined in [RFC8152](https://www.rfc-editor.org/rfc/rfc8152)
+/// A `COSE_Sign1` structure as defined in [RFC8152](https://www.rfc-editor.org/rfc/rfc8152).
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 #[derive(minicbor::Decode, Debug)]
 #[cbor(tag(18))]
@@ -303,7 +303,7 @@ impl OscoreInputMaterial<'_> {
     /// Produces an OSCORE context from the ACE OSCORE inputs.
     ///
     /// FIXME: When this errs and panics could need some clean-up: the same kind of error produces
-    /// a panic in some and an error in
+    /// a panic in some and an error in other cases.
     ///
     /// # Errors
     ///
@@ -367,7 +367,7 @@ pub struct AceCborAuthzInfoResponse {
 }
 
 impl AceCborAuthzInfoResponse {
-    /// Renders the response into a CoAP message
+    /// Renders the response into a CoAP message.
     ///
     /// # Errors
     ///
@@ -406,7 +406,7 @@ impl AceCborAuthzInfoResponse {
 /// Given an application/ace+cbor payload as is posted to an /authz-info endpoint, decrypt all
 /// that's needed for the ACE-OSCORE profile.
 ///
-/// This needs to be provided with
+/// This needs to be provided with:
 ///
 /// * the request's `payload`
 /// * a list of recognized `authorities` (Authorization Servers) to authenticate the token,

@@ -4,6 +4,10 @@
 //!
 //! Beware that many numbers assigned by IANA also find their way into the [`crate::ace`] module,
 //! where the minicbor map keys can use constants.
+#![expect(
+    clippy::doc_paragraphs_missing_punctuation,
+    reason = "This module is always just referring to registries and items in registries without further explanation, and thus not following the full expression style that makes sense in general Rust documentation"
+)]
 
 /// The EDHOC External Authorization Data Registry (EAD Items)
 pub(crate) mod edhoc_ead {
