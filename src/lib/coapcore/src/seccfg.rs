@@ -224,8 +224,8 @@ impl ServerSecurityConfig for ConfigBuilder {
         aad: &[u8],
         ciphertext_buffer: &'buf mut [u8],
     ) -> Result<(Self::GeneralClaims, crate::ace::CwtClaimsSet<'buf>), CredentialError> {
-        use ccm::KeyInit;
-        use ccm::aead::AeadInPlace;
+        use ccm::KeyInit as _;
+        use ccm::aead::AeadInPlace as _;
 
         pub type Aes256Ccm = ccm::Ccm<aes::Aes256, ccm::consts::U16, ccm::consts::U13>;
         // FIXME: should be something Aes256Ccm::TagLength
@@ -294,7 +294,7 @@ impl ServerSecurityConfig for ConfigBuilder {
         signature: &[u8],
         signed_payload: &'b [u8],
     ) -> Result<(Self::GeneralClaims, crate::ace::CwtClaimsSet<'b>), CredentialError> {
-        use p256::ecdsa::{VerifyingKey, signature::Verifier};
+        use p256::ecdsa::{VerifyingKey, signature::Verifier as _};
 
         if headers.alg != Some(-7) {
             // ES256
@@ -429,7 +429,7 @@ impl ServerSecurityConfig for ConfigBuilder {
         &self,
         message: &mut M,
     ) -> Result<(), NotAllowedRenderingFailed> {
-        use coap_message::Code;
+        use coap_message::Code as _;
         message.set_code(M::Code::new(coap_numbers::code::UNAUTHORIZED).map_err(|_| {
             error!("CoAP stack can not represent Unauthorized responses.");
             NotAllowedRenderingFailed

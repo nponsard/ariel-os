@@ -57,7 +57,6 @@
 #![no_std]
 #![cfg_attr(feature = "_nightly_docs", feature(doc_cfg))]
 #![deny(missing_docs)]
-#![expect(clippy::unused_trait_names)]
 
 mod iana;
 

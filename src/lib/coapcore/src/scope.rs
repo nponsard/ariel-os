@@ -2,7 +2,7 @@
 //!
 //! This module provides the [`Scope`] trait, and generic implementations thereof.
 
-use coap_message::{MessageOption, ReadableMessage};
+use coap_message::{MessageOption as _, ReadableMessage};
 
 /// A data item representing the server access policy as evaluated for a particular security context.
 pub trait Scope: Sized + core::fmt::Debug {

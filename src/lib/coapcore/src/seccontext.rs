@@ -7,7 +7,7 @@
 use core::marker::PhantomData;
 
 use coap_message::{
-    Code, MessageOption, MinimalWritableMessage, MutableWritableMessage, ReadableMessage,
+    Code as _, MessageOption, MinimalWritableMessage, MutableWritableMessage, ReadableMessage,
     error::RenderableOnMinimal,
 };
 use coap_message_utils::{Error as CoAPError, OptionsExt as _};
@@ -15,7 +15,7 @@ use defmt_or_log::{Debug2Format, debug, error, trace};
 
 use crate::generalclaims::{self, GeneralClaims as _};
 use crate::helpers::COwn;
-use crate::scope::Scope;
+use crate::scope::Scope as _;
 use crate::seccfg::ServerSecurityConfig;
 
 use crate::time::TimeProvider;
