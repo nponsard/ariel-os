@@ -8,7 +8,7 @@ use ariel_os_embassy_common::{
 };
 use embassy_embedded_hal::adapter::{BlockingAsync, YieldingAsync};
 use embassy_stm32::{
-    Peri, gpio,
+    gpio,
     mode::Blocking,
     peripherals,
     spi::{MisoPin, MosiPin, SckPin, Spi as InnerSpi},
@@ -92,10 +92,14 @@ macro_rules! define_spi_drivers {
                 /// peripheral.
                 #[expect(clippy::new_ret_no_self)]
                 #[must_use]
-                pub fn new(
-                    sck_pin: Peri<'static, impl SckPin<peripherals::$peripheral>>,
-                    miso_pin: Peri<'static, impl MisoPin<peripherals::$peripheral>>,
-                    mosi_pin: Peri<'static, impl MosiPin<peripherals::$peripheral>>,
+                pub fn new<
+                    SCK: SckPin<peripherals::$peripheral>,
+                    MISO: MisoPin<peripherals::$peripheral>,
+                    MOSI: MosiPin<peripherals::$peripheral>,
+                >(
+                    sck_pin: impl $crate::IntoPeripheral<'static, SCK>,
+                    miso_pin: impl $crate::IntoPeripheral<'static, MISO>,
+                    mosi_pin: impl $crate::IntoPeripheral<'static, MOSI>,
                     config: Config,
                 ) -> Spi {
                     // Make this struct a compile-time-enforced singleton: having multiple statics
@@ -119,9 +123,9 @@ macro_rules! define_spi_drivers {
                     // The order of MOSI/MISO pins is inverted.
                     let spim = InnerSpi::new_blocking(
                         spim_peripheral,
-                        sck_pin,
-                        mosi_pin,
-                        miso_pin,
+                        sck_pin.into_hal_peripheral(),
+                        mosi_pin.into_hal_peripheral(),
+                        miso_pin.into_hal_peripheral(),
                         spi_config,
                     );
 

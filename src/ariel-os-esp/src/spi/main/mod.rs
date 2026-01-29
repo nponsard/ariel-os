@@ -83,10 +83,14 @@ macro_rules! define_spi_drivers {
                 /// peripheral.
                 #[expect(clippy::new_ret_no_self)]
                 #[must_use]
-                pub fn new(
-                    sck_pin: impl PeripheralOutput<'static>,
-                    miso_pin: impl PeripheralInput<'static>,
-                    mosi_pin: impl PeripheralOutput<'static>,
+                pub fn new<
+                    SCK: PeripheralOutput<'static>,
+                    MISO: PeripheralInput<'static>,
+                    MOSI: PeripheralOutput<'static>,
+                >(
+                    sck_pin: impl $crate::IntoPeripheral<'static, SCK>,
+                    miso_pin: impl $crate::IntoPeripheral<'static, MISO>,
+                    mosi_pin: impl $crate::IntoPeripheral<'static, MOSI>,
                     config: Config,
                 ) -> Spi {
                     // Make this struct a compile-time-enforced singleton: having multiple statics
@@ -112,9 +116,9 @@ macro_rules! define_spi_drivers {
                         spi_config,
                     )
                         .unwrap()
-                        .with_sck(sck_pin)
-                        .with_mosi(mosi_pin)
-                        .with_miso(miso_pin)
+                        .with_sck(sck_pin.into_hal_peripheral())
+                        .with_mosi(mosi_pin.into_hal_peripheral())
+                        .with_miso(miso_pin.into_hal_peripheral())
                         .with_cs(gpio::NoPin); // The CS pin is managed separately
 
                     Spi::$peripheral(Self { spim: YieldingAsync::new(BlockingAsync::new(spi)) })
