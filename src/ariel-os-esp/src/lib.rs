@@ -60,12 +60,12 @@ mod time_driver;
 pub use esp_hal::peripherals::OptionalPeripherals;
 
 #[doc(hidden)]
-pub trait IntoPeripheral<'a, T: 'a> {
+pub trait IntoPeripheral<'a, T> {
     fn into_hal_peripheral(self) -> T;
 }
 
 #[doc(hidden)]
-impl<'a, T: 'a> IntoPeripheral<'a, T> for T {
+impl<T> IntoPeripheral<'_, T> for T {
     fn into_hal_peripheral(self) -> T {
         self
     }
