@@ -66,10 +66,7 @@ pub struct Input {
 
 impl Input {
     /// Returns a configured [`Input`].
-    pub fn new<T: IntoPeripheral<'static, P>, P: HalInputPin + 'static>(
-        pin: T,
-        pull: Pull,
-    ) -> Self {
+    pub fn new<P: HalInputPin + 'static>(pin: impl IntoPeripheral<'static, P>, pull: Pull) -> Self {
         Self::builder(pin, pull).build()
     }
 
@@ -319,8 +316,8 @@ pub struct Output {
 
 impl Output {
     /// Returns a configured [`Output`].
-    pub fn new<T: IntoPeripheral<'static, P>, P: HalOutputPin + 'static>(
-        pin: T,
+    pub fn new<P: HalOutputPin + 'static>(
+        pin: impl IntoPeripheral<'static, P>,
         initial_level: Level,
     ) -> Self {
         Self::builder(pin, initial_level).build()
