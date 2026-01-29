@@ -98,9 +98,9 @@ macro_rules! define_i2c_drivers {
                 /// I2C peripheral.
                 #[expect(clippy::new_ret_no_self)]
                 #[must_use]
-                pub fn new(
-                    sda_pin: impl PeripheralOutput<'static>,
-                    scl_pin: impl PeripheralOutput<'static>,
+                pub fn new<SDA: PeripheralOutput<'static>, SCL: PeripheralOutput<'static>>(
+                    sda_pin: impl $crate::IntoPeripheral<'static, SDA>,
+                    scl_pin: impl $crate::IntoPeripheral<'static, SCL>,
                     config: Config,
                 ) -> I2c {
                     // Make this struct a compile-time-enforced singleton: having multiple statics
@@ -132,8 +132,8 @@ macro_rules! define_i2c_drivers {
                     )
                         .unwrap()
                         .into_async()
-                        .with_sda(sda_pin)
-                        .with_scl(scl_pin);
+                        .with_sda(sda_pin.into_hal_peripheral())
+                        .with_scl(scl_pin.into_hal_peripheral());
 
                     I2c::$peripheral(Self { twim })
                 }

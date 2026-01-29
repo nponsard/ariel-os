@@ -4,7 +4,7 @@
 
 use ariel_os_embassy_common::{i2c::controller::Kilohertz, impl_async_i2c_for_driver_enum};
 use embassy_rp::{
-    Peri, bind_interrupts,
+    bind_interrupts,
     i2c::{InterruptHandler, SclPin, SdaPin},
     peripherals,
 };
@@ -121,9 +121,9 @@ macro_rules! define_i2c_drivers {
                 /// I2C peripheral.
                 #[expect(clippy::new_ret_no_self)]
                 #[must_use]
-                pub fn new(
-                    sda_pin: Peri<'static, impl SdaPin<peripherals::$peripheral>>,
-                    scl_pin: Peri<'static, impl SclPin<peripherals::$peripheral>>,
+                pub fn new<SDA: SdaPin<peripherals::$peripheral>, SCL: SclPin<peripherals::$peripheral>>(
+                    sda_pin: impl $crate::IntoPeripheral<'static, SDA>,
+                    scl_pin: impl $crate::IntoPeripheral<'static, SCL>,
                     config: Config,
                 ) -> I2c {
                     // Make this struct a compile-time-enforced singleton: having multiple statics
@@ -151,8 +151,8 @@ macro_rules! define_i2c_drivers {
                     // does not seem possible to disable the timeout feature on RP.
                     let i2c = embassy_rp::i2c::I2c::new_async(
                         i2c_peripheral,
-                        scl_pin,
-                        sda_pin,
+                        scl_pin.into_hal_peripheral(),
+                        sda_pin.into_hal_peripheral(),
                         Irqs,
                         i2c_config,
                     );
