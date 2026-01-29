@@ -5,7 +5,7 @@
 use ariel_os_embassy_common::impl_async_i2c_for_driver_enum;
 
 use embassy_nrf::{
-    Peri, bind_interrupts,
+    bind_interrupts,
     gpio::Pin as GpioPin,
     peripherals,
     twim::{InterruptHandler, Twim},
@@ -142,9 +142,9 @@ macro_rules! define_i2c_drivers {
                 /// I2C peripheral.
                 #[expect(clippy::new_ret_no_self)]
                 #[must_use]
-                pub fn new(
-                    sda_pin: Peri<'static, impl GpioPin>,
-                    scl_pin: Peri<'static, impl GpioPin>,
+                pub fn new<SDA: GpioPin, SCL: GpioPin>(
+                    sda_pin: impl $crate::IntoPeripheral<'static, SDA>,
+                    scl_pin: impl $crate::IntoPeripheral<'static, SCL>,
                     config: Config,
                 ) -> I2c {
                     let mut twim_config = embassy_nrf::twim::Config::default();
@@ -181,7 +181,14 @@ macro_rules! define_i2c_drivers {
                     // NOTE(hal): the I2C peripheral and driver do not have any built-in timeout,
                     // we implement it at a higher level, not in this HAL-specific module.
                     paste::paste! {
-                        let twim = Twim::new(twim_peripheral, Irqs, sda_pin, scl_pin, twim_config, [<RAM_BUFFER_ $peripheral>].take());
+                        let twim = Twim::new(
+                            twim_peripheral,
+                            Irqs,
+                            sda_pin.into_hal_peripheral(),
+                            scl_pin.into_hal_peripheral(),
+                            twim_config,
+                            [<RAM_BUFFER_ $peripheral>].take(),
+                        );
                     }
 
                     I2c::$peripheral(Self { twim })
