@@ -48,8 +48,9 @@ pub mod wifi;
 #[doc(hidden)]
 pub mod peripheral {}
 
-#[doc(hidden)]
 pub mod peripherals {
+    //! Types for the peripheral singletons.
+
     pub use esp_hal::peripherals::*;
 }
 
