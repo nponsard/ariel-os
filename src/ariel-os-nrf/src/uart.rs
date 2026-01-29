@@ -4,7 +4,7 @@
 
 use ariel_os_embassy_common::{impl_async_uart_for_driver_enum, uart::ConfigError};
 use embassy_nrf::{
-    Peri, bind_interrupts,
+    bind_interrupts,
     buffered_uarte::{BufferedUarte, InterruptHandler},
     gpio::Pin as GpioPin,
     peripherals,
@@ -236,9 +236,9 @@ macro_rules! define_uart_drivers {
                 ///
                 /// This never returns an error.
                 #[expect(clippy::new_ret_no_self)]
-                pub fn new(
-                    rx_pin: Peri<'d, impl GpioPin>,
-                    tx_pin: Peri<'d, impl GpioPin>,
+                pub fn new<RX: GpioPin, TX: GpioPin>(
+                    rx_pin: impl $crate::IntoPeripheral<'d, RX>,
+                    tx_pin: impl $crate::IntoPeripheral<'d, TX>,
                     rx_buffer: &'d mut [u8],
                     tx_buffer: &'d mut [u8],
                     config: Config,
@@ -273,8 +273,8 @@ macro_rules! define_uart_drivers {
                         ppi_ch1_peripheral,
                         ppi_ch2_peripheral,
                         ppi_group_peripheral,
-                        rx_pin,
-                        tx_pin,
+                        rx_pin.into_hal_peripheral(),
+                        tx_pin.into_hal_peripheral(),
                         Irqs,
                         uart_config,
                         rx_buffer,
