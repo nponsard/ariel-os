@@ -194,9 +194,9 @@ macro_rules! define_uart_drivers {
                 /// [`ConfigError::BaudrateNotSupported`] error, or as
                 /// [`ConfigError::ConfigurationNotSupported`].
                 #[expect(clippy::new_ret_no_self)]
-                pub fn new(
-                    rx_pin: impl PeripheralInput<'d> ,
-                    tx_pin: impl PeripheralOutput<'d> ,
+                pub fn new<RX: PeripheralInput<'d>, TX: PeripheralOutput<'d>>(
+                    rx_pin: impl $crate::IntoPeripheral<'d, RX>,
+                    tx_pin: impl $crate::IntoPeripheral<'d, TX>,
                     _rx_buf: &'d mut [u8],
                     _tx_buf: &'d mut [u8],
                     config: Config,
@@ -218,8 +218,8 @@ macro_rules! define_uart_drivers {
                         uart_config
                     )
                         .map_err(convert_error)?
-                        .with_tx(tx_pin)
-                        .with_rx(rx_pin)
+                        .with_tx(tx_pin.into_hal_peripheral())
+                        .with_rx(rx_pin.into_hal_peripheral())
                         .into_async();
 
                     Ok(Uart::$peripheral(Self { uart }))
