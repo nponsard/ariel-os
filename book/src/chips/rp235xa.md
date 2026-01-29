@@ -1,4 +1,4 @@
-# RP235xa
+# RP235xA
 
 ## Chip Info
 

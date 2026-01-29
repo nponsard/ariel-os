@@ -62,7 +62,7 @@
   - [nRF9151](./chips/nrf9151.md)
   - [nRF9160](./chips/nrf9160.md)
   - [RP2040](./chips/rp2040.md)
-  - [RP235xa](./chips/rp235xa.md)
+  - [RP235xA](./chips/rp235xa.md)
   - [STM32C031C6](./chips/stm32c031c6.md)
   - [STM32F042K6](./chips/stm32f042k6.md)
   - [STM32F401RE](./chips/stm32f401re.md)
