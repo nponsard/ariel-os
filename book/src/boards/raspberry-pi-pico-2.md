@@ -10,7 +10,7 @@ For more information on laze builders, check out [this page](../build-system.md#
 ### `rpi-pico2`
 
 - **Tier:** 1
-- **Chip:** [RP235xa](../chips/rp235xa.md)
+- **Chip:** [RP235xA](../chips/rp235xa.md)
 - **Chip Ariel OS Name:** `rp235xa`
 
 To target this laze builder, run the following command in the root of your Ariel OS app:

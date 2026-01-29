@@ -252,7 +252,7 @@ chips:
       ble: not_available
 
   rp235xa:
-    name: RP235xa
+    name: RP235xA
     manufacturer: Raspberry Pi
     support:
       gpio: supported
