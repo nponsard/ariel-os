@@ -153,6 +153,8 @@ jobs:
           mkdir -p ./_site/dev/docs/api
           mv target/riscv32imac-unknown-none-elf/doc/ariel_os_esp/ ./_site/dev/docs/api
           mv target/doc/* ./_site/dev/docs/api
+          # hack ariel-os-esp in the sidebar
+          sed -i 's/"ariel_os","ariel_os_nrf"/"ariel_os","ariel_os_esp","ariel_os_nrf"/g' ./_site/dev/docs/api/crates.js
 
       - name: Install mdbook
         uses: taiki-e/install-action@3522286d40783523f9c7880e33f785905b4c20d0 # v2
