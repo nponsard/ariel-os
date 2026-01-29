@@ -5,7 +5,7 @@
 use ariel_os_embassy_common::{impl_async_uart_for_driver_enum, uart::ConfigError};
 
 use embassy_rp::{
-    Peri, bind_interrupts, peripherals,
+    bind_interrupts, peripherals,
     uart::{BufferedInterruptHandler, BufferedUart, RxPin, TxPin},
 };
 
@@ -185,9 +185,9 @@ macro_rules! define_uart_drivers {
                 ///
                 /// This never returns an error.
                 #[expect(clippy::new_ret_no_self)]
-                pub fn new(
-                    rx_pin: Peri<'d, impl RxPin<peripherals::$peripheral>>,
-                    tx_pin: Peri<'d, impl TxPin<peripherals::$peripheral>>,
+                pub fn new<RX: RxPin<peripherals::$peripheral>, TX: TxPin<peripherals::$peripheral>>(
+                    rx_pin: impl $crate::IntoPeripheral<'d, RX>,
+                    tx_pin: impl $crate::IntoPeripheral<'d, TX>,
                     rx_buf: &mut [u8],
                     tx_buf: &mut [u8],
                     config: Config,
@@ -209,8 +209,8 @@ macro_rules! define_uart_drivers {
                     let uart = BufferedUart::new(
                         uart_peripheral,
                         // Order of TX / RX is swapped compared to other platforms
-                        tx_pin,
-                        rx_pin,
+                        tx_pin.into_hal_peripheral(),
+                        rx_pin.into_hal_peripheral(),
                         Irqs,
                         tx_buf,
                         rx_buf,
