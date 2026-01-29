@@ -1,6 +1,6 @@
 [package]
 name = "coapcore"
-version = "0.1.0"
+version = "0.1.1"
 edition.workspace = true
 description = "A CoAP stack for embedded devices with built-in OSCORE/EDHOC support"
 repository.workspace = true
