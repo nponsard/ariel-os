@@ -162,7 +162,7 @@ impl CoseEncrypt0<'_> {
 
         // Could have the extra exception for empty byte strings expressing the empty map, but we don't
         // encounter this here
-        let protected: HeaderMap = minicbor::decode(self.protected)?;
+        let protected: HeaderMap<'_> = minicbor::decode(self.protected)?;
         trace!("Protected decoded as header map: {:?}", protected);
         let headers = self.unprotected.updated_with(&protected);
 
@@ -443,7 +443,7 @@ pub(crate) fn process_acecbor_authz_info<GC: crate::GeneralClaims>(
         defmt_or_log::wrappers::Cbor(payload)
     );
 
-    let decoded: UnprotectedAuthzInfoPost = minicbor::decode(payload)?;
+    let decoded: UnprotectedAuthzInfoPost<'_> = minicbor::decode(payload)?;
     // FIXME: The `..` should be "all others are None"; se also comment on UnprotectedAuthzInfoPost
     // on type alias vs new type
     let AceCbor {
@@ -461,7 +461,7 @@ pub(crate) fn process_acecbor_authz_info<GC: crate::GeneralClaims>(
         decoded
     );
 
-    let encrypt0: EncryptedCwt = minicbor::decode(access_token)?;
+    let encrypt0: EncryptedCwt<'_> = minicbor::decode(access_token)?;
 
     let mut buffer = heapless::Vec::new();
     let (headers, aad_encoded, buffer) = encrypt0.prepare_decryption(&mut buffer)?;
@@ -526,12 +526,12 @@ pub(crate) fn process_edhoc_token<GeneralClaims>(
     // Trying and falling back means that the minicbor error is not too great ("Expected tag 16"
     // rather than "Expected tag 16 or 18"), but we don't
     // show much of that anyway.
-    let (processed, parsed) = if let Ok(encrypt0) = minicbor::decode::<EncryptedCwt>(ead3) {
+    let (processed, parsed) = if let Ok(encrypt0) = minicbor::decode::<EncryptedCwt<'_>>(ead3) {
         let (headers, aad_encoded, buffer) = encrypt0.prepare_decryption(&mut buffer)?;
 
         authorities.decrypt_symmetric_token(&headers, aad_encoded.as_ref(), buffer)?
-    } else if let Ok(sign1) = minicbor::decode::<SignedCwt>(ead3) {
-        let protected: HeaderMap = minicbor::decode(sign1.protected)?;
+    } else if let Ok(sign1) = minicbor::decode::<SignedCwt<'_>>(ead3) {
+        let protected: HeaderMap<'_> = minicbor::decode(sign1.protected)?;
         trace!(
             "Decoded protected header map {:?} inside sign1 container {:?}",
             &protected, &sign1

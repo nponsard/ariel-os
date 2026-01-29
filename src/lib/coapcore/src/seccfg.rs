@@ -76,7 +76,7 @@ pub trait ServerSecurityConfig {
     // more public over time, and that should not impct this method's publicness.
     fn decrypt_symmetric_token<'buf>(
         &self,
-        headers: &HeaderMap,
+        headers: &HeaderMap<'_>,
         aad: &[u8],
         ciphertext_buffer: &'buf mut [u8],
     ) -> Result<(Self::GeneralClaims, crate::ace::CwtClaimsSet<'buf>), CredentialError> {
@@ -104,7 +104,7 @@ pub trait ServerSecurityConfig {
     )]
     fn verify_asymmetric_token<'b>(
         &self,
-        headers: &HeaderMap,
+        headers: &HeaderMap<'_>,
         signed_data: &[u8],
         signature: &[u8],
         signed_payload: &'b [u8],
@@ -220,7 +220,7 @@ impl ServerSecurityConfig for ConfigBuilder {
 
     fn decrypt_symmetric_token<'buf>(
         &self,
-        headers: &HeaderMap,
+        headers: &HeaderMap<'_>,
         aad: &[u8],
         ciphertext_buffer: &'buf mut [u8],
     ) -> Result<(Self::GeneralClaims, crate::ace::CwtClaimsSet<'buf>), CredentialError> {
@@ -268,7 +268,7 @@ impl ServerSecurityConfig for ConfigBuilder {
                 CredentialErrorDetail::VerifyFailed
             })?;
 
-        let claims: crate::ace::CwtClaimsSet = minicbor::decode(ciphertext)
+        let claims: crate::ace::CwtClaimsSet<'_> = minicbor::decode(ciphertext)
             .map_err(|_| CredentialErrorDetail::UnsupportedExtension)?;
 
         // FIXME: Consider moving into general parser.
@@ -289,7 +289,7 @@ impl ServerSecurityConfig for ConfigBuilder {
 
     fn verify_asymmetric_token<'b>(
         &self,
-        headers: &HeaderMap,
+        headers: &HeaderMap<'_>,
         signed_data: &[u8],
         signature: &[u8],
         signed_payload: &'b [u8],
@@ -316,7 +316,7 @@ impl ServerSecurityConfig for ConfigBuilder {
             .verify(signed_data, &signature)
             .map_err(|_| CredentialErrorDetail::VerifyFailed)?;
 
-        let claims: crate::ace::CwtClaimsSet = minicbor::decode(signed_payload)
+        let claims: crate::ace::CwtClaimsSet<'_> = minicbor::decode(signed_payload)
             .map_err(|_| CredentialErrorDetail::UnsupportedExtension)?;
 
         if claims.aud != Some(rs_audience) {
