@@ -1,4 +1,4 @@
-//! Types sharedly used by different modules of this crate
+//! Types sharedly used by different modules of this crate.
 
 /// An own identifier for a security context.
 ///
@@ -6,7 +6,7 @@
 /// recipient ID in OSCORE.
 ///
 /// This type represents any of the 48 efficient identifiers that use CBOR one-byte integer
-/// encodings (see RFC9528 Section 3.3.2), or equivalently the 1-byte long OSCORE identifiers
+/// encodings (see RFC9528 Section 3.3.2), or equivalently the 1-byte long OSCORE identifiers.
 ///
 /// Lakers supports a much larger value space for `C_x`, and coapcore processes larger values
 /// selected by the peer -- but on its own, will select only those that fit in this type.
@@ -79,7 +79,7 @@ impl COwn {
         unreachable!("Iterator is not long enough to set this many bits.");
     }
 
-    /// Given an OSCORE Key ID (kid), find the corresponding context identifier value
+    /// Given an OSCORE Key ID (kid), finds the corresponding context identifier value.
     pub(crate) fn from_kid(kid: &[u8]) -> Option<Self> {
         match kid {
             [first] if *first <= 0x17 || (*first >= 0x20 && *first <= 0x37) => Some(Self(*first)),

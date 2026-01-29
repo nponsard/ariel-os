@@ -13,6 +13,10 @@
 //! indicate numeric values (including of priorities, where "high" corresponds to "small" and "low"
 //! to "large").
 #![expect(clippy::indexing_slicing, reason = "module is scheduled for overhaul")]
+#![expect(
+    clippy::doc_paragraphs_missing_punctuation,
+    reason = "module is scheduled for overhaul"
+)]
 #![expect(clippy::pedantic)]
 
 use arrayvec::ArrayVec;

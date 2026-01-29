@@ -18,9 +18,9 @@ pub(crate) const OWN_NONCE_LEN: usize = 8;
 /// Size allocated for the ACE OSCORE nonces chosen by the peers.
 const MAX_SUPPORTED_PEER_NONCE_LEN: usize = 16;
 
-/// Maximum size a CWT processed by this module can have (at least when it needs to be copied)
+/// Maximum size a CWT processed by this module can have (at least when it needs to be copied).
 const MAX_SUPPORTED_ACCESSTOKEN_LEN: usize = 256;
-/// Maximum size of a `COSE_Encrypt0` protected header (used to size the AAD buffer)
+/// Maximum size of a `COSE_Encrypt0` protected header (used to size the AAD buffer).
 const MAX_SUPPORTED_ENCRYPT_PROTECTED_LEN: usize = 32;
 
 /// The content of an application/ace+cbor file.
@@ -114,7 +114,7 @@ pub(crate) struct CoseKey<'a> {
     pub(crate) y: Option<&'a [u8]>, // or bool (unsupported here so far)
 }
 
-/// A `COSE_Encrypt0` structure as defined in [RFC8152](https://www.rfc-editor.org/rfc/rfc8152)
+/// A `COSE_Encrypt0` structure as defined in [RFC8152](https://www.rfc-editor.org/rfc/rfc8152).
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 #[derive(minicbor::Decode, Debug)]
 #[cbor(tag(16))]
@@ -162,7 +162,7 @@ impl CoseEncrypt0<'_> {
 
         // Could have the extra exception for empty byte strings expressing the empty map, but we don't
         // encounter this here
-        let protected: HeaderMap = minicbor::decode(self.protected)?;
+        let protected: HeaderMap<'_> = minicbor::decode(self.protected)?;
         trace!("Protected decoded as header map: {:?}", protected);
         let headers = self.unprotected.updated_with(&protected);
 
@@ -193,7 +193,7 @@ impl CoseEncrypt0<'_> {
 
 type EncryptedCwt<'a> = CoseEncrypt0<'a>;
 
-/// A `COSE_Sign1` structure as defined in [RFC8152](https://www.rfc-editor.org/rfc/rfc8152)
+/// A `COSE_Sign1` structure as defined in [RFC8152](https://www.rfc-editor.org/rfc/rfc8152).
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 #[derive(minicbor::Decode, Debug)]
 #[cbor(tag(18))]
@@ -303,7 +303,7 @@ impl OscoreInputMaterial<'_> {
     /// Produces an OSCORE context from the ACE OSCORE inputs.
     ///
     /// FIXME: When this errs and panics could need some clean-up: the same kind of error produces
-    /// a panic in some and an error in
+    /// a panic in some and an error in other cases.
     ///
     /// # Errors
     ///
@@ -367,7 +367,7 @@ pub struct AceCborAuthzInfoResponse {
 }
 
 impl AceCborAuthzInfoResponse {
-    /// Renders the response into a CoAP message
+    /// Renders the response into a CoAP message.
     ///
     /// # Errors
     ///
@@ -406,7 +406,7 @@ impl AceCborAuthzInfoResponse {
 /// Given an application/ace+cbor payload as is posted to an /authz-info endpoint, decrypt all
 /// that's needed for the ACE-OSCORE profile.
 ///
-/// This needs to be provided with
+/// This needs to be provided with:
 ///
 /// * the request's `payload`
 /// * a list of recognized `authorities` (Authorization Servers) to authenticate the token,
@@ -443,7 +443,7 @@ pub(crate) fn process_acecbor_authz_info<GC: crate::GeneralClaims>(
         defmt_or_log::wrappers::Cbor(payload)
     );
 
-    let decoded: UnprotectedAuthzInfoPost = minicbor::decode(payload)?;
+    let decoded: UnprotectedAuthzInfoPost<'_> = minicbor::decode(payload)?;
     // FIXME: The `..` should be "all others are None"; se also comment on UnprotectedAuthzInfoPost
     // on type alias vs new type
     let AceCbor {
@@ -461,7 +461,7 @@ pub(crate) fn process_acecbor_authz_info<GC: crate::GeneralClaims>(
         decoded
     );
 
-    let encrypt0: EncryptedCwt = minicbor::decode(access_token)?;
+    let encrypt0: EncryptedCwt<'_> = minicbor::decode(access_token)?;
 
     let mut buffer = heapless::Vec::new();
     let (headers, aad_encoded, buffer) = encrypt0.prepare_decryption(&mut buffer)?;
@@ -526,12 +526,12 @@ pub(crate) fn process_edhoc_token<GeneralClaims>(
     // Trying and falling back means that the minicbor error is not too great ("Expected tag 16"
     // rather than "Expected tag 16 or 18"), but we don't
     // show much of that anyway.
-    let (processed, parsed) = if let Ok(encrypt0) = minicbor::decode::<EncryptedCwt>(ead3) {
+    let (processed, parsed) = if let Ok(encrypt0) = minicbor::decode::<EncryptedCwt<'_>>(ead3) {
         let (headers, aad_encoded, buffer) = encrypt0.prepare_decryption(&mut buffer)?;
 
         authorities.decrypt_symmetric_token(&headers, aad_encoded.as_ref(), buffer)?
-    } else if let Ok(sign1) = minicbor::decode::<SignedCwt>(ead3) {
-        let protected: HeaderMap = minicbor::decode(sign1.protected)?;
+    } else if let Ok(sign1) = minicbor::decode::<SignedCwt<'_>>(ead3) {
+        let protected: HeaderMap<'_> = minicbor::decode(sign1.protected)?;
         trace!(
             "Decoded protected header map {:?} inside sign1 container {:?}",
             &protected, &sign1

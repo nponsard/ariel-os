@@ -76,14 +76,14 @@ pub trait ServerSecurityConfig {
     // more public over time, and that should not impct this method's publicness.
     fn decrypt_symmetric_token<'buf>(
         &self,
-        headers: &HeaderMap,
+        headers: &HeaderMap<'_>,
         aad: &[u8],
         ciphertext_buffer: &'buf mut [u8],
     ) -> Result<(Self::GeneralClaims, crate::ace::CwtClaimsSet<'buf>), CredentialError> {
         Err(CredentialErrorDetail::KeyNotPresent.into())
     }
 
-    /// Verify the signature on a symmetrically encrypted token
+    /// Verifies the signature on a symmetrically encrypted token.
     ///
     /// `signed_payload` is the payload part of the signed CWT; while it is part of `signed_data` and
     /// can be recovered from it, `signed_data` currently typically resides in a copied buffer
@@ -104,7 +104,7 @@ pub trait ServerSecurityConfig {
     )]
     fn verify_asymmetric_token<'b>(
         &self,
-        headers: &HeaderMap,
+        headers: &HeaderMap<'_>,
         signed_data: &[u8],
         signature: &[u8],
         signed_payload: &'b [u8],
@@ -198,9 +198,9 @@ impl ServerSecurityConfig for AllowAll {
 /// preconfigured EDHOC keys are regarded as important, and thus kept around even in the presence
 /// of multiple competing token based contexts.
 pub struct ConfigBuilder {
-    /// Symmetric used when tokens are symmetrically encrypted with AES-CCM-16-128-256
+    /// Symmetric key used when tokens are symmetrically encrypted with AES-CCM-16-128-256.
     as_key_31: Option<[u8; 32]>,
-    /// Asymmetric key used when tokens are signed with ES256
+    /// Asymmetric key used when tokens are signed with ES256.
     ///
     /// Along with the key, this also holds the audience value of this RS (as signed tokens only
     /// make sense when the same signing key is used with multiple recipients).
@@ -220,12 +220,12 @@ impl ServerSecurityConfig for ConfigBuilder {
 
     fn decrypt_symmetric_token<'buf>(
         &self,
-        headers: &HeaderMap,
+        headers: &HeaderMap<'_>,
         aad: &[u8],
         ciphertext_buffer: &'buf mut [u8],
     ) -> Result<(Self::GeneralClaims, crate::ace::CwtClaimsSet<'buf>), CredentialError> {
-        use ccm::KeyInit;
-        use ccm::aead::AeadInPlace;
+        use ccm::KeyInit as _;
+        use ccm::aead::AeadInPlace as _;
 
         pub type Aes256Ccm = ccm::Ccm<aes::Aes256, ccm::consts::U16, ccm::consts::U13>;
         // FIXME: should be something Aes256Ccm::TagLength
@@ -268,7 +268,7 @@ impl ServerSecurityConfig for ConfigBuilder {
                 CredentialErrorDetail::VerifyFailed
             })?;
 
-        let claims: crate::ace::CwtClaimsSet = minicbor::decode(ciphertext)
+        let claims: crate::ace::CwtClaimsSet<'_> = minicbor::decode(ciphertext)
             .map_err(|_| CredentialErrorDetail::UnsupportedExtension)?;
 
         // FIXME: Consider moving into general parser.
@@ -289,12 +289,12 @@ impl ServerSecurityConfig for ConfigBuilder {
 
     fn verify_asymmetric_token<'b>(
         &self,
-        headers: &HeaderMap,
+        headers: &HeaderMap<'_>,
         signed_data: &[u8],
         signature: &[u8],
         signed_payload: &'b [u8],
     ) -> Result<(Self::GeneralClaims, crate::ace::CwtClaimsSet<'b>), CredentialError> {
-        use p256::ecdsa::{VerifyingKey, signature::Verifier};
+        use p256::ecdsa::{VerifyingKey, signature::Verifier as _};
 
         if headers.alg != Some(-7) {
             // ES256
@@ -316,7 +316,7 @@ impl ServerSecurityConfig for ConfigBuilder {
             .verify(signed_data, &signature)
             .map_err(|_| CredentialErrorDetail::VerifyFailed)?;
 
-        let claims: crate::ace::CwtClaimsSet = minicbor::decode(signed_payload)
+        let claims: crate::ace::CwtClaimsSet<'_> = minicbor::decode(signed_payload)
             .map_err(|_| CredentialErrorDetail::UnsupportedExtension)?;
 
         if claims.aud != Some(rs_audience) {
@@ -429,7 +429,7 @@ impl ServerSecurityConfig for ConfigBuilder {
         &self,
         message: &mut M,
     ) -> Result<(), NotAllowedRenderingFailed> {
-        use coap_message::Code;
+        use coap_message::Code as _;
         message.set_code(M::Code::new(coap_numbers::code::UNAUTHORIZED).map_err(|_| {
             error!("CoAP stack can not represent Unauthorized responses.");
             NotAllowedRenderingFailed
