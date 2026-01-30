@@ -1604,6 +1604,16 @@ modules:
         FEATURES:
           - ariel-os/wifi-esp
 
+  - name: tuntap
+    provides_unique:
+      - network_device
+    context:
+      - native
+    env:
+      global:
+        FEATURES:
+          - ariel-os/tuntap
+
   - name: idle-threads
     help: create idle-threads to be taken when no other threads are ready
     env:

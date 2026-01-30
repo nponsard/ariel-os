@@ -111,6 +111,8 @@ cfg_if::cfg_if! {
         use wifi::NetworkDevice;
     } else if #[cfg(feature = "eth")] {
         use eth::NetworkDevice;
+    } else if #[cfg(feature = "tuntap")] {
+        use crate::hal::tuntap::NetworkDevice;
     } else if #[cfg(context = "ariel-os")] {
         compile_error!("no backend for net is active");
     } else {
@@ -334,6 +336,9 @@ async fn init_task(mut peripherals: hal::OptionalPeripherals) {
     #[cfg(feature = "wifi-esp")]
     let device = hal::wifi::esp_wifi::init(&mut peripherals, spawner);
 
+    #[cfg(feature = "tuntap")]
+    let device = crate::hal::tuntap::create();
+
     #[cfg(feature = "net")]
     {
         use embassy_net::StackResources;
@@ -353,7 +358,8 @@ async fn init_task(mut peripherals: hal::OptionalPeripherals) {
             feature = "usb-ethernet",
             feature = "wifi-cyw43",
             feature = "wifi-esp",
-            feature = "eth"
+            feature = "eth",
+            feature = "tuntap",
         )))]
         // The creation of `device` is not organized in such a way that they could be put in a
         // cfg-if without larger refactoring; relying on unused variable lints to keep the

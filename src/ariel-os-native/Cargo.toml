@@ -15,6 +15,7 @@ cfg-if = { workspace = true }
 defmt = { workspace = true, optional = true }
 embassy-embedded-hal = { workspace = true, optional = true }
 embassy-executor = { workspace = true, default-features = false }
+embassy-net-tuntap = "0.1.0"
 embassy-time = { workspace = true, default-features = false, features = [
   "std",
 ] }
