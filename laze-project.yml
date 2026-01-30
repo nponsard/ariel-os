@@ -1605,6 +1605,14 @@ modules:
           - ariel-os/wifi-esp
 
   - name: tuntap
+    help: Provides a network device by connecting to a tap interface at `tap0`
+      (or another interface named in the `ARIEL_NATIVE_TUNTAP` environment
+      variable).
+
+      This is named tuntap because the `embassy-net-tuntap` crate is named this
+      way, even though it only supports tap (Ethernet) devices at the time of
+      writing. As that is enhanced to support other media (IP or 802.15.4),
+      this module will transparently start supporting those.
     provides_unique:
       - network_device
     context:
