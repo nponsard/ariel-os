@@ -32,8 +32,8 @@ pub mod tuntap {
     /// permission, when it does not exist, or when it is in use).
     #[must_use]
     pub fn create() -> NetworkDevice {
-        let ifname = "tap0";
-        match NetworkDevice::new(ifname) {
+        let ifname = std::env::var("ARIEL_NATIVE_TUNTAP").unwrap_or_else(|_| "tap0".to_owned());
+        match NetworkDevice::new(&ifname) {
             Ok(d) => d,
             Err(e) => panic!("Error opening interface {ifname}: {e}"),
         }
