@@ -14,7 +14,7 @@ Being ZSTs, they do not carry any data to the drivers, only their ownership is m
 > [!TIP]
 > If you are used to thinking about MCU peripherals as referenced by a base address (in the case of memory-mapped peripherals), you can think of these ZSTs as abstraction over these, with a zero-cost, statically-enforced lock ensuring exclusive access.
 
-These Embassy types are defined by [Embassy HAL crates][embassy-hal-crates] in the respective `peripherals` modules.
+These Embassy types are defined by HAL crates in the respective `peripherals` modules.
 In Ariel OS applications, the only safe way to obtain an instance of an Embassy peripheral is by using the [`define_peripherals!`][define_peripherals-docs] macro, combined with a [spawner or task][spawner-or-task].
 The [`group_peripherals!`][group_peripherals-docs] macro can also be useful.
 
@@ -77,7 +77,6 @@ async fn blinky(peripherals: pins::LedPeripherals) {
 
 TODO
 
-[embassy-hal-crates]: ./glossary.md#embassy-hal-crates
 [spawner-attr-docs]: https://ariel-os.github.io/ariel-os/dev/docs/api/ariel_os/attr.spawner.html
 [task-attr-docs]: https://ariel-os.github.io/ariel-os/dev/docs/api/ariel_os/attr.task.html
 [spawner-or-task]: #the-spawner-and-task-ariel-os-macros
