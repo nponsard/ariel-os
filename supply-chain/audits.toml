@@ -16,6 +16,11 @@ who = "chrysn <chrysn@fsfe.org>"
 criteria = "safe-to-deploy"
 version = "0.2.1"
 
+[[audits.embassy-net-tuntap]]
+who = "chrysn <chrysn@fsfe.org>"
+criteria = "safe-to-deploy"
+version = "0.1.0"
+
 [[audits.embassy-time-driver]]
 who = "ROMemories <152802150+ROMemories@users.noreply.github.com>"
 criteria = "safe-to-deploy"
