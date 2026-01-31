@@ -24,7 +24,7 @@ As for any relevant OS, Ariel is permanently worked on, by many people, and at v
 The current tip of the iceberg? See the day-to-day [delta](https://github.com/orgs/ariel-os/projects/1) and the current [feature planning](https://github.com/orgs/ariel-os/projects/3).
 Beyond that, the following summarizes our roadmap at high level.
 
-We are extending hardware support to not only upcoming 32-bit hardware, but also to a native target enabling development/debugging directly on your PC, leveraging low-cost, highly-portable abstractions.
+We are extending hardware support to upcoming 32-bit hardware, and extending our native target (which enables development/debugging directly on your PC), leveraging low-cost, highly-portable abstractions.
 We are working on improving the integration of our build system extensions with Cargo.
 We are developing the building blocks for modern, secure DevOps and over-the-air software updates working out-of-the-box on most boards.
 We are working on extending support for additional network link-layers (BLE, 802.15.4, LoRa) and for additional open standard network protocols (MQTT, DTLS...) to facilitate integration in various backends (E.g. Home Assistant).
