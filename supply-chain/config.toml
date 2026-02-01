@@ -158,12 +158,16 @@ criteria = "safe-to-deploy"
 version = "0.1.5"
 criteria = "safe-to-deploy"
 
-[[exemptions.as-slice]]
-version = "0.2.1"
-criteria = "safe-to-deploy"
-
 [[exemptions.ascii-canvas]]
 version = "4.0.0"
+criteria = "safe-to-deploy"
+
+[[exemptions.async-io]]
+version = "1.13.0"
+criteria = "safe-to-deploy"
+
+[[exemptions.async-lock]]
+version = "2.8.0"
 criteria = "safe-to-deploy"
 
 [[exemptions.at-commands]]
@@ -308,6 +312,10 @@ criteria = "safe-to-deploy"
 
 [[exemptions.coapcore]]
 version = "0.1.1"
+criteria = "safe-to-deploy"
+
+[[exemptions.concurrent-queue]]
+version = "2.5.0"
 criteria = "safe-to-deploy"
 
 [[exemptions.const-default]]
@@ -754,6 +762,10 @@ criteria = "safe-to-deploy"
 version = "0.34.0"
 criteria = "safe-to-deploy"
 
+[[exemptions.event-listener]]
+version = "2.5.3"
+criteria = "safe-to-deploy"
+
 [[exemptions.eyre]]
 version = "0.6.12"
 criteria = "safe-to-deploy"
@@ -780,6 +792,10 @@ criteria = "safe-to-deploy"
 
 [[exemptions.futures-intrusive]]
 version = "0.5.0"
+criteria = "safe-to-deploy"
+
+[[exemptions.futures-lite]]
+version = "1.13.0"
 criteria = "safe-to-deploy"
 
 [[exemptions.futures-task]]
@@ -867,6 +883,10 @@ version = "0.9.1"
 criteria = "safe-to-deploy"
 
 [[exemptions.hermit-abi]]
+version = "0.3.3"
+criteria = "safe-to-deploy"
+
+[[exemptions.hermit-abi]]
 version = "0.5.1"
 criteria = "safe-to-deploy"
 
@@ -888,6 +908,10 @@ criteria = "safe-to-deploy"
 
 [[exemptions.instability]]
 version = "0.3.10"
+criteria = "safe-to-deploy"
+
+[[exemptions.instant]]
+version = "0.1.13"
 criteria = "safe-to-deploy"
 
 [[exemptions.itertools]]
@@ -1050,6 +1074,10 @@ criteria = "safe-to-deploy"
 version = "0.6.0"
 criteria = "safe-to-deploy"
 
+[[exemptions.parking]]
+version = "2.2.1"
+criteria = "safe-to-deploy"
+
 [[exemptions.peg]]
 version = "0.8.5"
 criteria = "safe-to-deploy"
@@ -1094,6 +1122,10 @@ criteria = "safe-to-deploy"
 version = "0.3.0"
 criteria = "safe-to-deploy"
 
+[[exemptions.polling]]
+version = "2.8.0"
+criteria = "safe-to-deploy"
+
 [[exemptions.poly1305]]
 version = "0.8.0"
 criteria = "safe-to-deploy"
@@ -1136,14 +1168,6 @@ criteria = "safe-to-deploy"
 
 [[exemptions.proc-macro-crate]]
 version = "3.3.0"
-criteria = "safe-to-deploy"
-
-[[exemptions.proc-macro-error-attr2]]
-version = "2.0.0"
-criteria = "safe-to-deploy"
-
-[[exemptions.proc-macro-error2]]
-version = "2.0.1"
 criteria = "safe-to-deploy"
 
 [[exemptions.r-efi]]
@@ -1286,6 +1310,10 @@ criteria = "safe-to-deploy"
 version = "0.12.0"
 criteria = "safe-to-deploy"
 
+[[exemptions.socket2]]
+version = "0.4.4"
+criteria = "safe-to-deploy"
+
 [[exemptions.somni-expr]]
 version = "0.2.0"
 criteria = "safe-to-deploy"
@@ -1392,6 +1420,22 @@ criteria = "safe-to-deploy"
 
 [[exemptions.volatile-register]]
 version = "0.2.2"
+criteria = "safe-to-deploy"
+
+[[exemptions.waker-fn]]
+version = "1.2.0"
+criteria = "safe-to-deploy"
+
+[[exemptions.winapi]]
+version = "0.3.9"
+criteria = "safe-to-deploy"
+
+[[exemptions.winapi-i686-pc-windows-gnu]]
+version = "0.4.0"
+criteria = "safe-to-deploy"
+
+[[exemptions.winapi-x86_64-pc-windows-gnu]]
+version = "0.4.0"
 criteria = "safe-to-deploy"
 
 [[exemptions.xtensa-lx]]
