@@ -55,7 +55,11 @@ Setting up a suitable interface depends on your platform and preferred configura
 
   ```console
   $ sudo ip tuntap add dev tap0 user $(id -u) mode tap
+  $ sudo ip link set dev tap0 up
   ```
+
+  Note that for provisioning addresses, you may need to run a DHCP server on that interface,
+  and depending on your application, you may need to set up routing manually.
 
 * For device-to-device communication between multiple native instances,
   you can create a bridge and attach one tap device per instance to the bridge;
