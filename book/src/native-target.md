@@ -30,7 +30,7 @@ This means that threads all run in *parallel* from the point of view of Ariel O
 ## Networking
 
 Applications that set the `network` [laze module]
-will by select the `tuntap` module, which opens the `tap0` tap device
+will automatically select the `tuntap` module, which opens the `tap0` tap device
 (or any other name given in the `ARIEL_NATIVE_TUNTAP` environment variable)
 and exchanges traffic through there.
 
