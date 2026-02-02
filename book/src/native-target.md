@@ -30,11 +30,11 @@ This means that threads all run in *parallel* from the point of view of Ariel O
 ## Networking
 
 Applications that set the `network` [laze module]
-will by select the `tuntap` module, which opens the `tap0` tap device
+will automatically select the `tuntap` module, which opens the `tap0` tap device
 (or any other name given in the `ARIEL_NATIVE_TUNTAP` environment variable)
 and exchanges traffic through there.
 
-If the device is has not been created, is in use or otherwise inaccessible,
+If the device has not yet been created, is in use or otherwise inaccessible,
 you get this error:
 
 ```
@@ -48,14 +48,18 @@ Setting up a suitable interface depends on your platform and preferred configura
   and forward traffic from any uplink interface, run:
 
   ```console
-  $ sudo nmcli connection add type tun mode tap user $(id -u) ifname tap0 con-name tap0 ivp6.method shared ipv4.method shared
+  $ sudo nmcli connection add type tun mode tap owner $(id -u) ifname tap0 con-name tap0 ipv6.method shared ipv4.method shared
   ```
 
 * To create a manually managed device that only persists until the next reboot, run:
 
   ```console
   $ sudo ip tuntap add dev tap0 user $(id -u) mode tap
+  $ sudo ip link set dev tap0 up
   ```
+
+  Note that for provisioning addresses, you may need to run a DHCP server on that interface,
+  and depending on your application, you may need to set up routing manually.
 
 * For device-to-device communication between multiple native instances,
   you can create a bridge and attach one tap device per instance to the bridge;
