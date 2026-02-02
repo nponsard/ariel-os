@@ -48,7 +48,7 @@ Setting up a suitable interface depends on your platform and preferred configura
   and forward traffic from any uplink interface, run:
 
   ```console
-  $ sudo nmcli connection add type tun mode tap user $(id -u) ifname tap0 con-name tap0 ivp6.method shared ipv4.method shared
+  $ sudo nmcli connection add type tun mode tap owner $(id -u) ifname tap0 con-name tap0 ipv6.method shared ipv4.method shared
   ```
 
 * To create a manually managed device that only persists until the next reboot, run:
