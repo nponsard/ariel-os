@@ -23,7 +23,7 @@ pub mod tuntap {
     /// Creates a TUN/TAP network device as configured in the environment.
     ///
     /// Unlike the hardware device initializers that are inline in `ariel_os_embassy::init_task`,
-    /// this doesn't work automatically from init'ing with peripherals ans a spawner, but goes
+    /// this doesn't work automatically from init'ing with peripherals and a spawner, but goes
     /// through extra steps of finding which device to actually use.
     ///
     /// # Panics

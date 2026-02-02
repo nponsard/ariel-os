@@ -34,7 +34,7 @@ will automatically select the `tuntap` module, which opens the `tap0` tap device
 (or any other name given in the `ARIEL_NATIVE_TUNTAP` environment variable)
 and exchanges traffic through there.
 
-If the device is has not been created, is in use or otherwise inaccessible,
+If the device has not yet been created, is in use or otherwise inaccessible,
 you get this error:
 
 ```
