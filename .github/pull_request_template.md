@@ -23,6 +23,19 @@
 
 <!-- Unresolved questions, if any. -->
 
+## Changelog Entry
+
+<!--
+The changelog entry, if any.
+It should likely contain variations of "has been" or "is now": past entries can
+be used as reference: <https://github.com/ariel-os/ariel-os/blob/main/CHANGELOG.md>.
+If you are unsure about how to phrase the entry, you can leave it empty and a
+maintainer will write it for you.
+For maintainers: if no entry is added, the `changelog:skip` label must be attached.
+-->
+<!-- changelog:begin -->
+<!-- changelog:end -->
+
 ## Change Checklist
 
 <!--
