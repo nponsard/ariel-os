@@ -1,4 +1,4 @@
-//! Provides control over the system BLE stack.
+//! Provides control over the system BLE (Bluetooth Low Energy) stack.
 //!
 //! All interactions happen through the [`trouble_host::Stack`] struct that can be obtained using
 //! [`ble_stack()`].
