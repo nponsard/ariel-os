@@ -69,6 +69,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- (ESP32-S2) USB is now marked as supported on this MCU. ([#1767](https://github.com/ariel-os/ariel-os/pull/1767))
+- (ESP32-S2) I2C is now marked as supported on this MCU. ([#1766](https://github.com/ariel-os/ariel-os/pull/1766))
+- (ESP32-S3) I2C is now marked as supported on this MCU. ([#1765](https://github.com/ariel-os/ariel-os/pull/1765))
 - A `tcp-client` example is now available: it makes it easy to test Internet connectivity without requiring a HWRNG. ([#1690](https://github.com/ariel-os/ariel-os/pull/1690))
 - (nRF5340) Both the application core and the network core of this MCU are now supported and their usage is documented. ([#1658](https://github.com/ariel-os/ariel-os/pull/1658))
 - The concept of laze builder is now explained in the documentation. ([#1619](https://github.com/ariel-os/ariel-os/pull/1619))
