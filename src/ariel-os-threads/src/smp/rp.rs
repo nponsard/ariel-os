@@ -87,7 +87,6 @@ const SCHEDULE_TOKEN: u32 = 0x11;
 #[unsafe(no_mangle)]
 // SAFETY: this function is placed in RAM to improve execution latency.
 #[unsafe(link_section = ".data.ram_func")]
-#[inline]
 fn handle_fifo_token(token: u32) -> bool {
     if token != SCHEDULE_TOKEN {
         return false;
