@@ -469,7 +469,7 @@ chips:
       gpio: supported
       debug_output: supported
       hwrng: supported
-      i2c_controller: needs_testing
+      i2c_controller: supported
       spi_main: needs_testing
       uart: supported
       logging: supported
@@ -489,7 +489,7 @@ chips:
       gpio: supported
       debug_output: supported
       hwrng: supported
-      i2c_controller: needs_testing
+      i2c_controller: supported
       spi_main: needs_testing
       uart: supported
       logging: supported
