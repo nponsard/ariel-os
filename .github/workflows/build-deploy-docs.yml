@@ -70,6 +70,7 @@ jobs:
               --features "
                   ariel-os-sensors/max-sample-min-count-12,
                   bench,
+                  ble,
                   coap,
                   core-affinity,
                   csprng,
