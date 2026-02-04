@@ -1,3 +1,14 @@
+//! Provides control over the system BLE stack.
+//!
+//! All interactions happen through the [`trouble_host::Stack`] struct that can be obtained using
+//! [`ble_stack()`].
+//!
+//! The address of the device is randomly generated at boot and may be rotated during execution.
+//!
+//! # Current implementation
+//!
+//! The address is not currently rotated during execution; however this behavior may not be relied upon.
+
 use trouble_host::{
     Address,
     prelude::{AddrKind, BdAddr},
