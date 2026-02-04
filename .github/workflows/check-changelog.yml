@@ -1,0 +1,28 @@
+name: Check changelog
+
+on:
+  pull_request:
+    branches:
+      - main
+    types: [opened, edited, reopened, labeled, unlabeled]
+
+permissions:
+  contents: read
+
+jobs:
+  check-changelog:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: "Check changelog label"
+        if: "!contains(github.event.pull_request.labels.*.name, 'changelog:skip')"
+        run: |
+          # The following regex looks for at least one line between the
+          # placeholders that contain a non whitespace character (or more).
+          # Using [\s\S] instead of . because it does not match newlines.
+          if ! echo "${GITHUB_EVENT_PULL_REQUEST_BODY}" | grep -q --null-data -P '<!-- changelog:begin -->[\s\S]*\n\S+[\s\S]*<!-- changelog:end -->'; then
+            echo 'The "changelog:skip" label is not attached, so a small entry that could be included in a changelog is required.'
+            echo 'You can ignore this if you are an external contributor.'
+            exit 1
+          fi
+        env:
+          GITHUB_EVENT_PULL_REQUEST_BODY: ${{ github.event.pull_request.body }}
