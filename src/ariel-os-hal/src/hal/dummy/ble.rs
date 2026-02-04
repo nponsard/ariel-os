@@ -13,6 +13,14 @@ impl Peripherals {
     }
 }
 
+/// Returns the system BLE stack, [`trouble_host::Stack`].
+///
+/// # Panics
+///
+/// For this function to succeed, it can only be called from the system executor, and only once:
+///
+/// - Panics if the stack was already taken.
+/// - Panics when not called from the system executor.
 pub async fn ble_stack() -> &'static Stack<'static, DummyController, DefaultPacketPool> {
     async { unimplemented!() }.await
 }
