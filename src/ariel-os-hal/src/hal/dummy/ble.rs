@@ -21,6 +21,7 @@ impl Peripherals {
 ///
 /// - Panics if the stack was already taken.
 /// - Panics when not called from the system executor.
+#[doc(alias = "bluetooth_stack")]
 pub async fn ble_stack() -> &'static Stack<'static, DummyController, DefaultPacketPool> {
     async { unimplemented!() }.await
 }
