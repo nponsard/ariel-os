@@ -21,13 +21,28 @@ through [laze modules][laze-modules-book].
 
 ## Network Credentials
 
+### Wi-Fi
+
 For Wi-Fi, the network credentials have to be supplied via environment variables:
 
 ```sh
 CONFIG_WIFI_NETWORK=<ssid> CONFIG_WIFI_PASSWORD=<pwd> laze build ...
 ```
 
-For cellular networking (LTE-M), currently the SIM card is expected to have no pin and an automatically configured APN.
+### Cellular Networking
+
+> [!WARNING]
+> This module is still experimental and only supports the nrf91 series of microcontrollers.
+
+If you need to configure how you authenticate to the network, you can set these environment variables:
+
+- `CONFIG_SIM_APN`: The access point name, if you set this environment variable, you also need to configure `CONFIG_SIM_AUTHENTICATION_PROTOCOL`.
+- `CONFIG_SIM_AUTHENTICATION_PROTOCOL`: The protocol used to authenticate, can be `NONE`, `PAP`, `CHAP`.
+- `CONFIG_SIM_USERNAME`: The username used to authenticate to the network, if this environment variable is set you also need to set `CONFIG_SIM_PASSWORD`. This won't have any effect if you don't configure the APN.
+- `CONFIG_SIM_PASSWORD`: The password use to authenticate to the network.
+- `CONFIG_SIM_PIN`: The code to unlock the pin, won't have any effect if you don't set `CONFIG_SIM_APN`.
+
+Providing no environment variables will use the default configuration stored in the SIM.
 
 ## Using the Networking Link on the Device
 

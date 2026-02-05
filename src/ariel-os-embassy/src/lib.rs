@@ -31,6 +31,9 @@ mod wifi;
 #[cfg(feature = "eth")]
 mod eth;
 
+#[cfg(feature = "sim-card")]
+mod sim_card;
+
 use ariel_os_debug::log::debug;
 
 use linkme::distributed_slice;
@@ -343,6 +346,9 @@ async fn init_task(mut peripherals: hal::OptionalPeripherals) {
     #[cfg(feature = "ltem-nrf-modem")]
     let (device, control) = hal::ltem::init(spawner).await;
 
+    #[cfg(feature = "sim-card")]
+    let sim_card_config = sim_card::config();
+
     #[cfg(feature = "net")]
     {
         use embassy_net::StackResources;
@@ -401,17 +407,8 @@ async fn init_task(mut peripherals: hal::OptionalPeripherals) {
         // update the network stack with the device's configuration
         #[cfg(feature = "ltem-nrf-modem")]
         {
-            // TODO: user configuration of APN settings
-
-            // let apn_config = hal::ltem::Config {
-            //     apn: b"eapn1.net",
-            //     auth_prot: hal::ltem::AuthProt::Pap,
-            //     auth: Some((b"NordicSe", b"NordicSe")),
-            //     pin: None,
-            // };
-
             spawner
-                .spawn(hal::ltem::control_task(control, None, stack))
+                .spawn(hal::ltem::control_task(control, sim_card_config, stack))
                 .unwrap();
         }
     }

@@ -8,6 +8,8 @@ use static_cell::StaticCell;
 
 pub use nrf_modem::embassy_net_modem::context::{AuthProt, Config, Status};
 
+use ariel_os_embassy_common::sim_card;
+
 pub type NetworkDevice = NetDriver<'static>;
 
 static LTEM_STATE: StaticCell<State> = StaticCell::new();
@@ -18,16 +20,38 @@ async fn modem_task(runner: Runner<'static>) -> ! {
     runner.run().await
 }
 
+fn convert_sim_card_config(config: sim_card::Config<'static>) -> Config<'static> {
+    let apn = config.apn.as_bytes();
+    let auth_prot = match config.authentication_protocol {
+        sim_card::AuthenticationProtocol::None => AuthProt::None,
+        sim_card::AuthenticationProtocol::Pap => AuthProt::Pap,
+        sim_card::AuthenticationProtocol::Chap => AuthProt::Chap,
+    };
+    let auth = config
+        .credentials
+        .map(|c| (c.username.as_bytes(), c.password.as_bytes()));
+    let pin = config.pin.map(|p| p.as_bytes());
+    Config {
+        apn,
+        auth_prot,
+        auth,
+        pin,
+    }
+}
+
 /// Task responsible of maintaining the connection status up to date.
 /// Also configures the modem when starting (if a `config` is provided )
 #[embassy_executor::task]
 pub async fn control_task(
     control: &'static context::Control<'static>,
-    config: Option<Config<'static>>,
+    config: Option<sim_card::Config<'static>>,
     stack: Stack<'static>,
 ) {
     if let Some(config) = config {
-        control.configure(&config).await.unwrap();
+        control
+            .configure(&convert_sim_card_config(config))
+            .await
+            .unwrap();
     }
 
     control
