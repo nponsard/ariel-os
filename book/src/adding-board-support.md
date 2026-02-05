@@ -85,6 +85,8 @@ sbd-gen generate-ariel boards -o src/ariel-os-boards --mode update
 - In `doc/support_matrix.yml`:
   - Add an entry under `chips`, with the laze context and supported features.
   - Update the generated support pages from the book using `laze build update-book`.
+- In `boards/ariel-chips.yaml`:
+  - Add the new laze context name to the list of `chips`.
 
 MCU-specific items inside Ariel OS crates are gated behind
 `#[cfg(context = $CONTEXT)]` attributes, where `$CONTEXT` is the [MCU's `laze
