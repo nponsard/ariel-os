@@ -35,6 +35,12 @@
 
 - **[STM32][stm32-wikipedia]:** a family of 32-bit microcontrollers developed by STMicroelectronics.
 
+- **[UART (Universal Asynchronous Receiver-Transmitter)][uart-wikipedia]:** a (microcontroller) peripheral.
+  By extension, can also refer to the link-layer protocol it implements.
+  Sometimes incorrectly used to refer to serial communication over USB (e.g., instead of [USB CDC-ACM][usb-cdc-acm-wikipedia]).
+
+- **[USB CDC-ACM][usb-cdc-acm-wikipedia]:** a standard protocol implementing serial communication over USB.
+
 - **[Xtensa][xtensa-wikipedia]:** a family of instruction set architectures, used in some ESP32 microcontrollers.
 
 [arm-arch-wikipedia]: https://en.wikipedia.org/wiki/ARM_architecture_family
@@ -55,4 +61,6 @@
 [risc-v-wikipedia]: https://en.wikipedia.org/wiki/RISC-V
 [stm32-wikipedia]: https://en.wikipedia.org/wiki/STM32
 [system-on-chip-wikipedia]: https://en.wikipedia.org/wiki/System_on_a_chip
+[uart-wikipedia]: https://en.wikipedia.org/wiki/Universal_asynchronous_receiver-transmitter
+[usb-cdc-acm-wikipedia]: https://en.wikipedia.org/wiki/USB_communications_device_class#Abstract_Control_Model
 [xtensa-wikipedia]: https://en.wikipedia.org/wiki/Tensilica#Xtensa_configurable_cores
