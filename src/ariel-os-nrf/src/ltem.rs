@@ -15,6 +15,9 @@ pub type NetworkDevice = NetDriver<'static>;
 static LTEM_STATE: StaticCell<State> = StaticCell::new();
 static LTEM_CONTROL: StaticCell<context::Control<'static>> = StaticCell::new();
 
+// Packet Data Protocol context id, range 0-10
+const PDP_CONTEXT_ID: u8 = 0;
+
 #[embassy_executor::task]
 async fn modem_task(runner: Runner<'static>) -> ! {
     runner.run().await
@@ -103,7 +106,7 @@ pub async fn init<'a>(spawner: Spawner) -> (NetworkDevice, &'a context::Control<
 
     spawner.spawn(modem_task(runner)).unwrap();
 
-    let control = LTEM_CONTROL.init(context::Control::new(control, 0).await);
+    let control = LTEM_CONTROL.init(context::Control::new(control, PDP_CONTEXT_ID).await);
 
     (driver, control)
 }
