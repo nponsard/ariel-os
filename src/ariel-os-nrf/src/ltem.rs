@@ -62,10 +62,10 @@ pub async fn control_task(
         .unwrap();
 }
 
-/// Create an embassy-net  IPv4 config from an modem status update.
+/// Creates an embassy-net IPv4 config from a modem status update.
 ///
 /// # Panics
-/// Panics if the modem returns an invalid IPv4 or too many dns servers are returned.
+/// Panics if the modem returns an invalid IPv4 address or too many DNS servers are returned.
 #[must_use]
 fn status_to_config(status: &Status) -> embassy_net::ConfigV4 {
     let Some(IpAddr::V4(addr)) = status.ip else {

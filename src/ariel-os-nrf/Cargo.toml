@@ -115,7 +115,7 @@ ble-central = ["ble", "nrf-sdc/central"]
 ## Enables modem support.
 nrf91-modem = ["dep:cortex-m", "dep:nrf-modem", "dep:tinyrlibc"]
 
-## Enables ltem networking support for nrf91 SiP.
+## Enables LTE-M networking support on nRF SiPs.
 ltem-nrf-modem = [
   "dep:embassy-net",
   "dep:embassy-net-driver-channel",
