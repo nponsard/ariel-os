@@ -1,12 +1,12 @@
 //! Common SIM card types to be used across different HALs.
 
-/// Configuration to use the SIM to connect to the network
+/// Configuration to use the SIM to connect to the cellular network
 #[derive(Debug, Clone)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub struct Config<'a> {
     /// Access Point Name, usually a domain given by the provider
     pub apn: &'a str,
-    /// Witch protocol to authentify with the provider
+    /// Which protocol to use to authenticate with the provider.
     pub authentication_protocol: AuthenticationProtocol,
     /// Credentials, if necessary
     pub credentials: Option<SimCredentials<'a>>,

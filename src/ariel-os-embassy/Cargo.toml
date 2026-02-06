@@ -124,7 +124,7 @@ storage = ["dep:ariel-os-storage", "ariel-os-hal/storage", "time"]
 
 debug-uart = []
 
-# Enables SIM card configuration
+# Enables SIM card configuration.
 sim-card = ["dep:const-str", "ariel-os-embassy-common/sim-card"]
 
 wifi = []
