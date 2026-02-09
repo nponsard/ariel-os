@@ -85,8 +85,6 @@ pub mod api {
 
 // These are made available in `ariel_os::reexports`.
 pub mod reexports {
-    #[cfg(feature = "ble")]
-    pub use ariel_os_embassy_common::ble;
     #[cfg(feature = "net")]
     pub use embassy_net;
     #[cfg(feature = "time")]
