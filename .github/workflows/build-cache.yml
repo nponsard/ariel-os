@@ -33,6 +33,9 @@ jobs:
       SCCACHE_DIR: /cache/sccache
       SCCACHE_CACHE_SIZE: 128G
 
+      CARGO_NET_GIT_FETCH_WITH_CLI: true
+
+
     steps:
       - name: reset git-cache update barrier
         run: pkill -f -SIGUSR1 /usr/local/bin/git-cache-daemon | true
