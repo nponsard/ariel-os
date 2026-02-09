@@ -67,7 +67,7 @@ jobs:
         id: day
         run: echo "day=$(date +'%u')" >> $GITHUB_OUTPUT
       - name: Clean cache on Sunday
-        if: steps.should-skip.outputs.result != 'true' && steps.day.outputs.day == '7'
+        # if: steps.should-skip.outputs.result != 'true' && steps.day.outputs.day == '7'
         run: |
           export  RUST_LOG=trace
           # clean previous cache
