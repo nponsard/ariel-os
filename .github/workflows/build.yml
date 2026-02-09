@@ -83,10 +83,7 @@ jobs:
 
   build:
     needs: check-labels
-    runs-on:
-      group: Ariel
-      # TODO: update the image of the nodes in the other center
-      labels: ["saclay"]
+    runs-on: "self-hosted-ubuntu"
 
     # Ignore the PR labels in nightly builds.
     if: ${{ github.event_name == 'schedule' || needs.check-labels.outputs.label != 'ci-build:skip' }}

@@ -9,9 +9,7 @@ concurrency:
 jobs:
   # build cache on each garm node
   build-cache:
-    runs-on:
-      group: Ariel
-      labels: ["${{ matrix.node }}"]
+    runs-on: ["${{ matrix.node }}"]
 
     strategy:
       matrix:
