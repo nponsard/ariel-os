@@ -83,7 +83,10 @@ jobs:
 
   build:
     needs: check-labels
-    runs-on: "self-hosted-ubuntu"
+    # repository variable so we can quickly switch between self-hosted and GitHub runners.
+    # - "self-hosted-ubuntu": self hosted runners
+    # - "ubuntu-24.04": GitHub hosted runners
+    runs-on: ${{ vars.BUILD_RUNS_ON }}
 
     # Ignore the PR labels in nightly builds.
     if: ${{ github.event_name == 'schedule' || needs.check-labels.outputs.label != 'ci-build:skip' }}
