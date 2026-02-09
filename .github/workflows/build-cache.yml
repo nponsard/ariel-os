@@ -1,5 +1,8 @@
 name: Build-cache
 on:
+  pull_request:
+    branches:
+      - main
   schedule:
     # run every morning at 1:07am
     - cron: "7 1 * * *"
