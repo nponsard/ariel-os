@@ -20,7 +20,7 @@ pub use ariel_os_embassy_common::i2c::controller::*;
 /// However, it cannot block indefinitely as a timeout is implemented, either by leveraging
 /// I2C-specific hardware capabilities or through a generic software timeout.
 // TODO: do we actually need a CriticalSectionRawMutex here?
-pub type I2cDevice = InnerI2cDevice<'static, CriticalSectionRawMutex, hal::i2c::controller::I2c>;
+pub type I2cDevice<'a> = InnerI2cDevice<'a, CriticalSectionRawMutex, hal::i2c::controller::I2c>;
 
 /// Returns the highest I2C frequency available on the MCU that fits into the requested
 /// range.
