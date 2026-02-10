@@ -46,10 +46,11 @@ Please make sure that:
 - The Developer Certificate of Origin (DCO) Sign-off is present in your commits.
   - See <https://github.com/ariel-os/ariel-os/blob/main/CONTRIBUTING.md#developer-certificate-of-origin>.
 -->
-- [ ] I have cleaned up my [commit history][conventional-commits] and squashed fixup commits.
+- [ ] The [commit history][conventional-commits] will be clean at the latest after applying [autosquash].
 - [ ] I have followed the [Coding Conventions][coding-conventions].
 - [ ] I have tested and performed a self-review of my own code.
 - [ ] I have made corresponding changes to the documentation.
 
 [conventional-commits]: https://www.conventional-commits.org/en/v1.0.0/
 [coding-conventions]: https://ariel-os.github.io/ariel-os/dev/docs/book/coding-conventions.html
+[autosquash]: https://git-scm.com/docs/git-rebase#Documentation/git-rebase.txt---autosquash
