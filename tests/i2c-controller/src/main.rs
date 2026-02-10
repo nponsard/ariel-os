@@ -54,10 +54,6 @@ cfg_if::cfg_if! {
     }
 }
 
-pub static I2C_BUS: once_cell::sync::OnceCell<
-    Mutex<embassy_sync::blocking_mutex::raw::CriticalSectionRawMutex, hal::i2c::controller::I2c>,
-> = once_cell::sync::OnceCell::new();
-
 #[ariel_os::task(autostart, peripherals)]
 async fn main(peripherals: pins::Peripherals) {
     let mut i2c_config = hal::i2c::controller::Config::default();
@@ -65,10 +61,9 @@ async fn main(peripherals: pins::Peripherals) {
     debug!("Selected frequency: {:?}", i2c_config.frequency);
 
     let i2c_bus = pins::SensorI2c::new(peripherals.i2c_sda, peripherals.i2c_scl, i2c_config);
+    let i2c_bus = Mutex::new(i2c_bus);
 
-    let _ = I2C_BUS.set(Mutex::new(i2c_bus));
-
-    let mut i2c_device = I2cDevice::new(I2C_BUS.get().unwrap());
+    let mut i2c_device = I2cDevice::new(&i2c_bus);
 
     let mut id = [0];
     i2c_device
