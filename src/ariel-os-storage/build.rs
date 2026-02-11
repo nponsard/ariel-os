@@ -9,6 +9,7 @@ fn main() {
     // could be pushed out of it by a large enough binary.
     let (storage_size_total, flash_page_size) = if is_in_current_contexts(&[
         "stm32f303cb",
+        "stm32f303re",
         "stm32u073kc",
         "stm32u083mc",
         "stm32l475vg",

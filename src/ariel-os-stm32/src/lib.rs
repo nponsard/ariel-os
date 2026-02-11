@@ -168,7 +168,7 @@ fn rcc_config() -> embassy_stm32::rcc::Config {
         rcc.mux.clk48sel = mux::Clk48sel::HSI48;
     }
 
-    #[cfg(context = "stm32f303cb")]
+    #[cfg(any(context = "stm32f303cb", context = "stm32f303re"))]
     {
         use embassy_stm32::rcc::*;
 

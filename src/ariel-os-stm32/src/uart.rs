@@ -268,6 +268,14 @@ define_uart_drivers!(
    // USART2 => USART2, // Often used as SWI
    USART3 => USART3,
 );
+#[cfg(context = "stm32f303re")]
+define_uart_drivers!(
+   USART1 => USART1,
+   // USART2 => USART2, // Often used as SWI
+   USART3 => USART3,
+   UART4 => UART4,
+   UART5 => UART5,
+);
 #[cfg(context = "stm32f401re")]
 define_uart_drivers!(
    USART1 => USART1,
@@ -359,6 +367,12 @@ pub fn init(peripherals: &mut crate::OptionalPeripherals) {
             let _ = peripherals.USART1.take().unwrap();
             let _ = peripherals.USART2.take().unwrap();
             let _ = peripherals.USART3.take().unwrap();
+        } else if #[cfg(context = "stm32f303re")] {
+            let _ = peripherals.USART1.take().unwrap();
+            let _ = peripherals.USART2.take().unwrap();
+            let _ = peripherals.USART3.take().unwrap();
+            let _ = peripherals.UART4.take().unwrap();
+            let _ = peripherals.UART5.take().unwrap();
         } else if #[cfg(context = "stm32f401re")] {
             let _ = peripherals.USART1.take().unwrap();
             let _ = peripherals.USART2.take().unwrap();

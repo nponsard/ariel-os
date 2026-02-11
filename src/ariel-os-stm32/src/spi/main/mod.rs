@@ -20,7 +20,7 @@ use embassy_stm32::{
 // When peripherals support different frequencies, the smallest one is used.
 #[cfg(context = "stm32c031c6")]
 const MAX_FREQUENCY: Kilohertz = Kilohertz::MHz(24);
-#[cfg(context = "stm32f303cb")]
+#[cfg(any(context = "stm32f303cb", context = "stm32f303re"))]
 const MAX_FREQUENCY: Kilohertz = Kilohertz::MHz(18);
 #[cfg(context = "stm32f401re")]
 const MAX_FREQUENCY: Kilohertz = Kilohertz::MHz(21);
@@ -162,6 +162,13 @@ define_spi_drivers!(
    SPI1 => SPI1,
    SPI2 => SPI2,
    SPI3 => SPI3,
+);
+#[cfg(context = "stm32f303re")]
+define_spi_drivers!(
+   SPI1 => SPI1,
+   SPI2 => SPI2,
+   SPI3 => SPI3,
+   // TODO: the MCU has a fourth SPI peripheral, but it does not seem supported by Embassy.
 );
 #[cfg(context = "stm32f401re")]
 define_spi_drivers!(
