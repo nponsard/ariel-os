@@ -147,6 +147,11 @@ jobs:
 
       - name: Check out repository code
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+        with:
+          # we need to access all the commits to know when the file was last modified
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha }}
+
 
       - name: Get tree hashes
         id: get-tree-hashes
@@ -305,6 +310,16 @@ jobs:
           sha256sum /usr/lib/llvm-*/lib/clang/*/include/stdint.h
           true
 
+      # Allows to reuse more cache
+      - name: Touch file time to commits time
+        if: steps.should-skip.outputs.result != 'true' && runner.environment == 'self-hosted'
+        # https://stackoverflow.com/questions/21735435/git-clone-changes-file-modification-time
+        run: |
+            git ls-tree -r --name-only HEAD | while read filename; do
+              unixtime=$(git log -1 --format="%at" -- "${filename}")
+              touchtime=$(date -d @$unixtime +'%Y%m%d%H%M.%S')
+              touch -t ${touchtime} "${filename}"
+            done
       - name: "start sccache daemon"
         if: steps.should-skip.outputs.result != 'true' && runner.environment == 'self-hosted'
         # work around https://github.com/ninja-build/ninja/issues/2052

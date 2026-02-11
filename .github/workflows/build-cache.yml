@@ -40,7 +40,7 @@ jobs:
       - name: Check out repository code
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5
         with:
-          # we need to access the Main branch for the cache
+          # we need to access all the commits to know when the file was last modified
           fetch-depth: 0
           ref: ${{ github.event.pull_request.head.sha }}
 
@@ -72,6 +72,17 @@ jobs:
           export  RUST_LOG=trace
           # clean previous cache
           cache-thing clean --prefix global --fixed-key nightly
+
+      # Allows to reuse more cache
+      - name: Touch file time to commits time
+        if: steps.should-skip.outputs.result != 'true'
+        # https://stackoverflow.com/questions/21735435/git-clone-changes-file-modification-time
+        run: |
+            git ls-tree -r --name-only HEAD | while read filename; do
+              unixtime=$(git log -1 --format="%at" -- "${filename}")
+              touchtime=$(date -d @$unixtime +'%Y%m%d%H%M.%S')
+              touch -t ${touchtime} "${filename}"
+            done
       - name: Cache with post-job cleanup
         if: steps.should-skip.outputs.result != 'true'
         uses: gacts/run-and-post-run@v1
