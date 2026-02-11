@@ -44,9 +44,9 @@ pub enum PdpType {
     /// IPv4.
     Ip,
     /// IPv6.
-    IpV6,
+    Ipv6,
     /// Dual IP stack.
-    IpV4V6,
+    Ipv4v6,
     /// Non-IP data.
     NonIp,
 }

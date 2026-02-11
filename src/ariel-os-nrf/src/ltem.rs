@@ -47,8 +47,8 @@ fn convert_cellular_networking_config(
 
     let pdp_type = match config.pdp_type {
         cellular_networking::PdpType::Ip => PdpType::Ip,
-        cellular_networking::PdpType::IpV6 => PdpType::IpV6,
-        cellular_networking::PdpType::IpV4V6 => PdpType::IpV4V6,
+        cellular_networking::PdpType::Ipv6 => PdpType::Ipv6,
+        cellular_networking::PdpType::Ipv4v6 => PdpType::Ipv4v6,
         cellular_networking::PdpType::NonIp => PdpType::NonIp,
     };
 
