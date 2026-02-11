@@ -31,6 +31,9 @@ mod wifi;
 #[cfg(feature = "eth")]
 mod eth;
 
+#[cfg(feature = "cellular-networking")]
+mod cellular_networking;
+
 use ariel_os_debug::log::debug;
 
 use linkme::distributed_slice;
@@ -403,17 +406,13 @@ async fn init_task(mut peripherals: hal::OptionalPeripherals) {
         // update the network stack with the device's configuration
         #[cfg(feature = "ltem-nrf-modem")]
         {
-            // TODO: user configuration of APN settings
-
-            // let apn_config = hal::ltem::Config {
-            //     apn: b"eapn1.net",
-            //     auth_prot: hal::ltem::AuthProt::Pap,
-            //     auth: Some((b"NordicSe", b"NordicSe")),
-            //     pin: None,
-            // };
-
             spawner
-                .spawn(hal::ltem::control_task(control, None, stack))
+                .spawn(hal::ltem::control_task(
+                    control,
+                    cellular_networking_config,
+                    sim_pin,
+                    stack,
+                ))
                 .unwrap();
         }
     }
