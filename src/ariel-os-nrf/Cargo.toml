@@ -120,6 +120,7 @@ ltem-nrf-modem = [
   "dep:embassy-net",
   "dep:embassy-net-driver-channel",
   "dep:heapless",
+  "ariel-os-embassy-common/cellular-networking",
   "nrf-modem/embassy-net",
   "nrf91-modem",
 ]
