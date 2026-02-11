@@ -233,9 +233,12 @@ jobs:
                 embassy-nrf/nrf9160-s,
                 external-interrupts,
                 i2c,
+                ipv4,
+                ipv6,
+                ltem-nrf-modem
+                nrf91-modem,
                 spi,
                 uart,
-                nrf91-modem
                 "
             -p ariel-os-nrf
             --target=thumbv8m.main-none-eabihf
