@@ -30,6 +30,9 @@ CONFIG_WIFI_NETWORK=<ssid> CONFIG_WIFI_PASSWORD=<pwd> laze build ...
 
 ### Network Configuration
 
+> [!IMPORTANT]
+> When selecting a `network-config-*` [laze module](./build-system.md#laze-modules), this module must be placed *before* the `network` laze module in the [`selects` array][enabling-laze-modules-book].
+
 #### IPv4
 
 Support for IPv4 is enabled by default.
@@ -109,3 +112,4 @@ a second cable.
 [embassy-net-reexport-rustdoc]: https://ariel-os.github.io/ariel-os/dev/docs/api/ariel_os/reexports/embassy_net/index.html
 [examples-dir-repo]: https://github.com/ariel-os/ariel-os/tree/main/examples
 [laze-modules-book]: ./build-system.md#laze-modules
+[enabling-laze-modules-book]: ./build-system.md#enabling-laze-modules-for-an-application
