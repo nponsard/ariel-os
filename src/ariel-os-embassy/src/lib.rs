@@ -397,21 +397,26 @@ async fn init_task(mut peripherals: hal::OptionalPeripherals) {
         }
 
         #[cfg(feature = "cellular-networking")]
-        let cellular_networking_config = cellular_networking::config();
-        #[cfg(feature = "cellular-networking")]
-        let sim_pin = cellular_networking::pin();
-
-        // update the network stack with the device's configuration
-        #[cfg(feature = "ltem-nrf-modem")]
         {
-            spawner
-                .spawn(hal::ltem::control_task(
-                    control,
-                    cellular_networking_config,
-                    sim_pin,
-                    stack,
-                ))
-                .unwrap();
+            let cellular_networking_config = cellular_networking::config();
+            let sim_pin = cellular_networking::pin();
+
+            // update the network stack with the device's configuration
+            #[cfg(feature = "ltem-nrf-modem")]
+            {
+                spawner
+                    .spawn(hal::ltem::control_task(
+                        control,
+                        cellular_networking_config,
+                        sim_pin,
+                        stack,
+                    ))
+                    .unwrap();
+            }
+
+            // Use the config so clippy doesn't complain
+            #[cfg(not(any(feature = "ltem-nrf-modem")))]
+            let (_, _) = (cellular_networking_config, sim_pin);
         }
     }
 
