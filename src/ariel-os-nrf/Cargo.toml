@@ -124,6 +124,11 @@ ltem-nrf-modem = [
   "nrf91-modem",
 ]
 
+# ipv4 support, only affects the LTE-M networking support.
+ipv4 = []
+# ipv6 support, only affects the LTE-M networking support.
+ipv6 = []
+
 ## Enables defmt support.
 defmt = ["dep:defmt", "embassy-nrf/defmt", "nrf-modem?/defmt", "nrf-sdc?/defmt"]
 

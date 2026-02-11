@@ -133,6 +133,9 @@ eth-stm32 = ["ariel-os-stm32/eth-stm32"]
 
 ltem-nrf-modem = ["ariel-os-nrf/ltem-nrf-modem"]
 
+ipv4 = ["ariel-os-nrf/ipv4"]
+ipv6 = ["ariel-os-nrf/ipv6"]
+
 executor-interrupt = [
   #"ariel-os-esp/executor-interrupt",
   "ariel-os-nrf/executor-interrupt",
