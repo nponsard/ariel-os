@@ -4,10 +4,9 @@ name: Check binary size
 on:
   workflow_run:
     workflows:
-      - CI
+      - Build
     types:
       - completed
-      - requested
 
 permissions: {}
 
@@ -15,9 +14,9 @@ permissions: {}
 jobs:
   size:
     # Only run this job if the Build workflow completed successfully.
-    # if: github.event.workflow_run.conclusion == 'success'
-    # permissions:
-    #   pull-requests: write
+    if: github.event.workflow_run.conclusion == 'success'
+    permissions:
+      pull-requests: write
     runs-on: ubuntu-24.04
     steps:
       - name: Install llvm-size
