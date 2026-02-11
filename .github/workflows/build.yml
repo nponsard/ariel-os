@@ -15,11 +15,6 @@ concurrency:
   group: ${{ github.head_ref || github.run_id }}-build
   cancel-in-progress: true
 
-env:
-  runner: ${{ vars.RUNNER }}  aa
-  BUILD_RUNS_ON: ${{ vars.BUILD_RUNS_ON }}  bb
-  build_runner: ${{ vars.build_runner }}  cc
-
 jobs:
   check-labels:
     runs-on: ubuntu-24.04
@@ -30,10 +25,6 @@ jobs:
 
     steps:
 
-      - name: debug
-        run: |
-          echo a ${{ vars.runner }} - ${{ vars.BUILD_RUNS_ON }} - ${{ vars.build_runner }}
-          echo b ${{ env.runner }} - ${{ env.BUILD_RUNS_ON }} - ${{ env.build_runner }}
       # Need to get two commits so we can get the PR's commit, not just the
       # merge commit.
       - name: Check out repository code
@@ -92,12 +83,12 @@ jobs:
             throw 'Did not find the PR; maybe it has more than 30 commits?';
 
   build:
-    name: ${{ vars.runner }} - ${{ vars.BUILD_RUNS_ON }} - ${{ vars.build_runner }}
     needs: check-labels
-    # repository variable so we can quickly switch between self-hosted and GitHub runners.
+    # Repository variable so we can quickly switch between self-hosted and GitHub runners.
     # - "self-hosted-ubuntu": self hosted runners
     # - "ubuntu-24.04": GitHub hosted runners
-    runs-on: ${{ vars.RUNNER }} - ${{ vars.BUILD_RUNS_ON }} - ${{ vars.build_runner }}
+    # Sometimes the variable is unavailable, we use a default.
+    runs-on: ${{ case(vars.build_runner == '', 'self-hosted-ubuntu', vars.build_runner) }}
 
     # Ignore the PR labels in nightly builds.
     if: ${{ github.event_name == 'schedule' || needs.check-labels.outputs.label != 'ci-build:skip' }}
