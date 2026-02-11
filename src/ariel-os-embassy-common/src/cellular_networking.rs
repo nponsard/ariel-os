@@ -29,11 +29,11 @@ pub struct PdnAuth<'a> {
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub enum AuthenticationProtocol {
-    /// No authentication
+    /// No authentication.
     None,
-    /// PAP
+    /// PAP.
     Pap,
-    /// CHAP
+    /// CHAP.
     Chap,
 }
 
@@ -41,13 +41,13 @@ pub enum AuthenticationProtocol {
 #[derive(Clone, Copy, PartialEq, Debug)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub enum PdpType {
-    /// IPv4
+    /// IPv4.
     Ip,
-    /// IPv6
+    /// IPv6.
     IpV6,
-    /// Dual IP stack
+    /// Dual IP stack.
     IpV4V6,
-    /// Non-IP data
+    /// Non-IP data.
     NonIp,
 }
 
@@ -55,8 +55,8 @@ pub enum PdpType {
 #[derive(Debug, Clone)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub struct PdnCredentials<'a> {
-    /// Username
+    /// Username.
     pub username: &'a str,
-    /// Password
+    /// Password.
     pub password: &'a str,
 }
