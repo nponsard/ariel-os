@@ -13,7 +13,7 @@ permissions: {}
 jobs:
   build:
     # Only run this job if the Build workflow completed successfully.
-    if: github.event.workflow_run.conclusion == 'success'
+    # if: github.event.workflow_run.conclusion == 'success'
     permissions:
       pull-requests: write
     runs-on: ubuntu-24.04
