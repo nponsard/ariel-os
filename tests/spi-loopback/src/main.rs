@@ -21,10 +21,6 @@ use ariel_os::{
 use embassy_sync::mutex::Mutex;
 use embedded_hal_async::spi::SpiDevice as _;
 
-pub static SPI_BUS: once_cell::sync::OnceCell<
-    Mutex<embassy_sync::blocking_mutex::raw::CriticalSectionRawMutex, hal::spi::main::Spi>,
-> = once_cell::sync::OnceCell::new();
-
 #[ariel_os::task(autostart, peripherals)]
 async fn main(peripherals: pins::Peripherals) {
     let mut spi_config = hal::spi::main::Config::default();
@@ -43,11 +39,10 @@ async fn main(peripherals: pins::Peripherals) {
         peripherals.spi_mosi,
         spi_config,
     );
-
-    let _ = SPI_BUS.set(Mutex::new(spi_bus));
+    let spi_bus = Mutex::new(spi_bus);
 
     let cs_output = gpio::Output::new(peripherals.spi_cs, gpio::Level::High);
-    let mut spi_device = SpiDevice::new(SPI_BUS.get().unwrap(), cs_output);
+    let mut spi_device = SpiDevice::new(&spi_bus, cs_output);
 
     let out = [0u8, 1, 2, 3, 4, 5, 6, 7];
     let mut in_ = [0u8; 8];
