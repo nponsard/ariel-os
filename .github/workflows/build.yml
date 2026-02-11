@@ -293,7 +293,8 @@ jobs:
     name: Final Results
     needs: [build, check-labels]
     steps:
-      - run: |
+      - name: Check if build jobs succeeded
+        run: |
           result="${{ needs.build.result }}"
           if [[ $result == "success" || $result == "skipped" ]]; then
             exit 0
@@ -301,6 +302,14 @@ jobs:
             exit 1
           fi
 
+      - name: Check if check-labels succeeded
+        run: |
+          result="${{ needs.check-labels.result }}"
+          if [[ $result == "success" ]]; then
+            exit 0
+          else
+            exit 1
+          fi
       - name: Report nightly failure
         if: failure() && github.event_name == 'schedule' && github.repository == 'ariel-os/ariel-os'
         uses: s3krit/matrix-message-action@70ad3fb812ee0e45ff8999d6af11cafad11a6ecf # v0.0.3
