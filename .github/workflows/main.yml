@@ -232,6 +232,7 @@ jobs:
             --features "
                 embassy-nrf/nrf9160-s,
                 embassy-net/dns,
+                embassy-net/medium-ethernet,
                 embassy-net/medium-ip,
                 embassy-net/multicast,
                 embassy-net/proto-ipv4,
