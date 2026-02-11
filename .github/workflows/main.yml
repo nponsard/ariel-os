@@ -235,7 +235,8 @@ jobs:
                 i2c,
                 ipv4,
                 ipv6,
-                ltem-nrf-modem
+                ltem-nrf-modem,
+                net,
                 nrf91-modem,
                 spi,
                 uart,
