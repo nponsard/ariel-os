@@ -97,7 +97,7 @@ pub async fn control_task(
 ///
 /// # Panics
 /// This will never panic, the size of Vec from embassy-net is larger than the
-/// size of the Vec from nrf-modem
+/// size of the Vec from nrf-modem.
 #[must_use]
 fn status_to_config(status: &Status) -> embassy_net::Config {
     #[cfg(feature = "ipv4")]
