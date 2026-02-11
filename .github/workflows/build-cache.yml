@@ -93,6 +93,17 @@ jobs:
         if: steps.should-skip.outputs.result != 'true' && ( steps.day.outputs.day == '7' || inputs.clear_cache )
         run: echo "FALLBACK_KEY=none" >> "$GITHUB_ENV"
 
+      # Allows to reuse more cache
+      - name: Touch file time to commits time
+        if: steps.should-skip.outputs.result != 'true'
+        # https://stackoverflow.com/questions/21735435/git-clone-changes-file-modification-time
+        run: |
+          git ls-tree -r --name-only HEAD | while read filename; do
+            unixtime=$(git log -1 --format="%at" -- "${filename}")
+            touchtime=$(date -d @$unixtime +'%Y%m%d%H%M.%S')
+            touch -t ${touchtime} "${filename}"
+          done
+
       - name: Cache with post-job cleanup
         if: steps.should-skip.outputs.result != 'true'
         uses: gacts/run-and-post-run@81b6ce503cde93862cec047c54652e45c5dca991 # v1
