@@ -95,7 +95,10 @@ The following steps must be followed when preparing a new release of `ariel-os`:
    The title of the PR updating the changelog should start with `chore(release):` (so it could automatically be ignored by tools later).
 1. Create a git tag in the format `v{version}`.
 1. No `ariel-os*` crates are currently published on [crates.io][crates-io].
+1. Update the templates in [`ariel-os-hello`][ariel-os-hello-repo] (including the lockfile) and [`ariel-os-template`][ariel-os-template-repo] to use the new tag.
 
+[ariel-os-hello-repo]: https://github.com/ariel-os/ariel-os-hello
+[ariel-os-template-repo]: https://github.com/ariel-os/ariel-os-template
 [issue-label-breaking]: https://github.com/ariel-os/ariel-os/issues?q=state%3Aopen%20label%3Abreaking
 [issue-label-changelog-highlight]: https://github.com/ariel-os/ariel-os/issues?q=state%3Aopen%20label%3Achangelog%3Ahighlight
 [issue-label-changelog-skip]: https://github.com/ariel-os/ariel-os/issues?q=state%3Aopen%20label%3Achangelog%3Askip
