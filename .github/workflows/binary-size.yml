@@ -4,14 +4,15 @@ name: Check binary size
 on:
   workflow_run:
     workflows:
-      - CI
+      - PR dependencies
     types:
       - completed
+      - requested
 
 permissions: {}
 
 jobs:
-  build:
+  size:
     # Only run this job if the Build workflow completed successfully.
     # if: github.event.workflow_run.conclusion == 'success'
     # permissions:
