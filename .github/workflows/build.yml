@@ -46,7 +46,6 @@ jobs:
         with:
           result-encoding: string
           script: |
-            return "ci-build:nrf";
             const commitId = "${{ steps.get-commit-id.outputs.commit_id }}";
             console.log(`Commit ID: ${commitId}`);
             const { data: { items } } = await github.rest.search.issuesAndPullRequests({
