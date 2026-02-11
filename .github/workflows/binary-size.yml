@@ -3,8 +3,10 @@ name: Check binary size
 # Execute this workflow after the "Build" workflow has completed.
 on:
   workflow_run:
-    workflows: ["Build"]
-    types: [completed]
+    workflows:
+      - Build
+    types:
+      - completed
 
 permissions: {}
 
