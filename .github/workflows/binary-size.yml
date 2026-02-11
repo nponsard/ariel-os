@@ -4,9 +4,9 @@ name: Check binary size
 on:
   workflow_run:
     workflows:
-      - Build
-    # types:
-    #   - completed
+      - CI
+    types:
+      - completed
 
 permissions: {}
 
