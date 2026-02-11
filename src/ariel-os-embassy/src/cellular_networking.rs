@@ -22,15 +22,37 @@ const fn auth_protocol_from_str(str: &str) -> Option<AuthenticationProtocol> {
         None
     }
 }
-const PIN: Option<&'static str> = option_env!("CONFIG_SIM_PIN");
+const PIN: Option<&'static str> = {
+    let pin = option_env!("CONFIG_SIM_PIN");
+    if let Some(pin) = pin
+        && !const_str::is_ascii!(pin)
+    {
+        panic!("CONFIG_SIM_PIN must only contain ASCII characters")
+    }
+    pin
+};
+
 const CONFIG: PdConfig<'static> = {
     let apn = option_env!("CONFIG_CELLULAR_PDN_APN");
     let authentication_protocol = option_env!("CONFIG_CELLULAR_PDN_AUTHENTICATION_PROTOCOL");
     let username = option_env!("CONFIG_CELLULAR_PDN_USERNAME");
     let password = option_env!("CONFIG_CELLULAR_PDN_PASSWORD");
 
+    if let Some(apn) = apn
+        && !const_str::is_ascii!(apn)
+    {
+        panic!("CONFIG_CELLULAR_PDN_APN must only contain ASCII characters")
+    }
+
     let credentials = if let Some(username) = username {
         if let Some(password) = password {
+            if !const_str::is_ascii!(password) {
+                panic!("CONFIG_CELLULAR_PDN_PASSWORD must only contain ASCII characters");
+            }
+            if !const_str::is_ascii!(username) {
+                panic!("CONFIG_CELLULAR_PDN_USERNAME must only contain ASCII characters");
+            }
+
             Some(PdnCredentials { username, password })
         } else {
             panic!(
