@@ -231,9 +231,13 @@ jobs:
             --locked
             --features "
                 embassy-nrf/nrf9160-s,
+                embassy-net/dns,
                 embassy-net/medium-ip,
+                embassy-net/multicast,
                 embassy-net/proto-ipv4,
                 embassy-net/proto-ipv6,
+                embassy-net/tcp,
+                embassy-net/udp,
                 external-interrupts,
                 i2c,
                 ipv4,
