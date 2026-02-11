@@ -119,6 +119,7 @@ jobs:
             --locked
             --features "
                 ariel-os-sensors/max-sample-min-count-12,
+                ariel-os-embassy/cellular-networking,
                 ble,
                 coap,
                 coap-transport-udp,
