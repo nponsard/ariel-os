@@ -16,6 +16,14 @@ ariel_os::hal::define_peripherals!(Peripherals {
     i2c_sda: PB7
 });
 
+#[cfg(context = "st-nucleo-f303re")]
+pub type SensorI2c = i2c::controller::I2C1;
+#[cfg(context = "st-nucleo-f303re")]
+ariel_os::hal::define_peripherals!(Peripherals {
+    i2c_scl: PB8, // SCL/D15 on silkscreen
+    i2c_sda: PB9  // SDA/D14 on silkscreen
+});
+
 // This is the I2C bus that the onboard sensors are connected to.
 #[cfg(context = "st-steval-mkboxpro")]
 pub type SensorI2c = i2c::controller::I2C1;

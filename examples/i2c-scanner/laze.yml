@@ -5,4 +5,5 @@ apps:
       - bbc-microbit-v2
       - heltec-wifi-lora-32-v3
       - st-nucleo-f042k6
+      - st-nucleo-f303re
       - st-steval-mkboxpro
