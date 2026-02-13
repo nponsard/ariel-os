@@ -4323,8 +4323,9 @@ checksum = "aa07b0722c63805057dec824444fdc814bdfd30d1c782a3a8f63bbcf67c4ed1c"
 
 [[package]]
 name = "nrf-modem"
-version = "0.9.2"
-source = "git+https://github.com/nponsard/nrf-modem?rev=6ef8653b51302a7379b4625d7fbbf77944d70340#6ef8653b51302a7379b4625d7fbbf77944d70340"
+version = "0.10.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "332119e260ae4f4a411ac875d649a3595230457651aab6065c29afd3a0d9d3e0"
 dependencies = [
  "arrayvec",
  "at-commands",
@@ -4336,7 +4337,7 @@ dependencies = [
  "embassy-net-driver-channel",
  "embassy-sync 0.7.2",
  "embassy-time",
- "embedded-io-async 0.6.1",
+ "embedded-io-async 0.7.0",
  "futures",
  "grounded",
  "heapless 0.8.0",
