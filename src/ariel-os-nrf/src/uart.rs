@@ -4,7 +4,9 @@
 
 use portable_atomic::{AtomicBool, Ordering};
 
-use ariel_os_embassy_common::{impl_async_uart_for_driver_enum, uart::ConfigError};
+use ariel_os_embassy_common::{
+    impl_async_uart_bufread_for_driver_enum, impl_async_uart_for_driver_enum, uart::ConfigError,
+};
 use embassy_nrf::{
     bind_interrupts,
     buffered_uarte::{BufferedUarte, InterruptHandler},
@@ -321,6 +323,8 @@ macro_rules! define_uart_drivers {
         }
 
         impl_async_uart_for_driver_enum!(Uart, $( $peripheral ),*);
+
+        impl_async_uart_bufread_for_driver_enum!(Uart, $( $peripheral ),*);
     }
 }
 
