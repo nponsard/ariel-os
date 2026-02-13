@@ -28,6 +28,7 @@
 - [ST B-L475E-IOT01A](./st-b-l475e-iot01a.md)
 - [ST NUCLEO-C031C6](./st-nucleo-c031c6.md)
 - [ST NUCLEO-F042K6](./st-nucleo-f042k6.md)
+- [ST NUCLEO-F303RE](./st-nucleo-f303re.md)
 - [ST NUCLEO-F401RE](./st-nucleo-f401re.md)
 - [ST NUCLEO-F411RE](./st-nucleo-f411re.md)
 - [ST NUCLEO-H753ZI](./st-nucleo-h753zi.md)
