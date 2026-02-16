@@ -56,7 +56,8 @@ threading = [
   "ariel-os-embassy/threading",
   "ariel-os-rt/threading",
 ]
-## Enables the internal executor's timer queue, required for timer support.
+## Enables timing functionality.
+## Currently: Additionally enables the HAL-specific time driver.
 time = ["ariel-os-embassy/time"]
 # Enables the [`random`] module.
 random = ["dep:ariel-os-random", "ariel-os-embassy/random"]
