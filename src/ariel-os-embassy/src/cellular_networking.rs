@@ -28,7 +28,7 @@ const PIN: Option<&'static str> = {
         assert!(
             const_str::is_ascii!(pin),
             "CONFIG_SIM_PIN must only contain ASCII characters"
-        )
+        );
     }
     pin
 };
@@ -43,7 +43,7 @@ const CONFIG: PdConfig<'static> = {
         assert!(
             const_str::is_ascii!(apn),
             "CONFIG_CELLULAR_PDN_APN must only contain ASCII characters"
-        )
+        );
     }
 
     let credentials = if let Some(username) = username {
@@ -87,11 +87,13 @@ const CONFIG: PdConfig<'static> = {
 };
 
 /// Returns the configuration to authenticate to the cell network.
-pub fn config() -> PdConfig<'static> {
+#[allow(dead_code, reason = "false positive during builds outside of laze")]
+pub(crate) fn config() -> PdConfig<'static> {
     CONFIG
 }
 
 /// Returns the pin, if set, for the SIM.
-pub fn pin() -> Option<&'static str> {
+#[allow(dead_code, reason = "false positive during builds outside of laze")]
+pub(crate) fn pin() -> Option<&'static str> {
     PIN
 }

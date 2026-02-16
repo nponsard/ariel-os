@@ -26,7 +26,7 @@ pub struct PdnAuth<'a> {
 }
 
 /// Authentication protocol to authenticate to the network provider.
-#[derive(Clone, Copy, Eq, PartialEq, Debug)]
+#[derive(Debug, Copy, Clone, PartialEq, Eq)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub enum AuthenticationProtocol {
     /// No authentication.
@@ -38,7 +38,7 @@ pub enum AuthenticationProtocol {
 }
 
 /// Which type of communication happens on this PDP.
-#[derive(Clone, Copy, Eq, PartialEq, Debug)]
+#[derive(Debug, Copy, Clone, PartialEq, Eq)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub enum PdpType {
     /// IPv4.
