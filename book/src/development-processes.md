@@ -80,6 +80,7 @@ The following steps must be followed when preparing a new release of `ariel-os`:
 1. Update the roadmap if necessary.
 1. Check whether deprecated items should be removed, if any.
 1. Update the version numbers of the crates that need to be bumped.
+1. Update the [ariel-os docs repository][ariel-os-docs-repo] with the new docs.
 
     > [!IMPORTANT]
     > - The crates in the following directories are managed separately and their version numbers should *not* be bumped:
@@ -104,6 +105,7 @@ The following steps must be followed when preparing a new release of `ariel-os`:
 
 [ariel-os-hello-repo]: https://github.com/ariel-os/ariel-os-hello
 [ariel-os-template-repo]: https://github.com/ariel-os/ariel-os-template
+[ariel-os-docs-repo]: https://github.com/ariel-os/docs
 [issue-label-breaking]: https://github.com/ariel-os/ariel-os/issues?q=state%3Aopen%20label%3Abreaking
 [issue-label-changelog-highlight]: https://github.com/ariel-os/ariel-os/issues?q=state%3Aopen%20label%3Achangelog%3Ahighlight
 [issue-label-changelog-skip]: https://github.com/ariel-os/ariel-os/issues?q=state%3Aopen%20label%3Achangelog%3Askip
