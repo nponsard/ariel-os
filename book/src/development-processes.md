@@ -80,7 +80,6 @@ The following steps must be followed when preparing a new release of `ariel-os`:
 1. Update the roadmap if necessary.
 1. Check whether deprecated items should be removed, if any.
 1. Update the version numbers of the crates that need to be bumped.
-1. Update the [ariel-os docs repository][ariel-os-docs-repo] with the new docs.
 
     > [!IMPORTANT]
     > - The crates in the following directories are managed separately and their version numbers should *not* be bumped:
@@ -99,6 +98,8 @@ The following steps must be followed when preparing a new release of `ariel-os`:
 
    The above command will output entries in Markdown format that need to be manually made to fit into the existing Keep-a-Changelog template.
    The title of the PR updating the changelog should start with `chore(release):` (so it could automatically be ignored by other tools later).
+
+1. Update the [ariel-os docs repository][ariel-os-docs-repo] with the new docs.
 1. Create a git tag in the format `v{version}`.
 1. No `ariel-os*` crates are currently published on [crates.io][crates-io].
 1. Update the templates in [`ariel-os-hello`][ariel-os-hello-repo] (including the lockfile) and [`ariel-os-template`][ariel-os-template-repo] to use the new tag.
