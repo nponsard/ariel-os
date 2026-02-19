@@ -24,7 +24,9 @@ Ariel OS uses [sbd][sbd] (Structured Board Description) files to describe board
   - It is usually best to copy and adapt an existing one.
   - `chip`: The board's chip, needs to correspond to an existing laze context in `laze-project.yml`.
 - In `doc/support_matrix.yml`:
-  - Add an entry under `boards`. Include a link to a `web.archive.org` snapshot that describes the board.
+  - Add an entry under `builders`.
+  - Add an entry under `boards`, that references that new builder.
+    Include a link to a `web.archive.org` snapshot that describes the board.
   - Update the generated support pages from the book using `laze build update-book`.
 - Some MCU families need extra steps, see [Extra steps for some MCU families](#extra-steps-for-some-mcu-families).
 
