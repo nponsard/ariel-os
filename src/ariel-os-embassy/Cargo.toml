@@ -103,9 +103,9 @@ random = ["dep:ariel-os-random", "dep:rand_core"]
 hwrng = ["ariel-os-hal/hwrng"]
 
 ## Enables support for IPv4.
-ipv4 = ["embassy-net?/proto-ipv4"]
+ipv4 = ["ariel-os-hal/ipv4", "embassy-net?/proto-ipv4"]
 ## Enables support for IPv6.
-ipv6 = ["embassy-net?/proto-ipv6"]
+ipv6 = ["ariel-os-hal/ipv6", "embassy-net?/proto-ipv6"]
 ## Enables support for DHCPv4.
 dhcpv4 = ["embassy-net?/dhcpv4"]
 ## Enables support for TCP.
@@ -136,6 +136,14 @@ wifi-esp = ["ariel-os-hal/wifi-esp", "net", "wifi"]
 
 eth = []
 eth-stm32 = ["ariel-os-hal/eth-stm32", "eth", "net"]
+
+ltem-nrf-modem = [
+  "ariel-os-hal/ltem-nrf-modem",
+  "cellular-networking",
+  "embassy-net/medium-ip",
+  "net",
+  "nrf91-modem",
+]
 
 ble = [
   "dep:trouble-host",
