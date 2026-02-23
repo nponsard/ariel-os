@@ -43,6 +43,7 @@ ariel-os-threads = { path = "../ariel-os-threads", optional = true }
 ariel-os-utils = { workspace = true }
 
 heapless = "0.9.1"
+const-str = { workspace = true, optional = true }
 once_cell = { workspace = true }
 trouble-host = { workspace = true, optional = true }
 usbd-hid = { version = "0.8.2", optional = true }
@@ -122,6 +123,12 @@ multicast = ["embassy-net?/multicast"]
 storage = ["dep:ariel-os-storage", "ariel-os-hal/storage", "time"]
 
 debug-uart = []
+
+# Enables cellular networking configuration.
+cellular-networking = [
+  "dep:const-str",
+  "ariel-os-embassy-common/cellular-networking",
+]
 
 wifi = []
 wifi-cyw43 = ["ariel-os-hal/wifi-cyw43", "net", "wifi"]
