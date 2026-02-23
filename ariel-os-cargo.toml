@@ -46,3 +46,6 @@ esp-radio-rtos-driver = { git = "https://github.com/ariel-os/esp-hal", rev = "53
 esp-rom-sys = { git = "https://github.com/ariel-os/esp-hal", rev = "531c629afdd80ea464682ce7f4db8baed97967a6" }
 esp-sync = { git = "https://github.com/ariel-os/esp-hal", rev = "531c629afdd80ea464682ce7f4db8baed97967a6" }
 xtensa-lx-rt = { git = "https://github.com/ariel-os/esp-hal", rev = "531c629afdd80ea464682ce7f4db8baed97967a6" }
+
+# branch = fix/ipv6-parsing
+nrf-modem = { git = "https://github.com/nponsard/nrf-modem", rev = "5e25e5b2b67573d055563812a47c8a4c4aa98d07" }
