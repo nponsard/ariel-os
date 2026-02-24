@@ -42,6 +42,12 @@ who = "chrysn <chrysn@fsfe.org>"
 criteria = "safe-to-deploy"
 version = "0.1.0"
 
+[[audits.litrs]]
+who = "Antoine Lavandier <antoine.lavandier@inria.fr>"
+criteria = "safe-to-deploy"
+version = "1.0.0"
+notes = "No new unsafe functions, most of the changes are formatting and the new functional code seems reasonable to me"
+
 [[audits.log]]
 who = "chrysn <chrysn@fsfe.org>"
 criteria = "safe-to-deploy"
