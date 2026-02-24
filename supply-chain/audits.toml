@@ -360,6 +360,12 @@ user-id = 3618 # David Tolnay (dtolnay)
 start = "2019-04-23"
 end = "2026-09-01"
 
+[[trusted.quote]]
+criteria = "safe-to-deploy"
+user-id = 3618 # David Tolnay (dtolnay)
+start = "2019-04-09"
+end = "2027-02-24"
+
 [[trusted.regex]]
 criteria = "safe-to-deploy"
 user-id = 189 # Andrew Gallant (BurntSushi)

@@ -313,6 +313,13 @@ user-id = 3618
 user-login = "dtolnay"
 user-name = "David Tolnay"
 
+[[publisher.quote]]
+version = "1.0.43"
+when = "2026-01-05"
+user-id = 3618
+user-login = "dtolnay"
+user-name = "David Tolnay"
+
 [[publisher.regex]]
 version = "1.11.1"
 when = "2024-10-24"
@@ -3346,6 +3353,7 @@ delta = "0.10.3 -> 0.10.4"
 notes = "Adds panics to prevent a block size of zero from causing unsoundness."
 aggregated-from = "https://raw.githubusercontent.com/zcash/zcash/master/qa/supply-chain/audits.toml"
 
+<<<<<<< HEAD
 [[audits.zcash.audits.darling_macro]]
 who = "Jack Grigg <jack@electriccoin.co>"
 criteria = "safe-to-deploy"
@@ -3358,6 +3366,8 @@ criteria = "safe-to-deploy"
 delta = "0.2.11 -> 0.2.12"
 aggregated-from = "https://raw.githubusercontent.com/zcash/wallet/main/supply-chain/audits.toml"
 
+=======
+>>>>>>> f059cf92 (chore(vetting): renew trust in dtolnay for quote 1.0.44)
 [[audits.zcash.audits.errno]]
 who = "Jack Grigg <jack@electriccoin.co>"
 criteria = "safe-to-deploy"

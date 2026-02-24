@@ -1170,6 +1170,10 @@ criteria = "safe-to-deploy"
 version = "3.3.0"
 criteria = "safe-to-deploy"
 
+[[exemptions.proc-macro-error]]
+version = "1.0.4"
+criteria = "safe-to-deploy"
+
 [[exemptions.r-efi]]
 version = "5.2.0"
 criteria = "safe-to-deploy"
