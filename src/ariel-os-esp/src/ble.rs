@@ -12,6 +12,7 @@ use esp_radio_rtos_driver::{
 };
 use static_cell::StaticCell;
 use trouble_host::prelude::DefaultPacketPool;
+use crate::semaphore;
 
 use ariel_os_embassy_common::cell::SameExecutorCell;
 
@@ -68,8 +69,9 @@ pub async fn ble_stack() -> &'static mut BleStack {
         .expect("Stack needs to be taken from main executor")
 }
 
+// Should be be factored so its only called once when using wifi and bluetooth
 register_scheduler_implementation!(static SCHEDULER: ArielScheduler = ArielScheduler{});
 register_wait_queue_implementation!(ArielWaitQueue);
-register_semaphore_implementation!(CompatSemaphore);
+register_semaphore_implementation!(semaphore::CompatSemaphore);
 register_timer_implementation!(CompatTimer);
 register_queue_implementation!(CompatQueue);
