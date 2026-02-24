@@ -379,6 +379,7 @@ contexts:
       - ?esp-println
     provides:
       - has_hwrng
+      - has_ble_esp
     env:
       esp_wifi_heapsize_required: $(72*1024)
       RUSTFLAGS:
