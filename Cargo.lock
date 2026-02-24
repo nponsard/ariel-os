@@ -228,7 +228,7 @@ dependencies = [
  "embedded-io-async 0.6.1",
  "embedded-nal-async",
  "embedded-nal-coap",
- "heapless 0.8.0",
+ "heapless 0.9.1",
  "hexlit",
  "lakers",
  "lakers-crypto-rustcrypto",
@@ -298,7 +298,7 @@ dependencies = [
  "embedded-hal-async",
  "embedded-io 0.6.1",
  "embedded-io-async 0.6.1",
- "heapless 0.8.0",
+ "heapless 0.9.1",
  "linkme",
  "once_cell",
  "portable-atomic",
@@ -401,7 +401,7 @@ name = "ariel-os-macros"
 version = "0.3.0"
 dependencies = [
  "ariel-os",
- "heapless 0.8.0",
+ "heapless 0.9.1",
  "proc-macro-crate",
  "proc-macro2",
  "quote",
@@ -3064,7 +3064,7 @@ dependencies = [
  "ariel-os",
  "ariel-os-boards",
  "arrayvec",
- "heapless 0.8.0",
+ "heapless 0.9.1",
  "serde",
 ]
 
@@ -3571,6 +3571,7 @@ checksum = "b1edcd5a338e64688fbdcb7531a846cfd3476a54784dcb918a0844682bc7ada5"
 dependencies = [
  "defmt 1.0.1",
  "hash32 0.3.1",
+ "serde",
  "stable_deref_trait",
 ]
 
