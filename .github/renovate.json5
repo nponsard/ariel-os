@@ -73,7 +73,8 @@
     }
   ],
   // Add a 'renovate' label to every PR for the matrix bot
-  "addLabels": ["renovate"]
+  // and add 'changelog:skip' label for the check-changelog CI job
+  "addLabels": ["renovate", "changelog:skip"]
   // TODO: uncomment once confident that renovates works properly
   // "patch": {
   //   "automerge": true
