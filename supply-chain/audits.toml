@@ -16,6 +16,28 @@ who = "chrysn <chrysn@fsfe.org>"
 criteria = "safe-to-deploy"
 version = "0.2.1"
 
+[[audits.const-str]]
+who = "Antoine Lavandier <antoine.lavandier@inria.fr>"
+criteria = "safe-to-deploy"
+delta = "0.7.0 -> 0.7.1"
+notes = """
+90+% of the changes are added tests or repository structure changes.
+The rest is:
+- Compare -> Simple safe code
+- Repeat -> No Safety comment but the conditions that the bytes are valid are ensure by them coming from a &str
+- ToByteArray -> Simple safe code
+- ToCharArray -> Simple safe code
+- Unwrap -> Simple safe code
+- ascii.rs -> Simple safe code
+- CharEncodeUTF16 -> copied from RustLang + otherwise simple safe code
+"""
+
+[[audits.const-str]]
+who = "Antoine Lavandier <antoine.lavandier@inria.fr>"
+criteria = "safe-to-deploy"
+delta = "0.7.1 -> 1.1.0"
+notes = "No meaningful changes in the rust code or the dependencies"
+
 [[audits.embassy-net-tuntap]]
 who = "chrysn <chrysn@fsfe.org>"
 criteria = "safe-to-deploy"
