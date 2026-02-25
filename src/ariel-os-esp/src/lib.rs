@@ -12,6 +12,8 @@ mod app_desc {
 }
 
 #[cfg(any(feature = "ble-esp", feature = "wifi"))]
+mod radio;
+#[cfg(any(feature = "ble-esp", feature = "wifi"))]
 mod scheduler;
 #[cfg(any(feature = "ble-esp", feature = "wifi"))]
 mod semaphore;
