@@ -155,6 +155,11 @@ builders:
   provides:
   - has_buttons
   - has_leds
+- name: seeedstudio-xiao-nrf52840-plus
+  parent: nrf52840
+  provides:
+  - has_leds
+  - has_usb_device_port
 - name: st-b-l475e-iot01a
   parent: stm32l475vg
   provides:
