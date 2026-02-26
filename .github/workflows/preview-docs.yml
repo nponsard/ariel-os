@@ -5,7 +5,7 @@ permissions:
   pull-requests: write
 
 on:
-  workflow_run:
+  workflow_run: # zizmor: ignore[dangerous-triggers]
     workflows: ["Deploy docs"]
     types:
       - completed
