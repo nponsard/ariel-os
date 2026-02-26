@@ -49,7 +49,7 @@ jobs:
         uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8
         with:
           result-encoding: string
-          script: |
+          script: | # zizmor: ignore[template-injection] input is always a commit SHA
             const commitId = "${{ steps.get-commit-id.outputs.commit_id }}";
             console.log(`Commit ID: ${commitId}`);
             const { data: { items } } = await github.rest.search.issuesAndPullRequests({
@@ -171,7 +171,7 @@ jobs:
 
             echo "$hal_contexts" | tr ',' '\n' | grep -v "^context::${1}$" | paste -sd ','
           }
-          case '${{ needs.check-labels.outputs.label }}' in
+          case "${LABEL}" in
             'ci-build:esp')
               echo "NEEDS_XTENSA_TOOLCHAIN=1" >> "$GITHUB_ENV"
               echo "LAZE_DISABLE=$(allow_context esp)" >> "$GITHUB_ENV"
@@ -202,6 +202,8 @@ jobs:
               exit 1
               ;;
           esac
+        env:
+          LABEL: ${{ needs.check-labels.outputs.label }}
 
       - id: get_toolchain
         if: steps.should-skip.outputs.result != 'true'
@@ -303,12 +305,14 @@ jobs:
     needs: [build, check-labels]
     steps:
       - run: |
-          result="${{ needs.build.result }}"
+          result="${BUILD_RESULT}"
           if [[ $result == "success" || $result == "skipped" ]]; then
             exit 0
           else
             exit 1
           fi
+        env:
+          BUILD_RESULT: ${{ needs.build.result }}
 
       - name: Report nightly failure
         if: failure() && github.event_name == 'schedule' && github.repository == 'ariel-os/ariel-os'
