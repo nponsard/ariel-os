@@ -4,6 +4,8 @@ on:
   pull_request:
   merge_group:
 
+permissions: {}
+
 jobs:
   block-fixup:
     if: github.event_name != 'merge_group'

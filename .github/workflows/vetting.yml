@@ -5,6 +5,8 @@ on:
       - main
   merge_group:
 
+permissions: {}
+
 jobs:
   cargo-vet:
     runs-on: ubuntu-latest

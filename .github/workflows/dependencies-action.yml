@@ -7,6 +7,8 @@ on:
     types: [synchronize]
   merge_group:
 
+permissions: {}
+
 jobs:
   check_dependencies:
     if: github.event_name != 'merge_group'

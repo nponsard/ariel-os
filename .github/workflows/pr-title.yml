@@ -4,6 +4,8 @@ on:
   pull_request:
     types: [opened, edited, reopened]
 
+permissions: {}
+
 jobs:
   pr-title:
     name: Lint PR Title
