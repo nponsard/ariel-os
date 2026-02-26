@@ -1322,6 +1322,7 @@ modules:
       - nrf91-modem
     provides_unique:
       - network_device
+      - network-config-ipv6
     env:
       global:
         FEATURES:
