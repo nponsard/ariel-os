@@ -3,11 +3,11 @@ use ariel_os_embassy_common::cellular_networking::{
 };
 
 #[cfg(all(feature = "ipv4", feature = "ipv6"))]
-const PDP_TYPE: PdpType = PdpType::IpV4V6;
+const PDP_TYPE: PdpType = PdpType::Ipv4v6;
 #[cfg(all(feature = "ipv4", not(feature = "ipv6")))]
 const PDP_TYPE: PdpType = PdpType::Ip;
 #[cfg(all(not(feature = "ipv4"), feature = "ipv6"))]
-const PDP_TYPE: PdpType = PdpType::IpV4V6;
+const PDP_TYPE: PdpType = PdpType::Ipv6;
 #[cfg(not(any(feature = "ipv4", feature = "ipv6")))]
 const PDP_TYPE: PdpType = PdpType::NonIp;
 
