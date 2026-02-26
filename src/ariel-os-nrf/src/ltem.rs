@@ -31,19 +31,18 @@ async fn modem_task(runner: Runner<'static>) -> ! {
 }
 
 fn convert_cellular_networking_config(
-    config: cellular_networking::PdConfig<'static>,
+    config: &cellular_networking::PdConfig<'static>,
 ) -> PdConfig<'static> {
     let apn = config.apn.map(str::as_bytes);
     let pdn_auth = config.pdn_auth.map(|auth_config| {
-        let auth_prot = match auth_config.authentication_protocol {
-            cellular_networking::AuthenticationProtocol::None => AuthProt::None,
-            cellular_networking::AuthenticationProtocol::Pap => AuthProt::Pap,
-            cellular_networking::AuthenticationProtocol::Chap => AuthProt::Chap,
+        let (auth_prot, credentials) = match auth_config {
+            cellular_networking::PdnAuthentication::None => (AuthProt::None, None),
+            cellular_networking::PdnAuthentication::Pap(creds) => (AuthProt::Pap, Some(creds)),
+            cellular_networking::PdnAuthentication::Chap(creds) => (AuthProt::Chap, Some(creds)),
         };
 
-        let auth = auth_config
-            .credentials
-            .map(|c| (c.username.as_bytes(), c.password.as_bytes()));
+        let auth = credentials.map(|c| (c.username.as_bytes(), c.password.as_bytes()));
+
         PdnAuth { auth, auth_prot }
     });
 
@@ -76,7 +75,7 @@ pub async fn control_task(
 ) {
     control
         .configure(
-            &convert_cellular_networking_config(config),
+            &convert_cellular_networking_config(&config),
             pin.map(str::as_bytes),
         )
         .await
