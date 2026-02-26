@@ -1,5 +1,5 @@
 use ariel_os_embassy_common::cellular_networking::{
-    AuthenticationProtocol, PdConfig, PdnAuth, PdnCredentials, PdpType,
+    PdConfig, PdnAuthentication, PdnCredentials, PdpType,
 };
 
 #[cfg(all(feature = "ipv4", feature = "ipv6"))]
@@ -11,17 +11,38 @@ const PDP_TYPE: PdpType = PdpType::Ipv6;
 #[cfg(not(any(feature = "ipv4", feature = "ipv6")))]
 const PDP_TYPE: PdpType = PdpType::NonIp;
 
-const fn auth_protocol_from_str(str: &str) -> Option<AuthenticationProtocol> {
+/// Internal function to parse the `CONFIG_CELLULAR_PDN_AUTHENTICATION_PROTOCOL` string and match it with the credentials.
+///
+/// # Panics
+///
+/// To indicate an invalid configuration. This is meant to panic at build time.
+const fn auth_protocol_from_str<'a>(
+    str: &str,
+    credentials: Option<PdnCredentials<'a>>,
+) -> Option<PdnAuthentication<'a>> {
     if const_str::equal!(str, "NONE") {
-        Some(AuthenticationProtocol::None)
+        Some(PdnAuthentication::None)
     } else if const_str::equal!(str, "PAP") {
-        Some(AuthenticationProtocol::Pap)
+        if let Some(credentials) = credentials {
+            Some(PdnAuthentication::Pap(credentials))
+        } else {
+            panic!(
+                "PAP authentification needs CONFIG_CELLULAR_PDN_USERNAME and CONFIG_CELLULAR_PDN_PASSWORD to be set"
+            )
+        }
     } else if const_str::equal!(str, "CHAP") {
-        Some(AuthenticationProtocol::Chap)
+        if let Some(credentials) = credentials {
+            Some(PdnAuthentication::Chap(credentials))
+        } else {
+            panic!(
+                "CHAP authentification needs CONFIG_CELLULAR_PDN_USERNAME and CONFIG_CELLULAR_PDN_PASSWORD to be set"
+            )
+        }
     } else {
         None
     }
 }
+
 const PIN: Option<&'static str> = {
     let pin = option_env!("CONFIG_SIM_PIN");
     if let Some(pin) = pin {
@@ -69,12 +90,10 @@ const CONFIG: PdConfig<'static> = {
     };
 
     let pdn_auth = if let Some(authentication_protocol) = authentication_protocol {
-        let authentication_protocol = auth_protocol_from_str(authentication_protocol)
-            .expect("Invalid value for CONFIG_CELLULAR_PDN_AUTHENTICATION_PROTOCOL");
-        Some(PdnAuth {
-            authentication_protocol,
-            credentials,
-        })
+        Some(
+            auth_protocol_from_str(authentication_protocol, credentials)
+                .expect("Invalid value for CONFIG_CELLULAR_PDN_AUTHENTICATION_PROTOCOL"),
+        )
     } else {
         None
     };

@@ -10,31 +10,21 @@ pub struct PdConfig<'a> {
     pub apn: Option<&'a str>,
     /// Desired authentication parameters for the Packet Data Network.
     /// Setting this to `None` will keep the modem's default.
-    pub pdn_auth: Option<PdnAuth<'a>>,
+    pub pdn_auth: Option<PdnAuthentication<'a>>,
     /// Packet Domain Protocol type.
     pub pdp_type: PdpType,
 }
 
-/// Authentication parameters for the Packet Data Network (PDN).
-#[derive(Debug, Clone)]
-#[cfg_attr(feature = "defmt", derive(defmt::Format))]
-pub struct PdnAuth<'a> {
-    /// Which protocol to use to authenticate with the provider.
-    pub authentication_protocol: AuthenticationProtocol,
-    /// Credentials, if necessary.
-    pub credentials: Option<PdnCredentials<'a>>,
-}
-
-/// Authentication protocol to authenticate to the network provider.
+/// Authentication protocol and parameters for the Packet Data Network (PDN).
 #[derive(Debug, Copy, Clone, PartialEq, Eq)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
-pub enum AuthenticationProtocol {
+pub enum PdnAuthentication<'a> {
     /// No authentication.
     None,
     /// PAP.
-    Pap,
+    Pap(PdnCredentials<'a>),
     /// CHAP.
-    Chap,
+    Chap(PdnCredentials<'a>),
 }
 
 /// Which type of communication happens on this PDP.
@@ -52,7 +42,7 @@ pub enum PdpType {
 }
 
 /// Credentials to authenticate to the network provider.
-#[derive(Debug, Clone)]
+#[derive(Debug, Copy, Clone, PartialEq, Eq)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub struct PdnCredentials<'a> {
     /// Username.
