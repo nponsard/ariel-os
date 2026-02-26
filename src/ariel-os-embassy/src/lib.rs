@@ -413,10 +413,6 @@ async fn init_task(mut peripherals: hal::OptionalPeripherals) {
                     ))
                     .unwrap();
             }
-
-            // Use the config so clippy doesn't complain
-            #[cfg(not(any(feature = "ltem-nrf-modem")))]
-            let (_, _) = (cellular_networking_config, sim_pin);
         }
     }
 

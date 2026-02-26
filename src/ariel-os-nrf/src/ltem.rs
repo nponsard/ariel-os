@@ -1,9 +1,11 @@
 use core::net::IpAddr;
 
 use embassy_executor::Spawner;
+#[cfg(feature = "ipv4")]
+use embassy_net::Ipv4Cidr;
 #[cfg(feature = "ipv6")]
 use embassy_net::Ipv6Cidr;
-use embassy_net::{Ipv4Cidr, Stack};
+use embassy_net::Stack;
 use heapless::Vec;
 use nrf_modem::embassy_net_modem::{
     NetDriver, Runner, State,
@@ -61,6 +63,7 @@ fn convert_cellular_networking_config(
 
 /// Task responsible of maintaining the connection status up to date.
 /// Also configures the modem when starting (if a `config` is provided)
+///
 /// # Panics
 ///
 /// When the configuration is invalid.
@@ -93,12 +96,24 @@ pub async fn control_task(
         .unwrap();
 }
 
+fn can_contain<TContained, TContainer, const N_CONTAINED: usize, const N_CONTAINER: usize>(
+    _: &heapless::Vec<TContained, N_CONTAINED>,
+) -> heapless::Vec<TContainer, N_CONTAINER> {
+    const {
+        assert!(
+            N_CONTAINER >= N_CONTAINED,
+            "embassy config cannot contain the maximum number of DNS servers"
+        );
+    };
+    Vec::new()
+}
+
 /// Creates an embassy-net config from a modem status update.
-///
-/// # Panics
-/// This will never panic, the size of Vec from embassy-net is larger than the
-/// size of the Vec from nrf-modem.
 #[must_use]
+#[expect(
+    clippy::missing_panics_doc,
+    reason = "will never panic at runtime, Vec capacity is checked at compile-time with can_contain()"
+)]
 fn status_to_config(status: &Status) -> embassy_net::Config {
     #[cfg(feature = "ipv4")]
     let v4_gateway = match status.gateway {
@@ -128,9 +143,11 @@ fn status_to_config(status: &Status) -> embassy_net::Config {
     };
 
     #[cfg(feature = "ipv4")]
-    let mut v4_dns_servers = Vec::new();
+    let mut v4_dns_servers = can_contain(&status.dns);
+
     #[cfg(feature = "ipv6")]
-    let mut v6_dns_servers = Vec::new();
+    let mut v6_dns_servers = can_contain(&status.dns);
+
     for dns in &status.dns {
         #[allow(unused, reason = "conditional compilation")]
         match dns {
@@ -185,7 +202,8 @@ fn status_to_config(status: &Status) -> embassy_net::Config {
 /// The control task needs to be spawned using [`control_task`].
 ///
 /// # Panics
-/// If the modem task cannot be spawned.
+///
+/// When called more than once (because it spawns a task that does not terminate).
 #[must_use]
 pub async fn init<'a>(spawner: Spawner) -> (NetworkDevice, &'a context::Control<'a>) {
     let (driver, control, runner) =
