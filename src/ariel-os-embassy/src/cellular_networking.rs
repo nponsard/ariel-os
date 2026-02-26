@@ -27,7 +27,7 @@ const fn auth_protocol_from_str<'a>(
             Some(PdnAuthentication::Pap(credentials))
         } else {
             panic!(
-                "PAP authentification needs CONFIG_CELLULAR_PDN_USERNAME and CONFIG_CELLULAR_PDN_PASSWORD to be set"
+                "PAP authentication needs CONFIG_CELLULAR_PDN_USERNAME and CONFIG_CELLULAR_PDN_PASSWORD to be set"
             )
         }
     } else if const_str::equal!(str, "CHAP") {
@@ -35,7 +35,7 @@ const fn auth_protocol_from_str<'a>(
             Some(PdnAuthentication::Chap(credentials))
         } else {
             panic!(
-                "CHAP authentification needs CONFIG_CELLULAR_PDN_USERNAME and CONFIG_CELLULAR_PDN_PASSWORD to be set"
+                "CHAP authentication needs CONFIG_CELLULAR_PDN_USERNAME and CONFIG_CELLULAR_PDN_PASSWORD to be set"
             )
         }
     } else {
