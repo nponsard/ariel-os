@@ -20,6 +20,8 @@ jobs:
     steps:
       - name: Check out repository code
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+        with:
+          persist-credentials: false
 
       - id: get_toolchain
         run: echo "toolchain=$(scripts/rust-toolchain.sh)" >> $GITHUB_OUTPUT
@@ -49,6 +51,8 @@ jobs:
     steps:
       - name: Check out repository code
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+        with:
+          persist-credentials: false
 
       # "Obfuscate" the search query with concatenation so it does not self-trigger.
       - name: Check for leftover occurrences of the old project name
@@ -288,6 +292,8 @@ jobs:
     steps:
       - name: Check out repository code
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+        with:
+          persist-credentials: false
 
       - id: get_toolchain
         run: echo "toolchain=$(scripts/rust-toolchain.sh)" >> $GITHUB_OUTPUT
@@ -400,6 +406,8 @@ jobs:
     steps:
       - name: Check out repository code
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+        with:
+          persist-credentials: false
 
       - name: rustfmt
         run: cargo fmt --check --all -- --config format_generated_files=false
@@ -410,6 +418,8 @@ jobs:
     steps:
       - name: Check out repository code
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+        with:
+          persist-credentials: false
 
       - name: yamllint
         uses: karancode/yamllint-github-action@master
@@ -423,6 +433,8 @@ jobs:
     steps:
       - name: Check out repository code
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+        with:
+          persist-credentials: false
 
       - name: Install taplo
         uses: taiki-e/install-action@d6e286fa45544157a02d45a43742857ebbc25d12 # v2
@@ -439,6 +451,8 @@ jobs:
     steps:
       - name: Check out repository code
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+        with:
+          persist-credentials: false
 
       - name: Install cargo-manifest-check
         uses: taiki-e/install-action@d6e286fa45544157a02d45a43742857ebbc25d12 # v2
@@ -454,6 +468,8 @@ jobs:
     steps:
       - name: Check out repository code
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+        with:
+          persist-credentials: false
 
       - name: Ruff
         uses: chartboost/ruff-action@e18ae971ccee1b2d7bbef113930f00c670b78da4 # v1
@@ -466,6 +482,8 @@ jobs:
     steps:
       - name: Check out repository code
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+        with:
+          persist-credentials: false
 
       - name: typos
         uses: crate-ci/typos@3a4d65230db538caabac6e156599c8ba8380ff07 # v1.43.1
@@ -513,6 +531,8 @@ jobs:
     steps:
       - name: Check out repository code
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+        with:
+          persist-credentials: false
 
       - name: Install sbd-gen
         uses: taiki-e/install-action@d6e286fa45544157a02d45a43742857ebbc25d12 # v2

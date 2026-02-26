@@ -30,6 +30,7 @@ jobs:
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
         with:
           fetch-depth: 2
+          persist-credentials: false
 
       # Get the second parent of the merge commit created by the `checkout`
       # action.
@@ -121,6 +122,8 @@ jobs:
 
       - name: Check out repository code
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+        with:
+          persist-credentials: false
 
       - name: Get tree hashes
         id: get-tree-hashes
