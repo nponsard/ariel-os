@@ -43,7 +43,6 @@ ariel-os-threads = { path = "../ariel-os-threads", optional = true }
 ariel-os-utils = { workspace = true }
 
 heapless = "0.9.1"
-once_cell = { workspace = true }
 trouble-host = { workspace = true, optional = true }
 usbd-hid = { version = "0.8.2", optional = true }
 

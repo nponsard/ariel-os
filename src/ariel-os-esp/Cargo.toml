@@ -46,7 +46,6 @@ esp-radio-rtos-driver = { workspace = true, default-features = false, features =
 esp-rom-sys = { workspace = true }
 esp-sync = { workspace = true, optional = true }
 fugit = { workspace = true, optional = true }
-once_cell = { workspace = true }
 paste = { workspace = true }
 static_cell = { workspace = true }
 
