@@ -639,7 +639,6 @@ dependencies = [
  "embassy-sync 0.7.2",
  "embassy-time",
  "embedded-storage-async",
- "once_cell",
  "postcard",
  "sequential-storage",
  "serde",
