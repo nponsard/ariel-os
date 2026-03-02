@@ -301,7 +301,6 @@ dependencies = [
  "embedded-io-async 0.6.1",
  "heapless 0.9.1",
  "linkme",
- "once_cell",
  "portable-atomic",
  "rand_core 0.9.3",
  "static_cell",
