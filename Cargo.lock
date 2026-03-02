@@ -355,7 +355,6 @@ dependencies = [
  "esp-rom-sys",
  "esp-sync",
  "fugit",
- "once_cell",
  "paste",
  "static_cell",
 ]
