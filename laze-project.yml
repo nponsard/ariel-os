@@ -588,7 +588,7 @@ contexts:
       PROBE_RS_CHIP: STM32F401RE
       RUSTFLAGS:
         - --cfg capability=\"async-flash-driver\"
-        - --cfg capability=\"hw/stm32-usb-synopsis\"
+        - --cfg capability=\"hw/stm32-usb-synopsys\"
 
   - name: stm32f411re
     parent: stm32
@@ -622,7 +622,7 @@ contexts:
       RUSTFLAGS:
         - --cfg capability=\"hw/stm32-dual-core\"
         - --cfg capability=\"hw/stm32-hash-rng\"
-        - --cfg capability=\"hw/stm32-usb-synopsis\"
+        - --cfg capability=\"hw/stm32-usb-synopsys\"
 
   - name: stm32h753zi
     parent: stm32
@@ -635,7 +635,7 @@ contexts:
       PROBE_RS_CHIP: STM32H753ZITx
       RUSTFLAGS:
         - --cfg capability=\"hw/stm32-hash-rng\"
-        - --cfg capability=\"hw/stm32-usb-synopsis\"
+        - --cfg capability=\"hw/stm32-usb-synopsys\"
 
   - name: stm32l475vg
     parent: stm32
@@ -648,7 +648,7 @@ contexts:
       PROBE_RS_CHIP: STM32L475VG
       RUSTFLAGS:
         - --cfg capability=\"hw/stm32-rng\"
-        - --cfg capability=\"hw/stm32-usb-synopsis\" # Needs an external 32.768 kHz crystal to have a stable clock
+        - --cfg capability=\"hw/stm32-usb-synopsys\" # Needs an external 32.768 kHz crystal to have a stable clock
 
   - name: stm32u073kc
     parent: stm32
@@ -689,7 +689,7 @@ contexts:
       PROBE_RS_CHIP: STM32U585AI
       RUSTFLAGS:
         - --cfg capability=\"hw/stm32-rng\"
-        - --cfg capability=\"hw/stm32-usb-synopsis\"
+        - --cfg capability=\"hw/stm32-usb-synopsys\"
 
   - name: stm32wb55rg
     parent: stm32

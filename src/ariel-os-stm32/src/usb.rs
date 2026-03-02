@@ -1,7 +1,7 @@
 use embassy_stm32::{Peri, bind_interrupts, peripherals, usb, usb::Driver};
 
 bind_interrupts!(struct Irqs {
-    #[cfg(capability = "hw/stm32-usb-synopsis")]
+    #[cfg(capability = "hw/stm32-usb-synopsys")]
     OTG_FS => usb::InterruptHandler<peripherals::USB_OTG_FS>;
     #[cfg(capability = "hw/stm32-usb")]
     USB => usb::InterruptHandler<peripherals::USB>;
@@ -19,9 +19,9 @@ bind_interrupts!(struct Irqs {
     USB_UCPD1_2 => usb::InterruptHandler<peripherals::USB>;
 });
 
-#[cfg(not(capability = "hw/stm32-usb-synopsis"))]
+#[cfg(not(capability = "hw/stm32-usb-synopsys"))]
 type UsbPeripheral = peripherals::USB;
-#[cfg(capability = "hw/stm32-usb-synopsis")]
+#[cfg(capability = "hw/stm32-usb-synopsys")]
 type UsbPeripheral = peripherals::USB_OTG_FS;
 
 pub type UsbDriver = Driver<'static, UsbPeripheral>;
@@ -36,9 +36,9 @@ impl Peripherals {
     #[must_use]
     pub fn new(peripherals: &mut crate::OptionalPeripherals) -> Self {
         Self {
-            #[cfg(not(capability = "hw/stm32-usb-synopsis"))]
+            #[cfg(not(capability = "hw/stm32-usb-synopsys"))]
             usb: peripherals.USB.take().unwrap(),
-            #[cfg(capability = "hw/stm32-usb-synopsis")]
+            #[cfg(capability = "hw/stm32-usb-synopsys")]
             usb: peripherals.USB_OTG_FS.take().unwrap(),
             dp: peripherals.PA12.take().unwrap(),
             dm: peripherals.PA11.take().unwrap(),
@@ -46,12 +46,12 @@ impl Peripherals {
     }
 }
 
-#[cfg(not(capability = "hw/stm32-usb-synopsis"))]
+#[cfg(not(capability = "hw/stm32-usb-synopsys"))]
 pub fn driver(peripherals: Peripherals) -> UsbDriver {
     Driver::new(peripherals.usb, Irqs, peripherals.dp, peripherals.dm)
 }
 
-#[cfg(capability = "hw/stm32-usb-synopsis")]
+#[cfg(capability = "hw/stm32-usb-synopsys")]
 pub fn driver(peripherals: Peripherals) -> UsbDriver {
     use static_cell::ConstStaticCell;
 
