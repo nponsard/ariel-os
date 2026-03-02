@@ -61,10 +61,10 @@
       "matchPackageNames" : [ "/^.*-rp$/i" ],
       "labels": ["ci-build:rp"]
     },
-    // GHA updates skip build CI
+    // GHA updates skip build CI and the changelog
     {
       "matchManagers": ["github-actions"],
-      "labels": ["ci-build:skip"]
+      "labels": ["ci-build:skip", "changelog:skip"]
     },
     // Nothing updates i.e. version/digest pinning skip build CI
     {
@@ -79,8 +79,7 @@
     }
   ],
   // Add a 'renovate' label to every PR for the matrix bot
-  // and add 'changelog:skip' label for the check-changelog CI job
-  "addLabels": ["renovate", "changelog:skip"]
+  "addLabels": ["renovate"]
   // TODO: uncomment once confident that renovates works properly
   // "patch": {
   //   "automerge": true
