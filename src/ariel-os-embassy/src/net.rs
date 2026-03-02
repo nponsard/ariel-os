@@ -212,7 +212,11 @@ fn __ariel_os_network_config() -> embassy_net::Config {
 
             config.ipv4 = embassy_net::ConfigV4::Static(embassy_net::StaticConfigV4 {
                 address: embassy_net::Ipv4Cidr::new(ipaddr, PREFIX_LEN),
-                dns_servers: heapless::Vec::new(),
+                #[expect(
+                    clippy::default_trait_access,
+                    reason = "This allows us to not import heapless (and not worry about its version)."
+                )]
+                dns_servers: Default::default(),
                 gateway: Some(gw_addr),
             });
         } else if #[cfg(feature = "dhcpv4")] {
@@ -246,7 +250,11 @@ fn __ariel_os_network_config() -> embassy_net::Config {
 
         config.ipv6 = embassy_net::ConfigV6::Static(embassy_net::StaticConfigV6 {
             address: embassy_net::Ipv6Cidr::new(ipaddr, PREFIX_LEN),
-            dns_servers: heapless::Vec::new(),
+            #[expect(
+                clippy::default_trait_access,
+                reason = "This allows us to not import heapless (and not worry about its version)."
+            )]
+            dns_servers: Default::default(),
             gateway: Some(gw_addr),
         });
     }
