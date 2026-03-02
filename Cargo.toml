@@ -27,6 +27,9 @@ members = [
   "src/lib/coapcore",
   "src/lib/rbi",
   "src/lib/ringbuffer",
+  "src/sensors/ariel-os-sensor-lis2du12",
+  "src/sensors/ariel-os-sensor-lps22df",
+  "src/sensors/ariel-os-sensor-stts22h",
   "tests/benchmarks/bench_sched_flags",
   "tests/benchmarks/bench_sched_yield",
   "tests/coap",
@@ -142,6 +145,11 @@ ariel-os-stm32 = { path = "src/ariel-os-stm32" }
 ariel-os-storage = { path = "src/ariel-os-storage" }
 ariel-os-threads = { path = "src/ariel-os-threads" }
 ariel-os-utils = { path = "src/ariel-os-utils", default-features = false }
+
+# Built-in sensor drivers.
+ariel-os-sensor-lis2du12 = { path = "src/sensors/ariel-os-sensor-lis2du12" }
+ariel-os-sensor-lps22df = { path = "src/sensors/ariel-os-sensor-lps22df" }
+ariel-os-sensor-stts22h = { path = "src/sensors/ariel-os-sensor-stts22h" }
 
 const-str = "1.0.0"
 const_panic = { version = "0.2.8", default-features = false }
