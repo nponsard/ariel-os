@@ -1902,7 +1902,7 @@ modules:
     help: |
       Expect that the Nordic MCU's radio core runs the DECT variant of vendor firmware.
 
-      This must match
+      Whether this is set or not must match what is installed in the chip; it is not tested at startup.
     # No `provides-unique: [nrf-radiocore-firmware]` because this is the exotic
     # option, and because nrf-modem too only does the selection in one way.
     context:
