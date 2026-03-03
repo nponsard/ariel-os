@@ -397,6 +397,27 @@ fn rcc_config() -> embassy_stm32::rcc::Config {
         rcc.sys = Sysclk::PLL1_R;
     }
 
+    #[cfg(context = "st-nucleo-wba65ri")]
+    {
+        use embassy_stm32::rcc::*;
+
+        rcc.hse = Some(Hse {
+            prescaler: HsePrescaler::DIV1,
+        });
+        rcc.pll1 = Some(Pll {
+            source: PllSource::HSE,
+            prediv: PllPreDiv::DIV2,  // 32 / 2 = 16 MHz
+            mul: PllMul::MUL12,       // 16 * 12 = 192 MHz
+            divp: Some(PllDiv::DIV6), // 192 / 6 = 32 MHz (for SAI1)
+            divq: None,
+            divr: Some(PllDiv::DIV2), // 192 / 2 = 96 MHz (sysclk)
+            frac: None,
+        });
+        rcc.sys = Sysclk::PLL1_R;
+        rcc.voltage_scale = VoltageScale::RANGE1;
+        rcc.mux.otghssel = Otghssel::HSE; // USB OTG HS ref clock from HSE (32 MHz)
+    }
+
     rcc
 }
 

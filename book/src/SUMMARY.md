@@ -41,6 +41,7 @@
   - [ST NUCLEO-H755ZI-Q](./boards/st-nucleo-h755zi-q.md)
   - [ST NUCLEO-WB55RG](./boards/st-nucleo-wb55rg.md)
   - [ST NUCLEO-WBA55CG](./boards/st-nucleo-wba55cg.md)
+  - [ST NUCLEO-WBA65RI](./boards/st-nucleo-wba65ri.md)
   - [ST STEVAL-MKBOXPRO](./boards/st-steval-mkboxpro.md)
   - [STM32U083C-DK](./boards/stm32u083c-dk.md)
 - [Chips](./chips/index.md)
@@ -79,6 +80,7 @@
   - [STM32U585AI](./chips/stm32u585ai.md)
   - [STM32WB55RG](./chips/stm32wb55rg.md)
   - [STM32WBA55CG](./chips/stm32wba55cg.md)
+  - [STM32WBA65RI](./chips/stm32wba65ri.md)
   - [STM32WLE5JC](./chips/stm32wle5jc.md)
 
 # User Guide
