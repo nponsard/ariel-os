@@ -87,11 +87,8 @@ pub(crate) fn config() -> embassy_net::Config {
                 fn __ariel_os_network_config() -> embassy_net::Config;
             }
             unsafe { __ariel_os_network_config() }
-        } else if #[cfg(feature = "dhcpv4")] {
-            embassy_net::Config::dhcpv4(embassy_net::DhcpConfig::default())
-        } else if #[cfg(not(context = "ariel-os"))] {
-            // For platform-independent tooling.
-            embassy_net::Config::default()
+        } else {
+            ariel_os_network_config()
         }
     }
 }
@@ -171,15 +168,9 @@ impl embassy_net::driver::RxToken for DummyDriver {
     }
 }
 
-#[cfg(any(
-    feature = "network-config-ipv4-static",
-    feature = "network-config-ipv6-static"
-))]
-// SAFETY: the compiler prevents from defining multiple functions with the same name in the
-// same crate; the function signature is checked by the compiler as it is in the same crate as the
-// FFI declaration.
-#[unsafe(no_mangle)]
-fn __ariel_os_network_config() -> embassy_net::Config {
+#[cfg(not(feature = "network-config-override"))]
+fn ariel_os_network_config() -> embassy_net::Config {
+    #[allow(unused_mut, reason = "conditional compilation")]
     let mut config = embassy_net::Config::default();
 
     cfg_if::cfg_if! {
