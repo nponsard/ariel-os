@@ -163,6 +163,7 @@ jobs:
             -p ariel-os-random
             -p ariel-os-rt
             -p ariel-os-sensors
+            -p ariel-os-sensors-gnss-time-ext
             -p ariel-os-sensors-registry
             -p ariel-os-sensors-utils
             -p ariel-os-storage
@@ -316,6 +317,7 @@ jobs:
                 --no-deps \
                 -p ariel-os \
                 -p ariel-os-sensors \
+                -p ariel-os-sensors-gnss-time-ext \
                 -p coapcore \
                 --features "
                     ariel-os-sensors/max-sample-min-count-12,
