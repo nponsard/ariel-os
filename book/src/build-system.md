@@ -24,6 +24,8 @@ Tasks available in Ariel OS include:
 
 - `run`: Compiles, flashes, and runs an application. The [debug output](./debug-console.md) is printed in the terminal.
 - `flash`: Compiles and flashes an application.
+- `flash-dfu`: Compiles and flashes an application via USB DFU.
+  Requires bootloader support for DFU in the board or microcontroller.
 - `debug`: Starts a GDB debug session for the selected application.
   The application needs to be flashed using the `flash` task beforehand.
 - `flash-erase-all`: Erases the entire flash memory, including user data. Unlocks it if locked.
