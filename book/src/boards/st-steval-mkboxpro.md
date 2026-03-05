@@ -37,6 +37,13 @@ laze build -b st-steval-mkboxpro
 |Hardware Random Number Generator|<span title="supported">✅</span>|
 |Persistent Storage|<span title="supported with some caveats">☑️</span>[^removing-items-not-supported]|
 
+#### Additional Notes
+
+##### Using a Debug Probe for Flashing
+
+After opening the case, use the JP2/SWD connector (marked "MCU SWD") with an SWD debug probe (e.g., the STLINK-V3MINIE):
+do note that JP2 is not keyed, the red wire of the ribbon cable must be closer to the JP2 pin marked "1" on the PCB (close to the POWER switch).
+
 <p>Legend:</p>
 
 <dl>

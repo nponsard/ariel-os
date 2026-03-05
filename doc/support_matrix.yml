@@ -1113,6 +1113,11 @@ builders:
         status: not_currently_supported
         comments:
           - "[USB does not enumerate](https://github.com/embassy-rs/embassy/issues/2376), [workaround](https://github.com/ariel-os/ariel-os/pull/1126)"
+    notes: |-
+      ##### Using a Debug Probe for Flashing
+
+      After opening the case, use the JP2/SWD connector (marked "MCU SWD") with an SWD debug probe (e.g., the STLINK-V3MINIE):
+      do note that JP2 is not keyed, the red wire of the ribbon cable must be closer to the JP2 pin marked "1" on the PCB (close to the POWER switch).
 
   stm32u083c-dk:
     chip: stm32u083mc
