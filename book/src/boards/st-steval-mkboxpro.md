@@ -39,6 +39,14 @@ laze build -b st-steval-mkboxpro
 
 #### Additional Notes
 
+The `st-steval-mkboxpro` can be flashed using USB DFU and using a debug probe.
+
+##### Using USB DFU for Flashing
+
+After connecting a USB-C cable, start the bootloader with DFU by cycling the power of the microcontroller while pressing button 2 on the side of the case.
+The microcontroller enumerates as "STMicroelectronics STM Device in DFU Mode" on the host computer.
+Use the `laze build flash-dfu` task to flash the microcontroller.
+
 ##### Using a Debug Probe for Flashing
 
 After opening the case, use the JP2/SWD connector (marked "MCU SWD") with an SWD debug probe (e.g., the STLINK-V3MINIE):
