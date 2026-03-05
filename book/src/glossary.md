@@ -1,5 +1,10 @@
 # Glossary
 
+> [!NOTE]
+> This glossary does not intend to provide complete definitions of each term.
+> Instead, it aims to clarify and emphasize the differences between related terms.
+> Links are provided when relevant to learn more about each concept.
+
 - **[ARM (or Arm)][arm-arch-wikipedia]:** a family of instruction set architectures.
 
 - **[Arm (Arm Holdings)][arm-holdings]:** the company behind the ARM architecture family.
