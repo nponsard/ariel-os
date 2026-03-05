@@ -7,6 +7,7 @@
 ## laze Builders
 
 For more information on laze builders, check out [this page](../build-system.md#laze-builders).
+
 ### `heltec-wifi-lora-32-v3`
 
 - **Tier:** 3

@@ -7,6 +7,7 @@
 ## laze Builders
 
 For more information on laze builders, check out [this page](../build-system.md#laze-builders).
+
 ### `espressif-esp32-c6-devkitc-1`
 
 - **Tier:** 1
