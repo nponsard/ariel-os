@@ -148,6 +148,7 @@ jobs:
 
     steps:
       - name: reset git-cache update barrier
+        if: runner.environment == 'self-hosted'
         run: pkill -f -SIGUSR1 /usr/local/bin/git-cache-daemon | true
 
       - name: Free up space
