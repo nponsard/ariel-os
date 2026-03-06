@@ -43,12 +43,6 @@ jobs:
       # newest standard library. It may also need to be aligned with the clang
       # version which Xtensa provides.
       CLANG_PATH: /usr/bin/clang-18
-      CACHE_THING_LOCATION: /cache/cache-thing
-      RUSTC_WRAPPER: sccache
-      SCCACHE_DIR: /cache/sccache
-      SCCACHE_CACHE_SIZE: 128G
-
-      CARGO_NET_GIT_FETCH_WITH_CLI: true
 
     steps:
       - name: reset git-cache update barrier
