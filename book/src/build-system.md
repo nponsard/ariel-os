@@ -24,8 +24,8 @@ Tasks available in Ariel OS include:
 
 - `run`: Compiles, flashes, and runs an application. The [debug output](./debug-console.md) is printed in the terminal.
 - `flash`: Compiles and flashes an application.
-- `flash-dfu`: Compiles and flashes an application via USB DFU.
-  Requires bootloader support for DFU in the board or microcontroller.
+- `flash-dfu`: (Currently only available for STM32.) Compiles and flashes an application via USB DFU.
+  Requires bootloader support for DFU in the board or microcontroller, and [dfu-util][dfu-util-homepage] on the host.
 - `debug`: Starts a GDB debug session for the selected application.
   The application needs to be flashed using the `flash` task beforehand.
 - `flash-erase-all`: Erases the entire flash memory, including user data. Unlocks it if locked.
@@ -139,6 +139,7 @@ apps:
       - rpi-pico-w
 ```
 
+[dfu-util-homepage]: https://dfu-util.sourceforge.net/
 [laze-imports-book]: https://kaspar030.github.io/laze/dev/reference/imports.html
 [laze-git-import-book]: https://kaspar030.github.io/laze/dev/reference/import/git.html
 [laze-path-import-book]: https://kaspar030.github.io/laze/dev/reference/import/path.html
