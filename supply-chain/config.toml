@@ -46,6 +46,9 @@ audit-as-crates-io = true
 [policy.embassy-time]
 audit-as-crates-io = true
 
+[policy.embassy-usb-synopsys-otg]
+audit-as-crates-io = true
+
 [policy.esp-alloc]
 audit-as-crates-io = true
 
@@ -559,7 +562,7 @@ version = "0.2.0"
 criteria = "safe-to-deploy"
 
 [[exemptions.embassy-usb-synopsys-otg]]
-version = "0.3.1"
+version = "0.3.1@git:478df29985c8e0d0ff2e915440c8ca15e36f4403"
 criteria = "safe-to-deploy"
 
 [[exemptions.embedded-alloc]]
@@ -1008,10 +1011,6 @@ criteria = "safe-to-deploy"
 
 [[exemptions.nourl]]
 version = "0.1.4"
-criteria = "safe-to-deploy"
-
-[[exemptions.nrf-modem]]
-version = "0.7.3"
 criteria = "safe-to-deploy"
 
 [[exemptions.nrf-modem]]
