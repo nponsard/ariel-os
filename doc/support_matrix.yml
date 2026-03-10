@@ -1219,7 +1219,7 @@ boards:
       - dfrobot-firebeetle2-esp32-c6
 
   - name: Espressif ESP32-C3-DevKit-RUST-1
-    url: http://web.archive.org/web/20250729095245/https://github.com/esp-rs/esp-rust-board/tree/v1.2
+    url: htts://web.archive.org/web/20250729095245/https://github.com/esp-rs/esp-rust-board/tree/v1.2
     builders:
       - espressif-esp32-c3-devkit-rust-1
 
