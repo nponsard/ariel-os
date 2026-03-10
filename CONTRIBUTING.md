@@ -87,13 +87,3 @@ We are happy to hear from you and help you. The best way to reach us is to ask o
 
 [text of the DCO]: https://developercertificate.org/
 [adding-board-support]: https://ariel-os.github.io/ariel-os/dev/docs/book/adding-board-support.html
-
-
-## AI contributions
-
-When contributors use AI tools to generate any contribution (code, PR, issue),
-that tool must be acknowledged in the contribution (e.g. through a `Co-authored-by:` trailer).
-
-We define a tool as an AI tool if, when it makes a bad suggestion, no member of the project can find where to report and fix the false positive.
-
-It is the duty of the contributor to ensure that the requirements of the DCO are upheld when using those (or any other) tools.
