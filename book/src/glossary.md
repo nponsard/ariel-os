@@ -60,6 +60,8 @@
 
 - **[USB CDC-ACM][usb-cdc-acm-wikipedia]:** a standard protocol implementing serial communication over USB.
 
+- **[USB CDC-NCM][usb-cdc-ncm-wikipedia]:** a standard protocol implementing Ethernet over USB.
+
 - **[Xtensa][xtensa-wikipedia]:** a family of instruction set architectures, used in some ESP32 microcontrollers.
 
 [ariel-os-esp-rustdoc]: https://ariel-os.github.io/ariel-os/dev/docs/api/ariel_os_esp/index.html
@@ -87,4 +89,5 @@
 [system-on-chip-wikipedia]: https://en.wikipedia.org/wiki/System_on_a_chip
 [uart-wikipedia]: https://en.wikipedia.org/wiki/Universal_asynchronous_receiver-transmitter
 [usb-cdc-acm-wikipedia]: https://en.wikipedia.org/wiki/USB_communications_device_class#Abstract_Control_Model
+[usb-cdc-ncm-wikipedia]: https://en.wikipedia.org/wiki/Ethernet_over_USB#Protocols
 [xtensa-wikipedia]: https://en.wikipedia.org/wiki/Tensilica#Xtensa_configurable_cores
