@@ -74,6 +74,7 @@ spi = [
   "ariel-os-stm32/spi",
 ]
 
+## Enables a time driver, and functionality requiring `embassy-time`.
 time = [
   "ariel-os-esp/time",
   "ariel-os-nrf/time",
