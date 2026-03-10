@@ -68,4 +68,4 @@ Team members meet weekly online to discuss the current progress of the project. 
 All code and documentation of Ariel OS is available at the [Ariel OS GitHub](https://github.com/ariel-os/ariel-os).
 
 
-*The present text was written by Karin Lammers and is licensed as [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/), including components and inspiration from  [The Maintainer Council Template](https://github.com/cncf/project-template/blob/main/GOVERNANCE-maintainer.md), licensed likewise.*
+*The present text was written by Karin Lammers and is licensed as [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/), including components and inspiration from  [The Maintainer Council Template](https://contribute.cncf.io/projects/best-practices/governance/templates/governance-maintainer/), licensed likewise.*
