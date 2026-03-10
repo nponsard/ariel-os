@@ -5,6 +5,12 @@
 > Instead, it aims to clarify and emphasize the differences between related terms.
 > Links are provided when relevant to learn more about each concept.
 
+- Ariel OS HALs: currently the following crates:
+  [`ariel-os-esp`][ariel-os-esp-rustdoc],
+  [`ariel-os-nrf`][ariel-os-nrf-rustdoc],
+  [`ariel-os-rp`][ariel-os-rp-rustdoc], and
+  [`ariel-os-stm32`][ariel-os-stm32-rustdoc].
+
 - **[ARM (or Arm)][arm-arch-wikipedia]:** a family of instruction set architectures.
 
 - **[Arm (Arm Holdings)][arm-holdings]:** the company behind the ARM architecture family.
@@ -18,6 +24,14 @@
   Can also specifically refer to the eponymous ESP32 microcontroller.
 
 - **[Embassy][embassy-homepage]:** a software project developing HALs for multiple microcontroller families (e.g., [`embassy-nrf`][embassy-nrf-embassydev], [`embassy-rp`][embassy-rp-embassydev], [`embassy-stm32`][embassy-stm32-embassydev]), along with other components (e.g., [`embassy-executor`][embassy-executor-docsrs], [`embassy-time`][embassy-time-docsrs]).
+
+- Embassy-style HALs: currently the following crates:
+  [`embassy-nrf`][embassy-nrf-embassydev],
+  [`embassy-rp`][embassy-rp-embassydev],
+  [`embassy-stm32`][embassy-stm32-embassydev], and
+  [`esp-hal`][esp-hal-homepage].
+  In particular, these HALs feature [peripheral ZSTs][peripheral-zsts] modeling compile-time
+  exclusive access, that drivers require for instantiation.
 
 - **[esp-hal][esp-hal-homepage]:** a HAL for ESP32 microcontrollers, developed by their manufacturer Espressif.
 
@@ -48,6 +62,10 @@
 
 - **[Xtensa][xtensa-wikipedia]:** a family of instruction set architectures, used in some ESP32 microcontrollers.
 
+[ariel-os-esp-rustdoc]: https://ariel-os.github.io/ariel-os/dev/docs/api/ariel_os_esp/index.html
+[ariel-os-nrf-rustdoc]: https://ariel-os.github.io/ariel-os/dev/docs/api/ariel_os_nrf/index.html
+[ariel-os-rp-rustdoc]: https://ariel-os.github.io/ariel-os/dev/docs/api/ariel_os_rp/index.html
+[ariel-os-stm32-rustdoc]: https://ariel-os.github.io/ariel-os/dev/docs/api/ariel_os_stm32/index.html
 [arm-arch-wikipedia]: https://en.wikipedia.org/wiki/ARM_architecture_family
 [arm-holdings]: https://en.wikipedia.org/wiki/Arm_Holdings
 [integrated-circuit-wikipedia]: https://en.wikipedia.org/wiki/Integrated_circuit
@@ -61,6 +79,7 @@
 [esp32-wikipedia]: https://en.wikipedia.org/wiki/ESP32
 [esp-hal-homepage]: https://docs.espressif.com/projects/rust/esp-hal/latest/
 [microcontroller-wikipedia]: https://en.wikipedia.org/wiki/Microcontroller
+[peripheral-zsts]: ./application.md#obtaining-peripheral-access
 [raspberry-pi-sbc-wikipedia]: https://en.wikipedia.org/wiki/Raspberry_Pi
 [raspberry-pi-holdings-wikipedia]: https://en.wikipedia.org/wiki/Raspberry_Pi_Holdings
 [risc-v-wikipedia]: https://en.wikipedia.org/wiki/RISC-V
