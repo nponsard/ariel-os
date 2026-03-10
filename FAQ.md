@@ -30,7 +30,7 @@ Ariel OS has Embassy at its heart, using it for hardware abstraction, async exec
 - a modularized system initialization scheme
   - where Embassy leaves full control to the application developer by requiring all set up to be done in the application's `main()`, by the application developer, Ariel does a lot of initialization (e.g., network stack, rng, storage) internally, and hands a ready-to-use system to the developer
 - a meta build system that handles supporting many different target devices
-  - Ariel OS wraps Cargo in [laze](https://laze-build.org) in order to manage all the build-system configuration that Cargo cannot handle itself, like `--target`, the used runner, probe-rs configuration, linker setting, that are usually hard-coded per board. laze simplifies building for multiple target boards.
+  - Ariel OS wraps Cargo in [laze](https://kaspar030.github.io/laze/dev/index.html) in order to manage all the build-system configuration that Cargo cannot handle itself, like `--target`, the used runner, probe-rs configuration, linker setting, that are usually hard-coded per board. laze simplifies building for multiple target boards.
 
 Practically, Ariel OS moves some of the control of the classical main loop most Embassy applications have, and handles a lot of the "generic system" stuff itself. Actual applications contain less system bring-up, less boilerplate, and can concentrate on business logic.
 
