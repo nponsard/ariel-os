@@ -1,3 +1,4 @@
+version: 0.2.0
 boards:
   st-nucleo-wba55:
     chip: stm32wba55cg

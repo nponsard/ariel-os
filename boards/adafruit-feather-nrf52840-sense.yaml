@@ -1,3 +1,4 @@
+version: 0.2.0
 boards:
   adafruit-feather-nrf52840-sense:
     chip: nrf52840

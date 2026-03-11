@@ -1,3 +1,4 @@
+version: 0.2.0
 boards:
   seeedstudio-lora-e5-mini:
     chip: stm32wle5jc

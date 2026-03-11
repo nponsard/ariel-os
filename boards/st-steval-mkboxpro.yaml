@@ -1,3 +1,4 @@
+version: 0.2.0
 boards:
   st-steval-mkboxpro:
     chip: stm32u585ai

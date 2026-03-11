@@ -1,3 +1,4 @@
+version: 0.2.0
 boards:
   bbc-microbit-v2:
     chip: nrf52833

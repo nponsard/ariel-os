@@ -1,3 +1,4 @@
+version: 0.2.0
 boards:
   st-nucleo-c031c6:
     chip: stm32c031c6

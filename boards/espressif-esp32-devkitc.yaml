@@ -1,3 +1,4 @@
+version: 0.2.0
 boards:
   espressif-esp32-devkitc:
     chip: esp-wroom-32

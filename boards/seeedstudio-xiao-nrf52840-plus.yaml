@@ -1,3 +1,4 @@
+version: 0.2.0
 boards:
   seeedstudio-xiao-nrf52840-plus:
     chip: nrf52840

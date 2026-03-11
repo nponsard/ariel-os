@@ -1,3 +1,4 @@
+version: 0.2.0
 boards:
   dwm1001:
     chip: nrf52832

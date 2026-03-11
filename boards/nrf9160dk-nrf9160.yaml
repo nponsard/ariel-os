@@ -1,3 +1,4 @@
+version: 0.2.0
 boards:
   nrf9160dk-nrf9160:
     chip: nrf9160

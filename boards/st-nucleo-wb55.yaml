@@ -1,3 +1,4 @@
+version: 0.2.0
 boards:
   st-nucleo-wb55:
     chip: stm32wb55rg

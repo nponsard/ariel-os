@@ -1,3 +1,4 @@
+version: 0.2.0
 boards:
   st-nucleo-wba65ri:
     chip: stm32wba65ri
