@@ -447,8 +447,8 @@ user-login = "dtolnay"
 user-name = "David Tolnay"
 
 [[publisher.toml]]
-version = "0.5.11"
-when = "2023-01-20"
+version = "0.9.5"
+when = "2025-08-04"
 user-id = 6743
 user-login = "epage"
 user-name = "Ed Page"
