@@ -242,10 +242,6 @@ version = "1.24.0"
 criteria = "safe-to-deploy"
 
 [[exemptions.cbindgen]]
-version = "0.24.5"
-criteria = "safe-to-deploy"
-
-[[exemptions.cbindgen]]
 version = "0.29.2"
 criteria = "safe-to-deploy"
 
@@ -491,10 +487,6 @@ criteria = "safe-to-deploy"
 
 [[exemptions.der_derive]]
 version = "0.8.0"
-criteria = "safe-to-deploy"
-
-[[exemptions.deranged]]
-version = "0.5.8"
 criteria = "safe-to-deploy"
 
 [[exemptions.digest]]
@@ -1006,23 +998,11 @@ version = "0.8.7"
 criteria = "safe-to-deploy"
 
 [[exemptions.liboscore]]
-version = "0.2.4"
-criteria = "safe-to-deploy"
-
-[[exemptions.liboscore]]
 version = "0.2.7"
 criteria = "safe-to-deploy"
 
 [[exemptions.liboscore-cryptobackend]]
-version = "0.2.4"
-criteria = "safe-to-deploy"
-
-[[exemptions.liboscore-cryptobackend]]
 version = "0.2.7"
-criteria = "safe-to-deploy"
-
-[[exemptions.liboscore-msgbackend]]
-version = "0.2.4"
 criteria = "safe-to-deploy"
 
 [[exemptions.liboscore-msgbackend]]
