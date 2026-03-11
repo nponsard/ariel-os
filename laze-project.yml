@@ -1338,6 +1338,7 @@ modules:
   - name: wifi-cyw43
     selects:
       - has_wifi_cyw43
+      - network
     provides_unique:
       - network_device
     env:
