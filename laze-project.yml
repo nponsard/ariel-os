@@ -1370,6 +1370,7 @@ modules:
     provides_unique:
       - network_device
     selects:
+      - network
       - usb
     env:
       global:
