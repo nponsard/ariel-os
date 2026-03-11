@@ -1,3 +1,4 @@
+version: 0.2.0
 boards:
   seeedstudio-xiao-esp32c6:
     chip: esp32c6fx4

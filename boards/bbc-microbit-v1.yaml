@@ -1,3 +1,4 @@
+version: 0.2.0
 boards:
   bbc-microbit-v1:
     chip: nrf51822-xxaa

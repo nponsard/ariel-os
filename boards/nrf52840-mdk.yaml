@@ -1,3 +1,4 @@
+version: 0.2.0
 boards:
   nrf52840-mdk:
     chip: nrf52840

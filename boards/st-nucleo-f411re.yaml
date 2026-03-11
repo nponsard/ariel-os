@@ -1,3 +1,4 @@
+version: 0.2.0
 boards:
   st-nucleo-f411re:
     chip: stm32f411re

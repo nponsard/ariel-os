@@ -1,3 +1,4 @@
+version: 0.2.0
 boards:
   st-nucleo-h753zi:
     chip: stm32h753zi

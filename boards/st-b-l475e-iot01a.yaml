@@ -1,3 +1,4 @@
+version: 0.2.0
 boards:
   st-b-l475e-iot01a:
     chip: stm32l475vg

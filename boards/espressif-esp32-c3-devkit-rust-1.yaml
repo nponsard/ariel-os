@@ -1,3 +1,4 @@
+version: 0.2.0
 boards:
   espressif-esp32-c3-devkit-rust-1:
     chip: esp32-c3-mini-1
