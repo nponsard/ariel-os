@@ -1669,6 +1669,7 @@ modules:
       - alloc
       - multi-core:
           - core-affinity
+      - network
     context:
       - esp
     provides_unique:
