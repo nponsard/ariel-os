@@ -1,4 +1,4 @@
-laze_required_version: 0.1.37
+laze_required_version: 0.1.39
 
 contexts:
   # base context that all other contexts inherit from
@@ -31,6 +31,9 @@ contexts:
       - ?stable
       - ?nightly
     env:
+      # This laze special variable defines the expected output file of the LINK rule,
+      # which we set here to match the Cargo output.
+      outfile: ${build-dir}/bin/${builder}/cargo/${RUSTC_TARGET}/${PROFILE_DIR}/${app}
       RUSTFLAGS:
         - ${RUSTFLAGS_CONTEXTS}
       SCRIPTS: ${relroot}/scripts
@@ -114,7 +117,6 @@ contexts:
         cmd: >-
           test "${SKIP_CARGO_BUILD}" = "1" && exit 0;
           cd ${relpath} && ${CARGO_PRESHELL} ${CARGO_ENV} ${CARGO} ${CARGO_TOOLCHAIN} ${CARGO_ARGS} build --profile=${PROFILE} ${FEATURES}
-          && cp ${relroot}/${build-dir}/bin/${builder}/cargo/${RUSTC_TARGET}/${PROFILE_DIR}/${app} ${relroot}/${out}
           ${POST_LINK}
 
       - name: GIT_DOWNLOAD
