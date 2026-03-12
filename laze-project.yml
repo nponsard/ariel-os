@@ -189,7 +189,7 @@ contexts:
       vscode-config:
         help: Generate a VSCode configuration for selected board (select a board with -b)
         build: false
-        # The --config arg in CARGO_ARGS is pointing to a file relative to the appdir, it makes more sense to generate the config in the appdir
+        # Place the config in the application directory as it's the configuration for this application.
         workdir: ${appdir}
         export:
           - FEATURES
