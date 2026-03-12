@@ -37,8 +37,6 @@ contexts:
       RUSTFLAGS:
         - ${RUSTFLAGS_CONTEXTS}
       SCRIPTS: ${relroot}/scripts
-      CARGO_ARGS:
-        - --config ${relroot}/${root}/ariel-os-cargo.toml
       # While laze allows "export:" in rules and tasks to export laze
       # variables to a rule's recipe shell environment, this would require
       # those to be listed for *all* rules and tasks where they are needed.
@@ -193,7 +191,7 @@ contexts:
       vscode-config:
         help: Generate a VSCode configuration for selected board (select a board with -b)
         build: false
-        # The --config arg in CARGO_ARGS is pointing to a file relative to the appdir, it makes more sense to generate the config in the appdir
+        # Place the config in the application directory as it's the configuration for this application.
         workdir: ${appdir}
         export:
           - FEATURES
