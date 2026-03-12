@@ -44,8 +44,8 @@ user-login = "epage"
 user-name = "Ed Page"
 
 [[publisher.build-rs]]
-version = "0.3.2"
-when = "2025-09-18"
+version = "0.3.3"
+when = "2026-01-22"
 user-id = 55123
 user-login = "rust-lang-owner"
 
@@ -484,6 +484,13 @@ user-name = "Ed Page"
 [[publisher.trybuild]]
 version = "1.0.116"
 when = "2026-02-12"
+user-id = 3618
+user-login = "dtolnay"
+user-name = "David Tolnay"
+
+[[publisher.unicode-ident]]
+version = "1.0.24"
+when = "2026-02-16"
 user-id = 3618
 user-login = "dtolnay"
 user-name = "David Tolnay"
@@ -2038,56 +2045,6 @@ who = "George Burgess IV <gbiv@google.com>"
 criteria = "safe-to-deploy"
 version = "0.1.0"
 aggregated-from = "https://chromium.googlesource.com/chromiumos/third_party/rust_crates/+/refs/heads/main/cargo-vet/audits.toml?format=TEXT"
-
-[[audits.google.audits.unicode-ident]]
-who = "Lukasz Anforowicz <lukasza@chromium.org>"
-criteria = "safe-to-deploy"
-version = "1.0.12"
-notes = '''
-I grepped for \"crypt\", \"cipher\", \"fs\", \"net\" - there were no hits.
-
-All two functions from the public API of this crate use `unsafe` to avoid bound
-checks for an array access.  Cross-module analysis shows that the offsets can
-be statically proven to be within array bounds.  More details can be found in
-the unsafe review CL at https://crrev.com/c/5350386.
-
-This crate has been added to Chromium in https://crrev.com/c/3891618.
-'''
-aggregated-from = "https://chromium.googlesource.com/chromium/src/+/main/third_party/rust/chromium_crates_io/supply-chain/audits.toml?format=TEXT"
-
-[[audits.google.audits.unicode-ident]]
-who = "Dustin J. Mitchell <djmitche@chromium.org>"
-criteria = "safe-to-deploy"
-delta = "1.0.12 -> 1.0.13"
-notes = "Lots of table updates, and tables are assumed correct with unsafe `.get_unchecked()`, so ub-risk-2 is appropriate"
-aggregated-from = "https://chromium.googlesource.com/chromium/src/+/main/third_party/rust/chromium_crates_io/supply-chain/audits.toml?format=TEXT"
-
-[[audits.google.audits.unicode-ident]]
-who = "Lukasz Anforowicz <lukasza@chromium.org>"
-criteria = "safe-to-deploy"
-delta = "1.0.13 -> 1.0.14"
-notes = "Minimal delta in `.rs` files: new test assertions + doc changes."
-aggregated-from = "https://chromium.googlesource.com/chromium/src/+/main/third_party/rust/chromium_crates_io/supply-chain/audits.toml?format=TEXT"
-
-[[audits.google.audits.unicode-ident]]
-who = "Adrian Taylor <adetaylor@chromium.org>"
-criteria = "safe-to-deploy"
-delta = "1.0.14 -> 1.0.15"
-notes = "No changes relevant to any of these criteria."
-aggregated-from = "https://chromium.googlesource.com/chromium/src/+/main/third_party/rust/chromium_crates_io/supply-chain/audits.toml?format=TEXT"
-
-[[audits.google.audits.unicode-ident]]
-who = "Liza Burakova <liza@chromium.org>"
-criteria = "safe-to-deploy"
-delta = "1.0.15 -> 1.0.16"
-aggregated-from = "https://chromium.googlesource.com/chromium/src/+/main/third_party/rust/chromium_crates_io/supply-chain/audits.toml?format=TEXT"
-
-[[audits.google.audits.unicode-ident]]
-who = "Daniel Cheng <dcheng@chromium.org>"
-criteria = "safe-to-deploy"
-delta = "1.0.16 -> 1.0.18"
-notes = "Only minor comment and documentation updates."
-aggregated-from = "https://chromium.googlesource.com/chromium/src/+/main/third_party/rust/chromium_crates_io/supply-chain/audits.toml?format=TEXT"
 
 [[audits.google.audits.utf8parse]]
 who = "David Koloski <dkoloski@google.com>"
