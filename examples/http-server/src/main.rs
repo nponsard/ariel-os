@@ -4,7 +4,7 @@
 
 mod routes;
 
-use ariel_os::{asynch::Spawner, cell::StaticCell, net, time::Duration};
+use ariel_os::{asynch::Spawner, cell::StaticCell, net};
 
 ariel_os::hal::group_peripherals!(Peripherals {
     #[cfg(feature = "button-reading")]
@@ -17,12 +17,16 @@ use picoserve::AppBuilder;
 
 const HTTP_PORT: u16 = 80;
 const WEB_TASK_POOL_SIZE: usize = 2;
-const SERVER_CONFIG: picoserve::Config = picoserve::Config::new(picoserve::Timeouts {
-    start_read_request: Duration::from_secs(5),
-    persistent_start_read_request: Duration::from_secs(5),
-    read_request: Duration::from_secs(1),
-    write: Duration::from_secs(1),
-});
+const SERVER_CONFIG: picoserve::Config = {
+    use picoserve::time::Duration;
+
+    picoserve::Config::new(picoserve::Timeouts {
+        start_read_request: Duration::from_secs(5),
+        persistent_start_read_request: Duration::from_secs(5),
+        read_request: Duration::from_secs(1),
+        write: Duration::from_secs(1),
+    })
+};
 
 static APP: StaticCell<picoserve::Router<routes::AppRouter>> = StaticCell::new();
 
