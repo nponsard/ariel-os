@@ -188,7 +188,7 @@ contexts:
         cmd:
           - echo ${builder}
 
-      vscode-config:
+      editor-config:
         help: Generate a VSCode configuration for selected board (select a board with -b)
         build: false
         # Place the config in the application directory as it's the configuration for this application.
@@ -199,7 +199,7 @@ contexts:
           - CARGO_ARGS
           - CARGO_ENV
         cmd: # We have to obfuscate the variables to avoid cargo interpreting them since we're running a rust script
-          - _CARGO_TOOLCHAIN='${CARGO_TOOLCHAIN}' _RUSTFLAGS="${RUSTFLAGS}" ${relroot}/${root}/scripts/vscode.rs
+          - _CARGO_TOOLCHAIN='${CARGO_TOOLCHAIN}' _RUSTFLAGS="${RUSTFLAGS}" ${relroot}/${root}/scripts/editor-config.rs  $@
 
   - name: nrf
     help: Nordic MCU support (based on embassy-nrf)

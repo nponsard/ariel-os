@@ -17,7 +17,7 @@ This is meant to be used on projects created using the `cargo-generate` command 
 To generate/update your vscode configuration in `.vscode/settings.json`, run in the root of your project:
 
 ```sh
-laze build -b <builder> vscode-config
+laze build -b <builder> editor-config vscode
 ```
 
 If you get an error about the JSON file being malformated, you may have comments or trailing commas in your configuration, try removing them in `.vscode/settings.json`.
