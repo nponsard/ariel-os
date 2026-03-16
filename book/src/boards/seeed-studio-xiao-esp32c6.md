@@ -30,6 +30,7 @@ laze build -b seeedstudio-xiao-esp32c6
 |I2C Controller Mode|<span title="supported">✅</span>|
 |SPI Main Mode|<span title="supported">✅</span>|
 |UART|<span title="supported">✅</span>|
+|Ethernet|<span title="not available on this piece of hardware">–</span>|
 |User USB|<span title="not available on this piece of hardware">–</span>[^no-generic-usb-peripheral]|
 |Ethernet over USB|<span title="not available on this piece of hardware">–</span>|
 |Wi-Fi|<span title="supported">✅</span>|

@@ -14,6 +14,7 @@
 |I2C Controller Mode|<span title="supported">✅</span>|
 |SPI Main Mode|<span title="supported">✅</span>|
 |UART|<span title="supported">✅</span>|
+|Ethernet|<span title="not available on this piece of hardware">–</span>|
 |User USB|<span title="supported">✅</span>|
 |Ethernet over USB|<span title="available in hardware, but not currently supported by Ariel OS">❌</span>[^usb-does-not-enumerate-https-github-com-embassy-rs-embassy-issues-2376-workaround-https-github-com-ariel-os-ariel-os-pull-1126]|
 |Wi-Fi|<span title="not available on this piece of hardware">–</span>|
@@ -57,7 +58,7 @@ Boards using this chip.
   <thead>
     <tr>
       <th colspan="3">Board</th>
-      <th colspan="12">Functionality</th>
+      <th colspan="13">Functionality</th>
     </tr>
     <tr>
       <th>Manufacturer Name</th>
@@ -69,6 +70,7 @@ Boards using this chip.
       <th>I2C Controller Mode</th>
       <th>SPI Main Mode</th>
       <th>UART</th>
+      <th>Ethernet</th>
       <th>User USB</th>
       <th>Ethernet over USB</th>
       <th>Wi-Fi</th>
@@ -95,6 +97,7 @@ Boards using this chip.
 		  <td class="support-cell" title="not available on this piece of hardware">–</td>
 		  <td class="support-cell" title="not available on this piece of hardware">–</td>
 		  <td class="support-cell" title="not available on this piece of hardware">–</td>
+		  <td class="support-cell" title="not available on this piece of hardware">–</td>
 		  <td class="support-cell" title="supported">✅</td>
 		  <td class="support-cell" title="supported with some caveats">☑️</td>
       </tr>
@@ -112,6 +115,7 @@ Boards using this chip.
 		  <td class="support-cell" title="supported">✅</td>
 		  <td class="support-cell" title="supported">✅</td>
 		  <td class="support-cell" title="supported">✅</td>
+		  <td class="support-cell" title="not available on this piece of hardware">–</td>
 		  <td class="support-cell" title="supported">✅</td>
 		  <td class="support-cell" title="available in hardware, but not currently supported by Ariel OS">❌</td>
 		  <td class="support-cell" title="not available on this piece of hardware">–</td>

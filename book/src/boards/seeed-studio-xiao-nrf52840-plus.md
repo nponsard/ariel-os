@@ -30,6 +30,7 @@ laze build -b seeedstudio-xiao-nrf52840-plus
 |I2C Controller Mode|<span title="supported">✅</span>|
 |SPI Main Mode|<span title="supported">✅</span>|
 |UART|<span title="supported">✅</span>|
+|Ethernet|<span title="not available on this piece of hardware">–</span>|
 |User USB|<span title="needs testing">🚦</span>|
 |Ethernet over USB|<span title="needs testing">🚦</span>|
 |Wi-Fi|<span title="not available on this piece of hardware">–</span>|

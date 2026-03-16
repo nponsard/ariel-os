@@ -30,6 +30,7 @@ laze build -b native
 |I2C Controller Mode|<span title="available in hardware, but not currently supported by Ariel OS">❌</span>|
 |SPI Main Mode|<span title="available in hardware, but not currently supported by Ariel OS">❌</span>|
 |UART|<span title="available in hardware, but not currently supported by Ariel OS">❌</span>|
+|Ethernet|<span title="not available on this piece of hardware">–</span>|
 |User USB|<span title="available in hardware, but not currently supported by Ariel OS">❌</span>|
 |Ethernet over USB|<span title="available in hardware, but not currently supported by Ariel OS">❌</span>|
 |Wi-Fi|<span title="available in hardware, but not currently supported by Ariel OS">❌</span>|
