@@ -292,7 +292,7 @@ jobs:
         # No tag yet after https://github.com/esp-rs/xtensa-toolchain/pull/38 (will probably be @v1.5.5)
         uses: esp-rs/xtensa-toolchain@ec6d36527049a7f4fb2cb0c1a644668c1bb8a2a4 # main
         with:
-          version: "1.94.0.0"
+          version: "1.94.0.2"
           buildtargets: esp32,esp32s2,esp32s3
           override: false
           export: false
