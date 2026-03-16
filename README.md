@@ -43,7 +43,7 @@ Multiple resources are available to learn Ariel OS:
   demonstrate various features of Ariel OS.
 - 🧪 A set of [test cases](https://github.com/ariel-os/ariel-os/tree/main/tests)
   further verifies the capabilities of Ariel OS.
-- 🚧 The [roadmap](https://github.com/ariel-os/ariel-os/issues/242)
+- 🚧 The [roadmap](https://github.com/ariel-os/ariel-os/blob/main/ROADMAP.md)
   shows the planned features for Ariel OS.
 
 ## Minimum Supported Rust Version (MSRV) and Policy
