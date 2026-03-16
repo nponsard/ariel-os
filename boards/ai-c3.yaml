@@ -1,4 +1,0 @@
-version: 0.2.0
-boards:
-  ai-c3:
-    chip: esp32-c3-mini-1
