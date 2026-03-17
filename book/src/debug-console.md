@@ -46,6 +46,13 @@ if none of them are enabled, logging statements become no-operations.
 Enabling either the `defmt` or `log` [laze modules][laze-modules-book] allows selecting which logging facade and logger is used.
 defmt should be preferred when possible as it results in smaller binaries.
 
+> [!TIP]
+> The `defmt` laze module is favored and enabled by default when possible for
+> the target.
+> Applications that specifically depend on it still need to explicitly
+> [select][laze-modules-book] it to make the dependency explicit and increase
+> robustness to potential future changes.
+
 The precise set of formatting operations and traits required on formatted data
 depends on the selected backend.
 There are some wrapper structs available in the [`ariel_os::debug::log`] module
