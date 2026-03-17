@@ -91,7 +91,8 @@ usb-hid = ["dep:usbd-hid", "embassy-usb?/usbd-hid", "usb"]
 
 # `embassy-net` requires a time driver, which HALs provide.
 net = ["dep:embassy-net", "ariel-os-hal/time"]
-usb-ethernet = ["net", "usb"]
+# NOTE: `time` is only needed on STM32 for the workaround.
+usb-ethernet = ["net", "time", "usb"]
 ## Selects the network backend that goes through tun/tap (native only)
 tuntap = ["net"]
 
