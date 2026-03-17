@@ -69,7 +69,7 @@ static SHARED_DATA: MaybeUninit<SharedData> = MaybeUninit::uninit();
 pub static EXECUTOR: Executor = Executor::new();
 
 #[doc(hidden)]
-pub trait IntoPeripheral<'a, T: PeripheralType> {
+pub trait IntoPeripheral<'a, T: PeripheralType>: private::Sealed {
     fn into_hal_peripheral(self) -> Peri<'a, T>;
 }
 
@@ -78,6 +78,12 @@ impl<'a, T: PeripheralType> IntoPeripheral<'a, T> for Peri<'a, T> {
     fn into_hal_peripheral(self) -> Peri<'a, T> {
         self
     }
+}
+
+impl<'a, T: PeripheralType> private::Sealed for Peri<'a, T> {}
+
+mod private {
+    pub trait Sealed {}
 }
 
 #[doc(hidden)]
