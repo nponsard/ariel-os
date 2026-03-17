@@ -16,13 +16,10 @@ jobs:
         with:
           persist-credentials: false
 
-      - id: get_toolchain
-        run: echo "toolchain=$(scripts/rust-toolchain.sh)" >> $GITHUB_OUTPUT
-
       - name: Install toolchain
         uses: dtolnay/rust-toolchain@efa25f7f19611383d5b0ccf2d1c8914531636bf9 # master
         with:
-          toolchain: ${{ steps.get_toolchain.outputs.toolchain }}
+          toolchain: 1.94
 
       - name: Install cargo-vet
         uses: taiki-e/install-action@a37010ded18ff788be4440302bd6830b1ae50d8b # v2
