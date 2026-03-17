@@ -73,14 +73,14 @@ pub trait IntoPeripheral<'a, T: PeripheralType>: private::Sealed {
     fn into_hal_peripheral(self) -> Peri<'a, T>;
 }
 
+impl<T: PeripheralType> private::Sealed for Peri<'_, T> {}
+
 #[doc(hidden)]
 impl<'a, T: PeripheralType> IntoPeripheral<'a, T> for Peri<'a, T> {
     fn into_hal_peripheral(self) -> Peri<'a, T> {
         self
     }
 }
-
-impl<'a, T: PeripheralType> private::Sealed for Peri<'a, T> {}
 
 mod private {
     pub trait Sealed {}
