@@ -13,8 +13,6 @@ builders:
   - has_buttons
   - has_leds
   - has_usb_device_port
-- name: ai-c3
-  parent: esp32-c3-mini-1
 - name: bbc-microbit-v1
   parent: nrf51822-xxaa
   provides:
