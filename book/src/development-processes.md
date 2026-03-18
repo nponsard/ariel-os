@@ -79,16 +79,6 @@ The following steps must be followed when preparing a new release of `ariel-os`:
 1. Verify there are no [release blocking bugs](https://github.com/ariel-os/ariel-os/issues?q=state%3Aopen%20label%3Arelease-blocker).
 1. Update the roadmap if necessary.
 1. Check whether deprecated items should be removed, if any.
-1. Update the version numbers of the crates that need to be bumped.
-
-    > [!IMPORTANT]
-    > - The crates in the following directories are managed separately and their version numbers should *not* be bumped:
-    >   - `/src/lib/`
-    >   - `/src/sensors/`
-    > - The `ariel-os-sensors` crate's version is decoupled from the rest of the OS, as every sensor driver relies on it, and bumping it may result in fragmenting the entire ecosystem of sensor drivers.
-    > - The `ariel-os-sensors-utils` crate's version is also decoupled from the rest of the OS.
-    > - There might be other crates whose versions are decoupled from the rest of the OS; do **check the manifests** for such an indication before bumping.
-
 1. Update the changelog using [changelog-harvester][changelog-harvester-cratesio] and the following command (see its documentation for details):
    ```sh
    changelog-harvester --with-token --forge-owner 'ariel-os' --forge-repo 'ariel-os' --labels 'changelog:highlight,breaking,changelog:new-hardware,changelog:sensor,changelog:skip' --old '<previous-version>' --new '<new-version>' < ../token.txt
@@ -98,6 +88,16 @@ The following steps must be followed when preparing a new release of `ariel-os`:
 
    The above command will output entries in Markdown format that need to be manually made to fit into the existing Keep-a-Changelog template.
    The title of the PR updating the changelog should start with `chore(release):` (so it could automatically be ignored by other tools later).
+
+1. Update the version numbers of the crates that need to be bumped.
+
+    > [!IMPORTANT]
+    > - The crates in the following directories are managed separately and their version numbers should *not* be bumped:
+    >   - `/src/lib/`
+    >   - `/src/sensors/`
+    > - The `ariel-os-sensors` crate's version is decoupled from the rest of the OS, as every sensor driver relies on it, and bumping it may result in fragmenting the entire ecosystem of sensor drivers.
+    > - The `ariel-os-sensors-utils` crate's version is also decoupled from the rest of the OS.
+    > - There might be other crates whose versions are decoupled from the rest of the OS; do **check the manifests** for such an indication before bumping.
 
 1. Update the [ariel-os docs repository][ariel-os-docs-repo] with the new docs.
 1. Create a git tag in the format `v{version}`.
