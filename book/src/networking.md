@@ -8,12 +8,13 @@ Overriding this default selection is possible by explicitly selecting the desire
 
 ## Network Link Selection
 
-Ariel OS currently supports two different networking links: USB CDC-NCM (i.e., Ethernet over USB) and Wi-Fi.
-Boards may support both of them, only one of them, or none of them. However, currently the network stack supports at most one interface.
+Ariel OS currently supports three different networking links: Ethernet, USB CDC-NCM (i.e., Ethernet over USB) and Wi-Fi.
+Boards may support all of them, only some of them, or none of them. However, currently the network stack supports at most one interface.
 
 Which link layer is used for networking is selected at compile time,
 through [laze modules][laze-modules-book].
 
+- `ethernet-stm32`: Selects Ethernet on STM32 chips.
 - `usb-ethernet`: Selects Ethernet over USB (currently using USB CDC-NCM).
 - `wifi-cyw43`: Selects Wi-Fi using the CYW43 chip along an RP2040 or RP235x MCU (e.g., on the Raspberry Pi Pico W or Pico 2 W).
 - `wifi-esp`: Selects Wi-Fi on an ESP32 MCU.
