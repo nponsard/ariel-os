@@ -3,6 +3,7 @@
 
 - [Adafruit Feather nRF52840 Express](./adafruit-feather-nrf52840-express.md)
 - [Adafruit Feather nRF52840 Sense](./adafruit-feather-nrf52840-sense.md)
+- [Arduino UNO Q](./arduino-uno-q.md)
 - [BBC micro:bit V1](./bbc-micro-bit-v1.md)
 - [BBC micro:bit V2](./bbc-micro-bit-v2.md)
 - [native](./native.md)
