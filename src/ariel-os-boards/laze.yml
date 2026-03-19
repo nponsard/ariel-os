@@ -13,6 +13,15 @@ builders:
   - has_buttons
   - has_leds
   - has_usb_device_port
+- name: arduino-uno-q
+  parent: stm32u585ai
+  provides:
+  - has_leds
+  - has_swi
+  env:
+    CARGO_ENV:
+    - CONFIG_VBUS_DETECTION=false
+    - CONFIG_SWI=USART2
 - name: bbc-microbit-v1
   parent: nrf51822-xxaa
   provides:
