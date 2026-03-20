@@ -109,6 +109,9 @@ audit-as-crates-io = true
 [policy.esp-wifi-sys-esp32s3]
 audit-as-crates-io = true
 
+[policy.nrf-modem]
+audit-as-crates-io = true
+
 [policy.nrf-mpsl]
 audit-as-crates-io = true
 
@@ -1043,6 +1046,10 @@ criteria = "safe-to-deploy"
 
 [[exemptions.nrf-modem]]
 version = "0.10.1"
+criteria = "safe-to-deploy"
+
+[[exemptions.nrf-modem]]
+version = "0.10.1@git:5e25e5b2b67573d055563812a47c8a4c4aa98d07"
 criteria = "safe-to-deploy"
 
 [[exemptions.nrf-mpsl]]
