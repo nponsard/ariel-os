@@ -1,5 +1,5 @@
-version: 0.2.0
-boards:
+version: 0.3.0
+targets:
   st-nucleo-h755zi-q:
     chip: stm32h755zi
     flags:
