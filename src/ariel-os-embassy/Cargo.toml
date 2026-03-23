@@ -126,8 +126,8 @@ wifi = []
 wifi-cyw43 = ["ariel-os-hal/wifi-cyw43", "net", "wifi"]
 wifi-esp = ["ariel-os-hal/wifi-esp", "net", "wifi"]
 
-eth = []
-ethernet-stm32 = ["ariel-os-hal/ethernet-stm32", "eth", "net"]
+ethernet = []
+ethernet-stm32 = ["ariel-os-hal/ethernet-stm32", "ethernet", "net"]
 
 ble = [
   "dep:trouble-host",
