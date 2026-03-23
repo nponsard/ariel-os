@@ -28,6 +28,7 @@ static_cell = { workspace = true, optional = true }
 
 # rpi-pico-w cyw43
 cyw43 = { version = "0.5.0", features = ["firmware-logs"], optional = true }
+cyw43-firmware = { version = "0.1.0", optional = true }
 cyw43-pio = { version = "0.8.0", optional = true }
 
 # BLE dependencies
@@ -86,6 +87,8 @@ ble-cyw43 = [
   "_cyw43",
   "ariel-os-random/csprng",
   "ble",
+  "cyw43-firmware?/bluetooth",
+  "cyw43-firmware?/wifi",
   "cyw43?/bluetooth",
 ]
 ble-peripheral = ["ble-cyw43"]
@@ -98,7 +101,7 @@ defmt = ["dep:defmt", "cyw43?/defmt", "embassy-rp/defmt"]
 wifi = []
 
 ## Enables support for the CYW43 Wi-Fi chip.
-wifi-cyw43 = ["_cyw43", "wifi"]
+wifi-cyw43 = ["_cyw43", "cyw43-firmware?/wifi", "wifi"]
 
 ## Enables the interrupt executor.
 executor-interrupt = ["embassy-executor/executor-interrupt"]
@@ -107,6 +110,7 @@ _test = ["embassy-rp/rp2040", "external-interrupts", "i2c", "spi"]
 
 _cyw43 = [
   "dep:cyw43",
+  "dep:cyw43-firmware",
   "dep:cyw43-pio",
   "dep:embassy-net-driver-channel",
   "dep:static_cell",
