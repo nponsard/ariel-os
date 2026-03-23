@@ -446,6 +446,7 @@ dependencies = [
  "defmt 1.0.1",
  "embassy-embedded-hal",
  "embassy-executor",
+ "embassy-futures",
  "embassy-net",
  "embassy-net-driver-channel",
  "embassy-nrf",
@@ -4199,7 +4200,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "6a793df0d7afeac54f95b471d3af7f0d4fb975699f972341a4b76988d49cdf0c"
 dependencies = [
  "cfg-if",
- "windows-targets 0.48.5",
+ "windows-targets 0.52.6",
 ]
 
 [[package]]
@@ -4421,7 +4422,7 @@ checksum = "aa07b0722c63805057dec824444fdc814bdfd30d1c782a3a8f63bbcf67c4ed1c"
 [[package]]
 name = "nrf-modem"
 version = "0.10.1"
-source = "git+https://github.com/nponsard/nrf-modem?rev=5e25e5b2b67573d055563812a47c8a4c4aa98d07#5e25e5b2b67573d055563812a47c8a4c4aa98d07"
+source = "git+https://github.com/nponsard/nrf-modem?rev=bdb18f493b9f09e08cde8b1c3584535a7d013431#bdb18f493b9f09e08cde8b1c3584535a7d013431"
 dependencies = [
  "arrayvec",
  "at-commands",
@@ -6749,7 +6750,7 @@ version = "0.1.9"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "cf221c93e13a30d793f7645a0e7762c55d169dbb0a49671918a2319d289b10bb"
 dependencies = [
- "windows-sys 0.48.0",
+ "windows-sys 0.59.0",
 ]
 
 [[package]]

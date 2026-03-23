@@ -1,5 +1,6 @@
 use embassy_executor::Spawner;
 use embassy_net::Stack;
+use embassy_sync::{blocking_mutex::raw::CriticalSectionRawMutex, signal::Signal};
 use heapless::Vec;
 use nrf_modem::embassy_net_modem::{
     NetDriver, Runner, State,
@@ -17,8 +18,24 @@ pub type NetworkDevice = NetDriver<'static>;
 static LTEM_STATE: StaticCell<State> = StaticCell::new();
 static LTEM_CONTROL: StaticCell<context::Control<'static>> = StaticCell::new();
 
+static CONTROL_SIGNAL: Signal<CriticalSectionRawMutex, Command> = Signal::new();
+
+enum Command {
+    Enable,
+    Disable,
+}
+
 // Packet Data Protocol context id, range 0-10. On nrf9160 only cid 0 is already allocated.
 const PDP_CONTEXT_ID: u8 = 0;
+
+/// Disable the LTE-M link.
+pub fn disable() {
+    CONTROL_SIGNAL.signal(Command::Disable);
+}
+/// Enable the LTE-M link.
+pub fn enable() {
+    CONTROL_SIGNAL.signal(Command::Enable);
+}
 
 #[embassy_executor::task]
 async fn modem_task(runner: Runner<'static>) -> ! {
@@ -76,8 +93,19 @@ pub async fn control_task(
         .await
         .unwrap();
 
-    control
-        .run(|status| {
+    embassy_futures::join::join(
+        async {
+            loop {
+                let err = match CONTROL_SIGNAL.wait().await {
+                    Command::Disable => control.disable().await,
+                    Command::Enable => control.enable().await,
+                };
+                if let Err(_err) = err {
+                    warn!("Error when processing command: {}", _err);
+                }
+            }
+        },
+        control.run(|status| {
             let config = status_to_config(status);
 
             #[cfg(feature = "ipv4")]
@@ -85,9 +113,9 @@ pub async fn control_task(
 
             #[cfg(feature = "ipv6")]
             stack.set_config_v6(config.ipv6);
-        })
-        .await
-        .unwrap();
+        }),
+    )
+    .await;
 }
 
 fn can_contain<TContained, TContainer, const N_CONTAINED: usize, const N_CONTAINER: usize>(
