@@ -28,8 +28,8 @@ pub mod net;
 #[cfg(feature = "wifi")]
 mod wifi;
 
-#[cfg(feature = "eth")]
-mod eth;
+#[cfg(feature = "ethernet")]
+mod ethernet;
 
 use ariel_os_debug::log::debug;
 
@@ -107,8 +107,8 @@ cfg_if::cfg_if! {
         use usb::ethernet::NetworkDevice;
     } else if #[cfg(feature = "wifi")] {
         use wifi::NetworkDevice;
-    } else if #[cfg(feature = "eth")] {
-        use eth::NetworkDevice;
+    } else if #[cfg(feature = "ethernet")] {
+        use ethernet::NetworkDevice;
     } else if #[cfg(feature = "tuntap")] {
         use crate::hal::tuntap::NetworkDevice;
     } else if #[cfg(context = "ariel-os")] {
@@ -309,8 +309,8 @@ async fn init_task(mut peripherals: hal::OptionalPeripherals) {
         device
     };
 
-    #[cfg(feature = "eth-stm32")]
-    let device = hal::eth::device(&mut peripherals);
+    #[cfg(feature = "ethernet-stm32")]
+    let device = hal::ethernet::device(&mut peripherals);
 
     #[cfg(feature = "usb")]
     {
@@ -358,7 +358,7 @@ async fn init_task(mut peripherals: hal::OptionalPeripherals) {
             feature = "usb-ethernet",
             feature = "wifi-cyw43",
             feature = "wifi-esp",
-            feature = "eth",
+            feature = "ethernet",
             feature = "tuntap",
         )))]
         // The creation of `device` is not organized in such a way that they could be put in a

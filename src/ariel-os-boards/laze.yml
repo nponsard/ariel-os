@@ -225,7 +225,7 @@ builders:
   parent: stm32f767zi
   provides:
   - has_buttons
-  - has_eth_stm32
+  - has_ethernet_stm32
   - has_leds
   - has_swi
   env:
@@ -235,7 +235,7 @@ builders:
   parent: stm32h753zi
   provides:
   - has_buttons
-  - has_eth_stm32
+  - has_ethernet_stm32
   - has_leds
   - has_swi
   - has_usb_device_port
@@ -246,7 +246,7 @@ builders:
   parent: stm32h755zi
   provides:
   - has_buttons
-  - has_eth_stm32
+  - has_ethernet_stm32
   - has_leds
   - has_swi
   - has_usb_device_port

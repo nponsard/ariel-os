@@ -36,9 +36,9 @@ pub mod storage;
 #[doc(hidden)]
 pub mod usb;
 
-#[cfg(feature = "eth")]
+#[cfg(feature = "ethernet")]
 #[doc(hidden)]
-pub mod eth;
+pub mod ethernet;
 
 use embassy_stm32::Config;
 
