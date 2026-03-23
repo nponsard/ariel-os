@@ -309,7 +309,7 @@ async fn init_task(mut peripherals: hal::OptionalPeripherals) {
         device
     };
 
-    #[cfg(feature = "eth-stm32")]
+    #[cfg(feature = "ethernet-stm32")]
     let device = hal::eth::device(&mut peripherals);
 
     #[cfg(feature = "usb")]

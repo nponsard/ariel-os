@@ -79,7 +79,7 @@ storage = ["dep:embassy-embedded-hal"]
 usb = []
 
 eth = []
-eth-stm32 = ["dep:embassy-embedded-hal", "eth"]
+ethernet-stm32 = ["dep:embassy-embedded-hal", "eth"]
 
 ## Enables defmt support.
 defmt = ["dep:defmt", "embassy-stm32/defmt"]

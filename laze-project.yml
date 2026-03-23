@@ -1350,9 +1350,9 @@ modules:
     selects:
       - doc-only
 
-  - name: eth-stm32
+  - name: ethernet-stm32
     selects:
-      - has_eth_stm32
+      - has_ethernet_stm32
       - network
     provides_unique:
       - network_device
@@ -1361,9 +1361,9 @@ modules:
         executor_stacksize_required:
           - "32768"
         FEATURES:
-          - ariel-os/eth-stm32
+          - ariel-os/ethernet-stm32
 
-  - name: has_eth_stm32
+  - name: has_ethernet_stm32
     selects:
       - doc-only
 

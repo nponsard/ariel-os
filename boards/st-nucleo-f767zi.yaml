@@ -3,7 +3,7 @@ boards:
   st-nucleo-f767zi:
     chip: stm32f767zi
     flags:
-      - has_eth_stm32
+      - has_ethernet_stm32
     ariel:
       swi: USART2
     leds:

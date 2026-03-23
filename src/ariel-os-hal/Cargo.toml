@@ -144,7 +144,7 @@ threading = [
 wifi-cyw43 = ["ariel-os-rp/wifi-cyw43"]
 wifi-esp = ["ariel-os-esp/wifi-esp"]
 
-eth-stm32 = ["ariel-os-stm32/eth-stm32"]
+ethernet-stm32 = ["ariel-os-stm32/ethernet-stm32"]
 
 executor-interrupt = [
   #"ariel-os-esp/executor-interrupt",
