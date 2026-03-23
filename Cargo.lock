@@ -1686,7 +1686,7 @@ dependencies = [
 [[package]]
 name = "cyw43-firmware"
 version = "0.2.0"
-source = "git+https://github.com/KizzyCode/cyw43-firmware-rust/?rev=06bb42531c0445043b3005745afcdce9de8730f4#06bb42531c0445043b3005745afcdce9de8730f4"
+source = "git+https://github.com/kdimonych/cyw43-firmware-rust/?rev=06bb42531c0445043b3005745afcdce9de8730f4#06bb42531c0445043b3005745afcdce9de8730f4"
 dependencies = [
  "cyw43",
 ]
