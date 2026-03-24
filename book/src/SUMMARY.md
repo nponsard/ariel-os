@@ -45,6 +45,7 @@
   - [ST NUCLEO-WBA65RI](./boards/st-nucleo-wba65ri.md)
   - [ST STEVAL-MKBOXPRO](./boards/st-steval-mkboxpro.md)
   - [STM32U083C-DK](./boards/stm32u083c-dk.md)
+  - [Unihiker K10](./boards/unihiker-k10.md)
 - [Chips](./chips/index.md)
   - [ESP32-C3](./chips/esp32c3.md)
   - [ESP32-C3Fx4](./chips/esp32c3fx4.md)

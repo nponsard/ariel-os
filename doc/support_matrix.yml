@@ -1164,6 +1164,11 @@ builders:
       wifi: not_available
       ethernet_over_usb: supported
 
+  unihiker-k10:
+    chip: esp32s3
+    tier: "2"
+    support:
+
 # Boards are the logical entity that represents the hardware, which can have
 # one or multiple laze builders.
 boards:
@@ -1364,3 +1369,8 @@ boards:
     url: https://web.archive.org/web/20250119131656/https://www.st.com/en/evaluation-tools/stm32u083c-dk.html
     builders:
       - stm32u083c-dk
+
+  - name: Unihiker K10
+    url: https://web.archive.org/web/20260207013308/https://www.unihiker.com/products/k10
+    builders:
+      - unihiker-k10

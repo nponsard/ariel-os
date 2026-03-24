@@ -303,3 +303,8 @@ builders:
   env:
     CARGO_ENV:
     - CONFIG_SWI=USART4_LPUART3
+- name: unihiker-k10
+  parent: esp32-s3-wroom-1
+  provides:
+  - has_buttons
+  - has_usb_device_port
