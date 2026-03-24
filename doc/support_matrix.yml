@@ -670,6 +670,11 @@ chips:
           - removing items not supported
       wifi: not_available
       ble: not_available
+    notes: |-
+      ### Ethernet Link
+
+      The Ethernet MAC address is derived from the device identity using [`if_index` `0`](https://ariel-os.github.io/ariel-os/dev/docs/api/ariel_os/identity/fn.interface_eui48.html).
+      A different index should therefore be used to generate other EUI-48 identifiers.
 
   stm32h755zi:
     name: STM32H755ZI
@@ -696,6 +701,11 @@ chips:
           - removing items not supported
       wifi: not_available
       ble: not_available
+    notes: |-
+      ### Ethernet Link
+
+      The Ethernet MAC address is derived from the device identity using [`if_index` `0`](https://ariel-os.github.io/ariel-os/dev/docs/api/ariel_os/identity/fn.interface_eui48.html).
+      A different index should therefore be used to generate other EUI-48 identifiers.
 
   stm32l475vg:
     name: STM32L475VG
