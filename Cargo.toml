@@ -90,7 +90,7 @@ embassy-sync = { version = "0.7.2", default-features = false }
 embassy-time = { version = "0.5.1", default-features = false }
 embassy-time-driver = { version = "0.2.2", default-features = false }
 embassy-time-queue-utils = { version = "0.3.0", default-features = false }
-embassy-usb = { version = "0.5.1", default-features = false }
+embassy-usb = { version = "0.6.0", default-features = false }
 
 embedded-hal = { version = "1.0.0", default-features = false }
 embedded-hal-async = { version = "1.0.0", default-features = false }
