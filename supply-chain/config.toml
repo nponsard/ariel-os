@@ -553,6 +553,10 @@ criteria = "safe-to-deploy"
 version = "0.3.2"
 criteria = "safe-to-deploy"
 
+[[exemptions.embassy-net-driver-channel]]
+version = "0.4.0"
+criteria = "safe-to-deploy"
+
 [[exemptions.embassy-nrf]]
 version = "0.8.0@git:3940a79a29ae578a35625cae949bea473abf21d1"
 criteria = "safe-to-deploy"
@@ -573,6 +577,10 @@ criteria = "safe-to-deploy"
 version = "0.7.2"
 criteria = "safe-to-deploy"
 
+[[exemptions.embassy-sync]]
+version = "0.8.0"
+criteria = "safe-to-deploy"
+
 [[exemptions.embassy-time]]
 version = "0.5.0@git:32919cd38e4a5ad5fc21dfb339abd45a74bd1dc9"
 criteria = "safe-to-deploy"
@@ -587,6 +595,10 @@ criteria = "safe-to-deploy"
 
 [[exemptions.embassy-usb]]
 version = "0.5.1"
+criteria = "safe-to-deploy"
+
+[[exemptions.embassy-usb]]
+version = "0.6.0"
 criteria = "safe-to-deploy"
 
 [[exemptions.embassy-usb-driver]]
@@ -1461,12 +1473,24 @@ criteria = "safe-to-deploy"
 version = "0.8.2"
 criteria = "safe-to-deploy"
 
+[[exemptions.usbd-hid]]
+version = "0.10.0"
+criteria = "safe-to-deploy"
+
 [[exemptions.usbd-hid-descriptors]]
 version = "0.8.2"
 criteria = "safe-to-deploy"
 
+[[exemptions.usbd-hid-descriptors]]
+version = "0.10.0"
+criteria = "safe-to-deploy"
+
 [[exemptions.usbd-hid-macros]]
 version = "0.8.2"
+criteria = "safe-to-deploy"
+
+[[exemptions.usbd-hid-macros]]
+version = "0.10.0"
 criteria = "safe-to-deploy"
 
 [[exemptions.uuid]]
