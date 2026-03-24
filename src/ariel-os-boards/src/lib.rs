@@ -56,5 +56,6 @@ cfg_if::cfg_if! {
     "st-nucleo-wba55")] { include!("st-nucleo-wba55.rs"); } else if #[cfg(context =
     "st-nucleo-wba65ri")] { include!("st-nucleo-wba65ri.rs"); } else if #[cfg(context =
     "st-steval-mkboxpro")] { include!("st-steval-mkboxpro.rs"); } else if #[cfg(context =
-    "stm32u083c-dk")] { include!("stm32u083c-dk.rs"); } else {}
+    "stm32u083c-dk")] { include!("stm32u083c-dk.rs"); } else if #[cfg(context =
+    "unihiker-k10")] { include!("unihiker-k10.rs"); } else {}
 }
