@@ -43,11 +43,24 @@ who = "chrysn <chrysn@fsfe.org>"
 criteria = "safe-to-deploy"
 version = "0.1.0"
 
+[[audits.embassy-time]]
+who = "ROMemories <152802150+ROMemories@users.noreply.github.com>"
+criteria = "safe-to-deploy"
+delta = "0.5.0@git:32919cd38e4a5ad5fc21dfb339abd45a74bd1dc9 -> 0.5.1@git:3c1b5fbf28237ea7144ae970c3aec11c38023c3f"
+importable = false
+notes = "Nanosecond-related methods have been introduced, along with a new tick rate and dependency updates."
+
 [[audits.embassy-time-driver]]
 who = "ROMemories <152802150+ROMemories@users.noreply.github.com>"
 criteria = "safe-to-deploy"
 delta = "0.2.0 -> 0.2.1"
 notes = "A very minor update: only an extra tick setting is added, a few methods inlined, and the Cargo.lock is now distributed."
+
+[[audits.embassy-time-driver]]
+who = "ROMemories <152802150+ROMemories@users.noreply.github.com>"
+criteria = "safe-to-deploy"
+delta = "0.2.1 -> 0.2.2"
+notes = "Edition 2024 is now used, which requires a few extra `unsafe` keywords that do not affect the behavior in any way, and a new tick rate has been introduced."
 
 [[audits.embedded-io]]
 who = "chrysn <chrysn@fsfe.org>"
