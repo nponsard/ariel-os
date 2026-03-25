@@ -303,6 +303,10 @@ builders:
   env:
     CARGO_ENV:
     - CONFIG_SWI=USART4_LPUART3
+- name: ulanzi-tc001
+  parent: esp32-wroom-32d
+  provides:
+  - has_buttons
 - name: unihiker-k10
   parent: esp32-s3-wroom-1
   provides:
