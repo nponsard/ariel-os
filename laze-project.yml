@@ -399,6 +399,12 @@ contexts:
         - TARGET_CC="${CC}"
         - TARGET_CFLAGS="${CFLAGS}"
 
+  - name: esp32-wroom-32d
+    parent: esp32
+
+  - name: esp32-wroom-32u
+    parent: esp32
+
   - name: esp-wroom-32
     parent: esp32
 
