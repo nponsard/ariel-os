@@ -10,7 +10,6 @@ ariel-os = { path = "../../src/ariel-os", features = [
   "dns",
   "mdns",
   "tcp",
-  "time",
 ] }
 ariel-os-boards = { path = "../../src/ariel-os-boards" }
 
