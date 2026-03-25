@@ -18,3 +18,8 @@ boards:
         active: low
         aliases:
           - right
+    quirks:
+      - type: set_pin
+        description: turn off buzzer
+        pin: GPIO15
+        level: low
