@@ -7,4 +7,13 @@ pub mod pins {
     );
 }
 #[allow(unused_variables)]
-pub fn init(peripherals: &mut ariel_os_hal::hal::OptionalPeripherals) {}
+pub fn init(peripherals: &mut ariel_os_hal::hal::OptionalPeripherals) {
+    {
+        let pin = peripherals.GPIO15.take().unwrap();
+        let output = ariel_os_hal::gpio::Output::new(
+            pin,
+            ariel_os_embassy_common::gpio::Level::Low,
+        );
+        core::mem::forget(output);
+    }
+}
