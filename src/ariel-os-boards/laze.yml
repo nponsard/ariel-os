@@ -313,3 +313,7 @@ builders:
   provides:
   - has_buttons
   - has_usb_device_port
+- name: waveshare-esp32-s3-matrix
+  parent: esp32s3fx4r2
+  provides:
+  - has_usb_device_port
