@@ -32,7 +32,7 @@ Ariel OS uses [sbd][sbd] (Structured Board Description) files to describe board
 
 ```yaml
 # boards/<your-board-name>.yaml
-boards:
+targets:
   st-nucleo-f401re:
     chip: stm32f401re
     # Generally the board description is supposed to be OS agnostic.
@@ -71,7 +71,7 @@ sbd-gen generate-ariel boards -o src/ariel-os-boards --mode update
 
 ### `stm32`
 
-- STM32 chips do not have a dedicated SWI, so you need to choose one. Select any unused interrupt, like one of the UARTs, and set the `boards.<board_name>.ariel.swi` field in the board description.
+- STM32 chips do not have a dedicated SWI, so you need to choose one. Select any unused interrupt, like one of the UARTs, and set the `targets.<board_name>.ariel.swi` field in the board description.
 - Each STM32 MCU needs an entry for configuring the clock config, in `src/ariel-os-stm32/src/lib.rs` `rcc_config()`.
 
 ### `esp32`
