@@ -363,6 +363,69 @@ jobs:
           CONFIG_WIFI_NETWORK='test' CONFIG_WIFI_PASSWORD='password' laze build -DCARGO_ARGS+='--locked' --global --builders rpi-pico-w --partition hash:${{ matrix.partition }} --apps udp-echo -s network-config-ipv4-static
           # Build the udp-echo example with static IPv6
           CONFIG_WIFI_NETWORK='test' CONFIG_WIFI_PASSWORD='password' CONFIG_NET_IPV6_STATIC_ADDRESS='2001:db8::0' CONFIG_NET_IPV6_STATIC_GATEWAY_ADDRESS='2001:db8::1' laze build -DCARGO_ARGS+='--locked' --global --builders rpi-pico-w --partition hash:${{ matrix.partition }} --apps udp-echo -s ipv6 -s network-config-ipv6-static
+
+      # Arbitrarily choose an example binary to check its size in the next step.
+      # It is not possible to choose the same binary across multiple builders
+      # because not everything is present in the 1/12 partition.
+      - name: Select ELF to be used for size info
+        if: steps.should-skip.outputs.result != 'true' && github.event_name != 'schedule' && matrix.partition == '1/12'
+        run: |
+          case "${LABEL}" in
+            'ci-build:esp')
+              echo "EXAMPLE_PATH=build/bin/espressif-esp32-s3-devkitc-1/cargo/xtensa-esp32s3-none-elf/release/tcp-echo" >> "$GITHUB_ENV"
+              ;;
+            'ci-build:full')
+              echo "EXAMPLE_PATH=build/bin/nrf52840dk/cargo/thumbv7em-none-eabihf/release/blinky" >> "$GITHUB_ENV"
+              ;;
+            'ci-build:native')
+              echo "EXAMPLE_PATH=build/bin/native/cargo/x86_64-unknown-linux-gnu/release/example-random" >> "$GITHUB_ENV"
+              ;;
+            'ci-build:nrf')
+              echo "EXAMPLE_PATH=build/bin/nrf52840dk/cargo/thumbv7em-none-eabihf/release/blinky" >> "$GITHUB_ENV"
+              ;;
+            'ci-build:rp')
+              echo "EXAMPLE_PATH=build/bin/rpi-pico2/cargo/thumbv8m.main-none-eabihf/release/tcp-echo" >> "$GITHUB_ENV"
+              ;;
+            'ci-build:small')
+              echo "EXAMPLE_PATH=build/bin/nrf52840dk/cargo/thumbv7em-none-eabihf/release/blinky" >> "$GITHUB_ENV"
+              ;;
+            'ci-build:stm32')
+              echo "EXAMPLE_PATH=build/bin/st-nucleo-wb55/cargo/thumbv7em-none-eabihf/release/udp-echo" >> "$GITHUB_ENV"
+              ;;
+            *)
+              # Can happen if `check-labels` finds no labels but still completes
+              # successfully because of a bug.
+              exit 1
+              ;;
+          esac
+        env:
+          LABEL: ${{ needs.check-labels.outputs.label }}
+
+      - name: Get size of example binary
+        if: steps.should-skip.outputs.result != 'true' && github.event_name != 'schedule' && matrix.partition == '1/12'
+        id: size
+        run: |
+          echo "${EXAMPLE_PATH}" | awk -F/ '{print "EXAMPLE_BUILDER="$3}' >> "$GITHUB_ENV"
+          echo "${EXAMPLE_PATH}" | awk -F/ '{print "EXAMPLE_BINARY="$NF}' >> "$GITHUB_ENV"
+          sudo apt update
+          sudo apt install llvm -y
+          {
+            echo 'binsize<<EOF'
+            llvm-size -x "${EXAMPLE_PATH}"
+            echo 'EOF'
+          } | tee -a "$GITHUB_OUTPUT"
+
+      # - name: Comment binary size info on PR
+        # if: steps.should-skip.outputs.result != 'true' && github.event_name != 'schedule' && matrix.partition == '1/12'
+        # uses: marocchino/sticky-pull-request-comment@773744901bac0e8cbb5a0dc842800d45e9b2b405 # v2
+        # with:
+          # message: |
+            # <!-- binary size -->
+            # Binary size of the `${{ env.EXAMPLE_BINARY }}` example on the `${{ env.EXAMPLE_BUILDER }}` builder:
+            # ```
+            # ${{ steps.size.outputs.binsize }}
+            # ```
+
       # cleanup previous build artifacts. do in background (no need to wait).
       - name: "cleanup stable build artifacts"
         if: github.event_name == 'schedule' && steps.should-skip.outputs.result != 'true'
