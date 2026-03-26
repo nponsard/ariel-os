@@ -48,7 +48,7 @@ fn write_debug_uart(buffer: &[u8]) -> Result<(), ariel_os_debug::Error> {
             {
                 uart.write(buffer).map_err(|_| Error::Writing)?;
                 // TODO: is flushing needed here?
-                uart.flush().map_err(|_Error| Error::Writing)?;
+                uart.flush().map_err(|_| Error::Writing)?;
             }
         }
 
