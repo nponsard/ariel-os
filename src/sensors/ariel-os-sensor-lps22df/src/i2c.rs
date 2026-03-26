@@ -229,13 +229,7 @@ impl<I2C: Send> Sensor for Lps22df<I2C> {
     }
 
     fn set_mode(&self, mode: SensorMode) -> Result<State, SetModeError> {
-        let new_state = self.state.set_mode(mode);
-
-        if new_state == State::Uninitialized {
-            Err(SetModeError::Uninitialized)
-        } else {
-            Ok(new_state)
-        }
+        self.state.set_mode(mode)
     }
 
     fn state(&self) -> State {
