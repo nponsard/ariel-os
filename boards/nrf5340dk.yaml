@@ -34,3 +34,6 @@ targets:
       button3:
         pin: P0_09
         active: low
+
+  nrf5340dk-net:
+    chip: nrf5340-net
