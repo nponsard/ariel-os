@@ -17,6 +17,8 @@ Feel free to report anything that is unclear or missing!
 ## Adding Support for a Board
 
 Ariel OS uses [sbd][sbd] (Structured Board Description) files to describe boards.
+Each file corresponds to a physical board.
+Boards having multiple MCUs, or MCUs with multiple compilation targets, still require only a single file, but multiple `targets` entries are used to describe the different compilation targets.
 
 - Ensure that the HAL [is supported in `ariel-os-hal`](#adding-support-for-an-embassy-halmcu-family).
 - Ensure that the chip [is supported](#adding-support-for-an-mcu-from-a-supported-mcu-family).
