@@ -14,6 +14,7 @@
 |I2C Controller Mode|<span title="available in hardware, but not currently supported by Ariel OS">❌</span>|
 |SPI Main Mode|<span title="available in hardware, but not currently supported by Ariel OS">❌</span>|
 |UART|<span title="available in hardware, but not currently supported by Ariel OS">❌</span>|
+|Ethernet|<span title="supported with some caveats">☑️</span>[^currently-only-supported-on-a-limited-set-of-boards]|
 |User USB|<span title="supported">✅</span>|
 |Ethernet over USB|<span title="available in hardware, but not currently supported by Ariel OS">❌</span>[^usb-does-not-enumerate-https-github-com-embassy-rs-embassy-issues-2376-workaround-https-github-com-ariel-os-ariel-os-pull-1126]|
 |Wi-Fi|<span title="not available on this piece of hardware">–</span>|
@@ -57,7 +58,7 @@ Boards using this chip.
   <thead>
     <tr>
       <th colspan="3">Board</th>
-      <th colspan="12">Functionality</th>
+      <th colspan="13">Functionality</th>
     </tr>
     <tr>
       <th>Manufacturer Name</th>
@@ -69,6 +70,7 @@ Boards using this chip.
       <th>I2C Controller Mode</th>
       <th>SPI Main Mode</th>
       <th>UART</th>
+      <th>Ethernet</th>
       <th>User USB</th>
       <th>Ethernet over USB</th>
       <th>Wi-Fi</th>
@@ -91,6 +93,7 @@ Boards using this chip.
 		  <td class="support-cell" title="available in hardware, but not currently supported by Ariel OS">❌</td>
 		  <td class="support-cell" title="available in hardware, but not currently supported by Ariel OS">❌</td>
 		  <td class="support-cell" title="available in hardware, but not currently supported by Ariel OS">❌</td>
+		  <td class="support-cell" title="supported">✅</td>
 		  <td class="support-cell" title="supported">✅</td>
 		  <td class="support-cell" title="available in hardware, but not currently supported by Ariel OS">❌</td>
 		  <td class="support-cell" title="not available on this piece of hardware">–</td>
@@ -142,6 +145,14 @@ dt, dd {
 </style>
 
 
+## Additional Notes
 
+### Ethernet Link
+
+The Ethernet MAC address is derived from the device identity using [`if_index` `0`](https://ariel-os.github.io/ariel-os/dev/docs/api/ariel_os/identity/fn.interface_eui48.html).
+A different index should therefore be used to generate other EUI-48 identifiers.
+
+
+[^currently-only-supported-on-a-limited-set-of-boards]: Currently only supported on a limited set of boards.
 [^usb-does-not-enumerate-https-github-com-embassy-rs-embassy-issues-2376-workaround-https-github-com-ariel-os-ariel-os-pull-1126]: [USB does not enumerate](https://github.com/embassy-rs/embassy/issues/2376), [workaround](https://github.com/ariel-os/ariel-os/pull/1126).
 [^removing-items-not-supported]: Removing items not supported.

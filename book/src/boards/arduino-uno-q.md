@@ -30,6 +30,7 @@ laze build -b arduino-uno-q
 |I2C Controller Mode|<span title="supported">✅</span>|
 |SPI Main Mode|<span title="supported">✅</span>|
 |UART|<span title="supported">✅</span>|
+|Ethernet|<span title="not available on this piece of hardware">–</span>|
 |User USB|<span title="not available on this piece of hardware">–</span>[^despite-having-a-usb-port-on-the-board-it-is-only-usable-by-the-qualcomm-chip]|
 |Ethernet over USB|<span title="not available on this piece of hardware">–</span>|
 |Wi-Fi|<span title="not available on this piece of hardware">–</span>|

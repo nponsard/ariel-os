@@ -30,6 +30,7 @@ laze build -b st-b-l475e-iot01a
 |I2C Controller Mode|<span title="needs testing">🚦</span>|
 |SPI Main Mode|<span title="needs testing">🚦</span>|
 |UART|<span title="needs testing">🚦</span>|
+|Ethernet|<span title="not available on this piece of hardware">–</span>|
 |User USB|<span title="supported">✅</span>|
 |Ethernet over USB|<span title="available in hardware, but not currently supported by Ariel OS">❌</span>[^usb-does-not-enumerate-https-github-com-embassy-rs-embassy-issues-2376-workaround-https-github-com-ariel-os-ariel-os-pull-1126]|
 |Wi-Fi|<span title="available in hardware, but not currently supported by Ariel OS">❌</span>[^an-external-wi-fi-module-is-present-on-the-board]|

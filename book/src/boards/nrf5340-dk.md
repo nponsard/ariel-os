@@ -30,6 +30,7 @@ laze build -b nrf5340dk-app
 |I2C Controller Mode|<span title="supported">✅</span>|
 |SPI Main Mode|<span title="supported">✅</span>|
 |UART|<span title="supported">✅</span>|
+|Ethernet|<span title="not available on this piece of hardware">–</span>|
 |User USB|<span title="supported">✅</span>|
 |Ethernet over USB|<span title="supported">✅</span>|
 |Wi-Fi|<span title="not available on this piece of hardware">–</span>|
@@ -59,6 +60,7 @@ laze build -b nrf5340dk-net
 |I2C Controller Mode|<span title="available in hardware, but not currently supported by Ariel OS">❌</span>|
 |SPI Main Mode|<span title="available in hardware, but not currently supported by Ariel OS">❌</span>|
 |UART|<span title="available in hardware, but not currently supported by Ariel OS">❌</span>|
+|Ethernet|<span title="not available on this piece of hardware">–</span>|
 |User USB|<span title="not available on this piece of hardware">–</span>|
 |Ethernet over USB|<span title="not available on this piece of hardware">–</span>|
 |Wi-Fi|<span title="not available on this piece of hardware">–</span>|

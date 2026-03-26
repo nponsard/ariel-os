@@ -30,6 +30,7 @@ laze build -b nordic-thingy-91-x-nrf9151
 |I2C Controller Mode|<span title="supported">✅</span>|
 |SPI Main Mode|<span title="supported">✅</span>|
 |UART|<span title="needs testing">🚦</span>|
+|Ethernet|<span title="not available on this piece of hardware">–</span>|
 |User USB|<span title="not available on this piece of hardware">–</span>|
 |Ethernet over USB|<span title="not available on this piece of hardware">–</span>|
 |Wi-Fi|<span title="available in hardware, but not currently supported by Ariel OS">❌</span>[^requires-supporting-the-onboard-nrf7002-chip]|
@@ -59,6 +60,7 @@ laze build -b nordic-thingy-91-x-nrf5340-app
 |I2C Controller Mode|<span title="supported">✅</span>|
 |SPI Main Mode|<span title="supported">✅</span>|
 |UART|<span title="supported">✅</span>|
+|Ethernet|<span title="not available on this piece of hardware">–</span>|
 |User USB|<span title="supported">✅</span>|
 |Ethernet over USB|<span title="supported">✅</span>|
 |Wi-Fi|<span title="available in hardware, but not currently supported by Ariel OS">❌</span>[^requires-supporting-the-onboard-nrf7002-chip]|
@@ -88,6 +90,7 @@ laze build -b nordic-thingy-91-x-nrf5340-net
 |I2C Controller Mode|<span title="available in hardware, but not currently supported by Ariel OS">❌</span>|
 |SPI Main Mode|<span title="available in hardware, but not currently supported by Ariel OS">❌</span>|
 |UART|<span title="available in hardware, but not currently supported by Ariel OS">❌</span>|
+|Ethernet|<span title="not available on this piece of hardware">–</span>|
 |User USB|<span title="not available on this piece of hardware">–</span>|
 |Ethernet over USB|<span title="not available on this piece of hardware">–</span>|
 |Wi-Fi|<span title="available in hardware, but not currently supported by Ariel OS">❌</span>[^requires-supporting-the-onboard-nrf7002-chip]|
