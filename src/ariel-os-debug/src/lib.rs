@@ -183,7 +183,7 @@ pub mod backend {
 
     // Based on <https://blog.m-ou.se/format-args/>.
     #[doc(hidden)]
-    pub fn _print(args: core::fmt::Arguments) {
+    pub fn _print(args: core::fmt::Arguments<'_>) {
         use core::fmt::Write;
 
         DebugUart.write_fmt(args).unwrap();
