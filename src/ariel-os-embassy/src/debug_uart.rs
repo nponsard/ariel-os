@@ -1,7 +1,7 @@
 #![deny(clippy::pedantic)]
 
 #[cfg(context = "nrf")]
-type UartDriver = embassy_nrf::uarte::Uarte<'static, embassy_nrf::peripherals::UARTE0>;
+type UartDriver = embassy_nrf::uarte::Uarte<'static>;
 #[cfg(context = "stm32")]
 type UartDriver = embassy_stm32::usart::Uart<'static, embassy_stm32::mode::Blocking>;
 
@@ -78,7 +78,7 @@ mod iot_lab {
             )
         };
 
-        embassy_nrf::uarte::Uarte::new(p, Irqs, uart_rx, uart_tx, config)
+        embassy_nrf::uarte::Uarte::new(p, uart_rx, uart_tx, Irqs, config)
     }
 
     #[cfg(context = "stm32")]
