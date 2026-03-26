@@ -1,5 +1,5 @@
-version: 0.2.0
-boards:
+version: 0.3.0
+targets:
   ulanzi-tc001:
     chip: esp32-wroom-32d
     buttons:

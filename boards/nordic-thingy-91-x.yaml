@@ -1,5 +1,5 @@
-version: 0.2.0
-boards:
+version: 0.3.0
+targets:
   nordic-thingy-91-x-nrf9151:
     chip: nrf9151
     leds:

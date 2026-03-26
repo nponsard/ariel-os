@@ -1,5 +1,5 @@
-version: 0.2.0
-boards:
+version: 0.3.0
+targets:
   nrf9151-dk:
     chip: nrf9151
     leds:

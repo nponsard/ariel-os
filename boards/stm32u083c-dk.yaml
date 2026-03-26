@@ -1,5 +1,5 @@
-version: 0.2.0
-boards:
+version: 0.3.0
+targets:
   stm32u083c-dk:
     chip: stm32u083mc
     flags:
