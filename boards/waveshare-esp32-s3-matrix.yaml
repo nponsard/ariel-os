@@ -1,0 +1,8 @@
+version: 0.3.0
+targets:
+  waveshare-esp32-s3-matrix:
+    # website: https://www.waveshare.com/wiki/ESP32-S3-Matrix
+    chip: esp32s3fx4r2
+    flags:
+      - has_usb_device_port
+    # No buttons, no native LEDs, but an 8x8 WS281x chain on GPIO14.
