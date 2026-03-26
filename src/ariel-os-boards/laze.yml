@@ -82,6 +82,7 @@ builders:
   provides:
   - has_buttons
   - has_leds
+  - has_usb_device_port
 - name: nordic-thingy-91-x-nrf5340-net
   parent: nrf5340-net
   provides:
