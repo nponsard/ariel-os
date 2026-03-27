@@ -14,6 +14,12 @@ use ariel_os::{
     time::Timer,
 };
 
+#[cfg(feature = "gnss")]
+use ariel_os_sensors_gnss_time_ext::GnssTimeExt as _;
+
+const DEFAULT_SENSOR_DISPLAY_NAME: &str = "unknown";
+const DEFAULT_SENSOR_LABEL: &str = "no label";
+
 #[ariel_os::task(autostart, peripherals)]
 async fn main(peripherals: pins::Peripherals) {
     i2c_bus::init(peripherals);
@@ -38,6 +44,13 @@ async fn main(peripherals: pins::Peripherals) {
                     for (reading_channel, sample) in samples.samples() {
                         print_sample(sensor, sample, reading_channel);
                     }
+                    #[cfg(feature = "gnss")]
+                    if sensor
+                        .categories()
+                        .contains(&ariel_os::sensors::Category::Gnss)
+                    {
+                        print_gnss_time(sensor, &samples);
+                    }
                 }
                 Err(err) => {
                     error!("Error when reading: {}", err);
@@ -50,8 +63,8 @@ async fn main(peripherals: pins::Peripherals) {
 }
 
 fn print_sample(sensor: &dyn Sensor, sample: Sample, reading_channel: ReadingChannel) {
-    let display_name = sensor.display_name().unwrap_or("unknown");
-    let label = sensor.label().unwrap_or("no label");
+    let display_name = sensor.display_name().unwrap_or(DEFAULT_SENSOR_DISPLAY_NAME);
+    let label = sensor.label().unwrap_or(DEFAULT_SENSOR_LABEL);
 
     if reading_channel.label() == Label::Opaque {
         // Print only debug information about samples from opaque channels.
@@ -154,6 +167,40 @@ fn print_sample(sensor: &dyn Sensor, sample: Sample, reading_channel: ReadingCha
         SampleMetadata::ChannelTemporarilyUnavailable | SampleMetadata::ChannelDisabled => {
             // Printing is already handled above.
             unreachable!();
+        }
+    }
+}
+
+#[cfg(feature = "gnss")]
+fn print_gnss_time(sensor: &dyn Sensor, samples: &ariel_os_sensors::sensor::Samples) {
+    use ariel_os_sensors_gnss_time_ext::GnssTimeExtError;
+
+    let display_name = sensor.display_name().unwrap_or(DEFAULT_SENSOR_DISPLAY_NAME);
+    let label = sensor.label().unwrap_or(DEFAULT_SENSOR_LABEL);
+    match samples.time_of_fix_timestamp_nanos() {
+        Ok(timestamp_nanos) => {
+            info!(
+                "{} ({}): GNSS time in nanoseconds: {}",
+                display_name, label, timestamp_nanos
+            );
+        }
+        Err(GnssTimeExtError::InvalidSensor) => {
+            error!(
+                "{} ({}): GNSS time was requested on a sensor that is not a GNSS sensor",
+                display_name, label,
+            );
+        }
+        Err(GnssTimeExtError::Reading(SampleError::TemporarilyUnavailable)) => {
+            info!(
+                "{} ({}): GNSS sensor was not yet able to obtain the current time",
+                display_name, label,
+            );
+        }
+        Err(GnssTimeExtError::Reading(err)) => {
+            error!(
+                "{} ({}): error reading one of the time channel: {:?}",
+                display_name, label, err
+            );
         }
     }
 }
