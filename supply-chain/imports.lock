@@ -971,6 +971,12 @@ who = "Joel Dice <joel.dice@gmail.com>"
 criteria = "safe-to-deploy"
 version = "0.3.31"
 
+[[audits.bytecode-alliance.audits.futures-lite]]
+who = "Chris Fallin <chris@cfallin.org>"
+criteria = "safe-to-deploy"
+version = "1.13.0"
+notes = "No unsafe code and fairly straightforward/expected imports for async IO primitives."
+
 [[audits.bytecode-alliance.audits.futures-macro]]
 who = "Joel Dice <joel.dice@gmail.com>"
 criteria = "safe-to-deploy"
@@ -1050,6 +1056,12 @@ criteria = "safe-to-deploy"
 delta = "0.4.22 -> 0.4.27"
 notes = "Lots of minor updates to macros and such, nothing touching `unsafe`"
 
+[[audits.bytecode-alliance.audits.managed]]
+who = "Chris Fallin <chris@cfallin.org>"
+criteria = "safe-to-deploy"
+version = "0.8.0"
+notes = "No unsafe code."
+
 [[audits.bytecode-alliance.audits.object]]
 who = "Alex Crichton <alex@alexcrichton.com>"
 criteria = "safe-to-deploy"
@@ -1061,6 +1073,12 @@ who = "Alex Crichton <alex@alexcrichton.com>"
 criteria = "safe-to-deploy"
 delta = "0.37.1 -> 0.37.3"
 notes = "Lots of new support for new object features, no new unsafe or anything suspicious."
+
+[[audits.bytecode-alliance.audits.parking]]
+who = "Chris Fallin <chris@cfallin.org>"
+criteria = "safe-to-deploy"
+version = "2.2.1"
+notes = "forbid-unsafe crate with straightforward imports."
 
 [[audits.bytecode-alliance.audits.percent-encoding]]
 who = "Alex Crichton <alex@alexcrichton.com>"
@@ -1121,6 +1139,12 @@ who = "Alex Crichton <alex@alexcrichton.com>"
 criteria = "safe-to-deploy"
 delta = "0.4.7 -> 0.4.9"
 notes = "Minor OS compat updates but otherwise nothing major here."
+
+[[audits.bytecode-alliance.audits.waker-fn]]
+who = "Chris Fallin <chris@cfallin.org>"
+criteria = "safe-to-deploy"
+version = "1.2.0"
+notes = "Trivial crate with no unsafe code or use of any unsafe or risky APIs."
 
 [[audits.embark-studios.audits.ident_case]]
 who = "Johan Andersson <opensource@embark-studios.com>"
@@ -3266,12 +3290,6 @@ criteria = "safe-to-deploy"
 delta = "0.10.3 -> 0.10.4"
 notes = "Adds panics to prevent a block size of zero from causing unsoundness."
 aggregated-from = "https://raw.githubusercontent.com/zcash/zcash/master/qa/supply-chain/audits.toml"
-
-[[audits.zcash.audits.darling_macro]]
-who = "Jack Grigg <jack@electriccoin.co>"
-criteria = "safe-to-deploy"
-delta = "0.20.11 -> 0.21.3"
-aggregated-from = "https://raw.githubusercontent.com/zcash/wallet/main/supply-chain/audits.toml"
 
 [[audits.zcash.audits.document-features]]
 who = "Jack Grigg <jack@electriccoin.co>"
