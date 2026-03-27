@@ -668,7 +668,6 @@ dependencies = [
  "cfg-if",
  "cortex-m",
  "cortex-m-rt",
- "cortex-m-semihosting",
  "critical-section",
  "defmt 1.0.1",
  "embassy-rp",

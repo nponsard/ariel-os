@@ -47,7 +47,6 @@ static_cell = { workspace = true, optional = true }
 # cortex-m specifics
 cortex-m = { workspace = true }
 cortex-m-rt = { workspace = true }
-cortex-m-semihosting = { workspace = true }
 panic-semihosting = { version = "0.6.0", features = ["exit"] }
 
 [target.'cfg(context = "native")'.dependencies]

@@ -66,7 +66,6 @@ cortex-m = { version = "0.7", default-features = false, features = [
   "inline-asm",
 ] }
 cortex-m-rt = { version = "0.7.5" }
-cortex-m-semihosting = { version = "0.5" }
 critical-section = { version = "1.2.0" }
 featurecomb = "0.2.0"
 # Disabling default features may reduce the code size by not providing atomics
