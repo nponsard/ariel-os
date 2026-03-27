@@ -361,10 +361,6 @@ criteria = "safe-to-deploy"
 version = "0.7.5"
 criteria = "safe-to-deploy"
 
-[[exemptions.cortex-m-semihosting]]
-version = "0.5.0"
-criteria = "safe-to-deploy"
-
 [[exemptions.cpufeatures]]
 version = "0.2.17"
 criteria = "safe-to-deploy"
@@ -1119,10 +1115,6 @@ criteria = "safe-to-deploy"
 
 [[exemptions.p384]]
 version = "0.13.1"
-criteria = "safe-to-deploy"
-
-[[exemptions.panic-semihosting]]
-version = "0.6.0"
 criteria = "safe-to-deploy"
 
 [[exemptions.parking]]
