@@ -42,3 +42,4 @@
 - [STM32U083C-DK](./stm32u083c-dk.md)
 - [Ulanzi TC001](./ulanzi-tc001.md)
 - [Unihiker K10](./unihiker-k10.md)
+- [Waveshare ESP32-S3-Matrix](./waveshare-esp32-s3-matrix.md)
