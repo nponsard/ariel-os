@@ -1,0 +1,16 @@
+version: 0.3.0
+targets:
+  waveshare-esp32-s3-matrix:
+    # website: https://www.waveshare.com/wiki/ESP32-S3-Matrix
+    chip: esp32s3fx4r2
+    flags:
+      - has_usb_device_port
+    # To be added, eg. through ariel.global_env.ESPFLASH_ARGS and once
+    # <https://github.com/esp-rs/espflash/issues/1023> is resolved:
+    #
+    # The device presents as VID/PID 303a:1001, and it'd be great to pass that
+    # information on to espflash so it won't give us boards where we can know
+    # they are *not* this device. (Might be even general enough to put in the
+    # chip's config, not sure for lack of other ESP32S3 devices).
+
+    # No buttons, no native LEDs, but an 8x8 WS281x chain on GPIO14.

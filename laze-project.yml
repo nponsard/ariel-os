@@ -498,6 +498,9 @@ contexts:
         - TARGET_CC="${CC}"
         - TARGET_CFLAGS="${CFLAGS}"
 
+  - name: esp32s3fx4r2
+    parent: esp32s3
+
   - name: esp32s3fx8
     parent: esp32s3
 
