@@ -1117,10 +1117,6 @@ criteria = "safe-to-deploy"
 version = "0.13.1"
 criteria = "safe-to-deploy"
 
-[[exemptions.panic-semihosting]]
-version = "0.6.0"
-criteria = "safe-to-deploy"
-
 [[exemptions.parking]]
 version = "2.2.1"
 criteria = "safe-to-deploy"
