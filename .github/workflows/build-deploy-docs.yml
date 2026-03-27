@@ -110,7 +110,12 @@ jobs:
             -p embedded-hal-async \
             -p embedded-io-async@0.6.1
 
-          cargo doc --no-deps -p ariel-os-sensors-gnss-time-ext
+          # These are split out so items from `ariel-os-sensors` are properly
+          # resolved.
+          cargo doc --no-deps \
+            -p ariel-os-sensors-gnss-time-ext \
+            -p ariel-os-sensors-utils
+
           RUSTDOCFLAGS='-D warnings --cfg context="esp32c6" --cfg nightly' cargo doc \
               --target=riscv32imac-unknown-none-elf \
               --no-deps \
