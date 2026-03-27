@@ -120,11 +120,11 @@ threading = [
   "embassy-time-queue-utils?/_generic-queue",
 ]
 
-## Enables timers
+## Enables a time driver.
 time = [
-  "dep:embassy-time",
   "dep:embassy-time-driver",
   "dep:embassy-time-queue-utils",
+  # `esp-sync` is used for the time driver.
   "dep:esp-sync",
 ]
 
@@ -160,7 +160,14 @@ ble-peripheral = ["ble-esp"]
 wifi = []
 
 ## Enables built-in Wi-Fi hardware.
-wifi-esp = ["dep:allocator-api2", "_radio-esp", "esp-radio?/wifi", "wifi"]
+wifi-esp = [
+  "dep:allocator-api2",
+  # `embassy-time` is used for Wi-Fi-specific functionality.
+  "dep:embassy-time",
+  "_radio-esp",
+  "esp-radio?/wifi",
+  "wifi",
+]
 
 ## Enables facilities required by the built-in Wi-Fi and/or BLE radio.
 _radio-esp = [
@@ -169,8 +176,10 @@ _radio-esp = [
   "dep:esp-alloc",
   "dep:esp-radio",
   "dep:esp-radio-rtos-driver",
+  # `esp-sync` is used in scheduler-related facilities.
   "dep:esp-sync",
   "esp-radio?/esp-alloc",
+  "time",
 ]
 
 #! ## Executor type selection for the (autostarted) main executor
