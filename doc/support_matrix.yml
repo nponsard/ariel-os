@@ -284,6 +284,31 @@ chips:
       ble: not_available
       ethernet: not_available
 
+  esp32-d0wd:
+    name: ESP32-D0WD
+    manufacturer: Espressif
+    support:
+      gpio: supported
+      debug_output: supported
+      hwrng: supported
+      i2c_controller: supported
+      spi_main: needs_testing
+      uart: needs_testing
+      logging: supported
+      storage:
+        status: not_currently_supported
+        comments:
+          - requires partitioning support
+      wifi:
+        status: supported
+      ble: supported
+      user_usb:
+        status: not_available
+        comments:
+          - no generic USB peripheral
+      ethernet_over_usb: not_available
+      ethernet: not_available
+
   esp32c3:
     name: ESP32-C3
     manufacturer: Espressif
@@ -1223,6 +1248,11 @@ builders:
       wifi: not_available
       ethernet_over_usb: supported
 
+  ulanzi-tc001:
+    chip: esp32-d0wd
+    tier: "2"
+    support:
+
   unihiker-k10:
     chip: esp32s3
     tier: "2"
@@ -1428,6 +1458,11 @@ boards:
     url: https://web.archive.org/web/20250119131656/https://www.st.com/en/evaluation-tools/stm32u083c-dk.html
     builders:
       - stm32u083c-dk
+
+  - name: Ulanzi TC001
+    url: https://web.archive.org/web/20260206132721/https://www.ulanzi.com/products/ulanzi-pixel-smart-clock-2882
+    builders:
+      - ulanzi-tc001
 
   - name: Unihiker K10
     url: https://web.archive.org/web/20260207013308/https://www.unihiker.com/products/k10

@@ -40,4 +40,5 @@
 - [ST NUCLEO-WBA65RI](./st-nucleo-wba65ri.md)
 - [ST STEVAL-MKBOXPRO](./st-steval-mkboxpro.md)
 - [STM32U083C-DK](./stm32u083c-dk.md)
+- [Ulanzi TC001](./ulanzi-tc001.md)
 - [Unihiker K10](./unihiker-k10.md)
