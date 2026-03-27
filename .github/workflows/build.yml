@@ -353,8 +353,16 @@ jobs:
           echo "LAZE_BUILDERS=${LAZE_BUILDERS}"
           echo "LAZE_DISABLE=${LAZE_DISABLE}"
           laze build -mg info-boards | uniq
+          # This will test DHCP IPv4 as it is the default
           CONFIG_WIFI_NETWORK='test' CONFIG_WIFI_PASSWORD='password' laze build -DCARGO_ARGS+='--locked' --global --partition hash:${{ matrix.partition }}
 
+      - name: "static IPv4/IPv6 compilation tests (default toolchain)"
+        if: steps.should-skip.outputs.result != 'true'
+        run: |
+          # Build the udp-echo example with static IPv4
+          CONFIG_WIFI_NETWORK='test' CONFIG_WIFI_PASSWORD='password' laze build -DCARGO_ARGS+='--locked' --global --builders rpi-pico-w --partition hash:${{ matrix.partition }} --apps udp-echo -s network-config-ipv4-static
+          # Build the udp-echo example with static IPv6
+          CONFIG_WIFI_NETWORK='test' CONFIG_WIFI_PASSWORD='password' CONFIG_NET_IPV6_STATIC_ADDRESS='2001:db8::0' CONFIG_NET_IPV6_STATIC_GATEWAY_ADDRESS='2001:db8::1' laze build -DCARGO_ARGS+='--locked' --global --builders rpi-pico-w --partition hash:${{ matrix.partition }} --apps udp-echo -s ipv6 -s network-config-ipv6-static
       # cleanup previous build artifacts. do in background (no need to wait).
       - name: "cleanup stable build artifacts"
         if: github.event_name == 'schedule' && steps.should-skip.outputs.result != 'true'
