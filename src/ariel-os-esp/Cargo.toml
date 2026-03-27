@@ -144,6 +144,7 @@ ble-esp = [
   "dep:esp-radio",
   "dep:esp-radio-rtos-driver",
   "dep:trouble-host",
+  "_radio-esp",
   "ariel-os-embassy-common/ble",
   "ariel-os-random/csprng",
   "esp-radio/ble",
@@ -163,10 +164,13 @@ wifi-esp = [
   "dep:esp-alloc",
   "dep:esp-radio",
   "dep:esp-radio-rtos-driver",
+  "_radio-esp",
   "esp-radio/esp-alloc",
   "esp-radio/wifi",
   "wifi",
 ]
+
+_radio-esp = []
 
 #! ## Executor type selection for the (autostarted) main executor
 #! Exactly one of the features below must be enabled at once.
