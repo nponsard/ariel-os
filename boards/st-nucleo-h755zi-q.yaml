@@ -21,7 +21,7 @@ targets:
         color: yellow
         active: high
       led2:
-        pin: PE1
+        pin: PB14
         aliases:
           - LD3
         color: red
