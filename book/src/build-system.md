@@ -31,7 +31,7 @@ Tasks available in Ariel OS include:
 - `flash-erase-all`: Erases the entire flash memory, including user data. Unlocks it if locked.
 - `reset`: Reboots the target.
 - `tree`: Prints the application's `cargo tree`.
-- `vscode-config`: update rust-analyzer configuration for VSCode, see [vscode-configuration](./vscode-configuration.md)
+- `editor-config`: update rust-analyzer configuration for supported code editors, see [Code Editor Configuration](./code-editor-configuration.md)
 - `fmt`: Formats the project's Rust source code following the [Coding Conventions](./coding-conventions.md) (formats all Rust files except generated ones).
 
 > [!IMPORTANT]
