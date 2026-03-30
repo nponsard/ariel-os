@@ -7,9 +7,6 @@ repository.workspace = true
 license.workspace = true
 
 [dependencies]
-allocator-api2 = { version = "0.3.0", default-features = false, features = [
-  "alloc",
-], optional = true }
 ariel-os-debug = { workspace = true }
 ariel-os-embassy-common = { workspace = true }
 ariel-os-random = { workspace = true, optional = true }
@@ -161,7 +158,6 @@ wifi = []
 
 ## Enables built-in Wi-Fi hardware.
 wifi-esp = [
-  "dep:allocator-api2",
   # `embassy-time` is used for Wi-Fi-specific functionality.
   "dep:embassy-time",
   "_radio-esp",
