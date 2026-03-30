@@ -139,15 +139,11 @@ usb = []
 ble-esp = [
   "dep:bt-hci",
   "dep:embassy-sync",
-  "dep:embassy-time",
-  "dep:esp-alloc",
-  "dep:esp-radio",
-  "dep:esp-radio-rtos-driver",
   "dep:trouble-host",
+  "_radio-esp",
   "ariel-os-embassy-common/ble",
   "ariel-os-random/csprng",
-  "esp-radio/ble",
-  "esp-radio/esp-alloc",
+  "esp-radio?/ble",
   "hwrng",
 ]
 ble-central = ["ble-esp"]
@@ -157,15 +153,17 @@ ble-peripheral = ["ble-esp"]
 wifi = []
 
 ## Enables built-in Wi-Fi hardware.
-wifi-esp = [
-  "dep:allocator-api2",
+wifi-esp = ["dep:allocator-api2", "_radio-esp", "esp-radio?/wifi", "wifi"]
+
+## Enables facilities required by the built-in Wi-Fi and/or BLE radio.
+_radio-esp = [
+  # `embassy-time` is used in scheduler-related facilities.
   "dep:embassy-time",
   "dep:esp-alloc",
   "dep:esp-radio",
   "dep:esp-radio-rtos-driver",
-  "esp-radio/esp-alloc",
-  "esp-radio/wifi",
-  "wifi",
+  "dep:esp-sync",
+  "esp-radio?/esp-alloc",
 ]
 
 #! ## Executor type selection for the (autostarted) main executor
