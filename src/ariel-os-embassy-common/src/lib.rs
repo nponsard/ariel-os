@@ -31,6 +31,7 @@ pub mod reexports {
     //! Crate re-exports.
 
     // Used by macros provided by this crate.
+    #[cfg(feature = "i2c")]
     pub use embassy_time;
     pub use embedded_hal_async;
 }

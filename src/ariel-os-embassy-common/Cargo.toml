@@ -12,7 +12,7 @@ ariel-os-utils = { workspace = true }
 const-sha1 = { version = "0.3.0", default-features = false }
 defmt = { workspace = true, optional = true }
 embassy-executor = { workspace = true }
-embassy-time = { workspace = true }
+embassy-time = { workspace = true, optional = true }
 embedded-hal = { workspace = true }
 embedded-hal-async = { workspace = true }
 fugit = { workspace = true, optional = true }
@@ -24,7 +24,7 @@ trouble-host = { workspace = true, optional = true }
 external-interrupts = []
 
 ## Enables I2C support.
-i2c = ["dep:fugit"]
+i2c = ["dep:embassy-time", "dep:fugit"]
 
 ## Enables SPI support.
 spi = ["dep:fugit"]
