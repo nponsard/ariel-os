@@ -1231,8 +1231,8 @@ modules:
 
   - name: network
     selects:
-      - ?ipv4
       - network_device
+      - ?ipv4
 
   - name: network-config-ipv4-default
     help: use default network configuration method
@@ -1250,7 +1250,6 @@ modules:
     help: use DHCPv4 for network configuration
     selects:
       - ipv4
-      - network
       # Needed for aliasing.
       - network-config-dhcp
     provides_unique:
@@ -1269,7 +1268,6 @@ modules:
     help: use static IPv4 network configuration
     selects:
       - ipv4
-      - network
       # Needed for aliasing.
       - network-config-static
     provides_unique:
@@ -1281,6 +1279,7 @@ modules:
 
   - name: ipv4
     selects:
+      - network
       - network-config-ipv4-default
     env:
       global:
@@ -1297,7 +1296,6 @@ modules:
     help: use static IPv6 network configuration
     selects:
       - ipv6
-      - network
     provides_unique:
       - network-config-ipv6
     env:
@@ -1307,6 +1305,7 @@ modules:
 
   - name: ipv6
     selects:
+      - network
       - network-config-ipv6-default
     env:
       global:
