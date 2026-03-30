@@ -18,3 +18,14 @@ apps:
       - st-nucleo-wb55
       - st-steval-mkboxpro
       - stm32u083c-dk
+    selects:
+      - ?defmt-app
+
+modules:
+  - name: defmt-app
+    selects:
+      - defmt
+    env:
+      global:
+        FEATURES:
+          - defmt
