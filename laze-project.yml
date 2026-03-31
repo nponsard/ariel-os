@@ -1164,7 +1164,8 @@ modules:
       - defmt:
           - defmt-rtt
       - log:
-          - rtt-target
+          - ?rtt-target
+          - ?debug-uart
     provides_unique:
       - embedded-test-runner
 
