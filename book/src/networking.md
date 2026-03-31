@@ -16,11 +16,14 @@ through [laze modules][laze-modules-book].
 
 - `ethernet-stm32`: Selects Ethernet on STM32 chips.
   Currently only the reduced media-independent interface (RMII) is supported.
+- `ltem-nrf-modem`: Selects LTE-M on nRF91 MCUs.
 - `usb-ethernet`: Selects Ethernet over USB (currently using USB CDC-NCM).
 - `wifi-cyw43`: Selects Wi-Fi using the CYW43 chip along an RP2040 or RP235x MCU (e.g., on the Raspberry Pi Pico W or Pico 2 W).
 - `wifi-esp`: Selects Wi-Fi on an ESP32 MCU.
 
 ## Network Credentials
+
+### Wi-Fi
 
 For Wi-Fi, the network credentials have to be supplied via environment variables:
 
@@ -28,12 +31,32 @@ For Wi-Fi, the network credentials have to be supplied via environment variables
 CONFIG_WIFI_NETWORK=<ssid> CONFIG_WIFI_PASSWORD=<pwd> laze build ...
 ```
 
+### Cellular Networking
+
+> [!WARNING]
+> This module is still experimental and only supports the nRF91 family of microcontrollers.
+
+The following environment variables can be used to authenticate to the cellular network:
+
+- `CONFIG_CELLULAR_PDN_APN`: The access point name to connect to.
+- `CONFIG_CELLULAR_PDN_AUTHENTICATION_PROTOCOL`: The protocol used to authenticate, must be one of `NONE`, `PAP`, or `CHAP`.
+  If `PAP` or `CHAP` is selected, `CONFIG_CELLULAR_PDN_USERNAME` and `CONFIG_CELLULAR_PDN_PASSWORD` need to be set.
+  `NONE` doesn't require more environment variables.
+- `CONFIG_CELLULAR_PDN_USERNAME`: The username used to authenticate to the network.
+- `CONFIG_CELLULAR_PDN_PASSWORD`: The password used to authenticate to the network.
+- `CONFIG_SIM_PIN`: The code to unlock the SIM.
+
+If some environment variables are not configured, the default provided by the modem and SIM will be used.
+
 ## Using the Networking Link on the Device
 
 ### Network Configuration
 
 > [!IMPORTANT]
 > When selecting a `network-config-*` [laze module](./build-system.md#laze-modules), this module must be placed *before* the `network` laze module in the [`selects` array][enabling-laze-modules-book].
+
+> [!NOTE]
+> IPv4 and IPv6 configurations are ignored when using `ltem-nrf-modem`, and is instead set by the modem.
 
 #### IPv4
 
