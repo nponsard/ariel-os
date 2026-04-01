@@ -226,6 +226,7 @@ mod backend {
 
 pub use backend::*;
 
+#[allow(unused, reason = "conditional compilation")]
 #[doc(hidden)]
 #[cfg(feature = "log")]
 mod logger {
@@ -259,6 +260,11 @@ mod logger {
         }
     };
 
+    /// Initializes the `log` logger.
+    ///
+    /// # Panics
+    ///
+    /// When a logger has already been set.
     pub fn init() {
         #[cfg(target_has_atomic = "ptr")]
         {
@@ -286,7 +292,7 @@ mod logger {
             });
         }
 
-        log::debug!("debug logging enabled at level {}", MAX_LEVEL);
+        log::debug!("debug logging enabled at level {MAX_LEVEL}");
     }
 
     struct DebugLogger;

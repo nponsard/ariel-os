@@ -172,6 +172,20 @@ jobs:
             --
             --deny warnings
 
+      - name: lint with Clippy when using the `log` logging facade
+        uses: clechasseur/rs-clippy-check@286fd9545eb133adad54b4af34bcb642e266ddd1 # v5
+        with:
+          args: |
+            --locked
+            --features "
+              log,
+              no-boards,
+            "
+            -p ariel-os
+            -p ariel-os-debug
+            --
+            --deny warnings
+
       - run: echo 'RUSTFLAGS=--cfg context="esp32c6" --cfg getrandom_backend="custom"' >> $GITHUB_ENV
       - name: clippy for ESP32
         uses: clechasseur/rs-clippy-check@286fd9545eb133adad54b4af34bcb642e266ddd1 # v5
