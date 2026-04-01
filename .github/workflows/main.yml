@@ -314,6 +314,19 @@ jobs:
             --
             --deny warnings
 
+      - name: Clippy on nrf91 sensor drivers
+        uses: clechasseur/rs-clippy-check@286fd9545eb133adad54b4af34bcb642e266ddd1 # v5
+        with:
+          args: |
+            --locked
+            -p ariel-os-sensor-nrf91-gnss
+            --features "
+              ariel-os-debug-log/log,
+              nrf-modem/nrf9160
+              "
+            --
+            --deny warnings
+
   lint-rustdoc:
     runs-on: ubuntu-latest
 
