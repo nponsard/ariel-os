@@ -1841,6 +1841,9 @@ modules:
     help: use esp-println in ariel-os-debug
     context:
       - esp
+    disables:
+      # espflash monitor doesn't support semihosting.
+      - semihosting
     provides_unique:
       - ariel-os-debug-backend
     env:
