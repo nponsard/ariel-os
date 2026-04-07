@@ -17,23 +17,13 @@
 #[featurecomb::comb]
 mod _featurecomb {}
 
-#[cfg(feature = "defmt")]
-pub mod defmt {
-    //! Selected [`defmt`] items.
-
-    // This module is hidden in the docs, but would still be imported by a wildcard import of this
-    // crate's items.
-    #[doc(hidden)]
-    pub mod hidden {
-        // Required so the macros can access it.
-        #[doc(hidden)]
-        pub use defmt;
-    }
-
-    pub use defmt::{Debug2Format, Display2Format, Format};
-
-    // These are required "internally" by `defmt`.
-    pub use defmt::{Formatter, Str, export, unreachable};
+// This module is hidden in the docs, but would still be imported by a wildcard import of this
+// crate's items.
+#[doc(hidden)]
+pub mod hidden {
+    // Required so the macros can access it.
+    #[cfg(feature = "defmt")]
+    pub use defmt;
 }
 
 #[cfg(feature = "defmt")]
@@ -85,7 +75,7 @@ mod log_macros {
     #[macro_export]
     macro_rules! trace {
         ($($arg:tt)*) => {{
-            use $crate::defmt::hidden::defmt;
+            use $crate::hidden::defmt;
             if true {
                 defmt::trace!($($arg)*);
             } else {
@@ -98,7 +88,7 @@ mod log_macros {
     #[macro_export]
     macro_rules! debug {
         ($($arg:tt)*) => {{
-            use $crate::defmt::hidden::defmt;
+            use $crate::hidden::defmt;
             if true {
                 defmt::debug!($($arg)*);
             } else {
@@ -111,7 +101,7 @@ mod log_macros {
     #[macro_export]
     macro_rules! info {
         ($($arg:tt)*) => {{
-            use $crate::defmt::hidden::defmt;
+            use $crate::hidden::defmt;
             if true {
                 defmt::info!($($arg)*);
             } else {
@@ -124,7 +114,7 @@ mod log_macros {
     #[macro_export]
     macro_rules! warn {
         ($($arg:tt)*) => {{
-            use $crate::defmt::hidden::defmt;
+            use $crate::hidden::defmt;
             if true {
                 defmt::warn!($($arg)*);
             } else {
@@ -137,7 +127,7 @@ mod log_macros {
     #[macro_export]
     macro_rules! error {
         ($($arg:tt)*) => {{
-            use $crate::defmt::hidden::defmt;
+            use $crate::hidden::defmt;
             if true {
                 defmt::error!($($arg)*);
             } else {
@@ -150,7 +140,7 @@ mod log_macros {
     #[macro_export]
     macro_rules! println {
         ($($arg:tt)*) => {{
-            use $crate::defmt::hidden::defmt;
+            use $crate::hidden::defmt;
             if true {
                 defmt::println!($($arg)*);
             } else {
@@ -256,7 +246,7 @@ impl<T: AsRef<[u8]>> core::fmt::Display for Hex<T> {
 #[cfg(feature = "defmt")]
 impl<T: AsRef<[u8]>> defmt::Format for Hex<T> {
     fn format(&self, f: defmt::Formatter<'_>) {
-        ::defmt::write!(f, "{=[u8]:02x}", self.0.as_ref());
+        defmt::write!(f, "{=[u8]:02x}", self.0.as_ref());
     }
 }
 
@@ -282,6 +272,6 @@ impl<T: AsRef<[u8]>> core::fmt::Display for Cbor<T> {
 #[cfg(feature = "defmt")]
 impl<T: AsRef<[u8]>> defmt::Format for Cbor<T> {
     fn format(&self, f: defmt::Formatter<'_>) {
-        ::defmt::write!(f, "{=[u8]:cbor}", self.0.as_ref());
+        defmt::write!(f, "{=[u8]:cbor}", self.0.as_ref());
     }
 }
