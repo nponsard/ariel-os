@@ -14,7 +14,7 @@ use trouble_host::{
     prelude::{AddrKind, BdAddr},
 };
 
-use ariel_os_debug::log::debug;
+use ariel_os_debug_log::debug;
 use ariel_os_embassy_common::ble::Config;
 
 // Must be async and return &trouble_host::Stack<'static, impl Controller>
