@@ -3,7 +3,7 @@
 
 use ariel_os::debug::{
     ExitCode, exit,
-    log::{Hex, defmt, info},
+    log::{Hex, info},
 };
 
 // Imports for using [`ariel_os::storage`]
@@ -13,7 +13,8 @@ use serde::{Deserialize, Serialize};
 /// Example object.
 ///
 /// The serde Serialize / Deserialize traits are required for storage.
-#[derive(Serialize, Deserialize, Debug, defmt::Format)]
+#[derive(Serialize, Deserialize, Debug)]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
 struct MyConfig {
     val_one: heapless::String<64>,
     val_two: u64,
@@ -69,7 +70,6 @@ async fn main() {
         .await
         .unwrap()
     {
-        // no `defmt::Format` for arrayvec, so just print length
         info!(
             "Attempting to retrieve string value as ArrayString: {}",
             Hex(string.as_bytes())

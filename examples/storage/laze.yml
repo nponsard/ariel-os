@@ -1,4 +1,14 @@
 apps:
   - name: example-storage
     selects:
+      - ?example-storage-defmt
       - sw/storage
+
+modules:
+  - name: example-storage-defmt
+    selects:
+      - defmt
+    env:
+      global:
+        FEATURES:
+          - defmt
