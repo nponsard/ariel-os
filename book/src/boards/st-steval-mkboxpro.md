@@ -46,7 +46,7 @@ The `st-steval-mkboxpro` can be flashed using USB DFU and using a debug probe.
 
 After connecting a USB-C cable, start the bootloader with DFU by cycling the power of the microcontroller while pressing button 2 on the side of the case.
 The microcontroller enumerates as "STMicroelectronics STM Device in DFU Mode" on the host computer.
-Use the `laze build flash-dfu` task to flash the microcontroller.
+Use the `laze build flash-dfuse` task to flash the microcontroller.
 
 ##### Using a Debug Probe for Flashing
 
