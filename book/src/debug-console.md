@@ -1,12 +1,25 @@
 # Debug Console
 
+<!-- NOTE: "Currently" because it could be extended with other semihosting functionality to make it an actual console. -->
+The debug console is currently conceptually composed of the debug output and of the ability for the target to close it (when supported).
+The debug console is enabled by default and the corresponding [laze module][laze-modules-book] is `debug-console`.
+
 ## Printing on the Debug Console
 
-The debug console is enabled by default and the corresponding [laze module][laze-modules-book] is `debug-console`.
 The [`ariel_os::debug::println!()`][println-macro-rustdoc] macro is used to print on the debug console.
 
 When the debug console is enabled, panic messages are automatically printed to it.
 If this is unwanted, the `panic-printing` [laze module][laze-modules-book] can be disabled.
+
+## Closing the Debug Console from Firmware
+
+When using semihosting, it is possible for the target to request the debug console to exit, and to return an exit code indicating success or failure.
+In Ariel OS, the [`ariel_os::debug::exit()` function][debug-exit-fn-rustdoc] can be used for this.
+When using a host tool that supports semihosting, this will cause the tool to exit, with the exit code given to [`exit()`][debug-exit-fn-rustdoc] on the target being passed to the host.
+
+The laze configuration automatically enables semihosting on the target when the host tool used *for flashing* supports semihosting (e.g., probe-rs).
+When the flashing tool does not, support for semihosting can still be enabled in the firmware by selecting the `semihosting` [laze module][laze-modules-book].
+This is needed to later be able to attach a semihosting-enabled host tool to the target.
 
 ## Debug Logging
 
@@ -86,3 +99,4 @@ Ariel OS's logger for `log` supports configuring the log level globally, but do
 [log]: https://github.com/rust-lang/log
 [laze-modules-book]: ./build-system.md#laze-modules
 [println-macro-rustdoc]: https://ariel-os.github.io/ariel-os/dev/docs/api/ariel_os/debug/macro.println.html
+[debug-exit-fn-rustdoc]: https://ariel-os.github.io/ariel-os/dev/docs/api/ariel_os/debug/fn.exit.html
