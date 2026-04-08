@@ -565,8 +565,6 @@ contexts:
       - cortex-m0
       - single-core
       - ram-tiny
-    disables:
-      - semihosting
     env:
       isr_stacksize_required_default: "512"
       executor_stacksize_required_default: "512"
