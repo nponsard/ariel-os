@@ -54,7 +54,7 @@ impl AccelFullScale {
 enum Odr {
     PowerDown = 0x0 << 4,
     _1_6HzUltraLpMode = 0x1 << 4,
-    _3HUltrazLpMode = 0x2 << 4,
+    _3HzUltraLpMode = 0x2 << 4,
     _6HzUltraLpMode = 0x3 << 4,
     _6HzNormalMode = 0x4 << 4,
     _12_5HzNormalMode = 0x5 << 4,
