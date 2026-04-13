@@ -20,7 +20,7 @@ mod _featurecomb {}
 // This module is hidden in the docs, but would still be imported by a wildcard import of this
 // crate's items.
 #[doc(hidden)]
-pub mod hidden {
+pub mod hidden_for_logging_macros {
     // Required so the macros can access it.
     #[cfg(feature = "defmt")]
     pub use defmt;
@@ -75,7 +75,7 @@ mod log_macros {
     #[macro_export]
     macro_rules! trace {
         ($($arg:tt)*) => {{
-            use $crate::hidden::defmt;
+            use $crate::hidden_for_logging_macros::defmt;
             if true {
                 defmt::trace!($($arg)*);
             } else {
@@ -88,7 +88,7 @@ mod log_macros {
     #[macro_export]
     macro_rules! debug {
         ($($arg:tt)*) => {{
-            use $crate::hidden::defmt;
+            use $crate::hidden_for_logging_macros::defmt;
             if true {
                 defmt::debug!($($arg)*);
             } else {
@@ -101,7 +101,7 @@ mod log_macros {
     #[macro_export]
     macro_rules! info {
         ($($arg:tt)*) => {{
-            use $crate::hidden::defmt;
+            use $crate::hidden_for_logging_macros::defmt;
             if true {
                 defmt::info!($($arg)*);
             } else {
@@ -114,7 +114,7 @@ mod log_macros {
     #[macro_export]
     macro_rules! warn {
         ($($arg:tt)*) => {{
-            use $crate::hidden::defmt;
+            use $crate::hidden_for_logging_macros::defmt;
             if true {
                 defmt::warn!($($arg)*);
             } else {
@@ -127,7 +127,7 @@ mod log_macros {
     #[macro_export]
     macro_rules! error {
         ($($arg:tt)*) => {{
-            use $crate::hidden::defmt;
+            use $crate::hidden_for_logging_macros::defmt;
             if true {
                 defmt::error!($($arg)*);
             } else {
@@ -140,7 +140,7 @@ mod log_macros {
     #[macro_export]
     macro_rules! println {
         ($($arg:tt)*) => {{
-            use $crate::hidden::defmt;
+            use $crate::hidden_for_logging_macros::defmt;
             if true {
                 defmt::println!($($arg)*);
             } else {
