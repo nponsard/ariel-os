@@ -31,7 +31,7 @@ pub fn print_panic(info: &core::panic::PanicInfo<'_>) {
     // We *need* to use the `Display` implementation and cannot use `PanicMessage::as_str()` as
     // that would not work for dynamically formatted messages.
     #[cfg(feature = "defmt")]
-    let message = ariel_os_debug_log::defmt::Display2Format(&message);
+    let message = ariel_os_debug_log::Display2Format(&message);
 
     // Mimics the `Display` implementation of `core::panic::PanicInfo`.
     println!("panicked at {}:\n{}", location, message);
