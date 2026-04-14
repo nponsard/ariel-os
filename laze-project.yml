@@ -1063,7 +1063,7 @@ modules:
         FEATURES:
           - ariel-os/log
         CARGO_ENV:
-          - DEBUG_LOG_LEVEL=${LOG}
+          - LOG_LEVEL=${LOG}
 
   - name: panic-printing
     context: ariel-os

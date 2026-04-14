@@ -185,7 +185,7 @@ mod logger {
 
     const MAX_LEVEL: LevelFilter = {
         let max_level =
-            ariel_os_utils::str_from_env_or!("DEBUG_LOG_LEVEL", "info", "maximum level to log");
+            ariel_os_utils::str_from_env_or!("LOG_LEVEL", "info", "maximum level to log");
 
         // NOTE: these magic strings could likely be replaced with calls to
         // `LevelFilter::*::as_str()` if that method was const.
