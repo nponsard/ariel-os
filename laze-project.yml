@@ -973,7 +973,7 @@ modules:
   - name: debug-console
     context: ariel-os
     selects:
-      - ?debug-logging-facade-default
+      - ?logging-facade-default
       - ?panic-printing
     env:
       global:
@@ -1033,18 +1033,17 @@ modules:
         RUSTFLAGS:
           - --cfg nightly
 
-  # This module should be hard-selected when an application *requires* debug
-  # logging.
-  - name: debug-logging-facade-default
+  # This module should be hard-selected when an application *requires* logging.
+  - name: logging-facade-default
     selects:
       - ?defmt
       - ?log
-      - debug-logging-facade
+      - logging-facade
 
   - name: defmt
-    help: Use the `defmt` crate as the debug logging facade
+    help: Use the `defmt` crate as the logging facade
     provides_unique:
-      - debug-logging-facade
+      - logging-facade
     env:
       global:
         FEATURES:
@@ -1056,9 +1055,9 @@ modules:
           - DEFMT_LOG=info,${LOG}
 
   - name: log
-    help: Use the `log` crate as the debug logging facade
+    help: Use the `log` crate as the logging facade
     provides_unique:
-      - debug-logging-facade
+      - logging-facade
     env:
       global:
         FEATURES:
