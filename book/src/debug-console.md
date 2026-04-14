@@ -6,7 +6,7 @@ The debug console is enabled by default and the corresponding [laze module][laze
 
 ## Printing on the Debug Console
 
-The [`ariel_os::debug::println!()`][println-macro-rustdoc] macro is used to print on the debug console.
+The [`ariel_os::log::println!()`][println-macro-rustdoc] macro is used to print on the debug console.
 
 When the debug console is enabled, panic messages are automatically printed to it.
 If this is unwanted, the `panic-printing` [laze module][laze-modules-book] can be disabled.
@@ -95,7 +95,7 @@ The defmt logger supports configuring the log level per crate and per module, as
 $ laze build -C examples/log --builders nrf52840dk -DLOG=info,ariel_os_rt=trace run
 ```
 
-Note: On Cortex-M devices, the order of `ariel_os::debug::println!()` output and
+Note: On Cortex-M devices, the order of `ariel_os::log::println!()` output and
       `defmt` log output is not deterministic.
 
 #### [log]
@@ -106,5 +106,5 @@ Ariel OS's logger for `log` supports configuring the log level globally, but do
 [defmt documentation]: https://defmt.ferrous-systems.com/
 [log]: https://github.com/rust-lang/log
 [laze-modules-book]: ./build-system.md#laze-modules
-[println-macro-rustdoc]: https://ariel-os.github.io/ariel-os/dev/docs/api/ariel_os/debug/macro.println.html
+[println-macro-rustdoc]: https://ariel-os.github.io/ariel-os/dev/docs/api/ariel_os/log/macro.println.html
 [debug-exit-fn-rustdoc]: https://ariel-os.github.io/ariel-os/dev/docs/api/ariel_os/debug/fn.exit.html
