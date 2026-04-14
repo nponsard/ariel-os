@@ -1,8 +1,8 @@
 #![no_main]
 #![no_std]
 
-use ariel_os::debug::{
-    ExitCode, exit,
+use ariel_os::{
+    debug::{ExitCode, exit},
     log::{Hex, info},
 };
 

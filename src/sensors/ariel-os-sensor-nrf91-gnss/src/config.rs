@@ -18,7 +18,7 @@ pub enum GnssOperationMode {
 pub struct Config {
     /// The GNSS operating mode to use.
     pub operation_mode: GnssOperationMode,
-    /// Whether NMEA messages should be logged as debug logs (adds extra processing).
+    /// Whether NMEA messages should be logged as logs (adds extra processing).
     pub log_nmea: bool,
 }
 

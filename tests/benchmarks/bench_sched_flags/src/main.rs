@@ -2,7 +2,7 @@
 #![no_std]
 
 use ariel_os::{
-    debug::log::*,
+    log::*,
     thread::{ThreadId, current_tid, sync::Channel, thread_flags},
 };
 

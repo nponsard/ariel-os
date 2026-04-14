@@ -1,7 +1,7 @@
 #![no_main]
 #![no_std]
 
-use ariel_os::{debug::log::*, net, reexports::embassy_net};
+use ariel_os::{log::*, net, reexports::embassy_net};
 use embassy_net::udp::{PacketMetadata, UdpSocket};
 
 // UDP datagrams with payloads larger than this will be dropped and ignored, both when receiving

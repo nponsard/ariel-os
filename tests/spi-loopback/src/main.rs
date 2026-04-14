@@ -8,11 +8,9 @@
 mod pins;
 
 use ariel_os::{
-    debug::{
-        ExitCode, exit,
-        log::{Hex, debug, info},
-    },
+    debug::{ExitCode, exit},
     gpio, hal,
+    log::{Hex, debug, info},
     spi::{
         Mode,
         main::{Kilohertz, SpiDevice, highest_freq_in},

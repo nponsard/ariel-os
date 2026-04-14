@@ -149,6 +149,7 @@ dependencies = [
  "ariel-os-embassy",
  "ariel-os-hal",
  "ariel-os-identity",
+ "ariel-os-log",
  "ariel-os-macros",
  "ariel-os-nrf",
  "ariel-os-power",

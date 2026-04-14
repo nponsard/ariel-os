@@ -9,7 +9,7 @@ use embedded_io_async::Write as _;
 
 use ariel_os::time::Timer;
 use ariel_os::{
-    debug::log::{info, warn},
+    log::{info, warn},
     net,
     reexports::embassy_net,
     time::Duration,

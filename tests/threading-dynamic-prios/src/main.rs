@@ -32,7 +32,7 @@ fn thread0() {
     // thread1 runs now.
 
     assert_eq!(RUN_ORDER.fetch_add(1, Ordering::AcqRel), 2);
-    ariel_os::debug::log::info!("Test passed!");
+    ariel_os::log::info!("Test passed!");
     exit(ExitCode::Success);
 }
 

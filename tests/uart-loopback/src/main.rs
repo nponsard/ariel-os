@@ -6,11 +6,9 @@
 mod pins;
 
 use ariel_os::{
-    debug::{
-        ExitCode, exit,
-        log::{Hex, info},
-    },
+    debug::{ExitCode, exit},
     hal,
+    log::{Hex, info},
     time::{Duration, with_timeout},
     uart::Baudrate,
 };

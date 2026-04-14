@@ -2,7 +2,7 @@
 #![no_main]
 #![no_std]
 
-use ariel_os::{debug::log::info, reexports::embassy_time, time::Timer};
+use ariel_os::{log::info, reexports::embassy_time, time::Timer};
 use embassy_futures::join::join;
 use embassy_time::Duration;
 use trouble_host::advertise::{

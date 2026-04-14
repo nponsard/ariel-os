@@ -33,7 +33,7 @@ fn thread0() {
 
     // Wait for other threads to complete.
     thread_flags::wait_all(0b111);
-    ariel_os::debug::log::info!("Test passed!");
+    ariel_os::log::info!("Test passed!");
     exit(ExitCode::Success);
 }
 

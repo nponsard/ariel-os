@@ -5,7 +5,7 @@ mod pins;
 
 use ariel_os::{
     cell::StaticCell,
-    debug::log::*,
+    log::*,
     reexports::{embassy_usb, usbd_hid},
     time::Timer,
     usb::UsbDriver,

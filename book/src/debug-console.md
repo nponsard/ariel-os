@@ -21,17 +21,17 @@ The laze configuration automatically enables semihosting on the target when the 
 When the flashing tool does not, support for semihosting can still be enabled in the firmware by selecting the `semihosting` [laze module][laze-modules-book].
 This is needed to later be able to attach a semihosting-enabled host tool to the target.
 
-## Debug Logging
+## Logging
 
-Ariel OS supports debug logging on all platforms and it is enabled by default with the `debug-logging-facade` [laze module][laze-modules-book].
-Debug logging offers a set of macros that print on the debug console with helpful logging formatting.
+Ariel OS supports logging on all platforms and it is enabled by default with the `debug-logging-facade` [laze module][laze-modules-book].
+Logging offers a set of macros that print on the debug console with helpful logging formatting.
 
 ### Logging
 
-Within Rust code, import `ariel_os::debug::log` items, then use Ariel OS logging macros:
+Within Rust code, import `ariel_os::log` items, then use Ariel OS logging macros:
 
 ```rust
-use ariel_os::debug::log::info;
+use ariel_os::log::info;
 
 #[ariel_os::task(autostart)]
 async fn main() {
@@ -68,14 +68,14 @@ defmt should be preferred when possible as it results in smaller binaries.
 
 The precise set of formatting operations and traits required on formatted data
 depends on the selected backend.
-There are some wrapper structs available in the [`ariel_os::debug::log`] module
+There are some wrapper structs available in the [`ariel_os::log`] module
 that help represent some types in a portable way;
 in particular, this includes [`Debug2Format`] and [`Display2Format`],
 which (while defeating some of `defmt`'s optimizations) come in handy when debugging third party types.
 
-[`ariel_os::debug::log`]: https://ariel-os.github.io/ariel-os/dev/docs/api/ariel_os/debug/log/
-[`Debug2Format`]: https://ariel-os.github.io/ariel-os/dev/docs/api/ariel_os/debug/log/struct.Debug2Format.html
-[`Display2Format`]: https://ariel-os.github.io/ariel-os/dev/docs/api/ariel_os/debug/log/struct.Display2Format.html
+[`ariel_os::log`]: https://ariel-os.github.io/ariel-os/dev/docs/api/ariel_os/log/
+[`Debug2Format`]: https://ariel-os.github.io/ariel-os/dev/docs/api/ariel_os/log/struct.Debug2Format.html
+[`Display2Format`]: https://ariel-os.github.io/ariel-os/dev/docs/api/ariel_os/log/struct.Display2Format.html
 
 #### [defmt]
 

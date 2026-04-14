@@ -13,9 +13,6 @@ mod _featurecomb {}
 
 mod exit;
 
-#[doc(inline)]
-pub use ariel_os_log as log;
-
 pub use exit::*;
 
 /// Prints the panic on the debug output in a consistent manner across loggers.
@@ -244,7 +241,7 @@ mod logger {
             });
         }
 
-        log::debug!("debug logging enabled at level {MAX_LEVEL}");
+        log::debug!("logging enabled at level {MAX_LEVEL}");
     }
 
     struct DebugLogger;

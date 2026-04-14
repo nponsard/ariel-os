@@ -5,7 +5,8 @@ use embassy_sync::{blocking_mutex::raw::CriticalSectionRawMutex, signal::Signal}
 
 use ariel_os::{
     asynch::spawner,
-    debug::{ExitCode, exit, log::*},
+    debug::{ExitCode, exit},
+    log::*,
     thread::block_on,
     time::{Instant, Timer},
 };

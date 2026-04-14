@@ -1,7 +1,7 @@
 #![no_main]
 #![no_std]
 
-use ariel_os::debug::log::info;
+use ariel_os::log::info;
 
 #[ariel_os::task(autostart)]
 async fn run_client_operations() {

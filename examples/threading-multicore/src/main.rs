@@ -2,7 +2,7 @@
 #![no_std]
 
 use ariel_os::{
-    debug::log::*,
+    log::*,
     thread::{CoreAffinity, CoreId},
 };
 

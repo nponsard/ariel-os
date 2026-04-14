@@ -2,9 +2,10 @@
 #![no_std]
 
 use ariel_os::{
-    debug::{ExitCode, exit, log::info},
+    debug::{ExitCode, exit},
     gpio::{self, Input, Pull},
     hal::peripherals,
+    log::info,
 };
 
 #[cfg(context = "nrf51")]
