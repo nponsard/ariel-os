@@ -8,8 +8,8 @@ use nrf_modem::embassy_net_modem::{
 };
 use static_cell::StaticCell;
 
-use ariel_os_debug_log::warn;
 use ariel_os_embassy_common::cellular_networking;
+use ariel_os_log::warn;
 
 pub type NetworkDevice = NetDriver<'static>;
 

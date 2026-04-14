@@ -14,7 +14,7 @@ mod _featurecomb {}
 mod exit;
 
 #[doc(inline)]
-pub use ariel_os_debug_log as log;
+pub use ariel_os_log as log;
 
 pub use exit::*;
 
@@ -31,7 +31,7 @@ pub fn print_panic(info: &core::panic::PanicInfo<'_>) {
     // We *need* to use the `Display` implementation and cannot use `PanicMessage::as_str()` as
     // that would not work for dynamically formatted messages.
     #[cfg(feature = "defmt")]
-    let message = ariel_os_debug_log::Display2Format(&message);
+    let message = ariel_os_log::Display2Format(&message);
 
     // Mimics the `Display` implementation of `core::panic::PanicInfo`.
     println!("panicked at {}:\n{}", location, message);
@@ -39,7 +39,7 @@ pub fn print_panic(info: &core::panic::PanicInfo<'_>) {
 
 #[cfg(all(feature = "debug-console", feature = "defmt-rtt"))]
 mod backend {
-    pub use ariel_os_debug_log::println;
+    pub use ariel_os_log::println;
     use defmt_rtt as _;
 
     #[doc(hidden)]
@@ -52,7 +52,7 @@ mod backend {
     pub use rtt_target::rprintln as println;
 
     #[cfg(feature = "defmt")]
-    pub use ariel_os_debug_log::println;
+    pub use ariel_os_log::println;
 
     #[doc(hidden)]
     pub fn init() {

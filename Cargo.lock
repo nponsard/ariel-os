@@ -170,7 +170,7 @@ version = "0.4.0"
 dependencies = [
  "ariel-os",
  "ariel-os-boards",
- "ariel-os-debug-log",
+ "ariel-os-log",
  "ariel-os-utils",
  "embedded-alloc",
  "embedded-test",
@@ -209,8 +209,8 @@ dependencies = [
 name = "ariel-os-coap"
 version = "0.4.0"
 dependencies = [
- "ariel-os-debug-log",
  "ariel-os-embassy",
+ "ariel-os-log",
  "ariel-os-macros",
  "ariel-os-random",
  "ariel-os-storage",
@@ -243,7 +243,7 @@ dependencies = [
 name = "ariel-os-debug"
 version = "0.4.0"
 dependencies = [
- "ariel-os-debug-log",
+ "ariel-os-log",
  "ariel-os-utils",
  "const-str",
  "critical-section",
@@ -257,25 +257,16 @@ dependencies = [
 ]
 
 [[package]]
-name = "ariel-os-debug-log"
-version = "0.4.0"
-dependencies = [
- "defmt 1.0.1",
- "featurecomb",
- "log",
-]
-
-[[package]]
 name = "ariel-os-embassy"
 version = "0.4.0"
 dependencies = [
  "ariel-os-boards",
  "ariel-os-buildinfo",
  "ariel-os-debug",
- "ariel-os-debug-log",
  "ariel-os-embassy-common",
  "ariel-os-hal",
  "ariel-os-identity",
+ "ariel-os-log",
  "ariel-os-macros",
  "ariel-os-random",
  "ariel-os-rt",
@@ -330,8 +321,8 @@ dependencies = [
 name = "ariel-os-esp"
 version = "0.4.0"
 dependencies = [
- "ariel-os-debug-log",
  "ariel-os-embassy-common",
+ "ariel-os-log",
  "ariel-os-random",
  "ariel-os-rt",
  "ariel-os-threads",
@@ -399,6 +390,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "ariel-os-log"
+version = "0.4.0"
+dependencies = [
+ "defmt 1.0.1",
+ "featurecomb",
+ "log",
+]
+
+[[package]]
 name = "ariel-os-macros"
 version = "0.4.0"
 dependencies = [
@@ -435,8 +435,8 @@ dependencies = [
 name = "ariel-os-nrf"
 version = "0.4.0"
 dependencies = [
- "ariel-os-debug-log",
  "ariel-os-embassy-common",
+ "ariel-os-log",
  "ariel-os-random",
  "ariel-os-rt",
  "cfg-if",
@@ -486,8 +486,8 @@ dependencies = [
 name = "ariel-os-rp"
 version = "0.4.0"
 dependencies = [
- "ariel-os-debug-log",
  "ariel-os-embassy-common",
+ "ariel-os-log",
  "ariel-os-random",
  "ariel-os-utils",
  "bt-hci",
@@ -514,7 +514,7 @@ version = "0.4.0"
 dependencies = [
  "ariel-os-alloc",
  "ariel-os-debug",
- "ariel-os-debug-log",
+ "ariel-os-log",
  "ariel-os-macros",
  "ariel-os-threads",
  "ariel-os-utils",
@@ -568,7 +568,7 @@ dependencies = [
 name = "ariel-os-sensor-nrf91-gnss"
 version = "0.1.0"
 dependencies = [
- "ariel-os-debug-log",
+ "ariel-os-log",
  "ariel-os-sensors",
  "ariel-os-sensors-gnss-time-ext",
  "ariel-os-sensors-utils",
@@ -669,8 +669,8 @@ dependencies = [
 name = "ariel-os-storage"
 version = "0.4.0"
 dependencies = [
- "ariel-os-debug-log",
  "ariel-os-hal",
+ "ariel-os-log",
  "arrayvec",
  "cfg-if",
  "embassy-sync 0.7.2",
@@ -685,7 +685,7 @@ dependencies = [
 name = "ariel-os-threads"
 version = "0.4.0"
 dependencies = [
- "ariel-os-debug-log",
+ "ariel-os-log",
  "ariel-os-runqueue",
  "ariel-os-utils",
  "atomic-wait",
