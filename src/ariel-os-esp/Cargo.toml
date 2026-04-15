@@ -7,8 +7,8 @@ repository.workspace = true
 license.workspace = true
 
 [dependencies]
-ariel-os-debug-log = { workspace = true }
 ariel-os-embassy-common = { workspace = true }
+ariel-os-log = { workspace = true }
 ariel-os-random = { workspace = true, optional = true }
 ariel-os-rt = { workspace = true, features = ["alloc"] }
 ariel-os-threads = { workspace = true, optional = true }

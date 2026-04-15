@@ -2,10 +2,10 @@ subdirs:
   - ariel-os
   - ariel-os-alloc
   - ariel-os-boards
-  - ariel-os-debug-log
   - ariel-os-embassy
   - ariel-os-embassy-common
   - ariel-os-identity
+  - ariel-os-log
   - ariel-os-macros
   - ariel-os-nrf
   - ariel-os-rp

@@ -29,7 +29,7 @@ use futures_util::StreamExt as _;
 use nrf_modem::{Gnss, GnssData, GnssStream};
 use time::{Date, Month, Time, UtcDateTime};
 
-use ariel_os_debug_log::{Debug2Format, debug, error, warn};
+use ariel_os_log::{Debug2Format, debug, error, warn};
 use ariel_os_sensors::{
     Category, Label, MeasurementUnit, Sensor,
     sensor::{

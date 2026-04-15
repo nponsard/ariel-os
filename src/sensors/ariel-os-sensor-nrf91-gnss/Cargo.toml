@@ -9,7 +9,7 @@ repository.workspace = true
 license.workspace = true
 
 [dependencies]
-ariel-os-debug-log = { workspace = true }
+ariel-os-log = { workspace = true }
 ariel-os-sensors = { workspace = true, features = ["max-sample-min-count-8"] }
 ariel-os-sensors-gnss-time-ext = { workspace = true }
 ariel-os-sensors-utils = { workspace = true }

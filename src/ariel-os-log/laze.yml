@@ -1,4 +1,4 @@
 apps:
-  - name: crates/ariel-os-debug-log
+  - name: crates/ariel-os-log
     selects:
       - host-test-only

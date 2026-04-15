@@ -152,11 +152,11 @@ jobs:
             -p ariel-os-boards
             -p ariel-os-coap
             -p ariel-os-debug
-            -p ariel-os-debug-log
             -p ariel-os-embassy
             -p ariel-os-embassy-common
             -p ariel-os-hal
             -p ariel-os-identity
+            -p ariel-os-log
             -p ariel-os-macros
             -p ariel-os-native
             -p ariel-os-power
@@ -321,7 +321,7 @@ jobs:
             --locked
             -p ariel-os-sensor-nrf91-gnss
             --features "
-              ariel-os-debug-log/log,
+              ariel-os-log/log,
               nrf-modem/nrf9160
               "
             --

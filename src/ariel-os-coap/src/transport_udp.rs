@@ -2,8 +2,8 @@
 
 use core::net::{Ipv6Addr, SocketAddr};
 
-use ariel_os_debug_log::info;
 use ariel_os_embassy::cell::SameExecutorCell;
+use ariel_os_log::info;
 
 use embassy_net::udp::{PacketMetadata, UdpSocket};
 use static_cell::StaticCell;

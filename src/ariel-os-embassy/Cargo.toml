@@ -32,10 +32,10 @@ embedded-hal-async = { workspace = true }
 ariel-os-boards = { workspace = true }
 ariel-os-buildinfo = { workspace = true }
 ariel-os-debug = { workspace = true }
-ariel-os-debug-log = { workspace = true }
 ariel-os-embassy-common = { workspace = true }
 ariel-os-hal = { path = "../ariel-os-hal" }
 ariel-os-identity = { path = "../ariel-os-identity" }
+ariel-os-log = { workspace = true }
 ariel-os-macros = { path = "../ariel-os-macros" }
 ariel-os-random = { path = "../ariel-os-random", optional = true }
 ariel-os-rt = { path = "../ariel-os-rt" }
