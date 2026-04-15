@@ -1,7 +1,7 @@
 #![no_main]
 #![no_std]
 
-use ariel_os::debug::log::*;
+use ariel_os::log::*;
 use rand::Rng as _;
 
 #[ariel_os::task(autostart)]

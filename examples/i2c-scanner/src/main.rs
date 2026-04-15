@@ -4,9 +4,9 @@
 mod pins;
 
 use ariel_os::{
-    debug::log::info,
     hal,
     i2c::controller::{Kilohertz, highest_freq_in},
+    log::info,
 };
 
 use embedded_hal_async::i2c::I2c;

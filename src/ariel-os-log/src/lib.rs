@@ -1,4 +1,4 @@
-//! Provides debug logging facilities.
+//! Provides logging facilities.
 //!
 //! # Syntax of formatting strings
 //!

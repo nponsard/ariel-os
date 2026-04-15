@@ -6,7 +6,7 @@ mod pins;
 mod sensors;
 
 use ariel_os::{
-    debug::log::{debug, error, info},
+    log::{debug, error, info},
     sensors::{
         Label, REGISTRY, Reading as _, Sensor,
         sensor::{ReadingChannel, Sample, SampleError, SampleMetadata},

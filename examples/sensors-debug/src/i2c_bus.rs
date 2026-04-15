@@ -1,7 +1,7 @@
 //! This module is intended to be @generated.
 
 use ariel_os::{
-    debug::log::debug,
+    log::debug,
     hal,
     i2c::controller::{Kilohertz, highest_freq_in},
 };

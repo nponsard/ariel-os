@@ -38,6 +38,8 @@ pub use ariel_os_hal::api::*;
 #[doc(inline)]
 pub use ariel_os_identity as identity;
 #[doc(inline)]
+pub use ariel_os_log as log;
+#[doc(inline)]
 pub use ariel_os_power as power;
 #[cfg(feature = "random")]
 #[doc(inline)]

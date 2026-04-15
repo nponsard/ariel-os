@@ -52,7 +52,7 @@ fn thread0() {
     thread_flags::wait_all(0b111);
 
     assert_eq!(*MUTEX.lock(), 4);
-    ariel_os::debug::log::info!("Test passed!");
+    ariel_os::log::info!("Test passed!");
 }
 
 #[ariel_os::thread(autostart, priority = 2)]

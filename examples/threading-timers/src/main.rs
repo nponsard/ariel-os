@@ -2,7 +2,8 @@
 #![no_std]
 
 use ariel_os::{
-    debug::{ExitCode, exit, log::info},
+    debug::{ExitCode, exit},
+    log::info,
     thread::block_on,
     time::Timer,
 };

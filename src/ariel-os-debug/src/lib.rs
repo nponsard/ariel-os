@@ -13,9 +13,6 @@ mod _featurecomb {}
 
 mod exit;
 
-#[doc(inline)]
-pub use ariel_os_log as log;
-
 pub use exit::*;
 
 /// Prints the panic on the debug output in a consistent manner across loggers.
@@ -188,7 +185,7 @@ mod logger {
 
     const MAX_LEVEL: LevelFilter = {
         let max_level =
-            ariel_os_utils::str_from_env_or!("DEBUG_LOG_LEVEL", "info", "maximum level to log");
+            ariel_os_utils::str_from_env_or!("LOG_LEVEL", "info", "maximum level to log");
 
         // NOTE: these magic strings could likely be replaced with calls to
         // `LevelFilter::*::as_str()` if that method was const.
@@ -244,7 +241,7 @@ mod logger {
             });
         }
 
-        log::debug!("debug logging enabled at level {MAX_LEVEL}");
+        log::debug!("logging enabled at level {MAX_LEVEL}");
     }
 
     struct DebugLogger;

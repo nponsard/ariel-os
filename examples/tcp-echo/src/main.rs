@@ -1,7 +1,7 @@
 #![no_main]
 #![no_std]
 
-use ariel_os::{debug::log::*, net, reexports::embassy_net, reexports::embassy_time};
+use ariel_os::{log::*, net, reexports::embassy_net, reexports::embassy_time};
 use embassy_net::tcp::TcpSocket;
 use embassy_time::Duration;
 use embedded_io_async::Write;

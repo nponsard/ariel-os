@@ -26,6 +26,7 @@ ariel-os-debug = { workspace = true }
 ariel-os-embassy = { path = "../ariel-os-embassy" }
 ariel-os-hal = { workspace = true }
 ariel-os-identity = { workspace = true }
+ariel-os-log = { workspace = true }
 ariel-os-macros = { path = "../ariel-os-macros" }
 ariel-os-nrf = { path = "../ariel-os-nrf", optional = true }
 ariel-os-power = { path = "../ariel-os-power" }
@@ -198,7 +199,7 @@ timer-generic-queue-128 = ["ariel-os-embassy/timer-generic-queue-128"]
 # Enables the debug console, required to use
 # [`println!`](ariel_os_debug::println).
 debug-console = ["ariel-os-rt/debug-console"]
-# Enables logging support through `defmt`, see [`debug::log`].
+# Enables logging support through `defmt`, see [`log`].
 defmt = [
   "ariel-os-bench?/defmt",
   "ariel-os-coap?/defmt",
@@ -207,7 +208,7 @@ defmt = [
   "ariel-os-sensors?/defmt",
   "ariel-os-threads?/defmt",
 ]
-# Enables logging support through `log`, see [`debug::log`].
+# Enables logging support through `log`, see [`log`].
 log = ["ariel-os-debug/log", "ariel-os-embassy/log"]
 ## Enables benchmarking facilities.
 bench = ["dep:ariel-os-bench"]

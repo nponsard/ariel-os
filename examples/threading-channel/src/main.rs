@@ -1,8 +1,8 @@
 #![no_main]
 #![no_std]
 
-use ariel_os::debug::{ExitCode, log::*};
 use ariel_os::thread::sync::Channel;
+use ariel_os::{debug::ExitCode, log::*};
 
 static CHANNEL: Channel<u8> = Channel::new();
 
