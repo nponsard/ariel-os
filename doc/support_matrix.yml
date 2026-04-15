@@ -289,7 +289,7 @@ chips:
     manufacturer: Espressif
     support:
       gpio: supported
-      debug_output: supported
+      debug_output: needs_testing
       hwrng: supported
       i2c_controller: supported
       spi_main: needs_testing
@@ -1274,6 +1274,10 @@ builders:
     chip: esp32-d0wd
     tier: "2"
     support:
+      debug_output:
+        status: not_available
+        comments:
+          - JTAG pins are not accessible through the case
 
   unihiker-k10:
     chip: esp32s3
