@@ -393,6 +393,8 @@ contexts:
       - has_ble_esp
     env:
       RUSTC_TARGET: xtensa-esp32-none-elf
+      PROBE_RS_CHIP: esp32
+      PROBE_RS_PROTOCOL: jtag
       CARGO_TARGET_PREFIX: CARGO_TARGET_XTENSA_ESP32_NONE_ELF
       CC: xtensa-esp32-elf-gcc
       CARGO_ENV:
