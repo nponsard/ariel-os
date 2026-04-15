@@ -79,7 +79,7 @@ mod log_macros {
             if true {
                 defmt::trace!($($arg)*);
             } else {
-                drop(format_args!($($arg)*));
+                let _ = format_args!($($arg)*);
             }
         }};
     }
@@ -92,7 +92,7 @@ mod log_macros {
             if true {
                 defmt::debug!($($arg)*);
             } else {
-                drop(format_args!($($arg)*));
+                let _ = format_args!($($arg)*);
             }
         }};
     }
@@ -105,7 +105,7 @@ mod log_macros {
             if true {
                 defmt::info!($($arg)*);
             } else {
-                drop(format_args!($($arg)*));
+                let _ = format_args!($($arg)*);
             }
         }};
     }
@@ -118,7 +118,7 @@ mod log_macros {
             if true {
                 defmt::warn!($($arg)*);
             } else {
-                drop(format_args!($($arg)*));
+                let _ = format_args!($($arg)*);
             }
         }};
     }
@@ -131,7 +131,7 @@ mod log_macros {
             if true {
                 defmt::error!($($arg)*);
             } else {
-                drop(format_args!($($arg)*));
+                let _ = format_args!($($arg)*);
             }
         }};
     }
@@ -144,7 +144,7 @@ mod log_macros {
             if true {
                 defmt::println!($($arg)*);
             } else {
-                drop(format_args!($($arg)*));
+                let _ = format_args!($($arg)*);
             }
         }};
     }
