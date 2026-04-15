@@ -8,7 +8,7 @@
 
 |Functionality|Support Status|
 |---|:---:|
-|Debug Output|<span title="supported">✅</span>|
+|Debug Output|<span title="needs testing">🚦</span>|
 |Logging|<span title="supported">✅</span>|
 |GPIO|<span title="supported">✅</span>|
 |I2C Controller Mode|<span title="supported">✅</span>|
@@ -87,7 +87,7 @@ Boards using this chip.
 	  <tr>
 	    <td><code>ulanzi-tc001</code></td>
 		<td style="text-align: center;">2</td>
-		  <td class="support-cell" title="supported">✅</td>
+		  <td class="support-cell" title="not available on this piece of hardware">–</td>
 		  <td class="support-cell" title="supported">✅</td>
 		  <td class="support-cell" title="supported">✅</td>
 		  <td class="support-cell" title="supported">✅</td>
