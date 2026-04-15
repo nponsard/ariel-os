@@ -24,7 +24,7 @@ laze build -b ulanzi-tc001
 
 |Functionality|Support Status|
 |---|:---:|
-|Debug Output|<span title="supported">✅</span>|
+|Debug Output|<span title="not available on this piece of hardware">–</span>[^jtag-pins-are-not-accessible-through-the-case]|
 |Logging|<span title="supported">✅</span>|
 |GPIO|<span title="supported">✅</span>|
 |I2C Controller Mode|<span title="supported">✅</span>|
@@ -65,5 +65,6 @@ dt, dd {
 
 
   
+[^jtag-pins-are-not-accessible-through-the-case]: JTAG pins are not accessible through the case.
 [^no-generic-usb-peripheral]: No generic USB peripheral.
 [^requires-partitioning-support]: Requires partitioning support.
