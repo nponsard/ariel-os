@@ -7,3 +7,4 @@ apps:
       - st-nucleo-f042k6
       - st-nucleo-f303re
       - st-steval-mkboxpro
+      - nordic-thingy-91-x-nrf9151

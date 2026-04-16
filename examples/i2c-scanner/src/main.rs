@@ -13,10 +13,13 @@ use embedded_hal_async::i2c::I2c;
 
 #[ariel_os::task(autostart, peripherals)]
 async fn i2c_scanner(peripherals: pins::Peripherals) {
+    use ariel_os::log::Debug2Format;
     let mut i2c_config = hal::i2c::controller::Config::default();
     i2c_config.frequency = const { highest_freq_in(Kilohertz::kHz(100)..=Kilohertz::kHz(400)) };
 
     let mut i2c_bus = pins::SensorI2c::new(peripherals.i2c_sda, peripherals.i2c_scl, i2c_config);
+    let err = ariel_os::hal::boards::init_thingy91x_board(&mut i2c_bus, false, false).await;
+    info!("{:?}", Debug2Format(&err));
 
     info!("Checking for I2C devices on the bus...");
 
@@ -26,5 +29,7 @@ async fn i2c_scanner(peripherals: pins::Peripherals) {
         }
     }
 
+
     info!("Done checking. Have a great day!");
+    loop {}
 }
