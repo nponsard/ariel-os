@@ -97,7 +97,7 @@ pub mod log {
         context = "ariel-os",
         not(any(feature = "esp-println", feature = "uart"))
     ))]
-    pub use ariel_os_debug::println;
+    pub use ariel_os_debug::debug_output_println as println;
 
     #[cfg(feature = "esp-println")]
     pub use esp_println::println;

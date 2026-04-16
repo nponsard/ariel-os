@@ -22,10 +22,10 @@ mod backend {
 #[cfg(all(feature = "debug-console", feature = "rtt-target"))]
 mod backend {
     #[cfg(feature = "defmt")]
-    pub use defmt::println;
+    pub use defmt::println as debug_output_println;
 
     #[cfg(not(feature = "defmt"))]
-    pub use rtt_target::rprintln as println;
+    pub use rtt_target::rprintln as debug_output_println;
 
     #[doc(hidden)]
     pub fn init() {
@@ -61,7 +61,7 @@ mod backend {
 
 #[cfg(all(feature = "debug-console", feature = "std"))]
 mod backend {
-    pub use std::println;
+    pub use std::println as debug_output_println;
 
     #[doc(hidden)]
     pub fn init() {
