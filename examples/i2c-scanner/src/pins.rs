@@ -40,3 +40,11 @@ ariel_os::hal::define_peripherals!(Peripherals {
     i2c_scl: GPIO18,
     i2c_sda: GPIO17,
 });
+
+#[cfg(context = "nordic-thingy-91-x-nrf9151")]
+pub type SensorI2c = i2c::controller::SERIAL0;
+#[cfg(context = "nordic-thingy-91-x-nrf9151")]
+ariel_os::hal::define_peripherals!(Peripherals {
+    i2c_scl: P0_08,
+    i2c_sda: P0_09,
+});
