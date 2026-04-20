@@ -8,6 +8,7 @@ use ariel_os::{
     hal,
     i2c::controller::{Kilohertz, highest_freq_in},
     log::info,
+    time::Timer,
 };
 
 use embedded_hal_async::i2c::I2c;
@@ -20,7 +21,7 @@ async fn i2c_scanner(peripherals: pins::Peripherals) {
     let mut i2c_bus = pins::SensorI2c::new(peripherals.i2c_sda, peripherals.i2c_scl, i2c_config);
 
     #[cfg(context = "nordic-thingy-91-x-nrf9151")]
-    ariel_os::hal::boards::init_thingy91x_board(&mut i2c_bus, true, true)
+    ariel_os::hal::boards::init_thingy91x_board(&mut i2c_bus, false, false)
         .await
         .unwrap();
 
@@ -36,6 +37,8 @@ async fn i2c_scanner(peripherals: pins::Peripherals) {
     log_value(&mut i2c_bus, 0x03, 0x07, "BCHGDISABLECLR").await;
     log_value(&mut i2c_bus, 0x03, 0x08, "BCHGISETMSB").await;
     log_value(&mut i2c_bus, 0x03, 0x09, "BCHGISETLSB").await;
+    // i2c_bus.write(0x6b, &[0x02, 0x09, 0x01]).await.unwrap();
+
     log_value(&mut i2c_bus, 0x03, 0x0A, "BCHGISETDISCHARGEMSB").await;
     log_value(&mut i2c_bus, 0x03, 0x0B, "BCHGISETDISCHARGELSB").await;
     log_value(&mut i2c_bus, 0x03, 0x0C, "BCHGVTERM").await;
@@ -44,6 +47,7 @@ async fn i2c_scanner(peripherals: pins::Peripherals) {
     log_value(&mut i2c_bus, 0x03, 0x0F, "BCHGITERMSEL").await;
     log_value(&mut i2c_bus, 0x03, 0x3C, "BCHGCONFIG").await;
     log_value(&mut i2c_bus, 0x03, 0x50, "BCHGVBATLOWCHARGE").await;
+    log_value(&mut i2c_bus, 0x03, 0x34, "BCHGCHARGESTATUS").await;
 
     log_value(&mut i2c_bus, 0xA0, 0x00, "LEDDRV0MODESEL").await;
     log_value(&mut i2c_bus, 0xA0, 0x01, "LEDDRV1MODESEL").await;
@@ -81,6 +85,44 @@ async fn i2c_scanner(peripherals: pins::Peripherals) {
     log_value(&mut i2c_bus, 0x08, 0x0D, "LDSW2VOUTSEL").await;
 
     info!("Done checking. Have a great day!");
+    // ADCIBATMEASEN 0x05 0x24
+    i2c_bus.write(0x6b, &[0x05, 0x24, 0x01]).await.unwrap();
+
+
+    loop {
+        // TASKIBATMEASURE [0x05, 0x06]
+        i2c_bus.write(0x6b, &[0x05, 0x06, 0x01]).await.unwrap();
+
+        // TASKVBATMEASURE [0x05, 0x00]
+        i2c_bus.write(0x6b, &[0x05, 0x00, 0x01]).await.unwrap();
+        Timer::after_millis(1000).await;
+        // ADCVBATRESULTMSB [0x05, 0x11]
+        let mut buffer = [0u8, 1];
+
+        i2c_bus
+            .write_read(0x6b, &[0x05, 0x11], &mut buffer)
+            .await
+            .unwrap();
+        let charge = (buffer[0] as u16) << 2;
+
+        i2c_bus
+            .write_read(0x6b, &[0x05, 0x15], &mut buffer)
+            .await
+            .unwrap();
+
+        let charge = charge | (buffer[0] as u16 & 0x03);
+
+        let voltage = (charge as f32 / 1023.0) * 5.0;
+        info!("voltage : {}", voltage);
+
+        // ADCIBATMEASSTATUS 0x05 0x10
+        log_value(&mut i2c_bus, 0x05, 0x10, "ADCIBATMEASSTATUS").await;
+
+        log_value(&mut i2c_bus, 0x05, 0x11, "ADCVBATRESULTMSB").await;
+        log_value(&mut i2c_bus, 0x05, 0x15, "ADCGP0RESULTLSBS").await;
+        log_value(&mut i2c_bus, 0x03, 0x34, "BCHGCHARGESTATUS").await;
+        Timer::after_millis(1000).await;
+    }
 
     exit(ExitCode::SUCCESS);
 }
