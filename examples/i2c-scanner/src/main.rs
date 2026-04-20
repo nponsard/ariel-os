@@ -20,7 +20,7 @@ async fn i2c_scanner(peripherals: pins::Peripherals) {
     let mut i2c_bus = pins::SensorI2c::new(peripherals.i2c_sda, peripherals.i2c_scl, i2c_config);
 
     #[cfg(context = "nordic-thingy-91-x-nrf9151")]
-    ariel_os::hal::boards::init_thingy91x_board(&mut i2c_bus)
+    ariel_os::hal::boards::init_thingy91x_board(&mut i2c_bus, true, true)
         .await
         .unwrap();
 
