@@ -244,15 +244,8 @@ dependencies = [
 name = "ariel-os-debug"
 version = "0.4.0"
 dependencies = [
- "ariel-os-log",
- "ariel-os-utils",
- "const-str",
- "critical-section",
  "defmt-rtt",
- "embassy-sync 0.7.2",
- "esp-println",
  "featurecomb",
- "log",
  "rtt-target",
  "semihosting",
 ]
@@ -394,7 +387,13 @@ dependencies = [
 name = "ariel-os-log"
 version = "0.4.0"
 dependencies = [
+ "ariel-os-debug",
+ "ariel-os-utils",
+ "const-str",
+ "critical-section",
  "defmt 1.0.1",
+ "embassy-sync 0.7.2",
+ "esp-println",
  "featurecomb",
  "log",
 ]
@@ -5485,7 +5484,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "4235cd78091930e907d2a510adb0db1369e82668eafa338f109742fa0c83059d"
 dependencies = [
  "critical-section",
- "defmt 0.3.100",
  "portable-atomic",
  "ufmt-write",
 ]

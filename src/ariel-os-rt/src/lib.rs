@@ -138,7 +138,7 @@ mod isr_stack {
 #[panic_handler]
 fn panic(_info: &core::panic::PanicInfo<'_>) -> ! {
     #[cfg(feature = "panic-printing")]
-    ariel_os_debug::print_panic(_info);
+    ariel_os_log::print_panic(_info);
 
     ariel_os_debug::exit(ariel_os_debug::ExitCode::FAILURE);
 
@@ -159,6 +159,8 @@ fn startup() -> ! {
 
     #[cfg(feature = "debug-console")]
     ariel_os_debug::init();
+
+    ariel_os_log::init();
 
     debug!("ariel_os_rt::startup()");
 
