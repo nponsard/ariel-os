@@ -17,6 +17,8 @@ use embassy_sync::{
     once_lock::OnceLock,
 };
 
+use ariel_os_embassy_common::net::{InterfaceController, NetworkInterface};
+
 use crate::{NetworkDevice, cell::SameExecutorCell};
 
 #[allow(dead_code)]
@@ -27,13 +29,41 @@ pub(crate) const ETHERNET_MTU: usize = 1514;
 /// Required to create a UDP or TCP socket.
 pub type NetworkStack = Stack<'static>;
 
-pub(crate) static STACK: OnceLock<Mutex<CriticalSectionRawMutex, SameExecutorCell<NetworkStack>>> =
-    OnceLock::new();
+// Will need a refactor if we want to use multiple network interfaces (probably with linkme).
+pub(crate) type InterfaceControllerType = DummyController;
 
+pub(crate) static STACK: OnceLock<
+    Mutex<CriticalSectionRawMutex, SameExecutorCell<NetworkInterface<'_, InterfaceControllerType>>>,
+> = OnceLock::new();
+
+#[derive(Debug, Copy, Clone)]
+pub(crate) struct DummyController {}
+
+impl DummyController {
+    pub fn new() -> Self {
+        Self {}
+    }
+}
+impl InterfaceController for DummyController {
+    fn disable(&self) {}
+    fn enable(&self) {}
+}
 /// Returns a new [`NetworkStack`].
 ///
 /// Returns [`None`] if networking is not yet initialized.
 pub async fn network_stack() -> Option<NetworkStack> {
+    // SAFETY: TODO(`for_current_executore()` unsoundness)
+    let spawner = unsafe { crate::asynch::Spawner::for_current_executor().await };
+    STACK
+        .get()
+        .await
+        .lock(|inner| inner.get(spawner).map(NetworkInterface::network_stack))
+}
+
+/// Returns a new [`NetworkInterface`].
+///
+/// Returns [`None`] if networking is not yet initialized.
+pub async fn network_interface<'a>() -> Option<NetworkInterface<'a, impl InterfaceController>> {
     // SAFETY: TODO(`for_current_executore()` unsoundness)
     let spawner = unsafe { crate::asynch::Spawner::for_current_executor().await };
     STACK.get().await.lock(|inner| inner.get(spawner).copied())
