@@ -30,6 +30,12 @@ pub(crate) const ETHERNET_MTU: usize = 1514;
 pub type NetworkStack = Stack<'static>;
 
 // Will need a refactor if we want to use multiple network interfaces (probably with linkme).
+#[cfg(feature = "ltem-nrf-modem")]
+pub(crate) type InterfaceControllerType = ariel_os_hal::hal::ltem::LtemInterfaceController;
+
+#[cfg(not(any(
+    feature = "ltem-nrf-modem",
+)))]
 pub(crate) type InterfaceControllerType = DummyController;
 
 pub(crate) static STACK: OnceLock<
