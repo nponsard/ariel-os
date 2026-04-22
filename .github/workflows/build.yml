@@ -212,7 +212,7 @@ jobs:
         with:
           run: |
             export  RUST_LOG=trace
-            cache-thing pull -f build -f /home/runner/.cargo/git -f /home/runner/.cargo/registry --prefix global --suffix "${{ matrix.partition }}" --fallback-key nightly || true
+            cache-thing pull -f /home/runner/metadata -f build -f /home/runner/.cargo/git -f /home/runner/.cargo/registry --prefix global --suffix "${{ matrix.partition }}" --fallback-key nightly || true
 
           post: |
             export  RUST_LOG=trace
@@ -337,11 +337,21 @@ jobs:
         if: steps.should-skip.outputs.result != 'true' && runner.environment == 'self-hosted'
         # https://stackoverflow.com/questions/21735435/git-clone-changes-file-modification-time
         run: |
+          if [ -f /home/runner/metadata/cache-ref ]; then
             git ls-tree -r --name-only HEAD | while read filename; do
               unixtime=$(git log -1 --format="%at" -- "${filename}")
               touchtime=$(date -d @$unixtime +'%Y%m%d%H%M.%S')
               touch -t ${touchtime} "${filename}"
             done
+
+            # Treat all files modified after the cached commit as "changed", by touching them.
+            git diff --name-only $(cat /home/runner/metadata/cache-ref) | while read filename; do
+              touch "${filename}"
+            done
+          else
+             echo "/home/runner/metadata/cache-ref not found, skipping step"
+          fi
+
       - name: "start sccache daemon"
         if: steps.should-skip.outputs.result != 'true' && runner.environment == 'self-hosted'
         # work around https://github.com/ninja-build/ninja/issues/2052
