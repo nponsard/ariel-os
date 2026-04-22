@@ -28,19 +28,21 @@ enum Command {
     Disable,
 }
 
-/// Disable the LTE-M link.
-///
-/// Will be replaced by the new network interface toggle API.
-#[doc(hidden)]
-pub fn disable() {
-    CONTROL_SIGNAL.signal(Command::Disable);
+#[derive(Debug, Clone, Copy)]
+pub struct LtemInterfaceController {}
+impl LtemInterfaceController {
+    pub fn new() -> Self {
+        Self {}
+    }
 }
-/// Enable the LTE-M link.
-///
-/// Will be replaced by the new network interface toggle API.
-#[doc(hidden)]
-pub fn enable() {
-    CONTROL_SIGNAL.signal(Command::Enable);
+
+impl ariel_os_embassy_common::net::InterfaceController for LtemInterfaceController {
+    fn disable(&self) {
+        CONTROL_SIGNAL.signal(Command::Disable);
+    }
+    fn enable(&self) {
+        CONTROL_SIGNAL.signal(Command::Enable);
+    }
 }
 
 #[embassy_executor::task]
