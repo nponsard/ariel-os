@@ -34,7 +34,7 @@ pub async fn init_thingy91x_board(
     const BCHGISETMSB: [u8; 2] = [0x03, 0x08];
     const BCHGISETMSB_VALUE: u8 = (CHARGING_RATE >> 2) as u8;
     const BCHGISETLSB: [u8; 2] = [0x03, 0x09];
-    const BCHGISETLSB_VALUE: u8 = (CHARGING_RATE >> 2) as u8 & 0x01;
+    const BCHGISETLSB_VALUE: u8 = (CHARGING_RATE >> 1) as u8 & 0x01;
     // Charging must be enabled after setting the charge rate.
     const BCHGENABLESET: [u8; 2] = [0x03, 0x04];
     const BCHGENABLESET_ENABLE_VALUE: u8 = 0x01;
