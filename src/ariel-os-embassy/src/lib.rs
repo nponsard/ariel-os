@@ -201,7 +201,7 @@ async fn init_task(mut peripherals: hal::OptionalPeripherals) {
     debug!("ariel-os-embassy::init_task()");
 
     // gated so doc builds pass
-    #[cfg(context = "ariel-os")]
+    #[cfg(all(not(feature = "no-boards"), context = "ariel-os"))]
     ariel_os_boards::init(&mut peripherals);
 
     #[cfg(all(context = "stm32", feature = "external-interrupts"))]
