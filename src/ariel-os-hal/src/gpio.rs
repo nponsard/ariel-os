@@ -2,10 +2,9 @@
 //!
 //! # Note
 //!
-//! This API does not currently provide a way of using the same GPIO pin as an input and an output
-//! alternatively.
-//! If you have a use case for this, especially if this is not regarding bit-banging, please open
-//! an issue on our repository.
+//! To use the same GPIO pin as an input and an output alternatively, you can use `.reborrow()` on the HAL pin type to give an instance of the pin peripheral with a shorter lifetime (a "child" pin instance) to [`Output::new()`] and [`Input::new()`].
+//!
+//! Make sure to drop both the driver and the "child" pin instance before using the pin in another driver as some HALs require it while others don't enforce it.
 #![allow(missing_docs)]
 
 use core::marker::PhantomData;
@@ -66,11 +65,17 @@ pub struct Input<'a> {
 
 impl<'a> Input<'a> {
     /// Returns a configured [`Input`].
+    ///
+    /// If you want to re-use a pin at runtime, you can give the result of `.reborrow()` of the pin instance to this constructor.
+    /// This driver and the child pin instance need to be dropped before being able to use the pin in another driver.
     pub fn new<P: HalInputPin + 'a>(pin: impl IntoPeripheral<'a, P>, pull: Pull) -> Self {
         Self::builder(pin, pull).build()
     }
 
     /// Returns an [`InputBuilder`], allowing to configure the GPIO input further.
+    ///
+    /// If you want to re-use a pin at runtime, you can give the result of `.reborrow()` of the pin instance to this constructor.
+    /// This driver and the child pin instance need to be dropped before being able to use the pin in another driver.
     pub fn builder<T: IntoPeripheral<'a, P>, P: HalInputPin + 'a>(
         pin: T,
         pull: Pull,
@@ -316,6 +321,9 @@ pub struct Output<'a> {
 
 impl<'a> Output<'a> {
     /// Returns a configured [`Output`].
+    ///
+    /// If you want to re-use a pin at runtime, you can give the result of `.reborrow()` of the pin instance to this constructor.
+    /// This driver and the child pin instance need to be dropped before being able to use the pin in another driver.
     pub fn new<P: HalOutputPin + 'a>(
         pin: impl IntoPeripheral<'a, P>,
         initial_level: Level,
@@ -324,6 +332,9 @@ impl<'a> Output<'a> {
     }
 
     /// Returns an [`OutputBuilder`], allowing to configure the GPIO output further.
+    ///
+    /// If you want to re-use a pin at runtime, you can give the result of `.reborrow()` of the pin instance to this constructor.
+    /// This driver and the child pin instance need to be dropped before being able to use the pin in another driver.
     pub fn builder<T: IntoPeripheral<'a, P>, P: HalOutputPin + 'a>(
         pin: T,
         initial_level: Level,
