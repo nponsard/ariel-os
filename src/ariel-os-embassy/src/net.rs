@@ -32,10 +32,11 @@ pub type NetworkStack = Stack<'static>;
 // Will need a refactor if we want to use multiple network interfaces (probably with linkme).
 #[cfg(feature = "ltem-nrf-modem")]
 pub(crate) type InterfaceControllerType = ariel_os_hal::hal::ltem::LtemInterfaceController;
+#[cfg(feature = "wifi-esp")]
+pub(crate) type InterfaceControllerType =
+    ariel_os_hal::hal::wifi::esp_wifi::EspWifiInterfaceController;
 
-#[cfg(not(any(
-    feature = "ltem-nrf-modem",
-)))]
+#[cfg(not(any(feature = "ltem-nrf-modem", feature = "wifi-esp",)))]
 pub(crate) type InterfaceControllerType = DummyController;
 
 pub(crate) static STACK: OnceLock<
@@ -46,6 +47,7 @@ pub(crate) static STACK: OnceLock<
 pub(crate) struct DummyController {}
 
 impl DummyController {
+    #[allow(unused)]
     pub fn new() -> Self {
         Self {}
     }
