@@ -11,6 +11,7 @@
     reason = "should be addressed eventually"
 )]
 
+use ariel_os_log::warn;
 use embassy_net::{Runner, Stack};
 use embassy_sync::{
     blocking_mutex::{Mutex, raw::CriticalSectionRawMutex},
@@ -35,8 +36,14 @@ pub(crate) type InterfaceControllerType = ariel_os_hal::hal::ltem::LtemInterface
 #[cfg(feature = "wifi-esp")]
 pub(crate) type InterfaceControllerType =
     ariel_os_hal::hal::wifi::esp_wifi::EspWifiInterfaceController;
+#[cfg(feature = "wifi-cyw43")]
+pub(crate) type InterfaceControllerType = ariel_os_hal::hal::cyw43::Cyw43WifiInterfaceController;
 
-#[cfg(not(any(feature = "ltem-nrf-modem", feature = "wifi-esp",)))]
+#[cfg(not(any(
+    feature = "ltem-nrf-modem",
+    feature = "wifi-esp",
+    feature = "wifi-cyw43"
+)))]
 pub(crate) type InterfaceControllerType = DummyController;
 
 pub(crate) static STACK: OnceLock<
@@ -53,7 +60,9 @@ impl DummyController {
     }
 }
 impl InterfaceController for DummyController {
-    fn disable(&self) {}
+    fn disable(&self) {
+        warn!("Disabling this network interface is not supported.");
+    }
     fn enable(&self) {}
 }
 /// Returns a new [`NetworkStack`].

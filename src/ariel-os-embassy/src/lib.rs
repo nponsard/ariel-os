@@ -427,7 +427,7 @@ async fn init_task(mut peripherals: hal::OptionalPeripherals) {
 
     #[cfg(feature = "wifi-cyw43")]
     {
-        hal::cyw43::join(control).await;
+        spawner.spawn(hal::cyw43::connection(control)).unwrap();
     };
 
     // mark used
