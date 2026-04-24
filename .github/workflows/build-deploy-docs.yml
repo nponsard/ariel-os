@@ -162,6 +162,15 @@ jobs:
           mkdir -p ./_site/dev/docs/api
           mv target/riscv32imac-unknown-none-elf/doc/ariel_os_esp/ ./_site/dev/docs/api
           mv target/doc/* ./_site/dev/docs/api
+          mv target/riscv32imac-unknown-none-elf/doc/src/ariel_os_esp ./_site/dev/docs/api/src
+          mv target/riscv32imac-unknown-none-elf/doc/static.files/* ./_site/dev/docs/api/static.files
+          # get the ariel-os-esp sidebar contents
+          # save the first line of the src-files.js in a variable
+          TEXT=`head -n 1 target/riscv32imac-unknown-none-elf/doc/src-files.js`
+          # use sed keep only the first element of the JSON string (i.e. "ariel_os_esp")
+          TEXT=`echo $TEXT | sed "s/createSrcSidebar('//" - | sed "s/');//" - | jq '.[0]' -cr`
+          # hack ariel-os-esp source files in the source files sidebar
+          sed -i "s/\[\"ariel_os\",\[\"\",\[\],\[\"lib.rs\",\"sensors.rs\"\]\]\]/[\"ariel_os\",[\"\",[],[\"lib.rs\",\"sensors.rs\"]]],$TEXT/g" ./_site/dev/docs/api/src-files.js
           # hack ariel-os-esp in the sidebar
           sed -i 's/"ariel_os","ariel_os_nrf"/"ariel_os","ariel_os_esp","ariel_os_nrf"/g' ./_site/dev/docs/api/crates.js
 
