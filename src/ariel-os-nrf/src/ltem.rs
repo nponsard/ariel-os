@@ -31,6 +31,8 @@ enum Command {
 #[derive(Debug, Clone, Copy)]
 pub struct LtemInterfaceController {}
 impl LtemInterfaceController {
+    #[allow(clippy::new_without_default)]
+    #[must_use]
     pub fn new() -> Self {
         Self {}
     }
