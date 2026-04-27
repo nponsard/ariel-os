@@ -36,9 +36,6 @@ mod backend {
             rtt_target::rtt_init_print!(NoBlockTrim);
         }
 
-        #[cfg(feature = "log")]
-        crate::logger::init();
-
         #[cfg(feature = "defmt")]
         {
             use rtt_target::ChannelMode::NoBlockSkip;
@@ -64,10 +61,7 @@ mod backend {
     pub use std::println as debug_output_println;
 
     #[doc(hidden)]
-    pub fn init() {
-        #[cfg(feature = "log")]
-        crate::logger::init();
-    }
+    pub fn init() {}
 }
 
 #[cfg(not(all(
