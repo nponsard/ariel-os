@@ -346,7 +346,9 @@ jobs:
 
             # Treat all files modified after the cached commit as "changed", by touching them.
             git diff --name-only $(cat /home/runner/metadata/cache-ref) | while read filename; do
-              touch "${filename}"
+              if [ -f "${filename}" ]; then
+                touch "${filename}"
+              fi
             done
           else
              echo "/home/runner/metadata/cache-ref not found, skipping step"
