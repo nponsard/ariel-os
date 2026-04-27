@@ -7,7 +7,7 @@ repository.workspace = true
 license.workspace = true
 
 [package.metadata.feature-groups]
-debug-output.xor = { features = ["defmt-rtt", "rtt-target", "std"] }
+debug-output.xor = { features = ["defmt-rtt", "rtt-target"] }
 
 [package.metadata.features]
 debug-console = { groups = ["debug-output"] }

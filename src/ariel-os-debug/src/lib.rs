@@ -56,17 +56,9 @@ mod backend {
     }
 }
 
-#[cfg(all(feature = "debug-console", feature = "std"))]
-mod backend {
-    pub use std::println as debug_output_println;
-
-    #[doc(hidden)]
-    pub fn init() {}
-}
-
 #[cfg(not(all(
     feature = "debug-console",
-    any(feature = "defmt-rtt", feature = "rtt-target", feature = "std")
+    any(feature = "defmt-rtt", feature = "rtt-target"),
 )))]
 mod backend {
     #[doc(hidden)]
