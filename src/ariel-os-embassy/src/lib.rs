@@ -290,8 +290,9 @@ async fn init_task(mut peripherals: hal::OptionalPeripherals) {
 
         // Host's MAC addr. This is the MAC the host "thinks" its USB-to-ethernet adapter has.
         let host_mac_addr = crate::hal::identity::DeviceId::get()
-            .map(|d| d.interface_eui48(1).0)
-            .unwrap_or([0x8A, 0x88, 0x88, 0x88, 0x88, 0x88]);
+            .map_or([0x8A, 0x88, 0x88, 0x88, 0x88, 0x88], |d| {
+                d.interface_eui48(1).0
+            });
 
         // Create classes on the builder.
         let usb_cdc_ecm = CdcNcmClass::new(
@@ -302,8 +303,9 @@ async fn init_task(mut peripherals: hal::OptionalPeripherals) {
         );
 
         let our_mac_addr = crate::hal::identity::DeviceId::get()
-            .map(|d| d.interface_eui48(0).0)
-            .unwrap_or([0xCA, 0xCC, 0xCC, 0xCC, 0xCC, 0xCC]);
+            .map_or([0xCA, 0xCC, 0xCC, 0xCC, 0xCC, 0xCC], |d| {
+                d.interface_eui48(0).0
+            });
 
         let (runner, device) = usb_cdc_ecm.into_embassy_net_device::<{ net::ETHERNET_MTU }, 4, 4>(
             NET_STATE.init_with(NetState::new),
