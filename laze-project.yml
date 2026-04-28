@@ -1991,7 +1991,7 @@ builders:
           - rustup ${CARGO_TOOLCHAIN} target add riscv32imc-unknown-none-elf
           - rustup ${CARGO_TOOLCHAIN} target add riscv32imac-unknown-none-elf
           - rustup ${CARGO_TOOLCHAIN} component add rust-src llvm-tools
-          - if command -v espup >/dev/null; then espup update --toolchain-version 1.94.0.2 --targets=esp32,esp32s2,esp32s3; fi
+          - if command -v espup >/dev/null; then espup update --targets=esp32,esp32s2,esp32s3; fi
 
       update-book:
         build: false
