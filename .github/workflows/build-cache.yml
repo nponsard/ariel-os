@@ -126,10 +126,6 @@ jobs:
              echo "/home/runner/metadata/cache-ref not found, skipping step"
           fi
 
-      - id: get_toolchain
-        if: steps.should-skip.outputs.result != 'true'
-        run: echo "toolchain=$(scripts/rust-toolchain.sh)" >> $GITHUB_OUTPUT
-
       - name: "Show installed versions"
         run: |
           set -x
