@@ -25,13 +25,10 @@ jobs:
         with:
           persist-credentials: false
 
-      - id: get_toolchain
-        run: echo "toolchain=$(scripts/rust-toolchain.sh)" >> $GITHUB_OUTPUT
-
       - name: Install toolchain
         uses: dtolnay/rust-toolchain@efa25f7f19611383d5b0ccf2d1c8914531636bf9 # master
         with:
-          toolchain: ${{ steps.get_toolchain.outputs.toolchain }}
+          toolchain: stable
 
       - name: Install laze
         uses: taiki-e/install-action@74e87cbfa15a59692b158178d8905a61bf6fca95 # v2
@@ -83,6 +80,7 @@ jobs:
       - id: get_toolchain
         run: echo "toolchain=$(scripts/rust-toolchain.sh)" >> $GITHUB_OUTPUT
 
+      # Clippy linting is better done with the nightly set of lints.
       - name: Install toolchain
         uses: dtolnay/rust-toolchain@efa25f7f19611383d5b0ccf2d1c8914531636bf9 # master
         with:
@@ -339,6 +337,7 @@ jobs:
       - id: get_toolchain
         run: echo "toolchain=$(scripts/rust-toolchain.sh)" >> $GITHUB_OUTPUT
 
+      # Generating the rustdoc docs requires nightly features.
       - name: Install toolchain
         uses: dtolnay/rust-toolchain@efa25f7f19611383d5b0ccf2d1c8914531636bf9 # master
         with:
