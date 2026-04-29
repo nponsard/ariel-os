@@ -8,8 +8,8 @@ on:
       - main
   merge_group:
   schedule:
-    # run every morning at 3:17am
-    - cron: "17 3 * * *"
+    # run every morning at 4:17am
+    - cron: "17 4 * * *"
 
 permissions:
   contents: read

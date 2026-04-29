@@ -9,8 +9,8 @@ on:
         required: false
         type: boolean
   schedule:
-    # run every morning at 1:07am
-    - cron: "7 1 * * *"
+    # run every morning at 00:07am
+    - cron: "7 0 * * *"
 concurrency:
   group: ${{ github.head_ref || github.run_id }}-build-cache
   cancel-in-progress: true
