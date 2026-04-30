@@ -287,6 +287,10 @@ contexts:
     parent: nrf
     selects:
       - cortex-m33f
+      # Initializing the modem reduces the power consumption of the MCU.
+      # For blinky the measured consumption is ~3milliAmps without nrf91-modem to ~4 microAmps with nrf91-modem.
+      # Tested using the ppk2 in ampere mode on the Thingy:91 X and nrf9160dk.
+      - ?nrf91-modem
 
   - name: nrf9160
     parent: nrf91
