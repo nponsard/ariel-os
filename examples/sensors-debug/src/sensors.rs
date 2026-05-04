@@ -48,7 +48,10 @@ mod lis2du12 {
     }
 }
 
-#[allow(unused, reason = "should be directly accessible without going through the registry")]
+#[allow(
+    unused,
+    reason = "should be directly accessible without going through the registry"
+)]
 #[cfg(any(context = "st-steval-mkboxpro"))]
 pub use lis2du12::LIS2DU12_I2C;
 
@@ -85,7 +88,10 @@ mod lps22df {
     }
 }
 
-#[allow(unused, reason = "should be directly accessible without going through the registry")]
+#[allow(
+    unused,
+    reason = "should be directly accessible without going through the registry"
+)]
 #[cfg(any(context = "st-steval-mkboxpro"))]
 pub use lps22df::LPS22DF_I2C;
 
@@ -124,7 +130,10 @@ mod stts22h {
     }
 }
 
-#[allow(unused, reason = "should be directly accessible without going through the registry")]
+#[allow(
+    unused,
+    reason = "should be directly accessible without going through the registry"
+)]
 #[cfg(any(context = "st-steval-mkboxpro", context = "stm32u083c-dk"))]
 pub use stts22h::STTS22H_I2C;
 
@@ -139,7 +148,9 @@ mod nrf91 {
     static NRF91_GNSS_REF: &'static dyn ariel_os::sensors::Sensor = &NRF91_GNSS;
     pub(super) async fn init() {
         let mut config = Config::default();
-        config.log_nmea = true;
+        config.log_nmea = false;
+        config.operation_mode = ariel_os_sensor_nrf91_gnss::config::GnssOperationMode::Continuous;
+        config.power_mode = ariel_os_sensor_nrf91_gnss::config::GnssPowerSaveMode::Disabled;
         NRF91_GNSS.init(config).await;
     }
 

@@ -11,7 +11,7 @@ use ariel_os::{
         Label, REGISTRY, Reading as _, Sensor,
         sensor::{ReadingChannel, Sample, SampleError, SampleMetadata},
     },
-    time::Timer,
+    time::{Duration, Instant, Timer},
 };
 
 #[cfg(feature = "gnss")]
@@ -28,6 +28,7 @@ async fn main(peripherals: pins::Peripherals) {
     info!("Will print the readings of registered sensor drivers…");
 
     loop {
+        let start = Instant::now();
         // Trigger measurements for each sensor driver in parallel.
         for sensor in REGISTRY.sensors() {
             if let Err(err) = sensor.trigger_measurement() {
@@ -58,7 +59,14 @@ async fn main(peripherals: pins::Peripherals) {
             }
         }
 
-        Timer::after_secs(2).await;
+        let finish = Instant::now();
+
+        Timer::after(
+            start
+                .saturating_add(Duration::from_secs(180))
+                .duration_since(finish),
+        )
+        .await;
     }
 }
 
