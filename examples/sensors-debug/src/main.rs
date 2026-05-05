@@ -6,6 +6,7 @@ mod pins;
 mod sensors;
 
 use ariel_os::{
+    gpio::{Level, Output},
     log::{debug, error, info},
     sensors::{
         Label, REGISTRY, Reading as _, Sensor,
@@ -14,6 +15,7 @@ use ariel_os::{
     time::{Duration, Instant, Timer},
 };
 
+use ariel_os_sensors::sensor;
 #[cfg(feature = "gnss")]
 use ariel_os_sensors_gnss_time_ext::GnssTimeExt as _;
 
@@ -22,7 +24,9 @@ const DEFAULT_SENSOR_LABEL: &str = "no label";
 
 #[ariel_os::task(autostart, peripherals)]
 async fn main(peripherals: pins::Peripherals) {
-    i2c_bus::init(peripherals);
+    let mut led0 = Output::new(peripherals.leds.led0, Level::Low);
+
+    // i2c_bus::init(peripherals);
     sensors::init().await;
 
     info!("Will print the readings of registered sensor drivers…");
@@ -43,6 +47,9 @@ async fn main(peripherals: pins::Peripherals) {
             match reading {
                 Ok(samples) => {
                     for (reading_channel, sample) in samples.samples() {
+                        if reading_channel.label() == Label::Altitude {
+                            led0.set_level(sample.value().is_ok().into());
+                        }
                         print_sample(sensor, sample, reading_channel);
                     }
                     #[cfg(feature = "gnss")]
@@ -61,12 +68,19 @@ async fn main(peripherals: pins::Peripherals) {
 
         let finish = Instant::now();
 
-        Timer::after(
-            start
-                .saturating_add(Duration::from_secs(180))
-                .duration_since(finish),
-        )
-        .await;
+        // let wait = 20;
+        let wait = 180;
+
+
+        // in periodic mode the modem will send empty messages until a fix is found, we need to consume them.
+        if finish < start.saturating_add(Duration::from_secs(wait)) && sensors::GNSS_SINGLE_SHOT {
+            Timer::after(
+                start
+                    .saturating_add(Duration::from_secs(wait))
+                    .duration_since(finish),
+            )
+            .await;
+        }
     }
 }
 

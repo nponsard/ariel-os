@@ -149,13 +149,28 @@ mod nrf91 {
     pub(super) async fn init() {
         let mut config = Config::default();
         config.log_nmea = false;
-        config.operation_mode = ariel_os_sensor_nrf91_gnss::config::GnssOperationMode::Continuous;
-        config.power_mode = ariel_os_sensor_nrf91_gnss::config::GnssPowerSaveMode::Disabled;
+        config.operation_mode = MODE;
+
+        config.power_mode = ariel_os_sensor_nrf91_gnss::config::GnssPowerSaveMode::DutyCycling;
         NRF91_GNSS.init(config).await;
     }
+
+    const MODE: ariel_os_sensor_nrf91_gnss::config::GnssOperationMode =
+        ariel_os_sensor_nrf91_gnss::config::GnssOperationMode::Periodic(180);
+        // ariel_os_sensor_nrf91_gnss::config::GnssOperationMode::SingleShot(180);
+
+        // ariel_os_sensor_nrf91_gnss::config::GnssOperationMode::Continuous;
+
+
+    pub const GNSS_SINGLE_SHOT: bool = matches!(
+        MODE,
+        ariel_os_sensor_nrf91_gnss::config::GnssOperationMode::SingleShot(_)
+    );
 
     #[ariel_os::task(autostart)]
     pub async fn nrf91_gnss_runner() {
         NRF91_GNSS.run().await;
     }
 }
+
+pub use nrf91::GNSS_SINGLE_SHOT;

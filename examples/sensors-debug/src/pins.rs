@@ -1,4 +1,5 @@
 use ariel_os::hal::{i2c, peripherals};
+use ariel_os_boards::pins;
 
 #[cfg(context = "heltec-wifi-lora-32-v3")]
 pub type SensorI2c = i2c::controller::I2C0;
@@ -35,9 +36,16 @@ ariel_os::hal::define_peripherals!(Peripherals {
     i2c_scl: P0_22,
 });
 #[cfg(context = "nordic-thingy-91-x-nrf9151")]
-ariel_os::hal::define_peripherals!(Peripherals {
+ariel_os::hal::define_peripherals!(I2cPeri {
     i2c_sda: P0_09,
     i2c_scl: P0_08,
+});
+
+#[cfg(context = "nordic-thingy-91-x-nrf9151")]
+ariel_os::hal::group_peripherals!(Peripherals {
+    leds: pins::LedPeripherals,
+    buttons: pins::ButtonPeripherals,
+    i2c: I2cPeri,
 });
 
 #[cfg(context = "rpi-pico")]
