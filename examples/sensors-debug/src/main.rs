@@ -68,9 +68,7 @@ async fn main(peripherals: pins::Peripherals) {
 
         let finish = Instant::now();
 
-        // let wait = 20;
-        let wait = 180;
-
+        let wait = 300;
 
         // in periodic mode the modem will send empty messages until a fix is found, we need to consume them.
         if finish < start.saturating_add(Duration::from_secs(wait)) && sensors::GNSS_SINGLE_SHOT {

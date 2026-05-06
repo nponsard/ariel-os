@@ -156,7 +156,7 @@ mod nrf91 {
     }
 
     const MODE: ariel_os_sensor_nrf91_gnss::config::GnssOperationMode =
-        ariel_os_sensor_nrf91_gnss::config::GnssOperationMode::Periodic(180);
+        ariel_os_sensor_nrf91_gnss::config::GnssOperationMode::Periodic(300);
         // ariel_os_sensor_nrf91_gnss::config::GnssOperationMode::SingleShot(180);
 
         // ariel_os_sensor_nrf91_gnss::config::GnssOperationMode::Continuous;
