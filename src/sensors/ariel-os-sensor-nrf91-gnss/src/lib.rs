@@ -286,8 +286,11 @@ impl Nrf91Gnss {
         let longitude_accuracy = (f64::from(data.accuracy) * DEGREES_PER_METER_BASE
             / libm::cos(data.latitude.to_radians())) as f32;
 
+        // Convert for 10**-7 channel scaling.
         let latitude_value = (data.latitude * 10_000_000f64) as i32;
+        // Convert for 10**-7 channel scaling.
         let longitude_value = (data.longitude * 10_000_000f64) as i32;
+        // Convert for 10**-2 channel scaling.
         let altitude_value = (data.altitude * 100f32) as i32;
 
         let fix_valid = (u32::from(data.flags)
@@ -338,8 +341,11 @@ impl Nrf91Gnss {
             )
         };
 
+        // Convert for 10**-6 channel scaling.
         let horizontal_speed_value = (data.speed * 1_000_000f32) as i32;
+        // Convert for 10**-6 channel scaling.
         let vertical_speed_value = (data.vertical_speed * 1_000_000f32) as i32;
+        // Convert for 10**-6 channel scaling.
         let heading_value = (data.heading * 1_000_000f32) as i32;
 
         let velocity_valid = (u32::from(data.flags)
