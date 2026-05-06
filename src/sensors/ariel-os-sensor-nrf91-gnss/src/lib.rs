@@ -157,7 +157,7 @@ impl Nrf91Gnss {
         configuration: &Config,
     ) {
         let mut latest_data = None;
-        let mut should_send_update = false;
+        let mut update_requested = false;
 
         loop {
             if !matches!(self.state.get(), State::Enabled | State::Measuring) {
@@ -172,13 +172,25 @@ impl Nrf91Gnss {
                 Either::First(Command::Stop) => {
                     break;
                 }
+                Either::First(Command::Trigger) => {
+                    // Ignore, already running
+                    if update_requested
+                        || matches!(
+                            configuration.operation_mode,
+                            GnssOperationMode::SingleShot(_)
+                        )
+                    {
+                        warn!("Received Trigger command while already processing one");
+                    } else {
+                        update_requested = true;
+                    }
+                }
                 Either::Second(None) => {
                     // In single shot mode, the stream ending means it has found a fix.
                     if matches!(
                         configuration.operation_mode,
                         GnssOperationMode::SingleShot(_)
                     ) {
-                        self.result_signal.clear();
                         if let Some(data) = latest_data {
                             let samples = self.convert_to_samples(&data);
                             self.result_signal.signal(Ok(samples));
@@ -188,25 +200,12 @@ impl Nrf91Gnss {
                     }
                     break;
                 }
-                Either::First(Command::Trigger) => {
-                    // Ignore, already running
-                    if should_send_update
-                        || matches!(
-                            configuration.operation_mode,
-                            GnssOperationMode::SingleShot(_)
-                        )
-                    {
-                        warn!("Received Trigger command while already processing one");
-                    } else {
-                        should_send_update = true;
-                    }
-                }
                 Either::Second(Some(Ok(message))) => match message {
                     GnssData::PositionVelocityTime(pos) => {
-                        if should_send_update {
+                        if update_requested {
                             let samples = self.convert_to_samples(&pos);
                             self.result_signal.signal(Ok(samples));
-                            should_send_update = false;
+                            update_requested = false;
                         }
 
                         // Only matters if we're in SingleShot mode.
