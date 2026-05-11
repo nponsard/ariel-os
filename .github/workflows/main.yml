@@ -251,7 +251,6 @@ jobs:
             --features "
                 dns,
                 external-interrupts,
-                executor-none,
                 i2c,
                 ipv4,
                 ipv6,
