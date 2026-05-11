@@ -150,6 +150,9 @@ pub static EMBASSY_TASKS: [Task] = [..];
 ))]
 compile_error!(r#"must select one of "executor-interrupt", "executor-thread"!"#);
 
+#[cfg(all(feature = "executor-interrupt", feature = "executor-thread"))]
+compile_error!(r#"must select only one of "executor-interrupt", "executor-thread"!"#);
+
 #[cfg(feature = "executor-interrupt")]
 #[distributed_slice(ariel_os_rt::INIT_FUNCS)]
 pub(crate) fn init() {
