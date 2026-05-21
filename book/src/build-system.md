@@ -22,7 +22,7 @@ For example, to run the hello-world example from the `ariel-os` directory, the c
 
 Tasks available in Ariel OS include:
 
-- `run`, `flash`, `flash-dfuse`, `flash-erase-all`, `reset`: See [Flashing & Debugging][flashing-debugging-book] for flashing and debug-related tasks.
+- `run`, `flash`, `flash-dfuse`, `flash-erase-all`, `attach`, `reset`: See [Flashing & Debugging][flashing-debugging-book] and [Logging][logging-book] for flashing and logging-related tasks.
 - `debug`: Starts a GDB debug session for the selected application.
   The application needs to be flashed using the `flash` task beforehand.
 - `tree`: Prints the application's `cargo tree`.
@@ -140,3 +140,4 @@ apps:
 [laze-module-selects-book]: https://kaspar030.github.io/laze/dev/reference/module/selects.html
 [laze-module-conflicts-book]: https://kaspar030.github.io/laze/dev/reference/module/conflicts.html
 [flashing-debugging-book]: ./flashing-debugging.md
+[logging-book]: ./logging.md
