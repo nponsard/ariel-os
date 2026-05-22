@@ -87,6 +87,7 @@ Ariel OS provides the [laze tasks][laze-tasks-book] listed in the following tab
 | ----------------- | ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | `run`             | ESP32 devices                      | Compiles, flashes, and runs an application. [Logs][logging-transports-book] (not the debug channel output) are printed in the terminal. Currently uses [`espflash`][espflah-cratesio].                                                           |
 | `flash-dfuse`     | DfuSe devices, i.e., STM32 devices | Compiles and flashes an application via DfuSe, the non-standard ST protocol based on USB DFU, before rebooting the target. Requires bootloader support for DfuSe in the microcontroller, and [dfu-util][dfu-util-homepage] on the host.          |
+| `reset`           | ESP32 devices                      | Reboots the target. Currently uses [`espflash`][espflah-cratesio].                                                                                                                                                                               |
 
 ## Debug Channel Transports
 

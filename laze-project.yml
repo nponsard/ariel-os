@@ -1112,6 +1112,12 @@ modules:
         cmd:
           - espflash monitor ${ESPFLASH_LOG_FORMAT} --elf ${out} $@
 
+      reset:
+        help: reset the target
+        build: false
+        cmd:
+          - espflash reset --after hard-reset $@
+
   - name: probe-rs
     help: use probe-rs as runner
     selects:
