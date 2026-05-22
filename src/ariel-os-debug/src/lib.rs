@@ -21,7 +21,7 @@ mod backend {
 
 #[cfg(feature = "rtt-target")]
 mod backend {
-    pub use rtt_target::rprintln as debug_output_println;
+    pub use rtt_target::rprintln as debug_channel_println;
 
     #[doc(hidden)]
     pub fn init() {
