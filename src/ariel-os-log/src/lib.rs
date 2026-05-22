@@ -80,7 +80,7 @@ pub mod log {
             feature = "std"
         ))
     ))]
-    pub use ariel_os_debug::debug_output_println as println;
+    pub use ariel_os_debug::debug_channel_println as println;
 
     #[cfg(feature = "esp-println")]
     pub use esp_println::println;
@@ -382,7 +382,7 @@ pub mod backend {
 
             if let Some(debug_uart_write_fn) = DEBUG_UART_WRITE_FN.try_get() {
                 // Panicking in this case would not be useful as (a) it is recoverable, we would
-                // just be dropping some debug output and (b) there would not be a output to print
+                // just be dropping some logs and (b) there would not be a logging output to print
                 // the panic on, as there can currently only be one backend at once.
                 let _ = debug_uart_write_fn(bytes);
             }
