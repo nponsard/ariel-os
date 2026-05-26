@@ -85,6 +85,16 @@ The cloned repository is stored inside `build/imports`.
 It is alternatively possible to clone the repository manually and specify the resulting directory using a [`path` import][laze-path-import-book].
 This can be useful when needing to modify Ariel OS itself, when also working on an application.
 
+#### Cargo Workspaces
+
+As your project gets bigger, you might want to use your own workspace with several crates. When doing so, you need to
+[exclude](https://doc.rust-lang.org/cargo/reference/workspaces.html#the-members-and-exclude-fields) `build/` to not interfere with Ariel OS' workspace.
+
+```toml
+[workspace]
+exclude = ["build"]
+```
+
 ### Enabling laze modules for an application
 
 Instead of manually specifying [laze modules on the command line](#laze-modules), laze modules required for an application must be specified in the application's laze configuration file, `laze-project.yml`.
