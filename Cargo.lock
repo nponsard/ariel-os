@@ -4589,9 +4589,9 @@ dependencies = [
 
 [[package]]
 name = "nrfxlib-sys"
-version = "3.0.3+3.0.2"
+version = "3.1.0+3.3.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "573d7e42c0dc325e4631bc22346d5c046ed68c4253c3da8fc990b3380fa8633d"
+checksum = "d024684e50e75bf8fb8d9e735b8cf5f213d615f1818825db79d6ffe6d3a12af3"
 dependencies = [
  "bindgen 0.70.1",
  "llvm-tools",
