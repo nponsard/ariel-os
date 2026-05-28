@@ -409,6 +409,8 @@ async fn init_task(mut peripherals: hal::OptionalPeripherals) {
             unreachable!();
         }
 
+        spawner.spawn(net::net_config_report(stack)).unwrap();
+
         #[cfg(feature = "cellular-networking")]
         {
             let cellular_networking_config = cellular_networking::config();

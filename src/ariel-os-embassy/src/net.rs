@@ -255,3 +255,57 @@ fn ariel_os_network_config() -> embassy_net::Config {
 
     config
 }
+
+/// Watches for changes to the network stack's config and logs the state on change.
+///
+/// This is a workaround for <https://github.com/embassy-rs/embassy/pull/6195> that makes IP
+/// addresses visible at the "info" log level for the common case of users interacting with devices
+/// during development when no DNS integration or similar is set up. Once that issue is closed, it
+/// should be removed, also due to two shortcomings:
+///
+/// * It is relatively big (almost 1 KiB of code).
+/// * It does not report all configuration changes, but only the first change after the stack
+///   status goes from "no configuration" to "some configuration".
+#[embassy_executor::task]
+pub(crate) async fn net_config_report(stack: Stack<'static>) {
+    use ariel_os_log::info;
+
+    loop {
+        stack.wait_config_up().await;
+
+        #[cfg(feature = "ipv4")]
+        if let Some(config) = stack.config_v4() {
+            info!("IPv4: UP");
+            info!("   IP address:      {:?}", config.address);
+            if let Some(gateway) = config.gateway {
+                info!("   Default gateway: {:?}", gateway);
+            }
+
+            #[cfg(feature = "dns")]
+            for s in &config.dns_servers {
+                info!("   DNS server:      {:?}", s);
+            }
+        } else {
+            info!("IPv4: DOWN");
+        }
+
+        #[cfg(feature = "ipv6")]
+        if let Some(config) = stack.config_v6() {
+            info!("IPv6: UP");
+            info!("   IP address:      {:?}", config.address);
+            if let Some(gateway) = config.gateway {
+                info!("   Default gateway: {:?}", gateway);
+            }
+
+            #[cfg(feature = "dns")]
+            for s in &config.dns_servers {
+                info!("   DNS server:      {:?}", s);
+            }
+        } else {
+            info!("IPv6: DOWN");
+        }
+
+        stack.wait_config_down().await;
+        info!("IPv4/v6: DOWN");
+    }
+}
