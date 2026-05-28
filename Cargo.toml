@@ -106,7 +106,7 @@ embedded-test = { version = "0.7.1", default-features = false, features = [
 
 esp-alloc = { version = "0.9.0", default-features = false }
 esp-bootloader-esp-idf = { version = "0.4.0", features = ["esp-rom-sys"] }
-esp-hal = { version = "1.0.0", default-features = false, features = [
+esp-hal = { version = "~1.0.0", default-features = false, features = [
   "unstable",
 ] }
 esp-metadata-generated = { version = "0.3.0", default-features = false }
