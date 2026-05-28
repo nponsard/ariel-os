@@ -409,6 +409,7 @@ async fn init_task(mut peripherals: hal::OptionalPeripherals) {
             unreachable!();
         }
 
+        #[cfg(any(feature = "defmt", feature = "log"))]
         spawner.spawn(net::net_config_report(stack)).unwrap();
 
         #[cfg(feature = "cellular-networking")]

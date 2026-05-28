@@ -266,6 +266,7 @@ fn ariel_os_network_config() -> embassy_net::Config {
 /// * It is relatively big (almost 1 KiB of code).
 /// * It does not report all configuration changes, but only the first change after the stack
 ///   status goes from "no configuration" to "some configuration".
+#[cfg(any(feature = "defmt", feature = "log"))]
 #[embassy_executor::task]
 pub(crate) async fn net_config_report(stack: Stack<'static>) {
     use ariel_os_log::info;
