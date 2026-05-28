@@ -505,8 +505,9 @@ contexts:
     parent: ariel-os
     selects:
       - infini-core
+      # NOTE: semantically this should only be enabled when `logging` is
+      # enabled, but laze does not support conditions on contexts.
       - logging-over-stdout
-      - ?debug-console
     provides:
       - has_device_identity
       - has_hwrng
@@ -1817,16 +1818,13 @@ modules:
     help: enable support for the debug console
     context: ariel-os
     selects:
-      # Mandatory.
-      - logging-over-debug-channel
+      - logging:
+          # Mandatory when logging is otherwise enabled.
+          - logging-over-debug-channel
       # Optional for now, at least until multiple logging transports can be used
       # at the same time: allows using semihosting while a logging transport
       # other than `logging-over-debug-channel` is used.
       - ?semihosting
-    env:
-      global:
-        FEATURES:
-          - ariel-os/debug-channel
 
   - name: logging
     help: enables logging functionality
@@ -1861,6 +1859,10 @@ modules:
           - debug-channel-transport-required
     provides_unique:
       - logging-transport
+    env:
+      global:
+        FEATURES:
+          - ariel-os/debug-channel
 
   # Disabled by modules that provide a `debug-channel-transport`.
   - name: no-debug-channel-transport
