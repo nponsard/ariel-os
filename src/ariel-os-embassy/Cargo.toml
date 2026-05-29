@@ -18,6 +18,10 @@ embassy-executor = { workspace = true }
 embassy-futures = { workspace = true }
 embassy-hal-internal = { workspace = true }
 embassy-net = { workspace = true, optional = true, features = [
+  # Could be removed for a future rom-small build, but it's a sensible default
+  # of smoltcp that is disabled by embassy-net's no-default-features on the
+  # smoltcp dependency.
+  "auto-icmp-echo-reply",
   "medium-ethernet",
 ] }
 embassy-sync = { workspace = true }
