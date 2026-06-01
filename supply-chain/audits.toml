@@ -61,6 +61,12 @@ criteria = "safe-to-deploy"
 delta = "1.1.0 -> 1.2.0"
 notes = "Many `usize` types have been changed to `u32` for increased portability, and an arithmetic bug has been fixed and a test added for it."
 
+[[audits.embassy-net]]
+who = "chrysn <chrysn@fsfe.org>"
+criteria = "safe-to-deploy"
+delta = "0.9.1 -> 0.9.1@git:37683fe299f12028e5a77af9f742f496da08afcd"
+importable = false
+
 [[audits.embassy-net-tuntap]]
 who = "chrysn <chrysn@fsfe.org>"
 criteria = "safe-to-deploy"
