@@ -23,7 +23,9 @@ The ability to configure which Bluetooth address is used and other capacity para
 >
 > Current implementation: the address is a static device address and is not rotated during execution.
 > This allows to use the BLE feature of Ariel OS on multiple devices in the same location.
-> We later plan to switch to private device addresses by default, which *are* rotated during execution.
+> We later plan to switch to private device addresses by default, which _are_ rotated during execution.
+>
+> To obtain the address at runtime, use `ariel_os::ble::current_address()`.
 
 ## Using the BLE Stack
 
