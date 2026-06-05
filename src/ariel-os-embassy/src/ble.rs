@@ -10,7 +10,7 @@
 //! The address is not currently rotated during execution; however this behavior may not be relied upon.
 
 use embassy_sync::once_lock::OnceLock;
-use futures_util::FutureExt;
+use futures_util::FutureExt as _;
 use trouble_host::{
     Address,
     prelude::{AddrKind, BdAddr},
