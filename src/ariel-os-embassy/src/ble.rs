@@ -9,6 +9,8 @@
 //!
 //! The address is not currently rotated during execution; however this behavior may not be relied upon.
 
+use embassy_sync::once_lock::OnceLock;
+use futures_util::FutureExt;
 use trouble_host::{
     Address,
     prelude::{AddrKind, BdAddr},
@@ -19,6 +21,8 @@ use ariel_os_log::debug;
 
 // Must be async and return &trouble_host::Stack<'static, impl Controller>
 pub use crate::hal::ble::ble_stack;
+
+static CURRENT_ADDRESS: OnceLock<Address> = OnceLock::new();
 
 #[allow(dead_code, reason = "false positive during builds outside of laze")]
 pub(crate) fn config() -> Config {
@@ -33,9 +37,17 @@ pub(crate) fn config() -> Config {
         kind: AddrKind::RANDOM,
     };
 
+    let _ = CURRENT_ADDRESS.init(address);
+
     debug!("Setting random address: {:?}", address);
 
     Config { address }
+}
+
+/// Returns the BLE address of the BLE adapter.
+pub fn current_address() -> impl Future<Output = Address> {
+    // Using map() to avoid creating a new state machine.
+    CURRENT_ADDRESS.get().map(|addr| *addr)
 }
 
 /// Generates a random address.
