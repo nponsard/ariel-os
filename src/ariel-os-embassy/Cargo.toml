@@ -203,6 +203,7 @@ no-boards = []
 defmt = [
   "ariel-os-embassy-common/defmt",
   "ariel-os-hal/defmt",
+  "embassy-executor/defmt",
   "embassy-net?/defmt",
   "embassy-time?/defmt",
   "embassy-usb?/defmt",
