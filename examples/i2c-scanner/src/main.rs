@@ -90,7 +90,7 @@ async fn i2c_scanner(peripherals: pins::Peripherals) {
 
     // EVENTSBCHARGER0CLR
 
-    i2c_bus.write(0x6b, &[0x00, 0x07, 0xFF]).await.unwrap();
+    // i2c_bus.write(0x6b, &[0x00, 0x07, 0xFF]).await.unwrap();
 
     loop {
         // TASKIBATMEASURE [0x05, 0x06]
@@ -119,15 +119,15 @@ async fn i2c_scanner(peripherals: pins::Peripherals) {
         info!("voltage : {}", voltage);
 
         // ADCIBATMEASSTATUS 0x05 0x10
-        log_value(&mut i2c_bus, 0x05, 0x10, "ADCIBATMEASSTATUS").await;
+        // log_value(&mut i2c_bus, 0x05, 0x10, "ADCIBATMEASSTATUS").await;
 
-        log_value(&mut i2c_bus, 0x05, 0x11, "ADCVBATRESULTMSB").await;
-        log_value(&mut i2c_bus, 0x05, 0x15, "ADCGP0RESULTLSBS").await;
-        log_value(&mut i2c_bus, 0x03, 0x34, "BCHGCHARGESTATUS").await;
-        log_value(&mut i2c_bus, 0x03, 0x08, "BCHGISETMSB").await;
-        log_value(&mut i2c_bus, 0x03, 0x09, "BCHGISETLSB").await;
+        // log_value(&mut i2c_bus, 0x05, 0x11, "ADCVBATRESULTMSB").await;
+        // log_value(&mut i2c_bus, 0x05, 0x15, "ADCGP0RESULTLSBS").await;
+        // log_value(&mut i2c_bus, 0x03, 0x34, "BCHGCHARGESTATUS").await;
+        // log_value(&mut i2c_bus, 0x03, 0x08, "BCHGISETMSB").await;
+        // log_value(&mut i2c_bus, 0x03, 0x09, "BCHGISETLSB").await;
 
-        log_value(&mut i2c_bus, 0x00, 0x07, "EVENTSBCHARGER0CLR").await;
+        // log_value(&mut i2c_bus, 0x00, 0x07, "EVENTSBCHARGER0CLR").await;
 
         Timer::after_millis(1000).await;
     }
