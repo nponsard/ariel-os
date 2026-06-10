@@ -374,6 +374,7 @@ impl Nrf91Gnss {
                 latitude_value,
                 SampleMetadata::SymmetricalError {
                     // One meter is approximately 0.000009 degrees. Accuracy value usually between 1 and 50 meters.
+                    // 10**-5 scaling for the error.
                     deviation: clamp_to_u8(latitude_accuracy * 100_000f32),
                     bias: 0,
                     scaling: -5,
@@ -382,6 +383,7 @@ impl Nrf91Gnss {
             let longitude = Sample::new(
                 longitude_value,
                 SampleMetadata::SymmetricalError {
+                    // 10**-5 scaling for the error.
                     deviation: clamp_to_u8(longitude_accuracy * 100_000f32),
                     bias: 0,
                     scaling: -5,
@@ -390,6 +392,7 @@ impl Nrf91Gnss {
             let altitude = Sample::new(
                 altitude_value,
                 SampleMetadata::SymmetricalError {
+                    // 10**-1 scaling for the error.
                     deviation: clamp_to_u8(data.altitude_accuracy * 10f32),
                     bias: 0,
                     scaling: -1,
@@ -428,6 +431,7 @@ impl Nrf91Gnss {
             let horizontal_speed = Sample::new(
                 horizontal_speed_value,
                 SampleMetadata::SymmetricalError {
+                    // 10**-1 scaling for the error.
                     deviation: clamp_to_u8(data.speed_accuracy * 10f32),
                     bias: 0,
                     scaling: -1,
@@ -437,6 +441,7 @@ impl Nrf91Gnss {
             let vertical_speed = Sample::new(
                 vertical_speed_value,
                 SampleMetadata::SymmetricalError {
+                    // 10**-1 scaling for the error.
                     deviation: clamp_to_u8(data.vertical_speed_accuracy * 10f32),
                     bias: 0,
                     scaling: -1,
