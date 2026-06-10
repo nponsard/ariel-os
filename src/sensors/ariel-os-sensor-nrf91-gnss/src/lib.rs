@@ -164,6 +164,39 @@ impl StreamState {
     }
 }
 
+/// Convert time from `nrf_modem` to parts that can be put in samples.
+///
+/// # Panics
+///
+/// When the date is too far in the future / past.
+fn convert_to_time_parts(
+    data: &nrf_modem::nrfxlib_sys::nrf_modem_gnss_pvt_data_frame,
+) -> Option<(i32, i32)> {
+    let parsed_date = Date::from_calendar_date(
+        data.datetime.year.into(),
+        Month::try_from(data.datetime.month).ok()?,
+        data.datetime.day,
+    )
+    .ok()?;
+
+    let time = Time::from_hms_milli(
+        data.datetime.hour,
+        data.datetime.minute,
+        data.datetime.seconds,
+        data.datetime.ms,
+    )
+    .ok()?;
+
+    // Default year when no GNSS fix.
+    if data.datetime.year == 1980 {
+        return None;
+    }
+
+    let timestamp = UtcDateTime::new(parsed_date, time).unix_timestamp_nanos();
+
+    Some(ariel_os_sensors_gnss_time_ext::convert_datetime_to_parts(timestamp).unwrap())
+}
+
 pub struct Nrf91Gnss {
     config: OnceLock<config::Config>,
     label: Option<&'static str>,
@@ -307,7 +340,7 @@ impl Nrf91Gnss {
         &'static self,
         data: &nrf_modem::nrfxlib_sys::nrf_modem_gnss_pvt_data_frame,
     ) -> Samples {
-        let time_parts = Self::convert_to_time_parts(data);
+        let time_parts = convert_to_time_parts(data);
 
         let (time_seconds_part, time_nanos_part) = if let Some(time_parts) = time_parts {
             (
