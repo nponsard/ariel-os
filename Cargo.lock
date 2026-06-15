@@ -659,6 +659,7 @@ dependencies = [
  "embassy-embedded-hal",
  "embassy-executor",
  "embassy-stm32",
+ "embedded-hal 1.0.0",
  "embedded-hal-async",
  "embedded-io-async 0.6.1",
  "paste",
@@ -5190,6 +5191,14 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "5ee95bc4ef87b8d5ba32e8b7714ccc834865276eab0aed5c9958d00ec45f49e8"
 dependencies = [
  "unicode-ident",
+]
+
+[[package]]
+name = "pwm"
+version = "0.0.0"
+dependencies = [
+ "ariel-os",
+ "ariel-os-boards",
 ]
 
 [[package]]

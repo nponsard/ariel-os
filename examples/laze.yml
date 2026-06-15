@@ -22,6 +22,7 @@ subdirs:
   - log
   - minimal
   - power
+  - pwm
   - random
   - sensors-debug
   - storage
