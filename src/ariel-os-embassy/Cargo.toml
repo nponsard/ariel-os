@@ -74,6 +74,14 @@ external-interrupts = [
 ]
 time = ["dep:embassy-time", "dep:embassy-time-queue-utils", "ariel-os-hal/time"]
 
+
+## Enables PWM support.
+pwm = [
+  "dep:embassy-embedded-hal",
+  "ariel-os-embassy-common/pwm",
+  "ariel-os-hal/pwm",
+]
+
 ## Enables I2C support.
 i2c = [
   "dep:embassy-embedded-hal",

@@ -65,6 +65,15 @@ i2c = [
   "ariel-os-stm32/i2c",
 ]
 
+pwm = [
+  "dep:embassy-embedded-hal",
+  "ariel-os-embassy-common/pwm",
+  # "ariel-os-esp/pwm",
+  # "ariel-os-nrf/pwm",
+  # "ariel-os-rp/pwm",
+  "ariel-os-stm32/pwm",
+]
+
 spi = [
   "ariel-os-embassy-common/spi",
   "ariel-os-esp/spi",

@@ -22,6 +22,9 @@ pub mod i2c;
 #[doc(hidden)]
 pub mod identity;
 
+#[cfg(feature = "pwm")]
+pub mod pwm;
+
 #[cfg(feature = "spi")]
 pub mod spi;
 

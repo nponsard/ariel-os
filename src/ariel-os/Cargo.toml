@@ -110,6 +110,10 @@ network-config-ipv4-static = ["ariel-os-embassy/network-config-ipv4-static"]
 # Selects static IPv6 configuration.
 network-config-ipv6-static = ["ariel-os-embassy/network-config-ipv6-static"]
 
+
+## Enables I2C support.
+pwm = ["ariel-os-embassy/pwm"]
+
 #! ## Serial communication
 ## Enables I2C support.
 i2c = ["ariel-os-embassy/i2c"]

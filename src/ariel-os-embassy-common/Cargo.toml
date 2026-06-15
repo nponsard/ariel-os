@@ -26,6 +26,9 @@ external-interrupts = []
 ## Enables I2C support.
 i2c = ["dep:embassy-time", "dep:fugit"]
 
+## Enables PWM support.
+pwm = []
+
 ## Enables SPI support.
 spi = ["dep:fugit"]
 

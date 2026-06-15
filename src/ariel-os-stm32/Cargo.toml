@@ -62,6 +62,9 @@ i2c = [
   "time",
 ]
 
+## Enables PWM support.
+pwm = ["dep:embassy-embedded-hal", "ariel-os-embassy-common/pwm"]
+
 ## Enables SPI support.
 spi = ["dep:embassy-embedded-hal", "ariel-os-embassy-common/spi"]
 
