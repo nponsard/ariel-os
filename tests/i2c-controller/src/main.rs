@@ -64,20 +64,41 @@ async fn main(peripherals: pins::Peripherals) {
     i2c_config.frequency = const { highest_freq_in(Kilohertz::kHz(100)..=Kilohertz::kHz(400)) };
     debug!("Selected frequency: {:?}", i2c_config.frequency);
 
-    let i2c_bus = pins::SensorI2c::new(peripherals.i2c_sda, peripherals.i2c_scl, i2c_config);
+    let i2c_bus2 = pins::SensorI2c::new(
+        peripherals.i2c_sda2,
+        peripherals.i2c_scl2,
+        i2c_config.clone(),
+    );
+    let i2c_bus =
+        pins::SensorI2c::new(peripherals.i2c_sda, peripherals.i2c_scl, i2c_config.clone());
+
     let i2c_bus = Mutex::new(i2c_bus);
+    let i2c_bus2 = Mutex::new(i2c_bus2);
 
     let mut i2c_device = I2cDevice::new(&i2c_bus);
+    let mut i2c_device2 = I2cDevice::new(&i2c_bus2);
 
     let mut id = [0];
+    let mut id2 = [0];
+
+    i2c_device2
+        .write_read(TARGET_I2C_ADDR, &[WHO_AM_I_REG_ADDR], &mut id2)
+        .await
+        .unwrap();
+
     i2c_device
         .write_read(TARGET_I2C_ADDR, &[WHO_AM_I_REG_ADDR], &mut id)
         .await
         .unwrap();
 
     let who_am_i = id[0];
+    let who_am_i2 = id2[0];
+
     info!("WHO_AM_I_COMMAND register value: 0x{:x}", who_am_i);
+    info!("WHO_AM_I_COMMAND (2) register value: 0x{:x}", who_am_i2);
+
     assert_eq!(who_am_i, DEVICE_ID);
+    assert_eq!(who_am_i2, DEVICE_ID);
 
     info!("Test passed!");
 

@@ -6,6 +6,8 @@ pub type SensorI2c = i2c::controller::I2C0;
 ariel_os::hal::define_peripherals!(Peripherals {
     i2c_sda: GPIO2,
     i2c_scl: GPIO0,
+    i2c_sda2: GPIO3,
+    i2c_scl2: GPIO4,
 });
 
 #[cfg(any(context = "nrf52833", context = "nrf52840"))]
@@ -23,6 +25,8 @@ pub type SensorI2c = i2c::controller::SERIAL0;
 ariel_os::hal::define_peripherals!(Peripherals {
     i2c_sda: P0_00,
     i2c_scl: P0_01,
+    i2c_sda2: P0_02,
+    i2c_scl2: P0_03,
 });
 #[cfg(context = "bbc-microbit-v2")]
 ariel_os::hal::define_peripherals!(Peripherals {
@@ -92,8 +96,10 @@ ariel_os::hal::define_peripherals!(Peripherals {
 pub type SensorI2c = i2c::controller::I2C1;
 #[cfg(any(context = "stm32u073kc", context = "stm32u083mc"))]
 ariel_os::hal::define_peripherals!(Peripherals {
-    i2c_sda: PB7,
-    i2c_scl: PB8,
+    i2c_sda: PB9,
+    i2c_scl: PB6,
+    i2c_sda2: PB7,
+    i2c_scl2: PB8,
 });
 
 #[cfg(any(context = "st-nucleo-f303re"))]
