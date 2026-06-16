@@ -6,6 +6,8 @@ pub type TestUart<'a> = uart::UART0<'a>;
 ariel_os::hal::define_peripherals!(Peripherals {
     uart_tx: GPIO4,
     uart_rx: GPIO5,
+    uart_tx2: GPIO6,
+    uart_rx2: GPIO7,
 });
 
 #[cfg(context = "nrf52832")]
@@ -30,6 +32,8 @@ pub type TestUart<'a> = uart::UARTE0<'a>;
 ariel_os::hal::define_peripherals!(Peripherals {
     uart_rx: P1_01,
     uart_tx: P1_02,
+    uart_rx2: P1_03,
+    uart_tx2: P1_04,
 });
 
 #[cfg(context = "nrf5340-app")]
@@ -62,6 +66,8 @@ pub type TestUart<'a> = uart::UART0<'a>;
 ariel_os::hal::define_peripherals!(Peripherals {
     uart_rx: PIN_17,
     uart_tx: PIN_16,
+    uart_rx2: PIN_13,
+    uart_tx2: PIN_12,
 });
 
 // Side UART of Arduino v3 connector
@@ -134,6 +140,8 @@ pub type TestUart<'a> = uart::USART2<'a>;
 ariel_os::hal::define_peripherals!(Peripherals {
     uart_rx: PA3,
     uart_tx: PA2,
+    uart_rx2: PA5,
+    uart_tx2: PA4,
 });
 
 // Side UART of Arduino v3 connector
