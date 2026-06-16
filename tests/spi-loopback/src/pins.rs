@@ -8,6 +8,11 @@ ariel_os::hal::define_peripherals!(Peripherals {
     spi_miso: GPIO1,
     spi_mosi: GPIO2,
     spi_cs: GPIO3,
+
+    spi_sck2: GPIO4,
+    spi_miso2: GPIO5,
+    spi_mosi2: GPIO6,
+    spi_cs2: GPIO7,
 });
 
 #[cfg(context = "nrf52833")]
@@ -29,6 +34,11 @@ ariel_os::hal::define_peripherals!(Peripherals {
     spi_miso: P1_14,
     spi_mosi: P1_13,
     spi_cs: P1_12,
+
+    spi_sck2: P1_05,
+    spi_miso2: P1_02,
+    spi_mosi2: P1_03,
+    spi_cs2: P1_04,
 });
 
 // Side SPI of Arduino v3 connector
@@ -57,6 +67,11 @@ ariel_os::hal::define_peripherals!(Peripherals {
     spi_miso: PIN_16,
     spi_mosi: PIN_19,
     spi_cs: PIN_17,
+
+    spi_sck2: PIN_2,
+    spi_miso2: PIN_0,
+    spi_mosi2: PIN_3,
+    spi_cs2: PIN_1,
 });
 
 // Side SPI of Arduino v3 connector
@@ -101,6 +116,12 @@ ariel_os::hal::define_peripherals!(Peripherals {
     spi_miso: PA6,
     spi_mosi: PA7,
     spi_cs: PA15,
+
+    spi_sck2: PA1,
+    spi_miso2: PA11,
+    spi_mosi2: PA12,
+    spi_cs2: PA4,
+
 });
 
 // DIL24 pin 21/22
