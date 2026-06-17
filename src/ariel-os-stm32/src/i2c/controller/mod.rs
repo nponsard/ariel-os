@@ -2,6 +2,8 @@
 
 #![expect(unsafe_code)]
 
+use portable_atomic::{AtomicBool, Ordering};
+
 use ariel_os_embassy_common::{i2c::controller::Kilohertz, impl_async_i2c_for_driver_enum};
 use embassy_embedded_hal::adapter::{BlockingAsync, YieldingAsync};
 use embassy_stm32::{
@@ -132,6 +134,11 @@ macro_rules! define_i2c_drivers {
                 twim: YieldingAsync<BlockingAsync<InnerI2c<'static, Blocking, Master>>>,
             }
 
+            // Ensure this peripheral has only one active Instance.
+            paste::paste! {
+                static [< ACTIVE_ $peripheral >]: AtomicBool = AtomicBool::new(false);
+            }
+
             impl $peripheral {
                 /// Returns a driver implementing [`embedded_hal_async::i2c::I2c`] for this
                 /// I2C peripheral.
@@ -162,9 +169,16 @@ macro_rules! define_i2c_drivers {
                         static [<PREVENT_MULTIPLE_ $peripheral>]: () = ();
                     }
 
+                    // Check if we can initialize this peripheral (check if the value was previously false, set it to true).
+                    paste::paste! {
+                        if [< ACTIVE_ $peripheral >].swap(true, Ordering::AcqRel) {
+                            panic!("I2C peripheral already initialized")
+                        }
+                    }
+
                     // FIXME(safety): enforce that the init code indeed has run
-                    // SAFETY: this struct being a singleton prevents us from stealing the
-                    // peripheral multiple times.
+                    // SAFETY: We check with an AtomicBool that only one instance of this peripheral
+                    // is active at once.
                     let twim_peripheral = unsafe { peripherals::$peripheral::steal() };
 
                     let i2c = InnerI2c::new_blocking(
@@ -175,6 +189,14 @@ macro_rules! define_i2c_drivers {
                     );
 
                     I2c::$peripheral(Self { twim: YieldingAsync::new(BlockingAsync::new(i2c)) })
+                }
+            }
+
+            impl Drop for $peripheral {
+                fn drop(&mut self) {
+                    paste::paste! {
+                        [< ACTIVE_ $peripheral >].store(false, Ordering::Release);
+                    }
                 }
             }
         )*
