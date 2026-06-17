@@ -2,6 +2,8 @@
 
 #![expect(unsafe_code)]
 
+use portable_atomic::{AtomicBool, Ordering};
+
 use ariel_os_embassy_common::{impl_async_uart_for_driver_enum, uart::ConfigError};
 
 use embassy_rp::{
@@ -177,6 +179,11 @@ macro_rules! define_uart_drivers {
                 static [<PREVENT_MULTIPLE_ $peripheral>]: () = ();
             }
 
+            // Ensure this peripheral has only one active Instance.
+            paste::paste! {
+                static [< ACTIVE_ $peripheral >]: AtomicBool = AtomicBool::new(false);
+            }
+
             impl<'d> $peripheral<'d> {
                 /// Returns a driver implementing embedded-io traits for this Uart
                 /// peripheral.
@@ -201,9 +208,16 @@ macro_rules! define_uart_drivers {
                         $interrupt => BufferedInterruptHandler<peripherals::$peripheral>;
                     });
 
+                    // Check if we can initialize this peripheral (check if the value was previously false, set it to true).
+                    paste::paste! {
+                        if [< ACTIVE_ $peripheral >].swap(true, Ordering::AcqRel) {
+                            panic!("UART peripheral already initialized")
+                        }
+                    }
+
                     // FIXME(safety): enforce that the init code indeed has run
-                    // SAFETY: this struct being a singleton prevents us from stealing the
-                    // peripheral multiple times.
+                    // SAFETY: We check with an AtomicBool that only one instance of this peripheral
+                    // is active at once.
                     let uart_peripheral = unsafe { peripherals::$peripheral::steal() };
 
                     let uart = BufferedUart::new(
@@ -218,6 +232,14 @@ macro_rules! define_uart_drivers {
                     );
 
                     Ok(Uart::$peripheral(Self { uart, _phantom: core::marker::PhantomData }))
+                }
+            }
+
+            impl<'d> Drop for $peripheral<'d> {
+                fn drop(&mut self) {
+                    paste::paste! {
+                        [< ACTIVE_ $peripheral >].store(false, Ordering::Release);
+                    }
                 }
             }
         )*

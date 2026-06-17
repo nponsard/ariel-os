@@ -2,6 +2,8 @@
 
 #![expect(unsafe_code)]
 
+use portable_atomic::{AtomicBool, Ordering};
+
 use ariel_os_embassy_common::{impl_async_uart_for_driver_enum, uart::ConfigError};
 use embassy_nrf::{
     bind_interrupts,
@@ -228,6 +230,11 @@ macro_rules! define_uart_drivers {
                 static [<PREVENT_MULTIPLE_ $ppi_group>]: () = ();
             }
 
+            // Ensure this peripheral has only one active Instance.
+            paste::paste! {
+                static [< ACTIVE_ $peripheral >]: AtomicBool = AtomicBool::new(false);
+            }
+
             impl<'d> $peripheral<'d> {
                 /// Returns a driver implementing [`embedded_io_async`] for this Uart
                 /// peripheral.
@@ -250,21 +257,28 @@ macro_rules! define_uart_drivers {
                         $interrupt => InterruptHandler<peripherals::$peripheral>;
                     });
 
+                    // Check if we can initialize this peripheral (check if the value was previously false, set it to true).
+                    paste::paste! {
+                        if [< ACTIVE_ $peripheral >].swap(true, Ordering::AcqRel) {
+                            panic!("UART peripheral already initialized")
+                        }
+                    }
+
                     // FIXME(safety): enforce that the init code indeed has run
-                    // SAFETY: this struct being a singleton prevents us from stealing the
-                    // peripheral multiple times.
+                    // SAFETY: We check with an AtomicBool that only one instance of this peripheral
+                    // is active at once.
                     let uart_peripheral = unsafe { peripherals::$peripheral::steal() };
-                    // SAFETY: this struct being a singleton prevents us from stealing the
-                    // required timer multiple times.
+                    // SAFETY: We check with an AtomicBool that only one instance of this peripheral
+                    // is active at once.
                     let timer_peripheral = unsafe { peripherals::$timer::steal() };
-                    // SAFETY: this struct being a singleton prevents us from stealing the
-                    // required ppi channel multiple times.
+                    // SAFETY: We check with an AtomicBool that only one instance of this peripheral
+                    // is active at once.
                     let ppi_ch1_peripheral = unsafe { peripherals::$ppi_ch1::steal() };
-                    // SAFETY: this struct being a singleton prevents us from stealing the
-                    // required ppi channel multiple times.
+                    // SAFETY: We check with an AtomicBool that only one instance of this peripheral
+                    // is active at once.
                     let ppi_ch2_peripheral = unsafe { peripherals::$ppi_ch2::steal() };
-                    // SAFETY: this struct being a singleton prevents us from stealing the
-                    // required ppi group multiple times.
+                    // SAFETY: We check with an AtomicBool that only one instance of this peripheral
+                    // is active at once.
                     let ppi_group_peripheral = unsafe { peripherals::$ppi_group::steal() };
 
                     let uart = BufferedUarte::new(
@@ -282,6 +296,14 @@ macro_rules! define_uart_drivers {
                     );
 
                     Ok(Uart::$peripheral(Self { uart }))
+                }
+            }
+
+            impl<'d> Drop for $peripheral<'d> {
+                fn drop(&mut self) {
+                    paste::paste! {
+                        [< ACTIVE_ $peripheral >].store(false, Ordering::Release);
+                    }
                 }
             }
         )*

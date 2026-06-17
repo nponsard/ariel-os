@@ -2,6 +2,8 @@
 
 #![expect(unsafe_code)]
 
+use portable_atomic::{AtomicBool, Ordering};
+
 use ariel_os_embassy_common::{impl_async_uart_for_driver_enum, uart::ConfigError};
 use embassy_stm32::{
     bind_interrupts, peripherals,
@@ -186,6 +188,11 @@ macro_rules! define_uart_drivers {
                 static [<PREVENT_MULTIPLE_ $peripheral>]: () = ();
             }
 
+            // Ensure this peripheral has only one active Instance.
+            paste::paste! {
+                static [< ACTIVE_ $peripheral >]: AtomicBool = AtomicBool::new(false);
+            }
+
             impl<'d> $peripheral<'d> {
                 /// Returns a driver implementing embedded-io traits for this Uart
                 /// peripheral.
@@ -217,9 +224,16 @@ macro_rules! define_uart_drivers {
                     });
 
                     // FIXME(safety): enforce that the init code indeed has run
-                    // SAFETY: this struct being a singleton prevents us from stealing the
-                    // peripheral multiple times.
+                    // SAFETY: We check with an AtomicBool that only one instance of this peripheral
+                    // is active at once.
                     let uart_peripheral = unsafe { peripherals::$peripheral::steal() };
+
+                    // Check if we can initialize this peripheral (check if the value was previously false, set it to true).
+                    paste::paste! {
+                        if [< ACTIVE_ $peripheral >].swap(true, Ordering::AcqRel) {
+                            panic!("UART peripheral already initialized")
+                        }
+                    }
 
                     let uart = BufferedUart::new(
                         uart_peripheral,
@@ -229,9 +243,23 @@ macro_rules! define_uart_drivers {
                         rx_buf,
                         Irqs,
                         uart_config,
-                    ).map_err(convert_error)?;
+                    ).map_err(|e| {
+                        // Turns out we didn't initialize it.
+                        paste::paste! {
+                            [< ACTIVE_ $peripheral >].store(false, Ordering::Release);
+                        }
+                        convert_error(e)
+                    })?;
 
                     Ok(Uart::$peripheral(Self { uart }))
+                }
+            }
+
+            impl<'d> Drop for $peripheral<'d> {
+                fn drop(&mut self) {
+                    paste::paste! {
+                        [< ACTIVE_ $peripheral >].store(false, Ordering::Release);
+                    }
                 }
             }
         )*
