@@ -497,6 +497,7 @@ dependencies = [
  "embedded-hal-async",
  "embedded-io-async 0.6.1",
  "paste",
+ "portable-atomic",
  "static_cell",
  "trouble-host",
 ]
