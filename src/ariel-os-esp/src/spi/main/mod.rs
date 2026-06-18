@@ -2,6 +2,8 @@
 
 #![expect(unsafe_code)]
 
+use portable_atomic::{AtomicBool, Ordering};
+
 use ariel_os_embassy_common::{
     impl_async_spibus_for_driver_enum,
     spi::{BitOrder, Mode, main::Kilohertz},
@@ -78,6 +80,11 @@ macro_rules! define_spi_drivers {
                 spim: YieldingAsync<BlockingAsync<InnerSpi<'static, esp_hal::Blocking>>>,
             }
 
+            // Ensure this peripheral has only one active Instance.
+            paste::paste! {
+                static [< ACTIVE_ $peripheral >]: AtomicBool = AtomicBool::new(false);
+            }
+
             impl $peripheral {
                 /// Returns a driver implementing [`embedded_hal_async::spi::SpiBus`] for this SPI
                 /// peripheral.
@@ -106,9 +113,16 @@ macro_rules! define_spi_drivers {
                         .with_read_bit_order(crate::spi::from_bit_order(config.bit_order))
                         .with_write_bit_order(crate::spi::from_bit_order(config.bit_order));
 
+                    // Check if we can initialize this peripheral (check if the value was previously false, set it to true).
+                    paste::paste! {
+                        if [< ACTIVE_ $peripheral >].swap(true, Ordering::AcqRel) {
+                            panic!("SPI peripheral already initialized")
+                        }
+                    }
+
                     // FIXME(safety): enforce that the init code indeed has run
-                    // SAFETY: this struct being a singleton prevents us from stealing the
-                    // peripheral multiple times.
+                    // SAFETY: We check with an AtomicBool that only one instance of this peripheral
+                    // is active at once.
                     let spi_peripheral = unsafe { peripherals::$peripheral::steal() };
 
                     let spi = esp_hal::spi::master::Spi::new(
@@ -122,6 +136,14 @@ macro_rules! define_spi_drivers {
                         .with_cs(gpio::NoPin); // The CS pin is managed separately
 
                     Spi::$peripheral(Self { spim: YieldingAsync::new(BlockingAsync::new(spi)) })
+                }
+            }
+
+            impl Drop for $peripheral {
+                fn drop(&mut self) {
+                    paste::paste! {
+                        [< ACTIVE_ $peripheral >].store(false, Ordering::Release);
+                    }
                 }
             }
         )*
