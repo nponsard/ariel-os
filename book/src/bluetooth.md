@@ -53,6 +53,8 @@ embassy_futures::join::join(host.runner.run(), async {
 }).await;
 ```
 
+To obtain the address at runtime, use [`ariel_os::ble::current_address()`](https://ariel-os.github.io/ariel-os/dev/docs/api/ariel_os/ble/fn.current_address.html).
+
 See [the Ariel OS examples](https://github.com/ariel-os/ariel-os/tree/main/examples) for more details.
 
 [laze-modules-book]: ./build-system.md#laze-modules

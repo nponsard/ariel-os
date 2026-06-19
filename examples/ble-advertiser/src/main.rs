@@ -16,6 +16,8 @@ async fn run_advertisement() {
     let stack = ariel_os::ble::ble_stack().await;
     let mut host = stack.build();
 
+    info!("Using address: {}", ariel_os::ble::current_address().await);
+
     let mut adv_data = [0; 31];
 
     let len = AdStructure::encode_slice(
