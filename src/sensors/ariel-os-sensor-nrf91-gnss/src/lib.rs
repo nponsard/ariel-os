@@ -280,14 +280,17 @@ impl Nrf91Gnss {
         let latitude_accuracy = (f64::from(data.accuracy) * DEGREES_PER_METER_BASE) as f32;
 
         // For longitude, the distance represented by a degree changes depending on the latitude
-        //
+
         // The perimeter of the circle formed by the latitude is `cos(latitude_radians) * EARTH_RADIUS * 2 * PI`
         // Full formula here is `longitude_accuracy = accuracy * 360 / (cos(latitude_radians) * EARTH_RADIUS * 2 * PI)`. We have 360 / (EARTH_RADIUS * 2 * PI) already pre-computed.
         let longitude_accuracy = (f64::from(data.accuracy) * DEGREES_PER_METER_BASE
             / libm::cos(data.latitude.to_radians())) as f32;
 
+        // Convert for 10^-7 channel scaling.
         let latitude_value = (data.latitude * 10_000_000f64) as i32;
+        // Convert for 10^-7 channel scaling.
         let longitude_value = (data.longitude * 10_000_000f64) as i32;
+        // Convert for 10^-2 channel scaling.
         let altitude_value = (data.altitude * 100f32) as i32;
 
         let fix_valid = (u32::from(data.flags)
@@ -301,6 +304,7 @@ impl Nrf91Gnss {
                     // One meter is approximately 0.000009 degrees. Accuracy value usually between 1 and 50 meters.
                     deviation: clamp_to_u8(latitude_accuracy * 100_000f32),
                     bias: 0,
+                    // 10^-5 scaling for the error.
                     scaling: -5,
                 },
             );
@@ -309,6 +313,7 @@ impl Nrf91Gnss {
                 SampleMetadata::SymmetricalError {
                     deviation: clamp_to_u8(longitude_accuracy * 100_000f32),
                     bias: 0,
+                    // 10^-5 scaling for the error.
                     scaling: -5,
                 },
             );
@@ -317,6 +322,7 @@ impl Nrf91Gnss {
                 SampleMetadata::SymmetricalError {
                     deviation: clamp_to_u8(data.altitude_accuracy * 10f32),
                     bias: 0,
+                    // 10^-1 scaling for the error.
                     scaling: -1,
                 },
             );
@@ -338,8 +344,11 @@ impl Nrf91Gnss {
             )
         };
 
+        // Convert for 10^-6 channel scaling.
         let horizontal_speed_value = (data.speed * 1_000_000f32) as i32;
+        // Convert for 10^-6 channel scaling.
         let vertical_speed_value = (data.vertical_speed * 1_000_000f32) as i32;
+        // Convert for 10^-6 channel scaling.
         let heading_value = (data.heading * 1_000_000f32) as i32;
 
         let velocity_valid = (u32::from(data.flags)
@@ -352,6 +361,7 @@ impl Nrf91Gnss {
                 SampleMetadata::SymmetricalError {
                     deviation: clamp_to_u8(data.speed_accuracy * 10f32),
                     bias: 0,
+                    // 10^-1 scaling for the error.
                     scaling: -1,
                 },
             );
@@ -361,6 +371,7 @@ impl Nrf91Gnss {
                 SampleMetadata::SymmetricalError {
                     deviation: clamp_to_u8(data.vertical_speed_accuracy * 10f32),
                     bias: 0,
+                    // 10^-1 scaling for the error.
                     scaling: -1,
                 },
             );
