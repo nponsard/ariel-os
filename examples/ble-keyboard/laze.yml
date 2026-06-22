@@ -1,0 +1,10 @@
+apps:
+  - name: ble-keyboard
+    env:
+      global:
+        executor_stacksize_required:
+          - "16384"
+    selects:
+      - ble-peripheral
+      - has_leds
+      - has_buttons

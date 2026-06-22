@@ -991,6 +991,19 @@ dependencies = [
 ]
 
 [[package]]
+name = "ble-keyboard"
+version = "0.0.0"
+dependencies = [
+ "ariel-os",
+ "ariel-os-boards",
+ "embassy-futures",
+ "embassy-sync 0.7.2",
+ "static_cell",
+ "trouble-host",
+ "usbd-hid",
+]
+
+[[package]]
 name = "ble-scanner"
 version = "0.0.0"
 dependencies = [
@@ -1327,6 +1340,17 @@ dependencies = [
  "tempfile",
  "walkdir",
  "windows-sys 0.42.0",
+]
+
+[[package]]
+name = "cmac"
+version = "0.7.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "8543454e3c3f5126effff9cd44d562af4e31fb8ce1cc0d3dcd8f084515dbc1aa"
+dependencies = [
+ "cipher",
+ "dbl",
+ "digest",
 ]
 
 [[package]]
@@ -1846,6 +1870,15 @@ checksum = "8d162beedaa69905488a8da94f5ac3edb4dd4788b732fadb7bd120b2625c1976"
 dependencies = [
  "data-encoding",
  "syn 1.0.109",
+]
+
+[[package]]
+name = "dbl"
+version = "0.3.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "bd2735a791158376708f9347fe8faba9667589d82427ef3aed6794a8981de3d9"
+dependencies = [
+ "generic-array 0.14.7",
 ]
 
 [[package]]
@@ -6458,7 +6491,9 @@ version = "0.5.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "2881b4859001fe1f48445145cda5149deac9110b1d707ec0a251b7ff6d8bdfa4"
 dependencies = [
+ "aes",
  "bt-hci",
+ "cmac",
  "defmt 1.1.0",
  "embassy-futures",
  "embassy-sync 0.7.2",
@@ -6466,6 +6501,9 @@ dependencies = [
  "embedded-io 0.6.1",
  "futures",
  "heapless 0.9.1",
+ "p256",
+ "rand 0.8.5",
+ "rand_chacha 0.3.1",
  "rand_core 0.6.4",
  "static_cell",
  "trouble-host-macros",
