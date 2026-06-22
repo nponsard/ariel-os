@@ -3,11 +3,6 @@
 
 mod hid;
 
-use ariel_os::{
-    log::{Debug2Format, error, info},
-    reexports::embassy_time,
-    time::Timer,
-};
 use embassy_futures::join::join;
 use embassy_sync::{blocking_mutex::raw::CriticalSectionRawMutex, channel::Channel};
 use embassy_time::Duration;
@@ -26,11 +21,19 @@ use trouble_host::{
 };
 use usbd_hid::descriptor::{AsInputReport, SerializedDescriptor};
 
+use ariel_os::{
+    gpio::{Input, Level, Output, Pull},
+    log::{Debug2Format, error, info},
+    reexports::embassy_time,
+};
+use ariel_os_boards::pins;
+
 use crate::hid::KeypadReport;
 
 const NAME: &str = "Ariel OS BLE keyboard";
 
-static KEY_CHANNEL: Channel<CriticalSectionRawMutex, [u8; 6], 10> = Channel::new();
+static KEYS_CHANNEL: Channel<CriticalSectionRawMutex, [u8; 6], 10> = Channel::new();
+static LEDS_CHANNEL: Channel<CriticalSectionRawMutex, u8, 10> = Channel::new();
 
 // GATT Server definition
 #[gatt_server]
@@ -91,7 +94,7 @@ async fn run_advertisement() {
                 Ok(conn) => {
                     let keypad = async {
                         loop {
-                            let keycodes = KEY_CHANNEL.receive().await;
+                            let keycodes = KEYS_CHANNEL.receive().await;
                             let mut buf = [0u8; 8];
 
                             let report = KeypadReport {
@@ -130,7 +133,7 @@ async fn advertise<'a, 'b, C: Controller>(
     peripheral: &mut Peripheral<'a, C, DefaultPacketPool>,
     server: &'b Server<'_>,
 ) -> Result<GattConnection<'a, 'b, DefaultPacketPool>, BleHostError<C::Error>> {
-    let mut advertiser_data = [0; 31];
+    let mut advertiser_data = [0; 60];
     AdStructure::encode_slice(
         &[
             AdStructure::Flags(LE_GENERAL_DISCOVERABLE | BR_EDR_NOT_SUPPORTED),
@@ -174,10 +177,62 @@ async fn gatt_events_task(
                 info!("[gatt] disconnected: {:?}", reason);
                 break;
             }
+            GattConnectionEvent::Gatt { event } => {
+                let payload = event.payload();
+
+                let incoming = payload.incoming();
+                info!("Gatt incoming: {:?}", incoming);
+
+                match event {
+                    GattEvent::Write(event) => {
+                        if event.handle() == server.hid_service.output_keyboard.handle {
+                            let data = event.data();
+
+                            if let Some(d) = data.get(0) {
+                                // Don't block if channel is full
+                                let _ = LEDS_CHANNEL.try_send(*d);
+                            }
+                        }
+                    }
+                    _ => {}
+                }
+            }
 
             _ => {}
         }
     }
     info!("[gatt] task finished");
     Ok(())
+}
+
+#[ariel_os::task(autostart, peripherals)]
+async fn button(peripherals: pins::ButtonPeripherals) {
+    let mut btn0 = Input::builder(peripherals.button0, Pull::Up)
+        .build_with_interrupt()
+        .unwrap();
+
+    loop {
+        btn0.wait_for_any_edge().await;
+        // Which keys are currently pressed, keycodes available here (section 10): https://www.usb.org/sites/default/files/hut1_7.pdf
+        let mut keys = [0u8; 6];
+        if btn0.get_level() == Level::High {
+            keys[0] = 0x04;
+        }
+        KEYS_CHANNEL.send(keys).await;
+    }
+}
+
+#[ariel_os::task(autostart, peripherals)]
+async fn led(peripherals: pins::LedPeripherals) {
+    let mut led0 = Output::new(peripherals.led0, Level::Low);
+
+    loop {
+        let led_status = LEDS_CHANNEL.receive().await;
+
+        if led_status & 0x02 == 0x02 {
+            led0.set_high();
+        } else {
+            led0.set_low();
+        }
+    }
 }
