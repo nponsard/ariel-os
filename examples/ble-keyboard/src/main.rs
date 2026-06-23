@@ -16,7 +16,7 @@ use trouble_host::{
     gatt::{GattConnection, GattConnectionEvent, GattEvent},
     prelude::{
         DefaultPacketPool, EventHandler, FromGatt, Peripheral, PhyKind, TxPower, appearance,
-        gatt_server, gatt_service, service,
+        characteristic, descriptors, gatt_server, gatt_service, service,
     },
 };
 use usbd_hid::descriptor::{AsInputReport, SerializedDescriptor};
@@ -30,7 +30,7 @@ use ariel_os_boards::pins;
 
 use crate::hid::KeypadReport;
 
-const NAME: &str = "Ariel OS BLE keyboard";
+const NAME: &str = "Ariel OS keyboard";
 
 static KEYS_CHANNEL: Channel<CriticalSectionRawMutex, [u8; 6], 10> = Channel::new();
 static LEDS_CHANNEL: Channel<CriticalSectionRawMutex, u8, 10> = Channel::new();
@@ -38,7 +38,18 @@ static LEDS_CHANNEL: Channel<CriticalSectionRawMutex, u8, 10> = Channel::new();
 // GATT Server definition
 #[gatt_server]
 struct Server {
+    battery_service: BatteryService,
     hid_service: HidService,
+}
+
+/// Battery service
+#[gatt_service(uuid = service::BATTERY)]
+struct BatteryService {
+    /// Battery Level
+    #[descriptor(uuid = descriptors::VALID_RANGE, read, value = [0, 100])]
+    #[descriptor(uuid = descriptors::MEASUREMENT_DESCRIPTION, name = "hello", read, value = "Battery Level")]
+    #[characteristic(uuid = characteristic::BATTERY_LEVEL, read, notify, value = 10)]
+    level: u8,
 }
 
 #[gatt_service(uuid = service::HUMAN_INTERFACE_DEVICE)]
@@ -48,7 +59,9 @@ pub(crate) struct HidService {
 
     // info!("len: {}", KeypadReport::desc().len());
     #[characteristic(uuid = "2a4b", read, value = KeypadReport::desc().try_into().expect("converting hid report to an [u8; 42] (check if size is correct)"))]
-    pub(crate) report_map: [u8; 42],
+    // pub(crate) report_map: [u8; 42],
+    pub(crate) report_map: [u8; 67],
+
     #[characteristic(uuid = "2a4c", write_without_response)]
     pub(crate) hid_control_point: u8,
     #[characteristic(uuid = "2a4e", read, write_without_response, value = 1)]
@@ -63,6 +76,8 @@ pub(crate) struct HidService {
 
 #[ariel_os::task(autostart)]
 async fn run_advertisement() {
+    info!("len: {}", KeypadReport::desc().len());
+
     info!("starting ble stack");
     let stack = ariel_os::ble::ble_stack().await;
     let mut host = stack.build();
@@ -74,17 +89,6 @@ async fn run_advertisement() {
     .unwrap();
 
     info!("Using address: {}", ariel_os::ble::current_address().await);
-
-    let mut adv_data = [0; 31];
-
-    let len = AdStructure::encode_slice(
-        &[
-            AdStructure::CompleteLocalName(b"Ariel OS BLE"),
-            AdStructure::Flags(LE_GENERAL_DISCOVERABLE | BR_EDR_NOT_SUPPORTED),
-        ],
-        &mut adv_data[..],
-    )
-    .unwrap();
 
     info!("Starting advertising");
     let _ = join(host.runner.run(), async {
@@ -103,6 +107,10 @@ async fn run_advertisement() {
                             };
                             let n = report.serialize(&mut buf).unwrap();
 
+                            let status = server.hid_service.output_keyboard.get(&server).unwrap();
+
+                            info!("status : {}", status[0]);
+
                             server
                                 .hid_service
                                 .input_keyboard
@@ -114,7 +122,8 @@ async fn run_advertisement() {
                     };
                     // set up tasks when the connection is established to a central, so they don't run when no one is connected.
                     let res =
-                        embassy_futures::join::join(gatt_events_task(&server, &conn), keypad).await;
+                        embassy_futures::select::select(gatt_events_task(&server, &conn), keypad)
+                            .await;
 
                     info!("res : {:?}", Debug2Format(&res));
                 }
@@ -137,12 +146,15 @@ async fn advertise<'a, 'b, C: Controller>(
     AdStructure::encode_slice(
         &[
             AdStructure::Flags(LE_GENERAL_DISCOVERABLE | BR_EDR_NOT_SUPPORTED),
-            AdStructure::ServiceUuids16(&[service::HUMAN_INTERFACE_DEVICE.to_le_bytes()]),
+            AdStructure::ServiceUuids16(&[
+                service::BATTERY.to_le_bytes(),
+                service::HUMAN_INTERFACE_DEVICE.to_le_bytes(),
+            ]),
             AdStructure::CompleteLocalName(name.as_bytes()),
-            AdStructure::Unknown {
-                ty: 0x19, // Appearance
-                data: &appearance::human_interface_device::KEYBOARD.to_le_bytes(),
-            },
+            // AdStructure::Unknown {
+            //     ty: 0x19, // Appearance
+            //     data: &appearance::human_interface_device::KEYBOARD.to_le_bytes(),
+            // },
         ],
         &mut advertiser_data[..],
     )?;
@@ -170,12 +182,27 @@ async fn gatt_events_task(
     server: &Server<'_>,
     conn: &GattConnection<'_, '_, DefaultPacketPool>,
 ) -> Result<(), Error> {
+    info!("hid_info handle : {}", server.hid_service.hid_info.handle);
+
     loop {
         match conn.next().await {
-            // TODO : handle security
             GattConnectionEvent::Disconnected { reason } => {
                 info!("[gatt] disconnected: {:?}", reason);
                 break;
+            }
+
+            GattConnectionEvent::PassKeyDisplay(key) => {
+                info!("passkey: {}", key);
+            }
+            GattConnectionEvent::PairingComplete {
+                security_level,
+                bond,
+            } => {
+                // TODO : handle bonding
+                info!("Pairing complete, security level: {:?}", security_level);
+            }
+            GattConnectionEvent::PairingFailed(err) => {
+                error!("Pairing failed: {:?}", err);
             }
             GattConnectionEvent::Gatt { event } => {
                 let payload = event.payload();
@@ -183,7 +210,7 @@ async fn gatt_events_task(
                 let incoming = payload.incoming();
                 info!("Gatt incoming: {:?}", incoming);
 
-                match event {
+                match &event {
                     GattEvent::Write(event) => {
                         if event.handle() == server.hid_service.output_keyboard.handle {
                             let data = event.data();
@@ -195,6 +222,10 @@ async fn gatt_events_task(
                         }
                     }
                     _ => {}
+                }
+
+                if let Ok(reply) = event.accept() {
+                    let _ = reply.send().await;
                 }
             }
 
@@ -215,8 +246,9 @@ async fn button(peripherals: pins::ButtonPeripherals) {
         btn0.wait_for_any_edge().await;
         // Which keys are currently pressed, keycodes available here (section 10): https://www.usb.org/sites/default/files/hut1_7.pdf
         let mut keys = [0u8; 6];
-        if btn0.get_level() == Level::High {
-            keys[0] = 0x04;
+
+        if btn0.get_level() == Level::Low {
+            keys[0] = 0x39;
         }
         KEYS_CHANNEL.send(keys).await;
     }
@@ -224,15 +256,17 @@ async fn button(peripherals: pins::ButtonPeripherals) {
 
 #[ariel_os::task(autostart, peripherals)]
 async fn led(peripherals: pins::LedPeripherals) {
-    let mut led0 = Output::new(peripherals.led0, Level::Low);
+    let mut led0 = Output::new(peripherals.led0, Level::High);
 
     loop {
         let led_status = LEDS_CHANNEL.receive().await;
 
+        info!("Received status: {:x}", led_status);
+
         if led_status & 0x02 == 0x02 {
-            led0.set_high();
-        } else {
             led0.set_low();
+        } else {
+            led0.set_high();
         }
     }
 }

@@ -57,7 +57,7 @@ const SDC_MEM_SIZE: usize = 6080;
 // Size of the TX buffer (number of packets), minimum is 1, SoftDevice default is 3 (SDC_DEFAULT_TX_PACKET_COUNT).
 const L2CAP_TXQ: u8 = 3;
 // Size of the RX buffer (number of packets), minimum is 1, SoftDevice default is 2 (SDC_DEFAULT_RX_PACKET_COUNT).
-const L2CAP_RXQ: u8 = 2;
+const L2CAP_RXQ: u8 = 3;
 
 #[cfg(context = "nrf52")]
 pub struct Peripherals {
