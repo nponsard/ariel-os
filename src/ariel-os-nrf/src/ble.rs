@@ -243,7 +243,11 @@ pub fn driver(p: Peripherals, spawner: Spawner, config: ariel_os_embassy_common:
 
     let resources = ariel_os_embassy_common::ble::get_ble_host_resources();
 
-    let stack = trouble_host::new(sdc, resources).set_random_address(config.address);
+    let mut rng = ariel_os_random::crypto_rng();
+
+    let stack = trouble_host::new(sdc, resources)
+        .set_random_generator_seed(&mut rng)
+        .set_random_address(config.address);
     let stackref = STACK.init(SameExecutorCell::new(stack, spawner));
     // Error case is unreachable: just init'ed another once item.
     let _ = STACKREF.init(Some(stackref).into());
