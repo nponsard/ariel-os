@@ -54,13 +54,13 @@ struct BatteryService {
 
 #[gatt_service(uuid = service::HUMAN_INTERFACE_DEVICE)]
 pub(crate) struct HidService {
-    #[characteristic(uuid = "2a4a", read, value = [0x01, 0x01, 0x00, 0x03])]
+    // bcdHID (2bytes), bCountryCode, Flags (RemoteWake)
+    #[characteristic(uuid = "2a4a", read, value = [0x01, 0x11, 0x00, 0x01])]
     pub(crate) hid_info: [u8; 4],
 
     // info!("len: {}", KeypadReport::desc().len());
     #[characteristic(uuid = "2a4b", read, value = KeypadReport::desc().try_into().expect("converting hid report to an [u8; 42] (check if size is correct)"))]
-    // pub(crate) report_map: [u8; 42],
-    pub(crate) report_map: [u8; 67],
+    pub(crate) report_map: [u8; 42],
 
     #[characteristic(uuid = "2a4c", write_without_response)]
     pub(crate) hid_control_point: u8,
@@ -71,7 +71,7 @@ pub(crate) struct HidService {
     pub(crate) input_keyboard: [u8; 8],
     #[descriptor(uuid = "2908", read, value = [0u8, 2u8])]
     #[characteristic(uuid = "2a4d", read, write, write_without_response)]
-    pub(crate) output_keyboard: [u8; 1],
+    pub(crate) output_keyboard: u8,
 }
 
 #[ariel_os::task(autostart)]
@@ -109,7 +109,7 @@ async fn run_advertisement() {
 
                             let status = server.hid_service.output_keyboard.get(&server).unwrap();
 
-                            info!("status : {}", status[0]);
+                            info!("status : {}", status);
 
                             server
                                 .hid_service
