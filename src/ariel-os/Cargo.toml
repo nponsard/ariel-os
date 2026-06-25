@@ -174,6 +174,9 @@ ble-esp = ["ariel-os-embassy/ble-esp"]
 ble-central = ["ariel-os-embassy/ble-central", "ble"]
 # Enables BLE to act as a peripheral. Can be used in conjunction with `ble-central`.
 ble-peripheral = ["ariel-os-embassy/ble-peripheral", "ble"]
+# Enables BLE security features (encryption, bonding).
+ble-security = ["ariel-os-embassy/ble-security", "ble"]
+
 
 # ## Enables support for the nRF91xx SiP modem.
 nrf91-modem = ["ariel-os-embassy/nrf91-modem", "ariel-os-rt/nrf91-modem"]

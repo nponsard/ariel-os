@@ -1440,6 +1440,15 @@ modules:
         FEATURES:
           - ariel-os/ble-central
 
+  - name: ble-security
+    help: Enables BLE security features (encryption, bonding)
+    selects:
+      - ble
+    env:
+      global:
+        FEATURES:
+          - ariel-os/ble-security
+
   - name: has_ble
     selects:
       - doc-only

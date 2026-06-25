@@ -52,6 +52,35 @@ pub fn current_address() -> impl Future<Output = Address> {
     CURRENT_ADDRESS.get().map(|addr| *addr)
 }
 
+#[cfg(feature = "ble-security")]
+mod security {
+    use trouble_host::security_manager::BondInformation;
+
+
+    #[derive(Serialize, Deserialize)]
+    struct StoredBondInformation {
+        ltk: StoredLongTermKey,
+        identity: StoredIdentity,
+        is_bonded: bool,
+        security_level: StoredSecurityLevel,
+    }
+
+    impl Into<BondInformation> for StoredBondInformation {
+
+    }
+
+    impl From<BondInformation> for StoredBondInformation {
+
+    }
+
+    pub fn store_bonding_information(
+        bonding_information: BondInformation,
+    ) {
+    }
+}
+#[cfg(feature = "ble-security")]
+pub use security::store_bonding_information;
+
 /// Generates a random address.
 fn get_random_addr() -> [u8; 6] {
     let mut addr = [0u8; 6];
