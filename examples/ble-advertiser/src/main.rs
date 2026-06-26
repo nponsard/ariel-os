@@ -22,8 +22,23 @@ async fn run_advertisement() {
 
     let len = AdStructure::encode_slice(
         &[
-            AdStructure::CompleteLocalName(b"Ariel OS BLE"),
             AdStructure::Flags(LE_GENERAL_DISCOVERABLE | BR_EDR_NOT_SUPPORTED),
+            AdStructure::ManufacturerSpecificData {
+                // Apple company identifier [0x4c, 0x00]
+                company_identifier: 0x4c00,
+                payload: &[
+                    // Beacon type
+                    0x02, 0x15,
+                   // Beacon data (16 bytes)
+                    1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16,
+                    // Major
+                    0,0,
+                    // Minor
+                    0,0,
+                    // Measured power
+                    0
+                ],
+            },
         ],
         &mut adv_data[..],
     )
