@@ -987,6 +987,7 @@ dependencies = [
  "ariel-os",
  "ariel-os-boards",
  "embassy-futures",
+ "heapless 0.9.1",
  "trouble-host",
 ]
 
