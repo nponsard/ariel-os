@@ -171,7 +171,7 @@ ble-esp = ["ariel-os-hal/ble-esp", "ble"]
 ble-central = ["ariel-os-hal/ble-central", "ble"]
 ble-peripheral = ["ariel-os-hal/ble-peripheral", "ble"]
 ble-config-static-address = []
-ble-security = ["dep:serde", "trouble-host/security", "ble"]
+ble-security = ["dep:serde", "trouble-host/security", "ble", "storage"]
 
 nrf91-modem = ["ariel-os-hal/nrf91-modem"]
 
