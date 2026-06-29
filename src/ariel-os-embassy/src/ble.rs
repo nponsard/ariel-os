@@ -54,28 +54,116 @@ pub fn current_address() -> impl Future<Output = Address> {
 
 #[cfg(feature = "ble-security")]
 mod security {
-    use trouble_host::security_manager::BondInformation;
+    use futures_util::FutureExt;
+    use serde::{Deserialize, Serialize};
+    use trouble_host::{
+        BondInformation, Identity, IdentityResolvingKey, LongTermKey, connection::SecurityLevel,
+        prelude::BdAddr,
+    };
 
+    use ariel_os_log::{Debug2Format, warn};
+    use ariel_os_storage as storage;
+
+    const BOND_STORAGE_KEY: &str = "BLE_BOND";
 
     #[derive(Serialize, Deserialize)]
     struct StoredBondInformation {
-        ltk: StoredLongTermKey,
+        ltk: u128,
         identity: StoredIdentity,
         is_bonded: bool,
         security_level: StoredSecurityLevel,
     }
 
     impl Into<BondInformation> for StoredBondInformation {
-
+        fn into(self) -> BondInformation {
+            BondInformation {
+                ltk: LongTermKey(self.ltk),
+                identity: self.identity.into(),
+                is_bonded: self.is_bonded,
+                security_level: self.security_level.into(),
+            }
+        }
     }
 
     impl From<BondInformation> for StoredBondInformation {
-
+        fn from(bond_information: BondInformation) -> Self {
+            Self {
+                ltk: bond_information.ltk.0,
+                identity: bond_information.identity.into(),
+                is_bonded: bond_information.is_bonded,
+                security_level: bond_information.security_level.into(),
+            }
+        }
     }
 
-    pub fn store_bonding_information(
+    #[derive(Serialize, Deserialize)]
+    struct StoredIdentity {
+        pub bd_addr: [u8; 6],
+        pub irk: Option<u128>,
+    }
+
+    impl Into<Identity> for StoredIdentity {
+        fn into(self) -> Identity {
+            Identity {
+                bd_addr: BdAddr::new(self.bd_addr),
+                irk: self.irk.map(|irk| IdentityResolvingKey(irk)),
+            }
+        }
+    }
+
+    impl From<Identity> for StoredIdentity {
+        fn from(identiy: Identity) -> Self {
+            Self {
+                bd_addr: identiy.bd_addr.into_inner(),
+                irk: identiy.irk.map(|irk| irk.0),
+            }
+        }
+    }
+
+    #[derive(Serialize, Deserialize)]
+    enum StoredSecurityLevel {
+        NoEncryption,
+        Encrypted,
+        EncryptedAuthenticated,
+    }
+
+    impl Into<SecurityLevel> for StoredSecurityLevel {
+        fn into(self) -> SecurityLevel {
+            match self {
+                Self::NoEncryption => SecurityLevel::NoEncryption,
+                Self::Encrypted => SecurityLevel::Encrypted,
+                Self::EncryptedAuthenticated => SecurityLevel::EncryptedAuthenticated,
+            }
+        }
+    }
+
+    impl From<SecurityLevel> for StoredSecurityLevel {
+        fn from(security_level: SecurityLevel) -> Self {
+            match security_level {
+                SecurityLevel::NoEncryption => Self::NoEncryption,
+                SecurityLevel::Encrypted => Self::Encrypted,
+                SecurityLevel::EncryptedAuthenticated => Self::EncryptedAuthenticated,
+            }
+        }
+    }
+
+    pub async fn store_bonding_information(
         bonding_information: BondInformation,
-    ) {
+    ) -> Result<(), sequential_storage::Error<ariel_os_hal::hal::storage::FlashError>> {
+        let storeable_bond: StoredBondInformation = bonding_information.into();
+        storage::insert(BOND_STORAGE_KEY, storeable_bond).await
+    }
+
+    pub fn get_bonding_information() -> impl Future<Output = Option<BondInformation>> {
+        storage::get(BOND_STORAGE_KEY).map(|result| {
+            match result.map(|option| option.map(|bond: StoredBondInformation| bond.into())) {
+                Ok(option) => option,
+                Err(err) => {
+                    warn!("Flash read error: {:?}", Debug2Format(&err));
+                    None
+                }
+            }
+        })
     }
 }
 #[cfg(feature = "ble-security")]

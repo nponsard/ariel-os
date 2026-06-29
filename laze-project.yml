@@ -1444,6 +1444,7 @@ modules:
     help: Enables BLE security features (encryption, bonding)
     selects:
       - ble
+      - sw/storage
     env:
       global:
         FEATURES:
