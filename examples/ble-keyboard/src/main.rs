@@ -89,7 +89,11 @@ async fn run_advertisement() {
 
     let server = Server::new_with_config(GapConfig::Peripheral(PeripheralConfig {
         name: NAME,
-        appearance: &appearance::human_interface_device::KEYBOARD,
+
+        // Some Android devices don't like a keyboard with `trouble_host::IoCapabilities::DisplayOnly`
+        // appearance: &appearance::human_interface_device::KEYBOARD,
+        appearance: &appearance::human_interface_device::GENERIC_HUMAN_INTERFACE_DEVICE,
+        // appearance: &appearance::power_device::GENERIC_POWER_DEVICE,
     }))
     .unwrap();
 
@@ -124,15 +128,14 @@ async fn run_advertisement() {
                                 .unwrap();
                         }
                     };
+
                     // set up tasks when the connection is established to a central, so they don't run when no one is connected.
 
-                    let _ = gatt_events_task(&server, &conn).await;
+                    let res =
+                        embassy_futures::select::select(gatt_events_task(&server, &conn), keypad)
+                            .await;
 
-                    // let res =
-                    //     embassy_futures::select::select(gatt_events_task(&server, &conn), keypad)
-                    //         .await;
-
-                    // info!("res : {:?}", Debug2Format(&res));
+                    info!("res : {:?}", Debug2Format(&res));
                 }
                 Err(e) => {
                     panic!("[adv] error: {:?}", e);
@@ -152,12 +155,12 @@ async fn advertise<'a, 'b, C: Controller>(
     let mut advertiser_data = [0; 60];
     let len = AdStructure::encode_slice(
         &[
+            AdStructure::CompleteLocalName(name.as_bytes()),
             AdStructure::Flags(LE_GENERAL_DISCOVERABLE | BR_EDR_NOT_SUPPORTED),
             AdStructure::ServiceUuids16(&[
                 service::BATTERY.to_le_bytes(),
                 service::HUMAN_INTERFACE_DEVICE.to_le_bytes(),
             ]),
-            AdStructure::CompleteLocalName(name.as_bytes()),
             AdStructure::Unknown {
                 ty: 0x19, // Appearance
                 data: &appearance::human_interface_device::KEYBOARD.to_le_bytes(),
@@ -166,19 +169,26 @@ async fn advertise<'a, 'b, C: Controller>(
         &mut advertiser_data[..],
     )?;
 
-    let advertise_config = AdvertisementParameters::default();
+    let advertise_config = AdvertisementParameters {
+        interval_min: Duration::from_millis(100),
+        interval_max: Duration::from_millis(100),
+        ..Default::default()
+    };
 
     let advertiser = peripheral
         .advertise(
             &advertise_config,
             Advertisement::ConnectableScannableUndirected {
-                adv_data: &advertiser_data[..len],
+                adv_data: &advertiser_data.get(..len).unwrap(),
                 scan_data: &[],
             },
         )
         .await?;
     info!("advertising");
-    let conn = advertiser.accept().await?.with_attribute_server(server)?;
+    let conn = advertiser.accept().await?;
+    conn.set_bondable(true)?;
+    conn.request_security()?;
+    let conn = conn.with_attribute_server(server)?;
     info!("connection established");
     Ok(conn)
 }
@@ -200,6 +210,13 @@ async fn gatt_events_task(
 
             GattConnectionEvent::PassKeyDisplay(key) => {
                 info!("passkey: {}", key);
+            }
+            GattConnectionEvent::PassKeyInput => {
+                info!("[gatt] passkey input");
+                // Normally fetched from the user
+            }
+            GattConnectionEvent::PassKeyConfirm(key) => {
+                info!("passkey confirm : {}", key);
             }
             GattConnectionEvent::PairingComplete {
                 security_level,
