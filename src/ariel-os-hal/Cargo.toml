@@ -115,6 +115,11 @@ ble-central = [
   "ariel-os-nrf/ble-central",
   "ariel-os-rp/ble-central",
 ]
+ble-security = [
+  # "ariel-os-esp/ble-security",
+  "ariel-os-nrf/ble-security",
+  # "ariel-os-rp/ble-security",
+]
 
 nrf91-modem = ["ariel-os-nrf/nrf91-modem"]
 

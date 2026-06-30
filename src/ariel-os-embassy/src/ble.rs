@@ -147,11 +147,13 @@ mod security {
         }
     }
 
-    pub async fn store_bonding_information(
+    pub fn store_bonding_information(
         bonding_information: BondInformation,
-    ) -> Result<(), sequential_storage::Error<ariel_os_hal::hal::storage::FlashError>> {
+    ) -> impl Future<
+        Output = Result<(), sequential_storage::Error<ariel_os_hal::hal::storage::FlashError>>,
+    > {
         let storeable_bond: StoredBondInformation = bonding_information.into();
-        storage::insert(BOND_STORAGE_KEY, storeable_bond).await
+        storage::insert(BOND_STORAGE_KEY, storeable_bond)
     }
 
     pub fn get_bonding_information() -> impl Future<Output = Option<BondInformation>> {
@@ -166,6 +168,8 @@ mod security {
         })
     }
 }
+#[cfg(feature = "ble-security")]
+pub use security::get_bonding_information;
 #[cfg(feature = "ble-security")]
 pub use security::store_bonding_information;
 

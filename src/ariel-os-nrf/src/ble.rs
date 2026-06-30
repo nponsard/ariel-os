@@ -9,7 +9,7 @@ use nrf_sdc::{
 };
 
 use static_cell::StaticCell;
-use trouble_host::{Stack, prelude::DefaultPacketPool};
+use trouble_host::{BondInformation, Stack, prelude::DefaultPacketPool};
 
 use ariel_os_embassy_common::{ble::MTU, cell::SameExecutorCell};
 use ariel_os_log::debug;
@@ -247,8 +247,8 @@ pub fn driver(p: Peripherals, spawner: Spawner, config: ariel_os_embassy_common:
 
     let stack = trouble_host::new(sdc, resources)
         .set_random_generator_seed(&mut rng)
-        // .set_io_capabilities(trouble_host::IoCapabilities::DisplayOnly)
-        .set_random_address(config.address);
+        .set_random_address(config.address)
+        .set_io_capabilities(trouble_host::IoCapabilities::DisplayOnly);
     let stackref = STACK.init(SameExecutorCell::new(stack, spawner));
     // Error case is unreachable: just init'ed another once item.
     let _ = STACKREF.init(Some(stackref).into());
