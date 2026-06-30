@@ -80,6 +80,11 @@ async fn run_advertisement() {
 
     info!("starting ble stack");
     let stack = ariel_os::ble::ble_stack().await;
+    if let Some(bond) = ariel_os::ble::get_bonding_information().await {
+        info!("Bond information: {:?} ", bond);
+        stack.add_bond_information(bond).unwrap()
+    }
+
     let mut host = stack.build();
 
     let server = Server::new_with_config(GapConfig::Peripheral(PeripheralConfig {
@@ -92,7 +97,6 @@ async fn run_advertisement() {
 
     info!("Starting advertising");
     let _ = join(host.runner.run(), async {
-        // let mut _session = scanner.scan(&config).await.unwrap();
         loop {
             match advertise(NAME, &mut host.peripheral, &server).await {
                 Ok(conn) => {
@@ -121,11 +125,14 @@ async fn run_advertisement() {
                         }
                     };
                     // set up tasks when the connection is established to a central, so they don't run when no one is connected.
-                    let res =
-                        embassy_futures::select::select(gatt_events_task(&server, &conn), keypad)
-                            .await;
 
-                    info!("res : {:?}", Debug2Format(&res));
+                    let _ = gatt_events_task(&server, &conn).await;
+
+                    // let res =
+                    //     embassy_futures::select::select(gatt_events_task(&server, &conn), keypad)
+                    //         .await;
+
+                    // info!("res : {:?}", Debug2Format(&res));
                 }
                 Err(e) => {
                     panic!("[adv] error: {:?}", e);
@@ -143,7 +150,7 @@ async fn advertise<'a, 'b, C: Controller>(
     server: &'b Server<'_>,
 ) -> Result<GattConnection<'a, 'b, DefaultPacketPool>, BleHostError<C::Error>> {
     let mut advertiser_data = [0; 60];
-    AdStructure::encode_slice(
+    let len = AdStructure::encode_slice(
         &[
             AdStructure::Flags(LE_GENERAL_DISCOVERABLE | BR_EDR_NOT_SUPPORTED),
             AdStructure::ServiceUuids16(&[
@@ -151,10 +158,10 @@ async fn advertise<'a, 'b, C: Controller>(
                 service::HUMAN_INTERFACE_DEVICE.to_le_bytes(),
             ]),
             AdStructure::CompleteLocalName(name.as_bytes()),
-            // AdStructure::Unknown {
-            //     ty: 0x19, // Appearance
-            //     data: &appearance::human_interface_device::KEYBOARD.to_le_bytes(),
-            // },
+            AdStructure::Unknown {
+                ty: 0x19, // Appearance
+                data: &appearance::human_interface_device::KEYBOARD.to_le_bytes(),
+            },
         ],
         &mut advertiser_data[..],
     )?;
@@ -165,7 +172,7 @@ async fn advertise<'a, 'b, C: Controller>(
         .advertise(
             &advertise_config,
             Advertisement::ConnectableScannableUndirected {
-                adv_data: &advertiser_data[..],
+                adv_data: &advertiser_data[..len],
                 scan_data: &[],
             },
         )
@@ -199,7 +206,16 @@ async fn gatt_events_task(
                 bond,
             } => {
                 // TODO : handle bonding
-                info!("Pairing complete, security level: {:?}", security_level);
+                info!(
+                    "Pairing complete, security level: {:?}, bond {:?}",
+                    security_level, bond
+                );
+
+                if let Some(bond_information) = bond {
+                    ariel_os::ble::store_bonding_information(bond_information)
+                        .await
+                        .unwrap()
+                }
             }
             GattConnectionEvent::PairingFailed(err) => {
                 error!("Pairing failed: {:?}", err);
