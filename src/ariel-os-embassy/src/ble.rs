@@ -25,16 +25,22 @@ pub use crate::hal::ble::ble_stack;
 static CURRENT_ADDRESS: OnceLock<Address> = OnceLock::new();
 
 #[allow(dead_code, reason = "false positive during builds outside of laze")]
-pub(crate) fn config() -> Config {
-    // Scanning apps show that the last byte of the array appears fist.
-    let mut raw_address = get_random_addr();
+pub(crate) async fn config() -> Config {
+    let address = if let Some((bonding_information, addr)) = get_bonding_information().await {
+        addr
+    } else {
+        // Scanning apps show that the last byte of the array appears fist.
+        let mut raw_address = get_random_addr();
 
-    // Set the two most significant bits to 1 to indicate a static random address https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/low-energy-controller/link-layer-specification.html#UUID-7edea27a-a47f-8436-4bd7-aedc1945c366_figure-idm4497995733171233616486354268
-    raw_address[5] |= 0b1100_0000;
+        // Set the two most significant bits to 1 to indicate a static random address https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/low-energy-controller/link-layer-specification.html#UUID-7edea27a-a47f-8436-4bd7-aedc1945c366_figure-idm4497995733171233616486354268
+        raw_address[5] |= 0b1100_0000;
+        // Set the two most significatn bits to 0 to indicate a private random address
+        // raw_address[5] &= 0b0011_1111;
 
-    let address = Address {
-        addr: BdAddr::new(raw_address),
-        kind: AddrKind::RANDOM,
+        Address {
+            addr: BdAddr::new(raw_address),
+            kind: AddrKind::RANDOM,
+        }
     };
 
     let _ = CURRENT_ADDRESS.init(address);
@@ -54,17 +60,18 @@ pub fn current_address() -> impl Future<Output = Address> {
 
 #[cfg(feature = "ble-security")]
 mod security {
-    use futures_util::FutureExt;
     use serde::{Deserialize, Serialize};
     use trouble_host::{
-        BondInformation, Identity, IdentityResolvingKey, LongTermKey, connection::SecurityLevel,
-        prelude::BdAddr,
+        Address, BondInformation, Identity, IdentityResolvingKey, LongTermKey,
+        connection::SecurityLevel, prelude::BdAddr,
     };
 
     use ariel_os_log::{Debug2Format, warn};
     use ariel_os_storage as storage;
 
     const BOND_STORAGE_KEY: &str = "BLE_BOND";
+    // Storing the address the device should be reacheable at for this bond
+    const BOND_ADDR_STORAGE_KEY: &str = "BLE_BOND_ADDR";
 
     #[derive(Serialize, Deserialize)]
     struct StoredBondInformation {
@@ -147,31 +154,45 @@ mod security {
         }
     }
 
-    pub fn store_bonding_information(
+    pub async fn store_bonding_information(
         bonding_information: BondInformation,
-    ) -> impl Future<
-        Output = Result<(), sequential_storage::Error<ariel_os_hal::hal::storage::FlashError>>,
-    > {
+    ) -> Result<(), sequential_storage::Error<ariel_os_hal::hal::storage::FlashError>> {
         let storeable_bond: StoredBondInformation = bonding_information.into();
-        storage::insert(BOND_STORAGE_KEY, storeable_bond)
-    }
+        let current_address = crate::ble::current_address().await;
 
-    pub fn get_bonding_information() -> impl Future<Output = Option<BondInformation>> {
-        storage::get(BOND_STORAGE_KEY).map(|result| {
-            match result.map(|option| option.map(|bond: StoredBondInformation| bond.into())) {
-                Ok(option) => option,
+        storage::insert(BOND_STORAGE_KEY, storeable_bond).await?;
+        storage::insert(BOND_ADDR_STORAGE_KEY, current_address.addr.into_inner()).await
+    }
+    pub async fn remove_bonding_information()
+    -> Result<(), sequential_storage::Error<ariel_os_hal::hal::storage::FlashError>> {
+        storage::remove(BOND_STORAGE_KEY).await?;
+        storage::remove(BOND_ADDR_STORAGE_KEY).await
+    }
+    pub async fn get_bonding_information() -> Option<(BondInformation, Address)> {
+        let bond_information: Option<BondInformation> = match storage::get(BOND_STORAGE_KEY).await {
+            Ok(option) => option.map(|b: StoredBondInformation| b.into()),
+            Err(err) => {
+                warn!("Flash read error: {:?}", Debug2Format(&err));
+                None
+            }
+        };
+
+        if let Some(bond) = bond_information {
+            match storage::get(BOND_ADDR_STORAGE_KEY).await {
+                Ok(addr) => Some((bond, Address::random(addr?))),
                 Err(err) => {
                     warn!("Flash read error: {:?}", Debug2Format(&err));
                     None
                 }
             }
-        })
+        } else {
+            None
+        }
     }
 }
 #[cfg(feature = "ble-security")]
-pub use security::get_bonding_information;
-#[cfg(feature = "ble-security")]
-pub use security::store_bonding_information;
+pub use security::{get_bonding_information,store_bonding_information,remove_bonding_information};
+
 
 /// Generates a random address.
 fn get_random_addr() -> [u8; 6] {
