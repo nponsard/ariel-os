@@ -10,7 +10,7 @@ use embassy_futures::{
 use embassy_sync::{blocking_mutex::raw::CriticalSectionRawMutex, channel::Channel};
 use embassy_time::Duration;
 use trouble_host::{
-    Address, BleHostError, Controller, Error, Identity, Stack,
+    BleHostError, Controller, Error, Identity,
     advertise::{
         AdStructure, Advertisement, AdvertisementParameters, BR_EDR_NOT_SUPPORTED,
         LE_GENERAL_DISCOVERABLE,
@@ -19,8 +19,8 @@ use trouble_host::{
     gap::{GapConfig, PeripheralConfig},
     gatt::{GattConnection, GattConnectionEvent, GattEvent},
     prelude::{
-        AddrKind, BdAddr, DefaultPacketPool, FromGatt, Peripheral, appearance, characteristic,
-        descriptors, gatt_server, gatt_service, service,
+        DefaultPacketPool, FromGatt, Peripheral, appearance, characteristic, descriptors,
+        gatt_server, gatt_service, service,
     },
 };
 use usbd_hid::descriptor::{AsInputReport, SerializedDescriptor};
@@ -29,7 +29,7 @@ use ariel_os::{
     gpio::{Input, Level, Output, Pull},
     log::{Debug2Format, error, info},
     reexports::embassy_time,
-    time::{Instant, Timer},
+    time::Timer,
 };
 use ariel_os_boards::pins;
 
@@ -85,7 +85,7 @@ async fn run_advertisement() {
 
     info!("starting ble stack");
     let stack = ariel_os::ble::ble_stack().await;
-    let mut peer = if let Some(bond) = ariel_os::ble::get_bonding_information().await {
+    let mut peer = if let Some(bond) = ariel_os::ble::get_bond_information().await {
         info!("Bond information: {:?} ", bond);
         let identity = bond.0.identity;
         stack.add_bond_information(bond.0).unwrap();
@@ -122,7 +122,7 @@ async fn run_advertisement() {
                             match select(Timer::after_secs(2), KEYS_CHANNEL.receive()).await {
                                 Either::First(_) => {
                                     if let Some(i) = peer.take() {
-                                        let _ = ariel_os::ble::remove_bonding_information().await;
+                                        let _ = ariel_os::ble::remove_bond_information().await;
                                         let _ = stack.remove_bond_information(i);
 
                                         return;
@@ -153,7 +153,7 @@ async fn run_advertisement() {
                                 keycodes,
                                 ..Default::default()
                             };
-                            let n = report.serialize(&mut buf).unwrap();
+                            let _ = report.serialize(&mut buf).unwrap();
 
                             let status = server.hid_service.output_keyboard.get(&server).unwrap();
 
@@ -291,15 +291,12 @@ async fn gatt_events_task(
                 security_level,
                 bond,
             } => {
-                // TODO : handle bonding
-                info!(
-                    "Pairing complete, security level: {:?}, bond {:?}",
-                    security_level, bond
-                );
-
+                info!("Pairing complete with security level {:?}", security_level);
                 if let Some(bond_information) = bond {
+                    info!("Storing bond information");
+
                     peer.replace(bond_information.identity);
-                    ariel_os::ble::store_bonding_information(bond_information)
+                    ariel_os::ble::store_bond_information(bond_information)
                         .await
                         .unwrap()
                 }
