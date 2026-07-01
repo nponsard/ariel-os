@@ -26,7 +26,10 @@ static CURRENT_ADDRESS: OnceLock<Address> = OnceLock::new();
 
 #[allow(dead_code, reason = "false positive during builds outside of laze")]
 pub(crate) async fn config() -> Config {
-    let address = if let Some((bonding_information, addr)) = get_bonding_information().await {
+    let address = if let Some((_, addr)) = get_bond_information().await {
+        // If we have a bonded device we need to use the same address, or use a
+        // resolvable private address, since we don't support the latter we use
+        // the previous address.
         addr
     } else {
         // Scanning apps show that the last byte of the array appears fist.
@@ -154,7 +157,8 @@ mod security {
         }
     }
 
-    pub async fn store_bonding_information(
+    /// Store the BLE bond information in storage to restore it on boot.
+    pub async fn store_bond_information(
         bonding_information: BondInformation,
     ) -> Result<(), sequential_storage::Error<ariel_os_hal::hal::storage::FlashError>> {
         let storeable_bond: StoredBondInformation = bonding_information.into();
@@ -163,12 +167,16 @@ mod security {
         storage::insert(BOND_STORAGE_KEY, storeable_bond).await?;
         storage::insert(BOND_ADDR_STORAGE_KEY, current_address.addr.into_inner()).await
     }
-    pub async fn remove_bonding_information()
+
+    /// Remove the bond information from storage so it won't be restored next boot.
+    pub async fn remove_bond_information()
     -> Result<(), sequential_storage::Error<ariel_os_hal::hal::storage::FlashError>> {
         storage::remove(BOND_STORAGE_KEY).await?;
         storage::remove(BOND_ADDR_STORAGE_KEY).await
     }
-    pub async fn get_bonding_information() -> Option<(BondInformation, Address)> {
+
+    /// Returns the bond information if present.
+    pub async fn get_bond_information() -> Option<(BondInformation, Address)> {
         let bond_information: Option<BondInformation> = match storage::get(BOND_STORAGE_KEY).await {
             Ok(option) => option.map(|b: StoredBondInformation| b.into()),
             Err(err) => {
@@ -191,8 +199,9 @@ mod security {
     }
 }
 #[cfg(feature = "ble-security")]
-pub use security::{get_bonding_information,store_bonding_information,remove_bonding_information};
-
+pub use security::{
+    get_bond_information, remove_bond_information, store_bond_information,
+};
 
 /// Generates a random address.
 fn get_random_addr() -> [u8; 6] {
