@@ -216,6 +216,16 @@ builders:
   provides:
   - has_leds
   - has_usb_device_port
+- name: st-b-l072z-lrwan1
+  parent: stm32l072cz
+  provides:
+  - has_buttons
+  - has_i2c_bus
+  - has_leds
+  - has_swi
+  env:
+    CARGO_ENV:
+    - CONFIG_SWI=USART2
 - name: st-b-l475e-iot01a
   parent: stm32l475vg
   provides:
