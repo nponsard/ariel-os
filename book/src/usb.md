@@ -4,14 +4,25 @@ Ariel OS integrates support for USB peripherals built into many microcontroller
 
 ## Hardware Support
 
-Many microcontrollers supported by Ariel OS include a USB peripheral that can be leveraged to build any USB device.
-At the time of writing, most of them support USB 2.0, but their signaling rate is often limited to that of Full-Speed USB (FS), i.e., 12 Mbit/s (now also known as Basic-Speed USB), even though some also do support High-Speed USB, i.e., 480 Mbit/s (marketed as Hi-Speed USB).
-Some also support USB On-The-Go (OTG), allowing the device to also behave as a USB Targeted Host on the same USB receptacle (by alternatively switching between the peripheral and host roles).
-Currently only the USB peripheral role is supported by Ariel OS.
+### Supported USB Standards
 
-These USB microcontroller peripherals are "generic," in that they can be used to implement any USB device class.
+Many microcontrollers supported by Ariel OS include a USB microcontroller peripheral that can be leveraged to build any USB device.
+At the time of writing, most of them support USB 2.0, but their signaling rate is often limited to 12 Mbit/s, even though some also do support 480 Mbit/s.
+The following table summarizes the standard signaling rates and their names:
+
+| Signaling rate | Standard                                 |
+| -------------: | ---------------------------------------- |
+| 12 Mbits/s     | Full-Speed USB (now aka Basic-Speed USB) |
+| 480 Mbits/s    | Hi-Speed USB                             |
+
+Some also support USB On-The-Go (OTG), allowing the device to also behave as a USB Targeted Host on the same USB receptacle (by alternatively switching between the peripheral and host roles).
+Currently only the USB peripheral (device) role is supported by Ariel OS.
+The USB host role is not supported.
+
+### USB Microcontrollers Peripherals
+
+Currently, Ariel OS applications can only make use of "generic" USB peripherals, that is, USB microcontroller peripherals that can be used to implement any USB device class.
 Some microcontrollers also feature USB microcontroller peripherals that only support a fixed set of USB classes: e.g., multiple ESP32 MCUs comprise a USB CDC-ACM/JTAG peripheral, which can only be used for the standard [USB CDC-ACM][usb-cdc-acm-book-glossary] device class or a vendor-specific device class implementing JTAG access over USB.
-Currently, only the "generic" USB peripherals are supported in Ariel OS applications.
 The others may still be integrated by Ariel OS to implement specific functionality, like [logging][logging-transports-book].
 
 > [!TIP]
@@ -50,7 +61,7 @@ The table below lists some of the well-known USB device classes and how to use t
 | [USB CDC-NCM][usb-cdc-ncm-glossary-book] | Enable the [`usb-ethernet` laze module][usb-ethernet-laze-module-book]                                                                        |
 | USB HID                                  | Enable the `usb-hid` Cargo feature and apply the [`HidReaderWriter`][ariel-os-embassy-usb-hidreaderwriter-rustdoc] constructor on the builder |
 
-Other device classes are supported.
+[Other well-known device classes][ariel-os-embassy-usb-class-rustdoc] are supported, and it is also possible to implement custom ones.
 
 ### Device Configuration
 
@@ -59,6 +70,20 @@ In particular, it allows setting the Vendor ID (VID) and Product ID (PID), and t
 
 Additionally, some environment variables are used by [`embassy-usb`][ariel-os-reexports-embassy-usb-rustdoc] for configuration.
 See its documentation for more.
+
+### Clock Configuration
+
+<!-- NOTE: THE STM32F4 MCUs do *not* support crystal-less USB. -->
+As USB microcontroller peripherals rely on specific clock frequencies (to accommodate the signaling rates of USB), they are usually provided with a dedicated clock signal, that is often not shared with other peripherals.
+Because USB requires accurate timings[^usb-timings-requirements], the clock source typically relies on a [crystal resonator][crystal-resonator-book] (or an [external crystal oscillator][external-crystal-oscillator]).
+When that is not the case, the microcontroller must feature a clock recovery system that is able to recover a clock from the USB Start Of Frame (SOF) packets (sent by the USB host every 1 ms for Full-Speed USB) and that trims an internal oscillator, keeping it in sync with the USB host and thus enabling crystal-less USB.
+Many STM32 MCUs feature such clock recovery system (CRS).
+
+To be able to use USB, the [clock configuration][clock-tree-configuration-book] must enable and configure the clock source required for the USB microcontroller peripheral.
+[The default clock configuration provided by Ariel OS][clock-tree-configuration-book] usually already configures it appropriately when made possible by the board.
+Otherwise, an appropriate clock configuration must be [provided in the application][clock-tree-configuration-book].
+
+[^usb-timings-requirements]: Full-Speed USB requires a bit rate accuracy of 2500 ppm, while Hi-Speed USB requires 500 ppm (see section 7.1.11 of the [USB 2.0 specification][usb-2.0-spec]).
 
 [usb-cdc-acm-book-glossary]: ./glossary.md#usb-cdc-acm
 [logging-transports-book]: ./logging.md#logging-transports
@@ -71,5 +96,10 @@ See its documentation for more.
 [ariel-os-embassy-usb-hidreaderwriter-rustdoc]: https://ariel-os.github.io/ariel-os/dev/docs/api/ariel_os/reexports/embassy_usb/class/hid/struct.HidReaderWriter.html
 [usb-ethernet-laze-module-book]: ./networking.md#network-link-selection
 [usb-cdc-ncm-glossary-book]: ./glossary.md#usb-cdc-ncm
+[ariel-os-embassy-usb-class-rustdoc]: https://ariel-os.github.io/ariel-os/dev/docs/api/ariel_os/reexports/embassy_usb/class/index.html
 [ariel-os-embassy-usb-config-rustdoc]: https://ariel-os.github.io/ariel-os/dev/docs/api/ariel_os/reexports/embassy_usb/struct.Config.html
 [config-attr-macro-rustdoc]: https://ariel-os.github.io/ariel-os/dev/docs/api/ariel_os/attr.config.html
+[crystal-resonator-book]: ./clocks.md#piezoelectric-oscillators
+[external-crystal-oscillator]: ./clocks.md#external-clock-signals
+[clock-tree-configuration-book]: ./clocks.md#configuring-the-clock-tree
+[usb-2.0-spec]: https://www.usb.org/document-library/usb-20-specification
