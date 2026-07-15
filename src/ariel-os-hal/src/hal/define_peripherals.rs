@@ -111,7 +111,7 @@ macro_rules! group_peripherals {
 /// This macro defines types which can be used as peripherals in autostart tasks for accessing
 /// UARTs as defined in board descriptions.
 ///
-/// Its argument is a comma-separated list of items that mostly go into repeated [`define_uart!`] calls
+/// Its argument is a comma-separated list of items that mostly go into repeated [`define_uart!`](crate::define_uart!) calls
 /// (which define a struct type); see there.
 ///
 /// In addition to that, type aliases are created for easier access; currently, that is only
@@ -148,10 +148,10 @@ macro_rules! define_uarts {
 /// Creates a struct of the given `name`, containing all peripherals needed to set up a UART.
 ///
 /// It holds the TX and RX pins, and can be taken through the same mechanism as those defined using
-/// [`ariel_os::hal::define_peripherals!`] (that is, by using [`ariel_os::task(autostart,
-/// peripherals)`] or the underlying `TakePeripherals` trait).
+/// [`define_peripherals!`](crate::define_peripherals!) (that is, by using [`ariel_os::task(autostart,
+/// peripherals)`](ariel_os::task()) or the underlying `TakePeripherals` trait).
 ///
-/// The struct also has a method [`with_config()`] that can be used to initialize an Ariel OS uart
+/// The struct also has a method `.with_config()` that can be used to initialize an Ariel OS uart
 /// instance.
 #[cfg(feature = "uart")]
 #[macro_export]
