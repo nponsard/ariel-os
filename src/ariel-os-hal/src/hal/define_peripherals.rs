@@ -145,15 +145,14 @@ macro_rules! define_uarts {
     ( $($_:tt)+ ) => {};
 }
 
-/// Creates a struct of the given `name`, containing everything needed to set up a UART.
+/// Creates a struct of the given `name`, containing all peripherals needed to set up a UART.
 ///
 /// It holds the TX and RX pins, and can be taken through the same mechanism as those defined using
 /// [`ariel_os::hal::define_peripherals!`] (that is, by using [`ariel_os::task(autostart,
 /// peripherals)`] or the underlying `TakePeripherals` trait).
 ///
-/// The struct also implement [`ariel_os::uart::Assignment`], and by that carries a type with the
-/// (not trait-backed) promise that it is something that can be initialized through the
-/// [`ariel_os::uart`] APIs.
+/// The struct also has a method [`with_config()`] that can be used to initialize an Ariel OS uart
+/// instance.
 #[cfg(feature = "uart")]
 #[macro_export]
 macro_rules! define_uart {
@@ -176,13 +175,15 @@ macro_rules! define_uart {
             }
         }
 
-        impl $crate::uart::Assignment for $name {
-            type Device<'a> = $crate::hal::uart::$device<'a>;
-            type Tx = $crate::__peripheral_ty!($tx);
-            type Rx = $crate::__peripheral_ty!($rx);
-
-            fn into_pins(self) -> (Self::Tx, Self::Rx) {
-                (self.tx, self.rx)
+        impl<'d> $name {
+            pub fn with_config(
+                self,
+                rx_buf: &'d mut [u8],
+                tx_buf: &'d mut [u8],
+                config: $crate::hal::uart::Config,
+            ) -> Result<$crate::hal::uart::Uart<'d>, ariel_os_embassy_common::uart::ConfigError>
+            {
+                $crate::hal::uart::$device::<'d>::new(self.rx, self.tx, rx_buf, tx_buf, config)
             }
         }
     };
