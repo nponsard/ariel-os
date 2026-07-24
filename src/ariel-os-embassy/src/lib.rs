@@ -330,7 +330,7 @@ async fn init_task(mut peripherals: hal::OptionalPeripherals) {
         spawner.spawn(usb::usb_task(usb)).unwrap();
     }
 
-    #[cfg(all(feature = "ble", not(any(context = "esp", context = "rp"))))]
+    #[cfg(all(feature = "ble", not(context = "rp")))]
     let ble_controller = hal::ble::build_controller(&mut peripherals, spawner);
 
     #[cfg(any(feature = "ble-cyw43", feature = "wifi-cyw43"))]
@@ -344,13 +344,11 @@ async fn init_task(mut peripherals: hal::OptionalPeripherals) {
         ..
     } = hal::cyw43::device(&mut peripherals, &spawner).await;
 
-    #[cfg(all(feature = "ble", context = "esp"))]
-    hal::ble::init(&mut peripherals, &ble_config, spawner).await;
-    #[cfg(feature = "wifi-esp")]
-    let device = hal::wifi::esp_wifi::init(&mut peripherals, spawner);
-
     #[cfg(feature = "ble")]
     ble::init_stack(ble_controller, spawner);
+
+    #[cfg(feature = "wifi-esp")]
+    let device = hal::wifi::esp_wifi::init(&mut peripherals, spawner);
 
     #[cfg(feature = "tuntap")]
     let device = crate::hal::tuntap::create();
