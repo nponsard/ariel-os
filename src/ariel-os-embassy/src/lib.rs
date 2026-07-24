@@ -237,11 +237,6 @@ async fn init_task(mut peripherals: hal::OptionalPeripherals) {
     #[cfg(all(feature = "usb", context = "nrf"))]
     hal::usb::init();
 
-    // Move out the peripherals required for drivers, so that tasks cannot mistakenly take them.
-
-    #[cfg(all(feature = "ble", not(any(context = "esp", context = "rp"))))]
-    let ble_peripherals = hal::ble::Peripherals::new(&mut peripherals);
-
     #[cfg(feature = "usb")]
     let usb_peripherals = hal::usb::Peripherals::new(&mut peripherals);
 
@@ -250,11 +245,6 @@ async fn init_task(mut peripherals: hal::OptionalPeripherals) {
     for task in EMBASSY_TASKS {
         task(spawner, &mut peripherals);
     }
-
-    #[cfg(feature = "ble")]
-    let ble_config = ble::config();
-    #[cfg(all(feature = "ble", not(any(context = "esp", context = "rp"))))]
-    hal::ble::driver(ble_peripherals, spawner, ble_config);
 
     #[cfg(feature = "nrf91-modem")]
     {
@@ -339,6 +329,9 @@ async fn init_task(mut peripherals: hal::OptionalPeripherals) {
         let usb = usb_builder.build();
         spawner.spawn(usb::usb_task(usb)).unwrap();
     }
+
+    #[cfg(all(feature = "ble", not(any(context = "esp", context = "rp"))))]
+    let ble_controller = hal::ble::build_controller(&mut peripherals, spawner);
 
     #[cfg(all(feature = "ble-cyw43", not(feature = "wifi-cyw43")))]
     let _ = hal::cyw43::device(&mut peripherals, &spawner, ble_config).await;

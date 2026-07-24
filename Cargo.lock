@@ -459,7 +459,6 @@ dependencies = [
  "portable-atomic",
  "static_cell",
  "tinyrlibc",
- "trouble-host",
 ]
 
 [[package]]
