@@ -333,12 +333,16 @@ async fn init_task(mut peripherals: hal::OptionalPeripherals) {
     #[cfg(all(feature = "ble", not(any(context = "esp", context = "rp"))))]
     let ble_controller = hal::ble::build_controller(&mut peripherals, spawner);
 
-    #[cfg(all(feature = "ble-cyw43", not(feature = "wifi-cyw43")))]
-    let _ = hal::cyw43::device(&mut peripherals, &spawner, ble_config).await;
-    #[cfg(all(feature = "wifi-cyw43", not(feature = "ble-cyw43")))]
-    let (device, control) = hal::cyw43::device(&mut peripherals, &spawner).await;
-    #[cfg(all(feature = "ble-cyw43", feature = "wifi-cyw43"))]
-    let (device, control) = hal::cyw43::device(&mut peripherals, &spawner, ble_config).await;
+    #[cfg(any(feature = "ble-cyw43", feature = "wifi-cyw43"))]
+    let hal::cyw43::Cyw43Device {
+        #[cfg(feature = "ble-cyw43")]
+        ble_controller,
+        #[cfg(feature = "wifi-cyw43")]
+            net_device: device,
+        #[cfg(feature = "wifi-cyw43")]
+            net_control: control,
+        ..
+    } = hal::cyw43::device(&mut peripherals, &spawner).await;
 
     #[cfg(all(feature = "ble", context = "esp"))]
     hal::ble::init(&mut peripherals, &ble_config, spawner).await;
