@@ -329,7 +329,6 @@ dependencies = [
  "defmt 1.1.0",
  "embassy-embedded-hal",
  "embassy-executor",
- "embassy-sync 0.7.2",
  "embassy-time",
  "embassy-time-driver",
  "embassy-time-queue-utils",
@@ -347,7 +346,6 @@ dependencies = [
  "paste",
  "portable-atomic",
  "static_cell",
- "trouble-host",
 ]
 
 [[package]]
