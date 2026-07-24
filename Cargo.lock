@@ -499,13 +499,11 @@ dependencies = [
  "embassy-executor",
  "embassy-net-driver-channel 0.3.2",
  "embassy-rp",
- "embassy-sync 0.7.2",
  "embedded-hal-async",
  "embedded-io-async 0.6.1",
  "paste",
  "portable-atomic",
  "static_cell",
- "trouble-host",
 ]
 
 [[package]]
