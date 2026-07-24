@@ -1,8 +1,6 @@
 #![no_main]
 #![no_std]
 
-mod hid;
-
 use embassy_futures::{
     join::join,
     select::{Either, select},
@@ -23,7 +21,7 @@ use trouble_host::{
         gatt_server, gatt_service, service,
     },
 };
-use usbd_hid::descriptor::{AsInputReport, SerializedDescriptor};
+use usbd_hid::descriptor::{AsInputReport, KeyboardReport, SerializedDescriptor};
 
 use ariel_os::{
     gpio::{Input, Level, Output, Pull},
@@ -32,8 +30,6 @@ use ariel_os::{
     time::Timer,
 };
 use ariel_os_boards::pins;
-
-use crate::hid::KeypadReport;
 
 const NAME: &str = "Ariel OS keyboard";
 
@@ -63,9 +59,8 @@ pub(crate) struct HidService {
     #[characteristic(uuid = "2a4a", read, value = [0x01, 0x11, 0x00, 0x01])]
     pub(crate) hid_info: [u8; 4],
 
-    // info!("len: {}", KeypadReport::desc().len());
-    #[characteristic(uuid = "2a4b", read, value = KeypadReport::desc().try_into().expect("converting hid report to an [u8; 67] (check if size is correct)"))]
-    pub(crate) report_map: [u8; 67],
+    #[characteristic(uuid = "2a4b", read, value = KeyboardReport::desc().try_into().expect("converting hid report to an [u8; 67] (check if size is correct)"))]
+    pub(crate) report_map: [u8; 69],
 
     #[characteristic(uuid = "2a4c", write_without_response)]
     pub(crate) hid_control_point: u8,
@@ -79,9 +74,18 @@ pub(crate) struct HidService {
     pub(crate) output_keyboard: u8,
 }
 
+fn get_keyboard_report(keycodes: [u8; 6]) -> KeyboardReport {
+    KeyboardReport {
+        keycodes,
+        leds: 0,
+        modifier: 0,
+        reserved: 0,
+    }
+}
+
 #[ariel_os::task(autostart)]
 async fn run_advertisement() {
-    info!("len: {}", KeypadReport::desc().len());
+    info!("len: {}", KeyboardReport::desc().len());
 
     info!("starting ble stack");
     let stack = ariel_os::ble::ble_stack().await;
@@ -149,10 +153,8 @@ async fn run_advertisement() {
                             let keycodes = KEYS_CHANNEL.receive().await;
                             let mut buf = [0u8; 8];
 
-                            let report = KeypadReport {
-                                keycodes,
-                                ..Default::default()
-                            };
+                            let report = get_keyboard_report(keycodes);
+
                             let _ = report.serialize(&mut buf).unwrap();
 
                             let status = server.hid_service.output_keyboard.get(&server).unwrap();
@@ -248,9 +250,13 @@ async fn advertise<'a, 'b, C: Controller>(
     info!("advertising");
     let conn = advertiser.accept().await?;
 
+    // If we're not already bonded, ask if the central would like to bond.
+
     conn.set_bondable(peer.is_none())?;
 
     // Usually the central sets up security but the peripheral can also request security.
+    // Requesting it here can cause issues with some devices though.
+    //
     // if peer.is_none() {
     //     conn.request_security()?;
     // }
@@ -305,6 +311,8 @@ async fn gatt_events_task(
                 error!("Pairing failed: {:?}", err);
             }
             GattConnectionEvent::Gatt { event } => {
+                // Check if the connection is actually encrypted.
+
                 if !conn.raw().security_level()?.encrypted() {
                     if let Ok(reply) = event.reject(AttErrorCode::INSUFFICIENT_ENCRYPTION) {
                         reply.send().await;
