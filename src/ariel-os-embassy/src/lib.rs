@@ -352,6 +352,9 @@ async fn init_task(mut peripherals: hal::OptionalPeripherals) {
     #[cfg(feature = "wifi-esp")]
     let device = hal::wifi::esp_wifi::init(&mut peripherals, spawner);
 
+    #[cfg(feature = "ble")]
+    ble::init_stack(ble_controller, spawner);
+
     #[cfg(feature = "tuntap")]
     let device = crate::hal::tuntap::create();
     #[cfg(feature = "ltem-nrf-modem")]
