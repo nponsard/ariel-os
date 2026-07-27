@@ -345,7 +345,7 @@ async fn init_task(mut peripherals: hal::OptionalPeripherals) {
     } = hal::cyw43::device(&mut peripherals, &spawner).await;
 
     #[cfg(feature = "ble")]
-    ble::init_stack(ble_controller, spawner);
+    ble::init_stack(ble_controller, spawner).await;
 
     #[cfg(feature = "wifi-esp")]
     let device = hal::wifi::esp_wifi::init(&mut peripherals, spawner);

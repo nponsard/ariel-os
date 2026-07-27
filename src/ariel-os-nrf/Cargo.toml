@@ -104,8 +104,6 @@ ble = [
 ]
 ble-peripheral = ["ble", "nrf-sdc/peripheral"]
 ble-central = ["ble", "nrf-sdc/central"]
-ble-security = ["ble", "trouble-host/security"]
-
 
 ## Enables modem support.
 nrf91-modem = ["dep:cortex-m", "dep:nrf-modem", "dep:tinyrlibc"]

@@ -252,8 +252,8 @@ pub async fn ble_stack() -> &'static mut BleStack {
 }
 
 #[allow(dead_code, reason = "false positive during builds outside of laze")]
-pub(crate) fn init_stack(controller: crate::hal::ble::BleController, spawner: Spawner) {
-    let config = config();
+pub(crate) async fn init_stack(controller: crate::hal::ble::BleController, spawner: Spawner) {
+    let config = config().await;
     let mut rng = ariel_os_random::crypto_rng();
 
     let resources = ariel_os_embassy_common::ble::get_ble_host_resources();
