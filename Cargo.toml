@@ -104,6 +104,7 @@ embedded-storage-async = { version = "0.4.1" }
 embedded-test = { version = "0.7.1", default-features = false, features = [
   "ariel-os-09",
 ] }
+embassy-usb-logger = { version = "0.6.0", default-features = false }
 
 esp-alloc = { version = "0.9.0", default-features = false }
 esp-bootloader-esp-idf = { version = "0.4.0", features = ["esp-rom-sys"] }

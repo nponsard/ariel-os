@@ -1936,9 +1936,10 @@ modules:
     help: use USB CDC-ACM as logging transport
     selects:
       # Temporarily restricted to ESP32s having a USB CDC-ACM/JTAG USB peripheral.
-      - usb-cdc-acm-esp
-      - context::esp:
-          - esp-println
+      # - usb-cdc-acm-esp
+      # - context::esp:
+      #     - esp-println
+      - usb
     provides_unique:
       - logging-transport
     env:
