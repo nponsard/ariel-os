@@ -84,6 +84,30 @@ mod security {
     use ariel_os_log::{Debug2Format, warn};
     use ariel_os_storage as storage;
 
+    mod private {
+        pub trait Sealed {}
+        impl<C, P: trouble_host::PacketPool> Sealed for trouble_host::Stack<'_, C, P> {}
+    }
+    pub trait StackWrapper: private::Sealed {
+        fn wrapped_remove_bond_information(
+            &self,
+            identity: Identity,
+        ) -> impl core::future::Future<Output = Result<(), trouble_host::Error>>;
+    }
+
+    impl<C: trouble_host::Controller, P: trouble_host::PacketPool> StackWrapper
+        for trouble_host::Stack<'_, C, P>
+    {
+        async fn wrapped_remove_bond_information(
+            &self,
+            identity: Identity,
+        ) -> Result<(), trouble_host::Error> {
+            // TODO: make a custom error type.
+            remove_bond_information().await.unwrap();
+            self.remove_bond_information(identity)
+        }
+    }
+
     const BOND_STORAGE_KEY: &str = "BLE_BOND";
     // Storing the address the device should be reacheable at for this bond
     const BOND_ADDR_STORAGE_KEY: &str = "BLE_BOND_ADDR";
@@ -212,7 +236,7 @@ mod security {
 }
 #[cfg(feature = "ble-security")]
 pub use security::{
-    get_bond_information, remove_bond_information, store_bond_information,
+    StackWrapper, get_bond_information, remove_bond_information, store_bond_information,
 };
 
 /// Generates a random address.

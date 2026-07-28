@@ -24,6 +24,7 @@ use trouble_host::{
 use usbd_hid::descriptor::{AsInputReport, KeyboardReport, SerializedDescriptor};
 
 use ariel_os::{
+    ble::StackWrapper,
     gpio::{Input, Level, Output, Pull},
     log::{Debug2Format, error, info},
     reexports::embassy_time,
@@ -118,21 +119,15 @@ async fn run_advertisement() {
             let adv = advertise(NAME, &mut host.peripheral, &server, peer);
 
             let res = if peer.is_some() {
+                // Detect if the button is pressed long enough to enter pairing mode.
                 let pairing = async {
                     loop {
                         let keycodes = KEYS_CHANNEL.receive().await;
-
                         if keycodes[0] != 0 {
+                            // If the button stays down for 2 seconds we go in pairing mode.
                             match select(Timer::after_secs(2), KEYS_CHANNEL.receive()).await {
-                                Either::First(_) => {
-                                    if let Some(i) = peer.take() {
-                                        let _ = ariel_os::ble::remove_bond_information().await;
-                                        let _ = stack.remove_bond_information(i);
-
-                                        return;
-                                    }
-                                }
-                                // havent presset for long enough
+                                Either::First(_) => return,
+                                // Havent presset for long enough
                                 Either::Second(_) => {}
                             }
                         }
@@ -140,7 +135,13 @@ async fn run_advertisement() {
                 };
                 match select(adv, pairing).await {
                     Either::First(res) => res,
-                    Either::Second(_) => continue,
+                    Either::Second(_) => {
+                        if let Some(i) = peer.take() {
+                            // let _ = ariel_os::ble::remove_bond_information().await;
+                            let _ = stack.wrapped_remove_bond_information(i).await;
+                        }
+                        continue;
+                    }
                 }
             } else {
                 adv.await
