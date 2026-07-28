@@ -3,9 +3,9 @@
 
 use ariel_os::{
     debug::{ExitCode, exit},
-    log::*,
     time::Timer,
 };
+use log::*;
 
 #[ariel_os::task(autostart)]
 async fn main() {
