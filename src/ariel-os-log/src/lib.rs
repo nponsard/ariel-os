@@ -96,7 +96,7 @@ pub mod log {
     pub use crate::uart_println as println;
 
     // #[cfg(feature = "logging-over-usb")]
-    pub use crate::transport::usb::usb_println as println;
+    pub use crate::usb_println as println;
 
     /// Prints to the logging output, with a newline.
     #[cfg(not(context = "ariel-os"))]

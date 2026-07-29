@@ -395,6 +395,7 @@ dependencies = [
  "const-str",
  "critical-section",
  "defmt 1.1.0",
+ "embassy-futures",
  "embassy-sync 0.7.2",
  "embassy-usb",
  "esp-println",

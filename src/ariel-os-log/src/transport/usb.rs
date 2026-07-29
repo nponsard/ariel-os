@@ -24,9 +24,11 @@ impl core::fmt::Write for UsbTransport {
         let mut total = 0;
 
         while total < end {
-            let n = USB_LOG_PIPE
-                .try_write(&bytes[total..end])
-                .map_err(|_| core::fmt::Error)?;
+            let n = match USB_LOG_PIPE.try_write(&bytes[total..end]) {
+                Ok(n) => n,
+                // Pipe full, drop the data.
+                Err(_) => return Ok(()),
+            };
             total += n;
         }
         Ok(())
@@ -56,15 +58,31 @@ pub struct UsbLoggerRunner<'d, D: embassy_usb::driver::Driver<'d>> {
 
 impl<'d, D: embassy_usb::driver::Driver<'d>> UsbLoggerRunner<'d, D> {
     pub async fn run(mut self) {
-        self.usb_cdc_acm.wait_connection().await;
-        let mut buffer = [0; MAX_USB_PACKET_SIZE as usize];
-        loop {
-            let len = USB_LOG_PIPE.read(&mut buffer).await;
+        let (mut sender, mut receiver) = self.usb_cdc_acm.split();
+        let sender_fut = async {
+            sender.wait_connection().await;
+            let mut buffer = [0; MAX_USB_PACKET_SIZE as usize];
+            loop {
+                let len = USB_LOG_PIPE.read(&mut buffer).await;
 
-            if Err(EndpointError::Disabled) == self.usb_cdc_acm.write_packet(&buffer[..len]).await {
-                self.usb_cdc_acm.wait_connection().await;
-            };
-        }
+                if Err(EndpointError::Disabled) == sender.write_packet(&buffer[..len]).await {
+                    sender.wait_connection().await;
+                };
+            }
+        };
+
+        // We need to read from the USB otherwise some hosts won't be able to close the connection.
+        let receiver_fut = async {
+            receiver.wait_connection().await;
+            let mut buffer = [0; MAX_USB_PACKET_SIZE as usize];
+            loop {
+                if Err(EndpointError::Disabled) == receiver.read_packet(&mut buffer).await {
+                    receiver.wait_connection().await;
+                };
+            }
+        };
+
+        embassy_futures::join::join(sender_fut, receiver_fut).await;
     }
 }
 

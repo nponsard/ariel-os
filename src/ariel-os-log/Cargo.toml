@@ -20,6 +20,7 @@ ariel-os-utils = { workspace = true, optional = true }
 const-str = { workspace = true, optional = true }
 critical-section = { workspace = true, optional = true }
 defmt = { workspace = true, optional = true }
+embassy-futures = { workspace = true, optional = true }
 embassy-sync = { workspace = true, optional = true }
 embassy-usb = { workspace = true, optional = true }
 featurecomb = { workspace = true }
@@ -63,6 +64,7 @@ debug-uart = ["dep:embassy-sync", "logging-over-uart"]
 defmt-rtt = ["ariel-os-debug/defmt-rtt"]
 logging-over-uart = ["esp-println?/uart"]
 logging-over-usb = [
+  "dep:embassy-futures",
   "dep:embassy-sync",
   "dep:embassy-usb",
   "dep:static_cell",
