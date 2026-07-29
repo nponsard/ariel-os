@@ -1940,6 +1940,7 @@ modules:
       # - context::esp:
       #     - esp-println
       - usb
+      - logging-facade
     provides_unique:
       - logging-transport
     env:
