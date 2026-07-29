@@ -161,7 +161,7 @@ fn startup() -> ! {
     #[cfg(feature = "debug-channel")]
     ariel_os_debug::init();
 
-    // ariel_os_log::init();
+    ariel_os_log::init();
 
     debug!("ariel_os_rt::startup()");
 

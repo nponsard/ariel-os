@@ -284,7 +284,6 @@ dependencies = [
  "embassy-time",
  "embassy-time-queue-utils",
  "embassy-usb",
- "embassy-usb-logger",
  "embedded-hal 1.0.0",
  "embedded-hal-async",
  "embedded-io 0.6.1",
@@ -397,9 +396,11 @@ dependencies = [
  "critical-section",
  "defmt 1.1.0",
  "embassy-sync 0.7.2",
+ "embassy-usb",
  "esp-println",
  "featurecomb",
  "log",
+ "static_cell",
 ]
 
 [[package]]
@@ -2458,18 +2459,6 @@ checksum = "17119855ccc2d1f7470a39756b12068454ae27a3eabb037d940b5c03d9c77b7a"
 dependencies = [
  "defmt 1.1.0",
  "embedded-io-async 0.6.1",
-]
-
-[[package]]
-name = "embassy-usb-logger"
-version = "0.6.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d67df3b052328a06f8d1d9bb0cb8a013aff9740e43eaa03cc2015e8ccc48d8e5"
-dependencies = [
- "embassy-futures",
- "embassy-sync 0.8.0",
- "embassy-usb",
- "log",
 ]
 
 [[package]]

@@ -21,6 +21,9 @@
 #[featurecomb::comb]
 mod _featurecomb {}
 
+#[doc(hidden)]
+pub mod transport;
+
 #[allow(unused, reason = "conditional compilation")]
 #[doc(hidden)]
 #[cfg(feature = "log")]
@@ -77,6 +80,7 @@ pub mod log {
         not(any(
             feature = "esp-println",
             feature = "logging-over-uart",
+            feature = "logging-over-usb",
             feature = "std"
         ))
     ))]
@@ -90,6 +94,9 @@ pub mod log {
 
     #[cfg(feature = "debug-uart")]
     pub use crate::uart_println as println;
+
+    // #[cfg(feature = "logging-over-usb")]
+    pub use crate::transport::usb::usb_println as println;
 
     /// Prints to the logging output, with a newline.
     #[cfg(not(context = "ariel-os"))]

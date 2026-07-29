@@ -7,6 +7,8 @@
 pub use ariel_os_embassy_common::cell;
 pub use ariel_os_hal::hal;
 
+mod log;
+
 #[cfg(feature = "executor-thread")]
 use ariel_os_embassy_common::executor_thread;
 
@@ -34,7 +36,6 @@ mod ethernet;
 #[cfg(feature = "cellular-networking")]
 mod cellular_networking;
 
-use ariel_os_hal::hal::usb::UsbDriver;
 use ariel_os_log::debug;
 
 use linkme::distributed_slice;
@@ -286,6 +287,13 @@ async fn init_task(mut peripherals: hal::OptionalPeripherals) {
         )
     };
 
+    // TODO: use separate feature.
+    #[cfg(feature = "usb")]
+    {
+        let usb_log_runner = ariel_os_log::transport::usb::init_usb_logger(&mut usb_builder);
+        spawner.spawn(log::usb_log_task(usb_log_runner)).unwrap();
+    }
+
     #[cfg(feature = "usb-ethernet")]
     let device = {
         use ariel_os_embassy_common::identity::DeviceId as _;
@@ -328,18 +336,6 @@ async fn init_task(mut peripherals: hal::OptionalPeripherals) {
 
     #[cfg(feature = "ethernet-stm32")]
     let device = hal::ethernet::device(&mut peripherals);
-
-    static CDC_ACM_STATE: static_cell::StaticCell<embassy_usb::class::cdc_acm::State<'_>> =
-        static_cell::StaticCell::new();
-
-    // Create classes on the builder.
-    let usb_cdc_acm = embassy_usb::class::cdc_acm::CdcAcmClass::new(
-        &mut usb_builder,
-        CDC_ACM_STATE.init_with(embassy_usb::class::cdc_acm::State::new),
-        64,
-    );
-
-    spawner.spawn(logger_task(usb_cdc_acm)).unwrap();
 
     #[cfg(feature = "usb")]
     {
@@ -454,9 +450,4 @@ async fn init_task(mut peripherals: hal::OptionalPeripherals) {
 
     #[cfg(feature = "threading")]
     ariel_os_threads::events::THREAD_START_EVENT.set();
-}
-
-#[embassy_executor::task]
-async fn logger_task(class: embassy_usb::class::cdc_acm::CdcAcmClass<'static, UsbDriver>) {
-    embassy_usb_logger::with_class!(1024, log::LevelFilter::Trace, class).await
 }

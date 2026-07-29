@@ -21,8 +21,10 @@ const-str = { workspace = true, optional = true }
 critical-section = { workspace = true, optional = true }
 defmt = { workspace = true, optional = true }
 embassy-sync = { workspace = true, optional = true }
+embassy-usb = { workspace = true, optional = true }
 featurecomb = { workspace = true }
 log = { workspace = true, optional = true }
+static_cell = { workspace = true, optional = true }
 
 [target.'cfg(context = "esp")'.dependencies]
 esp-println = { workspace = true, optional = true, features = [
@@ -60,7 +62,12 @@ debug-uart = ["dep:embassy-sync", "logging-over-uart"]
 # through this crate.
 defmt-rtt = ["ariel-os-debug/defmt-rtt"]
 logging-over-uart = ["esp-println?/uart"]
-logging-over-usb = ["esp-println?/jtag-serial"]
+logging-over-usb = [
+  "dep:embassy-sync",
+  "dep:embassy-usb",
+  "dep:static_cell",
+  "esp-println?/jtag-serial",
+]
 std = []
 
 _test = []
