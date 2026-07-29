@@ -29,6 +29,9 @@ pub mod transport;
 #[cfg(feature = "log")]
 mod log_logger;
 
+#[cfg(all(feature = "defmt", not(feature = "defmt-rtt")))]
+mod print_defmt;
+
 // This module is hidden in the docs, but would still be imported by a wildcard import of this
 // crate's items.
 #[doc(hidden)]
@@ -67,6 +70,13 @@ pub fn print_panic(info: &core::panic::PanicInfo<'_>) {
     println!("panicked at {}:\n{}", location, message);
 }
 
+#[cfg(feature = "defmt")]
+pub(crate) mod defmt_transport {
+
+    #[cfg(feature = "logging-over-usb")]
+    pub(crate) use crate::transport::usb::{flush, write_bytes};
+}
+
 #[cfg(feature = "log")]
 #[doc(hidden)]
 pub mod log {
@@ -95,7 +105,7 @@ pub mod log {
     #[cfg(feature = "debug-uart")]
     pub use crate::uart_println as println;
 
-    // #[cfg(feature = "logging-over-usb")]
+    #[cfg(feature = "logging-over-usb")]
     pub use crate::usb_println as println;
 
     /// Prints to the logging output, with a newline.

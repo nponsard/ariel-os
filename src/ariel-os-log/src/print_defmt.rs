@@ -1,0 +1,71 @@
+#![expect(unsafe_code)]
+
+/// Implementation of a locking [`defmt::Logger`].
+// Most of the code is taken from [defmt-itm](https://github.com/knurling-rs/defmt/tree/main/firmware/defmt-itm) under Apache 2.0 license / MIT licence.
+use core::sync::atomic::{AtomicBool, Ordering};
+
+#[defmt::global_logger]
+struct Logger;
+
+static TAKEN: AtomicBool = AtomicBool::new(false);
+static mut CS_RESTORE: critical_section::RestoreState = critical_section::RestoreState::invalid();
+static mut ENCODER: defmt::Encoder = defmt::Encoder::new();
+
+unsafe impl defmt::Logger for Logger {
+    fn acquire() {
+        // safety: Must be paired with corresponding call to release(), see below
+        let restore = unsafe { critical_section::acquire() };
+
+        // safety: accessing the atomic without CAS is OK because we have acquired a critical section.
+        if TAKEN.load(Ordering::Relaxed) {
+            panic!("defmt logger taken reentrantly")
+        }
+
+        // safety: accessing the atomic without CAS is OK because we have acquired a critical section.
+        TAKEN.store(true, Ordering::Relaxed);
+
+        // safety: accessing the `static mut` is OK because we have acquired a critical section.
+        unsafe { CS_RESTORE = restore };
+
+        // safety: accessing the `static mut` is OK because we have acquired a critical section.
+        unsafe {
+            let encoder: &mut defmt::Encoder = &mut *core::ptr::addr_of_mut!(ENCODER);
+            encoder.start_frame(do_write)
+        }
+    }
+
+    unsafe fn flush() {
+        crate::defmt_transport::flush()
+    }
+
+    unsafe fn release() {
+        // safety: accessing the `static mut` is OK because we have acquired a critical section.
+        unsafe {
+            let encoder: &mut defmt::Encoder = &mut *core::ptr::addr_of_mut!(ENCODER);
+            encoder.end_frame(do_write);
+        }
+
+        // safety: accessing the atomic without CAS is OK because we have acquired a critical section.
+        TAKEN.store(false, Ordering::Relaxed);
+
+        // safety: accessing the `static mut` is OK because we have acquired a critical section.
+        let restore = unsafe { CS_RESTORE };
+
+        // safety: Must be paired with corresponding call to acquire(), see above
+        unsafe {
+            critical_section::release(restore);
+        }
+    }
+
+    unsafe fn write(bytes: &[u8]) {
+        // safety: accessing the `static mut` is OK because we have acquired a critical section.
+        unsafe {
+            let encoder: &mut defmt::Encoder = &mut *core::ptr::addr_of_mut!(ENCODER);
+            encoder.write(bytes, do_write);
+        }
+    }
+}
+
+fn do_write(bytes: &[u8]) {
+    crate::defmt_transport::write_bytes(bytes)
+}

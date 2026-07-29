@@ -9,9 +9,25 @@ const MAX_USB_PACKET_SIZE: u16 = 64;
 
 static USB_LOG_PIPE: Pipe<CriticalSectionRawMutex, USB_PIPE_SIZE> = Pipe::new();
 
-#[doc(hidden)]
-pub enum Error {
-    Writing,
+pub(crate) fn write_bytes(bytes: &[u8]) {
+    let end = bytes.len();
+
+    let mut total = 0;
+    while total < end {
+        let n = match USB_LOG_PIPE.try_write(&bytes[total..end]) {
+            Ok(n) => n,
+            // Pipe full, drop the data.
+            Err(_) => return,
+        };
+        total += n;
+    }
+}
+pub(crate) fn flush() {
+
+    // TODO: implement flush. This is complicated as the USB communication is handled in another
+    // task, if we use block_on() the pipe will never be flushed as the task will never be executed.
+
+    // USB_LOG_PIPE.flush().await;
 }
 
 struct UsbTransport;
@@ -19,18 +35,7 @@ struct UsbTransport;
 impl core::fmt::Write for UsbTransport {
     fn write_str(&mut self, s: &str) -> core::fmt::Result {
         let bytes = s.as_bytes();
-        let end = bytes.len();
-
-        let mut total = 0;
-
-        while total < end {
-            let n = match USB_LOG_PIPE.try_write(&bytes[total..end]) {
-                Ok(n) => n,
-                // Pipe full, drop the data.
-                Err(_) => return Ok(()),
-            };
-            total += n;
-        }
+        write_bytes(bytes);
         Ok(())
     }
 }

@@ -1,11 +1,7 @@
 #![no_main]
 #![no_std]
 
-use ariel_os::{
-    debug::{ExitCode, exit},
-    time::Timer,
-};
-use log::*;
+use ariel_os::{log::info, time::Timer};
 
 #[ariel_os::task(autostart)]
 async fn main() {
