@@ -21,6 +21,9 @@
 #[featurecomb::comb]
 mod _featurecomb {}
 
+#[doc(hidden)]
+pub mod transport;
+
 #[allow(unused, reason = "conditional compilation")]
 #[doc(hidden)]
 #[cfg(feature = "log")]
