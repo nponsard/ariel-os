@@ -29,6 +29,13 @@ pub mod transport;
 #[cfg(feature = "log")]
 mod log_logger;
 
+#[cfg(all(
+    feature = "defmt",
+    not(feature = "defmt-rtt"),
+    not(feature = "esp-println")
+))]
+mod defmt_logger;
+
 // This module is hidden in the docs, but would still be imported by a wildcard import of this
 // crate's items.
 #[doc(hidden)]
