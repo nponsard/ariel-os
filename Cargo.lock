@@ -398,7 +398,7 @@ dependencies = [
  "embassy-futures",
  "embassy-sync 0.7.2",
  "embassy-usb",
- "esp-println",
+ "esp-hal",
  "featurecomb",
  "log",
  "static_cell",
@@ -2909,19 +2909,6 @@ dependencies = [
  "esp-wifi-sys-esp32s2",
  "esp-wifi-sys-esp32s3",
  "log",
-]
-
-[[package]]
-name = "esp-println"
-version = "0.16.1"
-source = "git+https://github.com/ariel-os/esp-hal?rev=531c629afdd80ea464682ce7f4db8baed97967a6#531c629afdd80ea464682ce7f4db8baed97967a6"
-dependencies = [
- "defmt 1.1.0",
- "document-features",
- "esp-metadata-generated",
- "esp-sync",
- "log",
- "portable-atomic",
 ]
 
 [[package]]
@@ -7253,3 +7240,8 @@ dependencies = [
  "quote",
  "syn 2.0.114",
 ]
+
+[[patch.unused]]
+name = "esp-println"
+version = "0.16.1"
+source = "git+https://github.com/ariel-os/esp-hal?rev=531c629afdd80ea464682ce7f4db8baed97967a6#531c629afdd80ea464682ce7f4db8baed97967a6"

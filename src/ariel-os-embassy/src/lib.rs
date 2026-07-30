@@ -290,7 +290,7 @@ async fn init_task(mut peripherals: hal::OptionalPeripherals) {
     // TODO: use separate feature.
     #[cfg(feature = "usb")]
     {
-        let usb_log_runner = ariel_os_log::transport::usb::init_usb_logger(&mut usb_builder);
+        let usb_log_runner = ariel_os_log::transport::generic_usb::init_usb_logger(&mut usb_builder);
         spawner.spawn(log::usb_log_task(usb_log_runner)).unwrap();
     }
 
