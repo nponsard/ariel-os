@@ -1936,7 +1936,6 @@ modules:
     help: use USB CDC-ACM as logging transport
     selects:
       - ?esp-serial-jtag
-      - ?esp-uart-usb-bridge
       - ?usb-cdc-acm-log
       - usb-log-transport
       # Issue when you're manually selecting a log transport and no facade is selected.
@@ -1959,24 +1958,10 @@ modules:
         FEATURES:
           - ariel-os/logging-over-generic-usb
 
-  - name: esp-uart-usb-bridge
-    selects:
-      - has_esp_uart_usb
-    provides_unique:
-      - usb-log-transport
-    env:
-      global:
-        FEATURES:
-          - ariel-os/logging-over-esp-uart-usb-bridge
-
-  - name: has_esp_uart_usb_bridge
-    help: This board has an usb to uart bridge connected to the UART0 default pins (RXD0, TXD0).
-    selects:
-      - doc-only
-
   - name: esp-serial-jtag
     selects:
       - has_esp_usb_jtag_serial
+      - esp
     provides_unique:
       - usb-log-transport
     env:
@@ -1986,8 +1971,8 @@ modules:
 
   - name: has_esp_usb_jtag_serial
     help: This board has the usb_jtag_serial peripheral connected to the USB port (USB_DN, USB_DP).
-    # selects:
-    #   - doc-only
+    selects:
+      - doc-only
 
   - name: logging-over-uart
     help: use UART as logging transport

@@ -47,7 +47,6 @@ logging-over-generic-usb = [
   "dep:embassy-usb",
   "dep:static_cell",
 ]
-logging-over-esp-uart-usb-bridge = ["dep:esp-hal"]
 logging-over-esp-jtag-serial = ["dep:embassy-sync", "dep:esp-hal"]
 std = []
 
