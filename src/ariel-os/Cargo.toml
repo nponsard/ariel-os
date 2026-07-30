@@ -223,9 +223,18 @@ debug-uart = ["ariel-os-embassy/debug-uart", "ariel-os-log/debug-uart"]
 logging-over-uart = ["ariel-os-log/logging-over-uart"]
 logging-over-usb = ["ariel-os-log/logging-over-usb"]
 
-logging-over-generic-usb = ["ariel-os-log/logging-over-generic-usb"]
-logging-over-esp-uart-usb-bridge = ["ariel-os-log/logging-over-esp-uart-usb-bridge"]
-logging-over-esp-jtag-serial = ["ariel-os-log/logging-over-esp-jtag-serial"]
+logging-over-generic-usb = [
+  "ariel-os-log/logging-over-generic-usb",
+  "ariel-os-embassy/logging-over-generic-usb",
+]
+logging-over-esp-uart-usb-bridge = [
+  "ariel-os-log/logging-over-esp-uart-usb-bridge",
+  "ariel-os-embassy/logging-over-esp-uart-usb-bridge",
+]
+logging-over-esp-jtag-serial = [
+  "ariel-os-log/logging-over-esp-jtag-serial",
+  "ariel-os-embassy/logging-over-esp-jtag-serial",
+]
 rtt-target = ["ariel-os-debug/rtt-target"]
 defmt-rtt = ["ariel-os-log/defmt-rtt"]
 semihosting = ["ariel-os-debug/semihosting"]

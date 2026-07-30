@@ -226,6 +226,10 @@ defmt = [
 ]
 log = ["ariel-os-hal/log"]
 
+logging-over-generic-usb = ["usb"]
+logging-over-esp-uart-usb-bridge = []
+logging-over-esp-jtag-serial = []
+
 _test = ["dhcpv4", "external-interrupts", "i2c", "spi", "time"]
 
 [lints]

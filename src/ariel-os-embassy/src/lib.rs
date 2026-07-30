@@ -287,10 +287,13 @@ async fn init_task(mut peripherals: hal::OptionalPeripherals) {
         )
     };
 
-    // TODO: use separate feature.
-    #[cfg(feature = "usb")]
+    #[cfg(feature = "logging-over-esp-jtag-serial")]
+    ariel_os_log::transport::esp_jtag_serial::init(peripherals.USB_DEVICE.take().unwrap());
+
+    #[cfg(feature = "logging-over-generic-usb")]
     {
-        let usb_log_runner = ariel_os_log::transport::generic_usb::init_usb_logger(&mut usb_builder);
+        let usb_log_runner =
+            ariel_os_log::transport::generic_usb::init_usb_logger(&mut usb_builder);
         spawner.spawn(log::usb_log_task(usb_log_runner)).unwrap();
     }
 

@@ -27,6 +27,11 @@ unsafe impl defmt::Logger for Logger {
         // safety: accessing the `static mut` is OK because we have acquired a critical section.
         unsafe { CS_RESTORE = restore };
 
+
+        // Espflash needs this to indicate the start of a defmt frame. This doesn't seem to cause
+        // issues with defmt-print.
+        #[cfg(context = "esp")]
+        do_write(&[0xFF, 0x00]);
         // safety: accessing the `static mut` is OK because we have acquired a critical section.
         unsafe {
             let encoder: &mut defmt::Encoder = &mut *core::ptr::addr_of_mut!(ENCODER);

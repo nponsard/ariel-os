@@ -1986,8 +1986,8 @@ modules:
 
   - name: has_esp_usb_jtag_serial
     help: This board has the usb_jtag_serial peripheral connected to the USB port (USB_DN, USB_DP).
-    selects:
-      - doc-only
+    # selects:
+    #   - doc-only
 
   - name: logging-over-uart
     help: use UART as logging transport
