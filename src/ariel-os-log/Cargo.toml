@@ -11,7 +11,7 @@ logging-facade.xor = { features = ["defmt", "log"] }
 logging-transport.xor = { features = [
   "custom-transport",
   "defmt-rtt",
-  "logging-over-uart",
+  "custom-transport",
   "logging-over-usb",
 ] }
 
@@ -21,7 +21,7 @@ ariel-os-utils = { workspace = true, optional = true }
 const-str = { workspace = true, optional = true }
 critical-section = { workspace = true, optional = true }
 defmt = { workspace = true, optional = true }
-embassy-sync = { workspace = true, optional = true }
+embassy-sync = { workspace = true }
 featurecomb = { workspace = true }
 log = { workspace = true, optional = true }
 
@@ -56,7 +56,7 @@ log = ["dep:ariel-os-utils", "dep:const-str", "dep:critical-section", "dep:log"]
 esp-println = ["dep:esp-println"]
 
 # Logging transports.
-debug-uart = ["dep:embassy-sync", "logging-over-uart"]
+debug-uart = ["logging-over-uart"]
 # `defmt-rtt` uses the debug channel as the logging transport, so it has to go
 # through this crate.
 defmt-rtt = ["dep:ariel-os-debug", "ariel-os-debug/defmt-rtt"]
