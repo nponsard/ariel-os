@@ -1959,6 +1959,7 @@ modules:
       - context::esp:
           - esp-println
       - ?debug-uart
+      - has_host_facing_uart
     provides_unique:
       - logging-transport
     env:

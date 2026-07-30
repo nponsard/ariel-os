@@ -205,6 +205,7 @@ async fn init_task(mut peripherals: hal::OptionalPeripherals) {
 
     #[cfg(feature = "debug-uart")]
     debug_uart::init(&mut peripherals);
+    ariel_os_log_transport::init(&mut peripherals, spawner);
 
     debug!("ariel-os-embassy::init_task()");
 
