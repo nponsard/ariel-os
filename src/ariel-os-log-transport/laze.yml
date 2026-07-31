@@ -1,4 +1,0 @@
-apps:
-  - name: crates/ariel-os-log-transport
-    selects:
-      - host-test-only

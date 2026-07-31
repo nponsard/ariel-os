@@ -179,6 +179,7 @@ builders:
   parent: esp32c6fx4
   provides:
   - has_buttons
+  - has_host_facing_uart
   - has_leds
   - has_usb_cdc_acm_port
 - name: seeedstudio-xiao-nrf52840-plus
