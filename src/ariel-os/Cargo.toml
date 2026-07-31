@@ -226,6 +226,11 @@ logging-over-usb-cdc-acm-esp = [
   "ariel-os-log-transport-driver/usb-cdc-acm-esp",
   "log-transport-driver",
 ]
+logging-over-generic-usb = [
+  "ariel-os-log-transport-driver/logging-over-generic-usb",
+  "ariel-os-embassy/logging-over-generic-usb",
+  "log-transport-driver",
+]
 rtt-target = ["ariel-os-debug/rtt-target"]
 defmt-rtt = ["ariel-os-log/defmt-rtt"]
 esp-println = ["ariel-os-log/esp-println"]

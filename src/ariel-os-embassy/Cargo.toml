@@ -230,6 +230,8 @@ log = ["ariel-os-hal/log"]
 # The protocol used is selected with features in `ariel-os`.
 log-transport-driver = ["dep:ariel-os-log-transport-driver"]
 
+logging-over-generic-usb = ["usb"]
+
 _test = ["dhcpv4", "external-interrupts", "i2c", "spi", "time"]
 
 [lints]

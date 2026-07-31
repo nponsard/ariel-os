@@ -1936,6 +1936,7 @@ modules:
     help: use USB CDC-ACM as logging transport
     selects:
       - ?logging-over-usb-cdc-acm-esp
+      - ?logging-over-generic-usb
       - usb-log-transport
     provides_unique:
       - logging-transport
@@ -1951,6 +1952,16 @@ modules:
       global:
         FEATURES:
           - ariel-os/logging-over-usb-cdc-acm-esp
+  - name: logging-over-generic-usb
+    help: Use generic usb peripheral as log transport.
+    selects:
+      - usb
+    provides_unique:
+      - usb-log-transport
+    env:
+      global:
+        FEATURES:
+          - ariel-os/logging-over-generic-usb
 
   - name: logging-over-uart
     help: use UART as logging transport

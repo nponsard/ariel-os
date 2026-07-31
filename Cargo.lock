@@ -409,8 +409,12 @@ dependencies = [
  "ariel-os-hal",
  "ariel-os-log",
  "embassy-executor",
+ "embassy-futures",
  "embassy-sync 0.7.2",
+ "embassy-usb",
+ "embedded-io-async 0.7.0",
  "esp-hal",
+ "static_cell",
 ]
 
 [[package]]
