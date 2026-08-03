@@ -24,11 +24,16 @@ static_cell = { workspace = true, optional = true }
 
 external = ["ariel-os-log/custom-transport"]
 
-writer = [
-  "dep:embedded-io-async",
-  "dep:embassy-futures",
-  "dep:embassy-sync",
+writer = ["dep:embedded-io-async", "dep:embassy-futures", "dep:embassy-sync"]
+
+logging-over-uart = [
+  "dep:ariel-os-boards",
+  "dep:static_cell",
+  "external",
+  "writer",
+  "ariel-os-hal/uart",
 ]
+logging-over-usb = ["external"]
 
 _test = []
 

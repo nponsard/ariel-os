@@ -15,6 +15,18 @@
 use embassy_sync::{blocking_mutex::raw::CriticalSectionRawMutex, mutex::Mutex};
 use embedded_io_async::Write as _;
 
+cfg_select! {
+    feature = "logging-over-uart" => {
+        pub(crate) mod uart;
+        use uart::WriterType;
+        pub use uart::init;
+    }
+
+    _ => {
+        compile_error!("No valid writer transport selected.");
+    }
+}
+
 static WRITER: Mutex<CriticalSectionRawMutex, Option<WriterType>> = Mutex::new(None);
 
 pub(crate) fn init_writer(w: WriterType) {

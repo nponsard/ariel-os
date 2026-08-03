@@ -56,13 +56,11 @@ log = ["dep:ariel-os-utils", "dep:const-str", "dep:critical-section", "dep:log"]
 esp-println = ["dep:esp-println"]
 
 # Logging transports.
-debug-uart = ["logging-over-uart"]
 # `defmt-rtt` uses the debug channel as the logging transport, so it has to go
 # through this crate.
 defmt-rtt = ["dep:ariel-os-debug", "ariel-os-debug/defmt-rtt"]
 # Using the debug channel as the transport
 debug-channel = ["dep:ariel-os-debug"]
-logging-over-uart = ["esp-println?/uart"]
 logging-over-usb = ["esp-println?/jtag-serial"]
 custom-transport = []
 std = []
