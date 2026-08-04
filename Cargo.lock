@@ -150,6 +150,7 @@ dependencies = [
  "ariel-os-hal",
  "ariel-os-identity",
  "ariel-os-log",
+ "ariel-os-log-transport-driver",
  "ariel-os-macros",
  "ariel-os-nrf",
  "ariel-os-power",
@@ -408,6 +409,8 @@ dependencies = [
  "ariel-os-hal",
  "ariel-os-log",
  "embassy-executor",
+ "embassy-sync 0.7.2",
+ "esp-hal",
 ]
 
 [[package]]
@@ -2927,7 +2930,6 @@ dependencies = [
  "esp-metadata-generated",
  "esp-sync",
  "log",
- "portable-atomic",
 ]
 
 [[package]]
