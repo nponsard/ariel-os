@@ -424,3 +424,32 @@ pub fn init() {
     #[cfg(feature = "log")]
     log_logger::init();
 }
+
+// From `esp-println`: espflash reads this metadata to know when to decode defmt.
+#[cfg(all(context = "esp", not(feature = "esp-println")))]
+#[expect(unsafe_code)]
+mod esp {
+    macro_rules! log_format {
+        ($value:expr) => {
+            #[unsafe(link_section = concat!(".espressif.metadata"))]
+            #[used]
+            #[unsafe(export_name = concat!("espflash.LOG_FORMAT"))]
+            static LOG_FORMAT: [u8; $value.len()] = const {
+                let val_bytes = $value.as_bytes();
+                let mut val_bytes_array = [0; $value.len()];
+                let mut i = 0;
+                while i < val_bytes.len() {
+                    val_bytes_array[i] = val_bytes[i];
+                    i += 1;
+                }
+                val_bytes_array
+            };
+        };
+    }
+
+    #[cfg(feature = "defmt")]
+    log_format!("defmt-espflash");
+
+    #[cfg(not(feature = "defmt"))]
+    log_format!("serial");
+}
