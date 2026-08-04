@@ -199,7 +199,7 @@ timer-generic-queue-128 = ["ariel-os-embassy/timer-generic-queue-128"]
 
 #! ## Development and debugging
 # Enables the debug channel.
-debug-channel = ["ariel-os-rt/debug-channel"]
+debug-channel = ["ariel-os-log/debug-channel", "ariel-os-rt/debug-channel"]
 # Enables logging support through `defmt`, see [`log`].
 defmt = [
   "ariel-os-bench?/defmt",
@@ -226,6 +226,9 @@ rtt-target = ["ariel-os-debug/rtt-target"]
 defmt-rtt = ["ariel-os-log/defmt-rtt"]
 esp-println = ["ariel-os-log/esp-println"]
 semihosting = ["ariel-os-debug/semihosting"]
+
+# Use an Ariel OS log transport driver.
+log-transport-driver = ["ariel-os-embassy/log-transport-driver"]
 
 net = ["ariel-os-embassy/net"]
 
