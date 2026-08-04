@@ -12,7 +12,6 @@ logging-transport.xor = { features = [
   "custom-transport",
   "defmt-rtt",
   "logging-over-uart",
-  "logging-over-usb",
 ] }
 
 [dependencies]
@@ -63,8 +62,7 @@ defmt-rtt = ["dep:ariel-os-debug", "ariel-os-debug/defmt-rtt"]
 # Using the debug channel as the transport
 debug-channel = ["dep:ariel-os-debug"]
 logging-over-uart = ["esp-println?/uart"]
-logging-over-usb = ["esp-println?/jtag-serial"]
-custom-transport = []
+custom-transport = ["dep:embassy-sync"]
 std = []
 
 _test = []

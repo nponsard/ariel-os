@@ -10,8 +10,11 @@ license.workspace = true
 ariel-os-hal = { workspace = true }
 ariel-os-log = { workspace = true, features = ["custom-transport"] }
 embassy-executor = { workspace = true }
+embassy-sync = { workspace = true, optional = true }
+esp-hal = { workspace = true, optional = true }
 
 [features]
+usb-cdc-acm-esp = ["dep:embassy-sync", "dep:esp-hal"]
 
 _test = []
 
