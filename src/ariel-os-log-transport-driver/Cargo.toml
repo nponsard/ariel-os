@@ -19,7 +19,14 @@ static_cell = { workspace = true, optional = true }
 
 [features]
 
-uart = ["dep:ariel-os-boards", "dep:ariel-os-embassy-common", "dep:embassy-futures", "dep:embassy-sync","dep:embedded-io-async-06", "dep:static_cell"]
+uart = [
+  "dep:ariel-os-boards",
+  "dep:ariel-os-embassy-common",
+  "dep:embassy-futures",
+  "dep:embassy-sync",
+  "dep:embedded-io-async-06",
+  "dep:static_cell",
+]
 
 _test = []
 
