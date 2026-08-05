@@ -1,5 +1,5 @@
 use embassy_executor::Spawner;
-use embassy_sync::{blocking_mutex::raw::CriticalSectionRawMutex, mutex::Mutex};
+use embassy_sync::{blocking_mutex::raw::CriticalSectionRawMutex, pipe::Pipe};
 use embedded_io_async_06::Write;
 use static_cell::ConstStaticCell;
 
@@ -8,13 +8,16 @@ use ariel_os_hal::hal::{OptionalPeripherals, TakePeripherals, uart::Uart};
 
 type UartAssignment = ariel_os_boards::pins::HOST_FACING_UART;
 
-static WRITER: Mutex<CriticalSectionRawMutex, Option<Uart<'static>>> = Mutex::new(None);
+const UART_PIPE_SIZE: usize = 1024;
+const UART_BUF_SIZE: usize = 32;
 
-static RX_BUF: ConstStaticCell<[u8; 32]> = ConstStaticCell::new([0u8; 32]);
-static TX_BUF: ConstStaticCell<[u8; 32]> = ConstStaticCell::new([0u8; 32]);
+static UART_LOG_PIPE: Pipe<CriticalSectionRawMutex, { UART_PIPE_SIZE }> = Pipe::new();
+
+static RX_BUF: ConstStaticCell<[u8; UART_BUF_SIZE]> = ConstStaticCell::new([0u8; UART_BUF_SIZE]);
+static TX_BUF: ConstStaticCell<[u8; UART_BUF_SIZE]> = ConstStaticCell::new([0u8; UART_BUF_SIZE]);
 
 /// Initialize UART log transport.
-pub fn init(mut peripherals: &mut OptionalPeripherals, _spawner: Spawner) {
+pub fn init(mut peripherals: &mut OptionalPeripherals, spawner: Spawner) {
     let mut config = ariel_os_hal::hal::uart::Config::default();
     config.baudrate = Baudrate::_115200;
 
@@ -27,24 +30,32 @@ pub fn init(mut peripherals: &mut OptionalPeripherals, _spawner: Spawner) {
 
     let uart = <UartAssignment as Assignment>::Device::new(rx, tx, rx_buf, tx_buf, config).unwrap();
 
-    let mut writer = WRITER.try_lock().unwrap();
-    writer.replace(uart);
+    spawner.spawn(run(uart)).expect("start UART log task");
 
     ariel_os_log::custom_transport::register_transport_functions(write_bytes, flush);
 }
 
-pub(crate) fn write_bytes(bytes: &[u8]) {
-    if let Ok(mut opt) = WRITER.try_lock()
-        && let Some(writer) = opt.as_mut()
-    {
-        let _ = embassy_futures::block_on(writer.write_all(bytes));
+#[embassy_executor::task]
+async fn run(mut uart: Uart<'static>) {
+    let mut buf = [0u8; UART_BUF_SIZE];
+    loop {
+        let len = UART_LOG_PIPE.read(&mut buf).await;
+        let _ = uart.write_all(&buf[..len]).await;
     }
 }
 
-pub(crate) fn flush() {
-    if let Ok(mut opt) = WRITER.try_lock()
-        && let Some(writer) = opt.as_mut()
-    {
-        let _ = embassy_futures::block_on(writer.flush());
+fn write_bytes(bytes: &[u8]) {
+    let end = bytes.len();
+
+    let mut total = 0;
+    while total < end {
+        let n = match UART_LOG_PIPE.try_write(&bytes[total..end]) {
+            Ok(n) => n,
+            // Pipe full, drop the data.
+            Err(_) => return,
+        };
+        total += n;
     }
 }
+
+fn flush() {}
