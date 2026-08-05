@@ -289,6 +289,7 @@ dependencies = [
  "embedded-io 0.6.1",
  "embedded-io-async 0.6.1",
  "futures-util",
+ "heapless 0.9.1",
  "linkme",
  "portable-atomic",
  "rand_core 0.9.3",

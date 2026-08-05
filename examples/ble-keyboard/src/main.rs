@@ -24,7 +24,6 @@ use trouble_host::{
 use usbd_hid::descriptor::{AsInputReport, KeyboardReport, SerializedDescriptor};
 
 use ariel_os::{
-    ble::StackWrapper,
     gpio::{Input, Level, Output, Pull},
     log::{Debug2Format, error, info},
     reexports::embassy_time,
@@ -91,9 +90,9 @@ async fn run_advertisement() {
     info!("starting ble stack");
     let stack = ariel_os::ble::ble_stack().await;
     let mut peer = if let Some(bond) = ariel_os::ble::get_bond_information().await {
-        info!("Bond information: {:?} ", bond);
-        let identity = bond.0.identity;
-        stack.add_bond_information(bond.0).unwrap();
+        info!("Bond information: {:?} ", Debug2Format(&bond));
+        let identity = bond.0[0].identity;
+        stack.add_bond_information(bond.0[0].clone()).unwrap();
         Some(identity)
     } else {
         None
@@ -137,8 +136,8 @@ async fn run_advertisement() {
                     Either::First(res) => res,
                     Either::Second(_) => {
                         if let Some(i) = peer.take() {
-                            // let _ = ariel_os::ble::remove_bond_information().await;
-                            let _ = stack.wrapped_remove_bond_information(i).await;
+                            let _ = ariel_os::ble::remove_bond_information(stack, i).await;
+                            // let _ = stack.wrapped_remove_bond_information(i).await;
                         }
                         continue;
                     }

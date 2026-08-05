@@ -77,40 +77,45 @@ pub fn current_address() -> impl Future<Output = Address> {
 mod security {
     use serde::{Deserialize, Serialize};
     use trouble_host::{
-        Address, BondInformation, Identity, IdentityResolvingKey, LongTermKey,
+        Address, BondInformation, Identity, IdentityResolvingKey, LongTermKey, Stack,
         connection::SecurityLevel, prelude::BdAddr,
     };
 
     use ariel_os_log::{Debug2Format, warn};
     use ariel_os_storage as storage;
 
-    mod private {
-        pub trait Sealed {}
-        impl<C, P: trouble_host::PacketPool> Sealed for trouble_host::Stack<'_, C, P> {}
-    }
-    pub trait StackWrapper: private::Sealed {
-        fn wrapped_remove_bond_information(
-            &self,
-            identity: Identity,
-        ) -> impl core::future::Future<Output = Result<(), trouble_host::Error>>;
-    }
+    // mod private {
+    //     pub trait Sealed {}
+    //     impl<C, P: trouble_host::PacketPool> Sealed for trouble_host::Stack<'_, C, P> {}
+    // }
+    // pub trait StackWrapper: private::Sealed {
+    //     fn wrapped_remove_bond_information(
+    //         &self,
+    //         identity: Identity,
+    //     ) -> impl core::future::Future<Output = Result<(), trouble_host::Error>>;
+    // }
 
-    impl<C: trouble_host::Controller, P: trouble_host::PacketPool> StackWrapper
-        for trouble_host::Stack<'_, C, P>
-    {
-        async fn wrapped_remove_bond_information(
-            &self,
-            identity: Identity,
-        ) -> Result<(), trouble_host::Error> {
-            // TODO: make a custom error type.
-            remove_bond_information().await.unwrap();
-            self.remove_bond_information(identity)
-        }
-    }
+    // impl<C: trouble_host::Controller, P: trouble_host::PacketPool> StackWrapper
+    //     for trouble_host::Stack<'_, C, P>
+    // {
+    //     async fn wrapped_remove_bond_information(
+    //         &self,
+    //         identity: Identity,
+    //     ) -> Result<(), trouble_host::Error> {
+    //         // TODO: make a custom error type.
+    //         remove_bond_information().await.unwrap();
+    //         self.remove_bond_information(identity)
+    //     }
+    // }
 
     const BOND_STORAGE_KEY: &str = "BLE_BOND";
     // Storing the address the device should be reacheable at for this bond
     const BOND_ADDR_STORAGE_KEY: &str = "BLE_BOND_ADDR";
+
+    const BOND_STORAGE_COUNT: usize = 10;
+
+    type BondStorage = heapless::Vec<StoredBondInformation, BOND_STORAGE_COUNT>;
+    type BondInfoVec = heapless::Vec<BondInformation, BOND_STORAGE_COUNT>;
 
     #[derive(Serialize, Deserialize)]
     struct StoredBondInformation {
@@ -142,7 +147,7 @@ mod security {
         }
     }
 
-    #[derive(Serialize, Deserialize)]
+    #[derive(Serialize, Deserialize, Clone)]
     struct StoredIdentity {
         pub bd_addr: [u8; 6],
         pub irk: Option<u128>,
@@ -200,21 +205,52 @@ mod security {
         let storeable_bond: StoredBondInformation = bonding_information.into();
         let current_address = crate::ble::current_address().await;
 
-        storage::insert(BOND_STORAGE_KEY, storeable_bond).await?;
+        let mut store: BondStorage = match storage::get(BOND_STORAGE_KEY).await {
+            Ok(Some(store)) => store,
+            _ => BondStorage::new(),
+        };
+
+        // TODO: propagate error with custom error type
+        let _ = store.push(storeable_bond);
+
+        storage::insert(BOND_STORAGE_KEY, store).await?;
         storage::insert(BOND_ADDR_STORAGE_KEY, current_address.addr.into_inner()).await
     }
 
     /// Remove the bond information from storage so it won't be restored next boot.
-    pub async fn remove_bond_information()
-    -> Result<(), sequential_storage::Error<ariel_os_hal::hal::storage::FlashError>> {
-        storage::remove(BOND_STORAGE_KEY).await?;
-        storage::remove(BOND_ADDR_STORAGE_KEY).await
+    pub async fn remove_bond_information<
+        C: trouble_host::Controller,
+        P: trouble_host::PacketPool,
+    >(
+        stack: &Stack<'_, C, P>,
+        identity: Identity,
+    ) -> Result<(), sequential_storage::Error<ariel_os_hal::hal::storage::FlashError>> {
+        // TODO: propagate error with custom error type
+        let _ = stack.remove_bond_information(identity);
+
+        let mut store: BondStorage = match storage::get(BOND_STORAGE_KEY).await {
+            Ok(Some(store)) => store,
+            _ => BondStorage::new(),
+        };
+
+        store = store
+            .into_iter()
+            .filter(|b| identity != b.identity.clone().into())
+            .collect();
+
+        if store.is_empty() {
+            storage::remove(BOND_STORAGE_KEY).await?;
+            storage::remove(BOND_ADDR_STORAGE_KEY).await?;
+        } else {
+            storage::insert(BOND_STORAGE_KEY, store).await?;
+        }
+        Ok(())
     }
 
     /// Returns the bond information if present.
-    pub async fn get_bond_information() -> Option<(BondInformation, Address)> {
-        let bond_information: Option<BondInformation> = match storage::get(BOND_STORAGE_KEY).await {
-            Ok(option) => option.map(|b: StoredBondInformation| b.into()),
+    pub async fn get_bond_information() -> Option<(BondInfoVec, Address)> {
+        let bond_information: Option<BondInfoVec> = match storage::get(BOND_STORAGE_KEY).await {
+            Ok(option) => option.map(|b: BondStorage| b.into_iter().map(|i| i.into()).collect()),
             Err(err) => {
                 warn!("Flash read error: {:?}", Debug2Format(&err));
                 None
@@ -235,9 +271,7 @@ mod security {
     }
 }
 #[cfg(feature = "ble-security")]
-pub use security::{
-    StackWrapper, get_bond_information, remove_bond_information, store_bond_information,
-};
+pub use security::{get_bond_information, remove_bond_information, store_bond_information};
 
 /// Generates a random address.
 #[cfg(not(feature = "ble-config-static-address"))]
