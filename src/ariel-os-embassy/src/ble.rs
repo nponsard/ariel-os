@@ -22,7 +22,7 @@ use trouble_host::{
 };
 
 use ariel_os_embassy_common::ble::Config;
-use ariel_os_log::debug;
+use ariel_os_log::{debug, warn};
 
 use crate::hal::ble::BleController;
 
@@ -38,24 +38,17 @@ static STACKREF: OnceLock<
 
 #[allow(dead_code, reason = "false positive during builds outside of laze")]
 pub(crate) async fn config() -> Config {
-    let address = if let Some((_, addr)) = security::get_bond_information().await {
-        // If we have a bonded device we need to use the same address, or use a
-        // resolvable private address, since we don't support the latter we use
-        // the previous address.
-        addr
-    } else {
-        // Scanning apps show that the last byte of the array appears fist.
-        let mut raw_address = get_random_addr();
+    // Scanning apps show that the last byte of the array appears fist.
+    let mut raw_address = get_random_addr();
 
-        // Set the two most significant bits to 1 to indicate a static random address https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/low-energy-controller/link-layer-specification.html#UUID-7edea27a-a47f-8436-4bd7-aedc1945c366_figure-idm4497995733171233616486354268
-        raw_address[5] |= 0b1100_0000;
-        // Set the two most significatn bits to 0 to indicate a private random address
-        // raw_address[5] &= 0b0011_1111;
+    // Set the two most significant bits to 1 to indicate a static random address https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/low-energy-controller/link-layer-specification.html#UUID-7edea27a-a47f-8436-4bd7-aedc1945c366_figure-idm4497995733171233616486354268
+    raw_address[5] |= 0b1100_0000;
+    // Set the two most significatn bits to 0 to indicate a private random address
+    // raw_address[5] &= 0b0011_1111;
 
-        Address {
-            addr: BdAddr::new(raw_address),
-            kind: AddrKind::RANDOM,
-        }
+    let address = Address {
+        addr: BdAddr::new(raw_address),
+        kind: AddrKind::RANDOM,
     };
 
     let _ = CURRENT_ADDRESS.init(address);
@@ -327,13 +320,33 @@ pub async fn ble_stack() -> &'static mut BleStack {
 #[allow(dead_code, reason = "false positive during builds outside of laze")]
 pub(crate) async fn init_stack(controller: crate::hal::ble::BleController, spawner: Spawner) {
     let config = config().await;
+
+    let address = config.address;
+
+    #[cfg(feature = "ble-security")]
+    let (bonds, address) =
+        if let Some((bonds, stored_address)) = security::get_bond_information().await {
+            (Some(bonds), stored_address)
+        } else {
+            (None, address)
+        };
+
     let mut rng = ariel_os_random::crypto_rng();
 
     let resources = ariel_os_embassy_common::ble::get_ble_host_resources();
 
     let stack = trouble_host::new(controller, resources)
         .set_random_generator_seed(&mut rng)
-        .set_random_address(config.address);
+        .set_random_address(address);
+
+    #[cfg(feature = "ble-security")]
+    if let Some(mut bond_information_vec) = bonds {
+        for bond in bond_information_vec.drain(..) {
+            if let Err(_err) = stack.add_bond_information(bond) {
+                warn!("Failed to add BLE bond");
+            }
+        }
+    }
 
     let stackref = STACK.init(SameExecutorCell::new(stack, spawner));
     let _ = STACKREF.init(Some(stackref).into());
