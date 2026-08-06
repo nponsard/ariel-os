@@ -26,11 +26,12 @@ use ariel_os::{
     gpio::{Input, Level, Output, Pull},
     log::{Debug2Format, error, info},
     reexports::embassy_time,
-    time::Timer,
+    time::{Instant, Timer},
 };
 use ariel_os_boards::pins;
 
 const NAME: &str = "Ariel OS keyboard";
+const CAPS_LOCK_KEYCODE: u8 = 0x39;
 
 static KEYS_CHANNEL: Channel<CriticalSectionRawMutex, [u8; 6], 10> = Channel::new();
 static LEDS_CHANNEL: Channel<CriticalSectionRawMutex, u8, 10> = Channel::new();
@@ -77,10 +78,9 @@ async fn run_advertisement() {
 
     info!("starting ble stack");
     let stack = ariel_os::ble::ble_stack().await;
-    let mut peer = if let Some(bond) = ariel_os::ble::security::get_bond_information().await {
+    let mut peer = if let Some(bond) = stack.get_bond_information().get(0) {
         info!("Bond information: {:?} ", Debug2Format(&bond));
-        let identity = bond.0[0].identity;
-        stack.add_bond_information(bond.0[0].clone()).unwrap();
+        let identity = bond.identity;
         Some(identity)
     } else {
         None
@@ -124,6 +124,7 @@ async fn run_advertisement() {
                     Either::First(res) => res,
                     Either::Second(_) => {
                         if let Some(i) = peer.take() {
+                            info!("Forgetting bond with device");
                             let _ =
                                 ariel_os::ble::security::remove_bond_information(stack, i).await;
                             // let _ = stack.wrapped_remove_bond_information(i).await;
@@ -137,9 +138,27 @@ async fn run_advertisement() {
 
             match res {
                 Ok(conn) => {
+                    let mut remove_bond = false;
                     let keypad = async {
+                        let mut pressed_since = None;
+
                         loop {
                             let keycodes = KEYS_CHANNEL.receive().await;
+
+                            if keycodes[0] != 0 {
+                                pressed_since = Some(Instant::now());
+                            } else {
+                                if let Some(since) = pressed_since
+                                    && since.elapsed() > Duration::from_secs(2)
+                                {
+                                    info!("Disconnecting from device");
+                                    remove_bond = true;
+                                    conn.raw().disconnect();
+                                }
+
+                                pressed_since = None;
+                            }
+
                             let mut buf = [0u8; 8];
 
                             let report = get_keyboard_report(keycodes);
@@ -147,8 +166,6 @@ async fn run_advertisement() {
                             let _ = report.serialize(&mut buf).unwrap();
 
                             let status = server.hid_service.output_keyboard.get(&server).unwrap();
-
-                            info!("status : {}", status);
 
                             server
                                 .hid_service
@@ -167,6 +184,13 @@ async fn run_advertisement() {
                         keypad,
                     )
                     .await;
+
+                    if remove_bond {
+                        if let Some(i) = peer.take() {
+                            let _ =
+                                ariel_os::ble::security::remove_bond_information(stack, i).await;
+                        }
+                    }
 
                     info!("res : {:?}", Debug2Format(&res));
                 }
@@ -189,22 +213,21 @@ async fn advertise<'a, 'b, C: Controller>(
     let mut advertiser_data = [0; 60];
 
     let len = if peer.is_some() {
+        info!("Advertising without name (waiting for bonded device to connect)");
+
         AdStructure::encode_slice(
             &[
-                // AdStructure::CompleteLocalName(name.as_bytes()),
                 AdStructure::Flags(BR_EDR_NOT_SUPPORTED),
                 AdStructure::ServiceUuids16(&[
                     service::BATTERY.to_le_bytes(),
                     service::HUMAN_INTERFACE_DEVICE.to_le_bytes(),
                 ]),
-                // AdStructure::Unknown {
-                //     ty: 0x19, // Appearance
-                //     data: &appearance::human_interface_device::KEYBOARD.to_le_bytes(),
-                // },
             ],
             &mut advertiser_data[..],
         )?
     } else {
+        info!("Advertising with name");
+
         AdStructure::encode_slice(
             &[
                 AdStructure::CompleteLocalName(name.as_bytes()),
@@ -236,7 +259,7 @@ async fn advertise<'a, 'b, C: Controller>(
     let advertiser = peripheral
         .advertise(&advertise_config, advertisement_data)
         .await?;
-    info!("advertising");
+
     let conn = advertiser.accept().await?;
 
     // If we're not already bonded, ask if the central would like to bond.
@@ -251,7 +274,7 @@ async fn advertise<'a, 'b, C: Controller>(
     // }
 
     let conn = conn.with_attribute_server(server)?;
-    info!("connection established");
+    info!("Connection established");
     Ok(conn)
 }
 
@@ -343,11 +366,10 @@ async fn button(peripherals: pins::ButtonPeripherals) {
 
     loop {
         btn0.wait_for_any_edge().await;
-        // Which keys are currently pressed, keycodes available here (section 10): https://www.usb.org/sites/default/files/hut1_7.pdf
         let mut keys = [0u8; 6];
 
         if btn0.get_level() == Level::Low {
-            keys[0] = 0x39;
+            keys[0] = CAPS_LOCK_KEYCODE;
         }
         KEYS_CHANNEL.send(keys).await;
     }

@@ -51,8 +51,6 @@ pub(crate) async fn config() -> Config {
         kind: AddrKind::RANDOM,
     };
 
-    let _ = CURRENT_ADDRESS.init(address);
-
     debug!("Setting random address: {:?}", address);
 
     Config { address }
@@ -338,6 +336,8 @@ pub(crate) async fn init_stack(controller: crate::hal::ble::BleController, spawn
     let stack = trouble_host::new(controller, resources)
         .set_random_generator_seed(&mut rng)
         .set_random_address(address);
+
+    let _ = CURRENT_ADDRESS.init(address);
 
     #[cfg(feature = "ble-security")]
     if let Some(mut bond_information_vec) = bonds {
