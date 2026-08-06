@@ -38,7 +38,7 @@ static STACKREF: OnceLock<
 
 #[allow(dead_code, reason = "false positive during builds outside of laze")]
 pub(crate) async fn config() -> Config {
-    let address = if let Some((_, addr)) = get_bond_information().await {
+    let address = if let Some((_, addr)) = security::get_bond_information().await {
         // If we have a bonded device we need to use the same address, or use a
         // resolvable private address, since we don't support the latter we use
         // the previous address.
@@ -74,11 +74,11 @@ pub fn current_address() -> impl Future<Output = Address> {
 }
 
 #[cfg(feature = "ble-security")]
-mod security {
+pub mod security {
     use serde::{Deserialize, Serialize};
     use trouble_host::{
-        Address, BondInformation, Identity, IdentityResolvingKey, LongTermKey, Stack,
-        connection::SecurityLevel, prelude::BdAddr,
+        Address, BondInformation, Identity, IdentityResolvingKey, LongTermKey, PacketPool, Stack,
+        connection::SecurityLevel, gatt::GattConnectionEvent, prelude::BdAddr,
     };
 
     use ariel_os_log::{Debug2Format, warn};
@@ -108,9 +108,9 @@ mod security {
     //     }
     // }
 
-    const BOND_STORAGE_KEY: &str = "BLE_BOND";
+    const BONDS_STORAGE_KEY: &str = "BLE_BONDS";
     // Storing the address the device should be reacheable at for this bond
-    const BOND_ADDR_STORAGE_KEY: &str = "BLE_BOND_ADDR";
+    const BONDED_ADDR_STORAGE_KEY: &str = "BLE_BONDED_ADDR";
 
     const BOND_STORAGE_COUNT: usize = 10;
 
@@ -198,6 +198,23 @@ mod security {
         }
     }
 
+    /// Automatically saves the bond keys when bonded.
+    pub async fn gatt_event_wrapper<'stack, 'server, P: PacketPool>(
+        next: impl Future<Output = GattConnectionEvent<'stack, 'server, P>>,
+    ) -> GattConnectionEvent<'stack, 'server, P> {
+        let event = next.await;
+
+        if let GattConnectionEvent::PairingComplete {
+            security_level: _,
+            ref bond,
+        } = event
+            && let Some(bond_information) = bond
+        {
+            let _ = store_bond_information(bond_information.clone()).await;
+        }
+        event
+    }
+
     /// Store the BLE bond information in storage to restore it on boot.
     pub async fn store_bond_information(
         bonding_information: BondInformation,
@@ -205,7 +222,7 @@ mod security {
         let storeable_bond: StoredBondInformation = bonding_information.into();
         let current_address = crate::ble::current_address().await;
 
-        let mut store: BondStorage = match storage::get(BOND_STORAGE_KEY).await {
+        let mut store: BondStorage = match storage::get(BONDS_STORAGE_KEY).await {
             Ok(Some(store)) => store,
             _ => BondStorage::new(),
         };
@@ -213,8 +230,8 @@ mod security {
         // TODO: propagate error with custom error type
         let _ = store.push(storeable_bond);
 
-        storage::insert(BOND_STORAGE_KEY, store).await?;
-        storage::insert(BOND_ADDR_STORAGE_KEY, current_address.addr.into_inner()).await
+        storage::insert(BONDS_STORAGE_KEY, store).await?;
+        storage::insert(BONDED_ADDR_STORAGE_KEY, current_address.addr.into_inner()).await
     }
 
     /// Remove the bond information from storage so it won't be restored next boot.
@@ -228,7 +245,7 @@ mod security {
         // TODO: propagate error with custom error type
         let _ = stack.remove_bond_information(identity);
 
-        let mut store: BondStorage = match storage::get(BOND_STORAGE_KEY).await {
+        let mut store: BondStorage = match storage::get(BONDS_STORAGE_KEY).await {
             Ok(Some(store)) => store,
             _ => BondStorage::new(),
         };
@@ -239,17 +256,17 @@ mod security {
             .collect();
 
         if store.is_empty() {
-            storage::remove(BOND_STORAGE_KEY).await?;
-            storage::remove(BOND_ADDR_STORAGE_KEY).await?;
+            storage::remove(BONDS_STORAGE_KEY).await?;
+            storage::remove(BONDED_ADDR_STORAGE_KEY).await?;
         } else {
-            storage::insert(BOND_STORAGE_KEY, store).await?;
+            storage::insert(BONDS_STORAGE_KEY, store).await?;
         }
         Ok(())
     }
 
     /// Returns the bond information if present.
     pub async fn get_bond_information() -> Option<(BondInfoVec, Address)> {
-        let bond_information: Option<BondInfoVec> = match storage::get(BOND_STORAGE_KEY).await {
+        let bond_information: Option<BondInfoVec> = match storage::get(BONDS_STORAGE_KEY).await {
             Ok(option) => option.map(|b: BondStorage| b.into_iter().map(|i| i.into()).collect()),
             Err(err) => {
                 warn!("Flash read error: {:?}", Debug2Format(&err));
@@ -258,7 +275,7 @@ mod security {
         };
 
         if let Some(bond) = bond_information {
-            match storage::get(BOND_ADDR_STORAGE_KEY).await {
+            match storage::get(BONDED_ADDR_STORAGE_KEY).await {
                 Ok(addr) => Some((bond, Address::random(addr?))),
                 Err(err) => {
                     warn!("Flash read error: {:?}", Debug2Format(&err));
@@ -270,8 +287,6 @@ mod security {
         }
     }
 }
-#[cfg(feature = "ble-security")]
-pub use security::{get_bond_information, remove_bond_information, store_bond_information};
 
 /// Generates a random address.
 #[cfg(not(feature = "ble-config-static-address"))]

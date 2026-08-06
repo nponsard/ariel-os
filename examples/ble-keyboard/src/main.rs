@@ -17,8 +17,7 @@ use trouble_host::{
     gap::{GapConfig, PeripheralConfig},
     gatt::{GattConnection, GattConnectionEvent, GattEvent},
     prelude::{
-        DefaultPacketPool, FromGatt, Peripheral, appearance, characteristic, descriptors,
-        gatt_server, gatt_service, service,
+        DefaultPacketPool, FromGatt, Peripheral, appearance, gatt_server, gatt_service, service,
     },
 };
 use usbd_hid::descriptor::{AsInputReport, KeyboardReport, SerializedDescriptor};
@@ -39,18 +38,7 @@ static LEDS_CHANNEL: Channel<CriticalSectionRawMutex, u8, 10> = Channel::new();
 // GATT Server definition
 #[gatt_server]
 struct Server {
-    battery_service: BatteryService,
     hid_service: HidService,
-}
-
-/// Battery service
-#[gatt_service(uuid = service::BATTERY)]
-struct BatteryService {
-    /// Battery Level
-    #[descriptor(uuid = descriptors::VALID_RANGE, read, value = [0, 100])]
-    #[descriptor(uuid = descriptors::MEASUREMENT_DESCRIPTION, name = "hello", read, value = "Battery Level")]
-    #[characteristic(uuid = characteristic::BATTERY_LEVEL, read, notify, value = 10)]
-    level: u8,
 }
 
 #[gatt_service(uuid = service::HUMAN_INTERFACE_DEVICE)]
@@ -89,7 +77,7 @@ async fn run_advertisement() {
 
     info!("starting ble stack");
     let stack = ariel_os::ble::ble_stack().await;
-    let mut peer = if let Some(bond) = ariel_os::ble::get_bond_information().await {
+    let mut peer = if let Some(bond) = ariel_os::ble::security::get_bond_information().await {
         info!("Bond information: {:?} ", Debug2Format(&bond));
         let identity = bond.0[0].identity;
         stack.add_bond_information(bond.0[0].clone()).unwrap();
@@ -136,7 +124,8 @@ async fn run_advertisement() {
                     Either::First(res) => res,
                     Either::Second(_) => {
                         if let Some(i) = peer.take() {
-                            let _ = ariel_os::ble::remove_bond_information(stack, i).await;
+                            let _ =
+                                ariel_os::ble::security::remove_bond_information(stack, i).await;
                             // let _ = stack.wrapped_remove_bond_information(i).await;
                         }
                         continue;
@@ -277,35 +266,30 @@ async fn gatt_events_task(
     info!("hid_info handle : {}", server.hid_service.hid_info.handle);
 
     loop {
-        match conn.next().await {
+        match ariel_os::ble::security::gatt_event_wrapper(conn.next()).await {
             GattConnectionEvent::Disconnected { reason } => {
                 info!("[gatt] disconnected: {:?}", reason);
                 break;
             }
 
-            GattConnectionEvent::PassKeyDisplay(key) => {
-                info!("passkey: {}", key);
-            }
-            GattConnectionEvent::PassKeyInput => {
-                info!("[gatt] passkey input");
-                // Normally fetched from the user
-            }
-            GattConnectionEvent::PassKeyConfirm(key) => {
-                info!("passkey confirm : {}", key);
-            }
+            // GattConnectionEvent::PassKeyDisplay(key) => {
+            //     info!("passkey: {}", key);
+            // }
+            // GattConnectionEvent::PassKeyInput => {
+            //     info!("[gatt] passkey input");
+            //     // Normally fetched from the user
+            // }
+            // GattConnectionEvent::PassKeyConfirm(key) => {
+            //     info!("passkey confirm : {}", key);
+            // }
             GattConnectionEvent::PairingComplete {
                 security_level,
                 bond,
             } => {
-                info!("Pairing complete with security level {:?}", security_level);
-                if let Some(bond_information) = bond {
-                    info!("Storing bond information");
-
-                    peer.replace(bond_information.identity);
-                    ariel_os::ble::store_bond_information(bond_information)
-                        .await
-                        .unwrap()
+                if let Some(bon_information) = bond {
+                    peer.replace(bon_information.identity);
                 }
+                info!("Pairing complete with security level {:?}", security_level);
             }
             GattConnectionEvent::PairingFailed(err) => {
                 error!("Pairing failed: {:?}", err);
