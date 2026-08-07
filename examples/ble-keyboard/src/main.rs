@@ -131,6 +131,7 @@ async fn run_advertisement() {
                         info!("Forgetting bond with device");
                         let _ = ariel_os::ble::security::remove_bond_information(stack, i).await;
                         // let _ = stack.wrapped_remove_bond_information(i).await;
+                        ariel_os::ble::rotate_address(&stack).await;
                     }
                     continue;
                 }
@@ -152,8 +153,6 @@ async fn run_advertisement() {
                         {
                             info!("Disconnecting from device");
                             remove_bond = true;
-
-                            // TODO: rotate MAC so the central doesn't try to connect to us again.
                             conn.raw().disconnect();
                         }
 
@@ -187,6 +186,8 @@ async fn run_advertisement() {
             if remove_bond {
                 if let Some(i) = peer.take() {
                     let _ = ariel_os::ble::security::remove_bond_information(stack, i).await;
+
+                    ariel_os::ble::rotate_address(&stack).await;
                 }
             }
 

@@ -22,7 +22,7 @@ use trouble_host::{
 };
 
 use ariel_os_embassy_common::ble::Config;
-use ariel_os_log::{debug, warn};
+use ariel_os_log::debug;
 
 use crate::hal::ble::BleController;
 
@@ -366,7 +366,7 @@ pub(crate) async fn init_stack(controller: crate::hal::ble::BleController, spawn
     if let Some(mut bond_information_vec) = bonds {
         for bond in bond_information_vec.drain(..) {
             if let Err(_err) = stack.add_bond_information(bond) {
-                warn!("Failed to add BLE bond");
+                ariel_os_log::warn!("Failed to add BLE bond");
             }
         }
     }
