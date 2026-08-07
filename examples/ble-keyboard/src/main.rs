@@ -105,99 +105,92 @@ async fn run_advertisement() {
         loop {
             let adv = advertise(NAME, &mut host.peripheral, &server, peer);
 
-            let res = if peer.is_some() {
-                // Detect if the button is pressed long enough to enter pairing mode.
-                let pairing = async {
-                    loop {
-                        let keycodes = KEYS_CHANNEL.receive().await;
-                        if keycodes[0] != 0 {
-                            // If the button stays down for 2 seconds we go in pairing mode.
-                            match select(Timer::after_secs(2), KEYS_CHANNEL.receive()).await {
-                                Either::First(_) => return,
-                                // Havent presset for long enough
-                                Either::Second(_) => {}
-                            }
+            // Detect if the button is pressed long enough to enter pairing mode.
+            let pairing = async {
+                loop {
+                    let keycodes = KEYS_CHANNEL.receive().await;
+                    if keycodes[0] != 0 {
+                        // If the button stays down for 2 seconds we go in pairing mode.
+                        match select(Timer::after_secs(2), KEYS_CHANNEL.receive()).await {
+                            Either::First(_) => return,
+                            // Havent presset for long enough
+                            Either::Second(_) => {}
                         }
-                    }
-                };
-                match select(adv, pairing).await {
-                    Either::First(res) => res,
-                    Either::Second(_) => {
-                        if let Some(i) = peer.take() {
-                            info!("Forgetting bond with device");
-                            let _ =
-                                ariel_os::ble::security::remove_bond_information(stack, i).await;
-                            // let _ = stack.wrapped_remove_bond_information(i).await;
-                        }
-                        continue;
                     }
                 }
-            } else {
-                adv.await
             };
 
-            match res {
-                Ok(conn) => {
-                    let mut remove_bond = false;
-                    let keypad = async {
-                        let mut pressed_since = None;
+            let conn = match select(adv, pairing).await {
+                Either::First(Ok(conn)) => conn,
+                Either::First(Err(e)) => {
+                    error!("Advertisement error : {:?}", e);
+                    continue;
+                }
+                Either::Second(_) => {
+                    if let Some(i) = peer.take() {
+                        info!("Forgetting bond with device");
+                        let _ = ariel_os::ble::security::remove_bond_information(stack, i).await;
+                        // let _ = stack.wrapped_remove_bond_information(i).await;
+                    }
+                    continue;
+                }
+            };
 
-                        loop {
-                            let keycodes = KEYS_CHANNEL.receive().await;
+            let mut remove_bond = false;
 
-                            if keycodes[0] != 0 {
-                                pressed_since = Some(Instant::now());
-                            } else {
-                                if let Some(since) = pressed_since
-                                    && since.elapsed() > Duration::from_secs(2)
-                                {
-                                    info!("Disconnecting from device");
-                                    remove_bond = true;
-                                    conn.raw().disconnect();
-                                }
+            let keypad = async {
+                let mut pressed_since = None;
 
-                                pressed_since = None;
-                            }
+                loop {
+                    let keycodes = KEYS_CHANNEL.receive().await;
 
-                            let mut buf = [0u8; 8];
+                    if keycodes[0] != 0 {
+                        pressed_since = Some(Instant::now());
+                    } else {
+                        if let Some(since) = pressed_since
+                            && since.elapsed() > Duration::from_secs(2)
+                        {
+                            info!("Disconnecting from device");
+                            remove_bond = true;
 
-                            let report = get_keyboard_report(keycodes);
-
-                            let _ = report.serialize(&mut buf).unwrap();
-
-                            let status = server.hid_service.output_keyboard.get(&server).unwrap();
-
-                            server
-                                .hid_service
-                                .input_keyboard
-                                .notify(&conn, &buf)
-                                .await
-                                .map_err(|e| error!("Failed to notify HID report: {:?}", e))
-                                .unwrap();
+                            // TODO: rotate MAC so the central doesn't try to connect to us again.
+                            conn.raw().disconnect();
                         }
-                    };
 
-                    // set up tasks when the connection is established to a central, so they don't run when no one is connected.
-
-                    let res = embassy_futures::select::select(
-                        gatt_events_task(&server, &conn, &mut peer),
-                        keypad,
-                    )
-                    .await;
-
-                    if remove_bond {
-                        if let Some(i) = peer.take() {
-                            let _ =
-                                ariel_os::ble::security::remove_bond_information(stack, i).await;
-                        }
+                        pressed_since = None;
                     }
 
-                    info!("res : {:?}", Debug2Format(&res));
+                    let mut buf = [0u8; 8];
+
+                    let report = get_keyboard_report(keycodes);
+
+                    let _ = report.serialize(&mut buf).unwrap();
+
+                    server
+                        .hid_service
+                        .input_keyboard
+                        .notify(&conn, &buf)
+                        .await
+                        .map_err(|e| error!("Failed to notify HID report: {:?}", e))
+                        .unwrap();
                 }
-                Err(e) => {
-                    panic!("[adv] error: {:?}", e);
+            };
+
+            // set up tasks when the connection is established to a central, so they don't run when no one is connected.
+
+            let res = embassy_futures::select::select(
+                gatt_events_task(&server, &conn, &mut peer),
+                keypad,
+            )
+            .await;
+
+            if remove_bond {
+                if let Some(i) = peer.take() {
+                    let _ = ariel_os::ble::security::remove_bond_information(stack, i).await;
                 }
             }
+
+            info!("GATT server closed : {:?}", Debug2Format(&res));
         }
     })
     .await;
