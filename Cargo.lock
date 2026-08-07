@@ -269,6 +269,7 @@ dependencies = [
  "ariel-os-storage",
  "ariel-os-threads",
  "ariel-os-utils",
+ "bt-hci",
  "const-str",
  "const_panic",
  "critical-section",

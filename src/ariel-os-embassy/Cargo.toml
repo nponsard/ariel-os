@@ -46,6 +46,7 @@ ariel-os-storage = { workspace = true, optional = true }
 ariel-os-threads = { path = "../ariel-os-threads", optional = true }
 ariel-os-utils = { workspace = true }
 
+bt-hci = { workspace = true, optional = true }
 const-str = { workspace = true, optional = true }
 futures-util = { workspace = true, optional = true }
 trouble-host = { workspace = true, optional = true }
@@ -166,6 +167,7 @@ ltem-nrf-modem = [
 ]
 
 ble = [
+  "dep:bt-hci",
   "dep:futures-util",
   "dep:trouble-host",
   "ariel-os-embassy-common/ble",

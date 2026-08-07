@@ -28,7 +28,7 @@ use crate::hal::ble::BleController;
 
 pub type BleStack = Stack<'static, BleController, DefaultPacketPool>;
 
-static CURRENT_ADDRESS: OnceLock<Address> = OnceLock::new();
+static CURRENT_ADDRESS: OnceLock<Mutex<CriticalSectionRawMutex, Address>> = OnceLock::new();
 #[allow(dead_code)]
 static STACK: StaticCell<SameExecutorCell<BleStack>> = StaticCell::new();
 // The stack can effectively only be taken by a single application; once taken, the Option is None.
@@ -36,20 +36,25 @@ static STACKREF: OnceLock<
     Mutex<CriticalSectionRawMutex, Option<&'static mut SameExecutorCell<BleStack>>>,
 > = OnceLock::new();
 
-#[allow(dead_code, reason = "false positive during builds outside of laze")]
-pub(crate) async fn config() -> Config {
-    // Scanning apps show that the last byte of the array appears fist.
-    let mut raw_address = get_random_addr();
-
+// Create a static random [`Address`] from the raw bytes.
+fn format_static_random_address(mut bytes: [u8; 6]) -> Address {
     // Set the two most significant bits to 1 to indicate a static random address https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/low-energy-controller/link-layer-specification.html#UUID-7edea27a-a47f-8436-4bd7-aedc1945c366_figure-idm4497995733171233616486354268
-    raw_address[5] |= 0b1100_0000;
+    bytes[5] |= 0b1100_0000;
     // Set the two most significatn bits to 0 to indicate a private random address
     // raw_address[5] &= 0b0011_1111;
 
-    let address = Address {
-        addr: BdAddr::new(raw_address),
+    Address {
+        addr: BdAddr::new(bytes),
         kind: AddrKind::RANDOM,
-    };
+    }
+}
+
+#[allow(dead_code, reason = "false positive during builds outside of laze")]
+pub(crate) async fn config() -> Config {
+    // Scanning apps show that the last byte of the array appears fist.
+    let raw_address = get_random_addr();
+
+    let address = format_static_random_address(raw_address);
 
     debug!("Setting random address: {:?}", address);
 
@@ -61,7 +66,25 @@ pub(crate) async fn config() -> Config {
 /// Note that the BLE address may be rotated over time.
 pub fn current_address() -> impl Future<Output = Address> {
     // Using map() to avoid creating a new state machine.
-    CURRENT_ADDRESS.get().map(|addr| *addr)
+    CURRENT_ADDRESS
+        .get()
+        .then(|mutex| mutex.lock())
+        .map(|guard| guard.clone())
+}
+
+/// Generate a new random address and make the BLE controller use it.
+#[cfg(not(feature = "ble-config-static-address"))]
+pub async fn rotate_address(stack: &BleStack) {
+    let new_address = format_static_random_address(get_random_addr());
+    let cmd = bt_hci::cmd::le::LeSetRandomAddr::new(new_address.addr);
+
+    stack.command(cmd).await.unwrap();
+
+    {
+        let mut current_address = CURRENT_ADDRESS.get().await.lock().await;
+
+        *current_address = new_address;
+    }
 }
 
 #[cfg(feature = "ble-security")]
@@ -337,7 +360,7 @@ pub(crate) async fn init_stack(controller: crate::hal::ble::BleController, spawn
         .set_random_generator_seed(&mut rng)
         .set_random_address(address);
 
-    let _ = CURRENT_ADDRESS.init(address);
+    let _ = CURRENT_ADDRESS.init(Mutex::new(address));
 
     #[cfg(feature = "ble-security")]
     if let Some(mut bond_information_vec) = bonds {
