@@ -8,41 +8,6 @@ user-id = 189
 user-login = "BurntSushi"
 user-name = "Andrew Gallant"
 
-[[publisher.anstream]]
-version = "0.6.18"
-when = "2024-11-04"
-user-id = 6743
-user-login = "epage"
-user-name = "Ed Page"
-
-[[publisher.anstyle]]
-version = "1.0.10"
-when = "2024-11-01"
-user-id = 6743
-user-login = "epage"
-user-name = "Ed Page"
-
-[[publisher.anstyle-parse]]
-version = "0.2.6"
-when = "2024-10-24"
-user-id = 6743
-user-login = "epage"
-user-name = "Ed Page"
-
-[[publisher.anstyle-query]]
-version = "1.1.2"
-when = "2024-10-24"
-user-id = 6743
-user-login = "epage"
-user-name = "Ed Page"
-
-[[publisher.anstyle-wincon]]
-version = "3.0.6"
-when = "2024-10-24"
-user-id = 6743
-user-login = "epage"
-user-name = "Ed Page"
-
 [[publisher.build-rs]]
 version = "0.3.3"
 when = "2026-01-22"
@@ -69,41 +34,6 @@ when = "2021-10-11"
 user-id = 3788
 user-login = "emilio"
 user-name = "Emilio Cobos Álvarez"
-
-[[publisher.clap]]
-version = "4.5.38"
-when = "2025-05-11"
-user-id = 6743
-user-login = "epage"
-user-name = "Ed Page"
-
-[[publisher.clap_builder]]
-version = "4.5.38"
-when = "2025-05-11"
-user-id = 6743
-user-login = "epage"
-user-name = "Ed Page"
-
-[[publisher.clap_derive]]
-version = "4.5.32"
-when = "2025-03-10"
-user-id = 6743
-user-login = "epage"
-user-name = "Ed Page"
-
-[[publisher.clap_lex]]
-version = "0.7.4"
-when = "2024-12-05"
-user-id = 6743
-user-login = "epage"
-user-name = "Ed Page"
-
-[[publisher.colorchoice]]
-version = "1.0.3"
-when = "2024-10-24"
-user-id = 6743
-user-login = "epage"
-user-name = "Ed Page"
 
 [[publisher.encoding_rs]]
 version = "0.8.35"
@@ -166,20 +96,6 @@ when = "2025-03-03"
 user-id = 3618
 user-login = "dtolnay"
 user-name = "David Tolnay"
-
-[[publisher.is-terminal]]
-version = "0.4.16"
-when = "2025-03-07"
-user-id = 6825
-user-login = "sunfishcode"
-user-name = "Dan Gohman"
-
-[[publisher.is_terminal_polyfill]]
-version = "1.70.1"
-when = "2024-07-25"
-user-id = 6743
-user-login = "epage"
-user-name = "Ed Page"
 
 [[publisher.js-sys]]
 version = "0.3.76"
@@ -2083,13 +1999,6 @@ criteria = "safe-to-deploy"
 version = "0.1.0"
 aggregated-from = "https://chromium.googlesource.com/chromiumos/third_party/rust_crates/+/refs/heads/main/cargo-vet/audits.toml?format=TEXT"
 
-[[audits.google.audits.utf8parse]]
-who = "David Koloski <dkoloski@google.com>"
-criteria = "safe-to-deploy"
-version = "0.2.1"
-notes = "Reviewed on https://fxrev.dev/904811"
-aggregated-from = "https://fuchsia.googlesource.com/fuchsia/+/refs/heads/main/third_party/rust_crates/supply-chain/audits.toml?format=TEXT"
-
 [[audits.google.audits.void]]
 who = "George Burgess IV <gbiv@google.com>"
 criteria = "safe-to-deploy"
@@ -3210,12 +3119,6 @@ who = "Valentin Gosu <valentin.gosu@gmail.com>"
 criteria = "safe-to-deploy"
 delta = "2.5.1 -> 2.5.4"
 aggregated-from = "https://hg.mozilla.org/mozilla-central/raw-file/tip/supply-chain/audits.toml"
-
-[[audits.mozilla.audits.utf8parse]]
-who = "Nika Layzell <nika@thelayzells.com>"
-criteria = "safe-to-deploy"
-delta = "0.2.1 -> 0.2.2"
-aggregated-from = "https://raw.githubusercontent.com/mozilla/cargo-vet/main/supply-chain/audits.toml"
 
 [[audits.mozilla.audits.wasm-bindgen]]
 who = "Lars Eggert <lars@eggert.org>"
