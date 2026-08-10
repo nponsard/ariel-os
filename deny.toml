@@ -45,6 +45,18 @@ exceptions = [
 deny = [
   { crate = "proc-macro-error", reason = "unmaintained: https://rustsec.org/advisories/RUSTSEC-2024-0370" },
   { crate = "serde_yml", reason = "unsound and unmaintained" },
+  # Weak bans: the bans below are considered "weak": they may be disabled
+  # (ideally only transiently) for a good reason.
+  # There is usually no good reasons for CLI argument parsing crates to be part
+  # of the dependency tree, even just as build-dependencies or dev-dependencies,
+  # as Ariel OS only contains libraries.
+  # Sometimes it may be needed to go upstream to feature-gate them.
+  { crate = "argh", reason = "CLI argument parsing crate" },
+  { crate = "clap", reason = "CLI argument parsing crate" },
+  { crate = "lexopt", reason = "CLI argument parsing crate" },
+  { crate = "pico-args", reason = "CLI argument parsing crate", wrappers = [
+    "lalrpop", # This exception is only needed for `pio-parser`.
+  ] },
 ]
 
 # This section is considered when running `cargo deny check sources`.
