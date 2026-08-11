@@ -1883,7 +1883,7 @@ modules:
     env:
       global:
         FEATURES:
-          - ariel-os/debug-channel
+          - ariel-os/logging-over-debug-channel
 
   # Disabled by modules that provide a `debug-channel-transport`.
   - name: no-debug-channel-transport

@@ -9,13 +9,17 @@ license.workspace = true
 [package.metadata.feature-groups]
 logging-facade.xor = { features = ["defmt", "log"] }
 logging-transport.xor = { features = [
-  "defmt-rtt",
+  "logging-over-debug-channel",
   "logging-over-uart",
   "logging-over-usb",
 ] }
 
+[package.metadata.feature-groups.features]
+defmt-rtt.requires = { features = ["logging-over-debug-channel"] }
+
+
 [dependencies]
-ariel-os-debug = { workspace = true }
+ariel-os-debug = { workspace = true, optional = true }
 ariel-os-utils = { workspace = true, optional = true }
 const-str = { workspace = true, optional = true }
 critical-section = { workspace = true, optional = true }
@@ -59,6 +63,8 @@ debug-uart = ["dep:embassy-sync", "logging-over-uart"]
 # `defmt-rtt` uses the debug channel as the logging transport, so it has to go
 # through this crate.
 defmt-rtt = ["ariel-os-debug/defmt-rtt"]
+# Using the debug channel as the transport
+logging-over-debug-channel = ["dep:ariel-os-debug"]
 logging-over-uart = ["esp-println?/uart"]
 logging-over-usb = ["esp-println?/jtag-serial"]
 std = []
