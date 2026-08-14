@@ -1392,6 +1392,7 @@ modules:
   - name: ble
     selects:
       - hw/ble
+      - hwrng
     env:
       global:
         FEATURES:
@@ -1409,7 +1410,6 @@ modules:
   - name: ble-cyw43
     selects:
       - has_ble_cyw43
-      - hwrng
     provides:
       - has_ble
     env:
@@ -1424,7 +1424,6 @@ modules:
   - name: ble-nrf
     selects:
       - has_ble_nrf
-      - hwrng
     provides:
       - has_ble
 
@@ -1696,7 +1695,6 @@ modules:
     selects:
       - alloc
       - has_ble_esp
-      - hwrng
     provides:
       - has_ble
     env:
