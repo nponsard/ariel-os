@@ -119,6 +119,7 @@
 - [Power Management](./power-management.md)
 - [I2C](./i2c.md)
 - [SPI](./spi.md)
+- [UART](./uart.md)
 - [Global Allocator](./global-allocator.md)
 - [Networking](./networking.md)
 - [USB](./usb.md)
