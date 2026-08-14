@@ -17,7 +17,7 @@ Microcontroller pins, also referred to as pads, include the necessary circuitry 
 Pins can be configured in the following states:
 
 - The GPIO logic can be enabled.
-- The GPIOs can be instead connected to be controlled by other digital peripherals (often called "alternate functions"), e.g., [I2C][i2c-book], [SPI][spi-book], UART,
+- The GPIOs can be instead connected to be controlled by other digital peripherals (often called "alternate functions"), e.g., [I2C][i2c-book], [SPI][spi-book], [UART][uart-book],
 - The analog inputs (i.e., upstream of [the Schmitt trigger](#gpios-as-inputs)) can be directed to an analog-to-digital converter (ADC), and
 - The analog outputs can be connected to a digital-to-analog converter (DAC), if present on the microcontroller.
 
@@ -141,6 +141,7 @@ They are well-suited as generic pull-up or pull-down resistors, but must not typ
 
 [i2c-book]: ./i2c.md
 [spi-book]: ./spi.md
+[uart-book]: ./uart.md
 [embassy-style-hals]: ./glossary.md#embassy-style-hals
 [schmitt-trigger-wikipedia]: https://en.wikipedia.org/wiki/Schmitt_trigger
 [gpio-input-rustdoc]: https://ariel-os.github.io/ariel-os/dev/docs/api/ariel_os/gpio/struct.Input.html
