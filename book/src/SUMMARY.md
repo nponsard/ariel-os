@@ -51,6 +51,7 @@
   - [STM32U083C-DK](./boards/stm32u083c-dk.md)
   - [Ulanzi TC001](./boards/ulanzi-tc001.md)
   - [Unihiker K10](./boards/unihiker-k10.md)
+  - [Waveshare ESP32-S3-ETH](./boards/waveshare-esp32-s3-eth.md)
   - [Waveshare ESP32-S3-Matrix](./boards/waveshare-esp32-s3-matrix.md)
 - [Chips](./chips/index.md)
   - [ESP32-D0WD](./chips/esp32-d0wd.md)
