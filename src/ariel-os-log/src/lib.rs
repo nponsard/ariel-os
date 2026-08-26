@@ -426,6 +426,8 @@ pub fn init() {
 }
 
 // From `esp-println`: espflash reads this metadata to know when to decode defmt.
+// Copied and adapted from https://github.com/esp-rs/esp-hal/blob/5363c4c493f5f11654696ff192028cf45f04ba72/esp-println/src/lib.rs#L13
+// Under MIT OR Apache-2.0 license.
 #[cfg(all(context = "esp", not(feature = "esp-println")))]
 #[expect(unsafe_code)]
 mod esp {
