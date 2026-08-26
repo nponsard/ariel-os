@@ -115,6 +115,7 @@
 - [Async Executors](./async-support.md)
 - [Memory Layout](./memory-layout.md)
 - [Clocks](./clocks.md)
+- [Pins & GPIOs](./pins-gpios.md)
 - [Power Management](./power-management.md)
 - [I2C](./i2c.md)
 - [SPI](./spi.md)
