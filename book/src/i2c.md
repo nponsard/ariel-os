@@ -81,9 +81,9 @@ In particular, Fast Mode Plus (i.e., 1 MHz) is generally not currently supporte
 
 Other settings may be available depending on the HAL and the microcontroller.
 
-Some HALs allow enabling internal pull-up resistors on the I2C lines: these typically use the regular GPIO internal pull-ups, which have a higher resistance than usually recommended for I2C and will therefore limit the maximum achievable bus frequency.
+Some HALs allow enabling internal pull-up resistors on the I2C lines: these typically use the [regular GPIO internal pull-ups][internal-pull-resistors-book], which have a higher resistance than usually recommended for I2C and will therefore limit the maximum achievable bus frequency.
 
-Some HALs also allow increasing the drive strength of the pins used for the I2C lines: this increases the current draw but helps achieve higher frequencies as well as accommodate a higher number of I2C targets on the bus (i.e., a higher bus capacitance).
+Some HALs also allow increasing the [drive strength of the pins][pin-drive-strength-book] used for the I2C lines: this increases the current draw but helps achieve higher frequencies as well as accommodate a higher number of I2C targets on the bus (i.e., a higher bus capacitance).
 
 [^peripherals-free-cargo-feature]: When the Cargo feature is not enabled (including indirectly as a dependency of another Cargo feature), the peripherals and their interrupts are not managed by Ariel OS and can be used separately, including [through their Embassy-style HAL][using-third-party-hals-directly-book].
 
@@ -92,5 +92,7 @@ Some HALs also allow increasing the drive strength of the pins used for the I2C 
 [i2c-controller-highest-freq-in-rustdoc]: https://ariel-os.github.io/ariel-os/dev/docs/api/ariel_os/i2c/controller/fn.highest_freq_in.html
 [i2c-clock-stretching-wikipedia]: https://en.wikipedia.org/wiki/I2C#Clock_stretching_using_SCL
 [obtaining-peripheral-access-book]: ./application.md#obtaining-peripheral-access
+[internal-pull-resistors-book]: ./pins-gpios.md#pull-uppull-down-resistors
+[pin-drive-strength-book]: ./pins-gpios.md#output-configuration
 [embassy-style-hals]: ./glossary.md#embassy-style-hals
 [using-third-party-hals-directly-book]: ./application.md#using-the-third-party-hals-directly
