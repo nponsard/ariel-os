@@ -28,6 +28,9 @@ audit-as-crates-io = true
 [policy.cyw43]
 audit-as-crates-io = true
 
+[policy.cyw43-pio]
+audit-as-crates-io = true
+
 [policy.embassy-hal-internal]
 audit-as-crates-io = true
 
@@ -402,7 +405,7 @@ version = "0.1.0"
 criteria = "safe-to-deploy"
 
 [[exemptions.cyw43-pio]]
-version = "0.8.0"
+version = "0.8.0@git:603583d94cb7ba14b3a6bbb84c8c5fea8bffea0d"
 criteria = "safe-to-deploy"
 
 [[exemptions.darling]]
