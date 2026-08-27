@@ -21,6 +21,10 @@
 #[featurecomb::comb]
 mod _featurecomb {}
 
+#[doc(hidden)]
+#[cfg(feature = "_pluggable-transport")]
+pub mod transport;
+
 #[allow(unused, reason = "conditional compilation")]
 #[doc(hidden)]
 #[cfg(feature = "log")]
@@ -91,6 +95,9 @@ pub mod log {
         }
         feature = "std" => {
             pub use std::println;
+        }
+        feature = "custom-transport" => {
+            pub use crate::transport_println as println;
         }
         not(context = "ariel-os") => {
             pub use crate::noop_println as println;
