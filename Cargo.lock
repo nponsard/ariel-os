@@ -6065,7 +6065,6 @@ version = "0.0.0"
 dependencies = [
  "ariel-os",
  "ariel-os-boards",
- "embassy-executor",
  "portable-atomic",
 ]
 
