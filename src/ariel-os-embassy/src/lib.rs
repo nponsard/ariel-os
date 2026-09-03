@@ -432,9 +432,8 @@ async fn init_task(mut peripherals: hal::OptionalPeripherals) {
 
     #[cfg(feature = "wifi-cyw43")]
     {
-        spawner
-            .spawn(hal::cyw43::join(control, wifi_config))
-            .expect("start wifi join task");
+        // Using an embassy task would cost us a lot of storage and RAM.
+        hal::cyw43::join(control, wifi_config).await;
     };
 
     #[cfg(feature = "wifi-esp")]

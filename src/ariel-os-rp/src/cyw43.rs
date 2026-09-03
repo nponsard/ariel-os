@@ -26,7 +26,6 @@ pub type NetworkDevice = cyw43::NetDriver<'static>;
 static STATE: StaticCell<cyw43::State> = StaticCell::new();
 
 #[cfg(feature = "wifi")]
-#[embassy_executor::task]
 pub async fn join(mut control: cyw43::Control<'static>, config: StationConfig) {
     use ariel_os_log::info;
     loop {
