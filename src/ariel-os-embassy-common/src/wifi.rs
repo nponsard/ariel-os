@@ -1,10 +1,10 @@
-//! Common WiFi configuration for Ariel OS.
+//! Common Wi-Fi configuration for Ariel OS.
 //!
 //! This module contains the types and [`WIFI_CONFIG`] constant containing the build-time configuration.
 
 use ariel_os_utils::str_from_env;
 
-/// Current wifi configuration.
+/// Current Wi-Fi configuration.
 // TODO: Feature-gate this when AP mode is implemented.
 pub const WIFI_CONFIG: StationConfig = {
     const WIFI_NETWORK: &str = str_from_env!("CONFIG_WIFI_NETWORK", "Wi-Fi SSID (network name)");
@@ -15,10 +15,10 @@ pub const WIFI_CONFIG: StationConfig = {
     }
 };
 
-/// WiFi configuration in station mode.
+/// Wi-Fi configuration in station mode.
 pub struct StationConfig {
-    /// WiFi access point SSID.
+    /// Wi-Fi access point SSID.
     pub ssid: &'static str,
-    /// WiFi access point password.
+    /// Wi-Fi access point password.
     pub password: &'static str,
 }
