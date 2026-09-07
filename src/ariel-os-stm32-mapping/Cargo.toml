@@ -6,6 +6,8 @@ rust-version.workspace = true
 repository.workspace = true
 license.workspace = true
 
+[lints]
+
 # BEGIN AUTO-GENERATED STM32 MAPPING
 [target.'cfg(context = "stm32c011d6")'.dependencies]
 embassy-stm32 = { workspace = true, features = ["stm32c011d6"] }
