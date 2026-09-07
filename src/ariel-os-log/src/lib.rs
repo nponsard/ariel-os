@@ -22,7 +22,10 @@
 mod _featurecomb {}
 
 #[doc(hidden)]
-#[cfg(feature = "_pluggable-transport")]
+#[cfg(feature = "internal-transport-driver")]
+pub mod transport;
+
+#[cfg(feature = "custom-transport-driver")]
 pub mod transport;
 
 #[allow(unused, reason = "conditional compilation")]
