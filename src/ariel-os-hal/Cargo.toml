@@ -17,7 +17,7 @@ embedded-hal = { workspace = true }
 embedded-hal-async = { workspace = true }
 
 [target.'cfg(context = "esp")'.dependencies]
-ariel-os-esp = { workspace = true}
+ariel-os-esp = { workspace = true }
 
 [target.'cfg(context = "native")'.dependencies]
 ariel-os-native = { workspace = true }
