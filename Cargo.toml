@@ -135,6 +135,7 @@ ariel-os-hal = { path = "src/ariel-os-hal", default-features = false }
 ariel-os-identity = { path = "src/ariel-os-identity" }
 ariel-os-log = { path = "src/ariel-os-log", default-features = false }
 ariel-os-macros = { path = "src/ariel-os-macros" }
+ariel-os-native = { path = "src/ariel-os-native" }
 ariel-os-nrf = { path = "src/ariel-os-nrf" }
 ariel-os-power = { path = "src/ariel-os-power" }
 ariel-os-random = { path = "src/ariel-os-random" }
@@ -146,6 +147,7 @@ ariel-os-sensors-gnss-time-ext = { path = "src/ariel-os-sensors-gnss-time-ext" }
 ariel-os-sensors-registry = { path = "src/ariel-os-sensors-registry" }
 ariel-os-sensors-utils = { path = "src/ariel-os-sensors-utils" }
 ariel-os-stm32 = { path = "src/ariel-os-stm32" }
+ariel-os-stm32-mapping = { path = "src/ariel-os-stm32-mapping" }
 ariel-os-storage = { path = "src/ariel-os-storage" }
 ariel-os-threads = { path = "src/ariel-os-threads" }
 ariel-os-utils = { path = "src/ariel-os-utils", default-features = false }
