@@ -99,7 +99,7 @@ pub mod log {
         feature = "std" => {
             pub use std::println;
         }
-        feature = "custom-transport" => {
+        any(feature = "internal-transport-driver", feature = "custom-transport-driver") => {
             pub use crate::transport_println as println;
         }
         not(context = "ariel-os") => {
