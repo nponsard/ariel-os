@@ -795,7 +795,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "9d297deb1925b89f2ccc13d7635fa0714f12c87adce1c75356b39ca9b7178567"
 
 [[package]]
-name = "bench_sched_flags"
+name = "bench-sched-flags"
 version = "0.0.0"
 dependencies = [
  "ariel-os",
@@ -803,7 +803,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "bench_sched_yield"
+name = "bench-sched-yield"
 version = "0.0.0"
 dependencies = [
  "ariel-os",
