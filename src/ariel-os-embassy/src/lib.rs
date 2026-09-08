@@ -10,6 +10,9 @@ pub use ariel_os_hal::hal;
 #[cfg(feature = "executor-thread")]
 use ariel_os_embassy_common::executor_thread;
 
+#[cfg(feature = "wifi")]
+use ariel_os_embassy_common::wifi::WIFI_CONFIG;
+
 #[cfg(feature = "debug-uart")]
 pub mod debug_uart;
 
@@ -427,20 +430,17 @@ async fn init_task(mut peripherals: hal::OptionalPeripherals) {
         }
     }
 
-    #[cfg(feature = "wifi")]
-    let wifi_config = ariel_os_embassy_common::wifi::WIFI_CONFIG;
-
     #[cfg(feature = "wifi-cyw43")]
     {
         // Using an embassy task would cost us a lot of storage and RAM.
-        hal::cyw43::join(control, wifi_config).await;
+        hal::cyw43::join(control, WIFI_CONFIG).await;
     };
 
     #[cfg(feature = "wifi-esp")]
     {
         spawner
-            .spawn(hal::wifi::esp_wifi::join(control, wifi_config))
-            .expect("start wifi join task");
+            .spawn(hal::wifi::esp_wifi::join(control, WIFI_CONFIG))
+            .unwrap();
     };
 
     // mark used
