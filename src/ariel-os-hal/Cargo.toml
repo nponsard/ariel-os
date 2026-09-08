@@ -17,16 +17,16 @@ embedded-hal = { workspace = true }
 embedded-hal-async = { workspace = true }
 
 [target.'cfg(context = "esp")'.dependencies]
-ariel-os-esp = { path = "../ariel-os-esp" }
+ariel-os-esp = { workspace = true }
 
 [target.'cfg(context = "native")'.dependencies]
-ariel-os-native = { path = "../ariel-os-native" }
+ariel-os-native = { workspace = true }
 
 [target.'cfg(context = "nrf")'.dependencies]
-ariel-os-nrf = { path = "../ariel-os-nrf" }
+ariel-os-nrf = { workspace = true }
 
 [target.'cfg(context = "rp")'.dependencies]
-ariel-os-rp = { path = "../ariel-os-rp" }
+ariel-os-rp = { workspace = true }
 
 [target.'cfg(context = "stm32")'.dependencies]
 ariel-os-stm32 = { workspace = true }

@@ -363,6 +363,7 @@ contexts:
     selects:
       - ?espflash
     provides:
+      - has_device_identity
       - has_hwrng
     env:
       esp_wifi_heapsize_required: $(72*1024)
@@ -492,6 +493,9 @@ contexts:
     parent: esp32s3
 
   - name: esp32s3fx8
+    parent: esp32s3
+
+  - name: esp32s3r8
     parent: esp32s3
 
   - name: esp32-s3-wroom-1

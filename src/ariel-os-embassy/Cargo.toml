@@ -36,14 +36,14 @@ ariel-os-boards = { workspace = true }
 ariel-os-buildinfo = { workspace = true }
 ariel-os-debug = { workspace = true }
 ariel-os-embassy-common = { workspace = true }
-ariel-os-hal = { path = "../ariel-os-hal" }
-ariel-os-identity = { path = "../ariel-os-identity" }
+ariel-os-hal = { workspace = true }
+ariel-os-identity = { workspace = true }
 ariel-os-log = { workspace = true }
-ariel-os-macros = { path = "../ariel-os-macros" }
-ariel-os-random = { path = "../ariel-os-random", optional = true }
-ariel-os-rt = { path = "../ariel-os-rt" }
+ariel-os-macros = { workspace = true }
+ariel-os-random = { workspace = true, optional = true }
+ariel-os-rt = { workspace = true }
 ariel-os-storage = { workspace = true, optional = true }
-ariel-os-threads = { path = "../ariel-os-threads", optional = true }
+ariel-os-threads = { workspace = true, optional = true }
 ariel-os-utils = { workspace = true }
 
 const-str = { workspace = true, optional = true }
