@@ -11,7 +11,7 @@ logging-transport-driver.exactly-one = { features = ["dummy"] }
 
 [dependencies]
 ariel-os-hal = { workspace = true }
-ariel-os-log = { workspace = true, features = ["custom-transport"] }
+ariel-os-log = { workspace = true, features = ["internal-transport-driver"] }
 embassy-executor = { workspace = true }
 embassy-sync = { workspace = true }
 featurecomb = { workspace = true }
