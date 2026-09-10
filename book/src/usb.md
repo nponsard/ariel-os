@@ -12,6 +12,7 @@ The following table summarizes the standard signaling rates and their names:
 
 | Signaling rate | Standard                                 |
 | -------------: | ---------------------------------------- |
+| 1.5 Mbits/s    | Low-Speed USB (now aka Basic-Speed USB)  |
 | 12 Mbits/s     | Full-Speed USB (now aka Basic-Speed USB) |
 | 480 Mbits/s    | Hi-Speed USB                             |
 
@@ -28,6 +29,38 @@ The others may still be integrated by Ariel OS to implement specific functional
 > [!TIP]
 > Development kits that support USB often feature two USB receptacles: one for the onboard [debug probe][debug-probes-book] (if there is one), and the other connected to the USB peripheral of the microcontroller.
 > That second USB connection is usually called "user USB" to differentiate it from that of the debug probe and is the one that must be connected to the computer acting as USB host.
+
+### USB 1.x/USB 2.0 Device Speed Identification Pull-up Resistors
+
+The USB specifications require that the USB device advertise its supported speed to the USB host using a pull-up resistor on one of the data line.
+A pull-up resistor[^usb-rpu] (Rpu) must be added on D+ to advertise support for Full-Speed USB, while Low-Speed requires one on D−.
+Hi-Speed USB uses the same pull-up as Full-Speed, with additional software negotiation.
+
+<!-- NOTE: See Table 9-1 of the USB 2.0 specification for the definition of "attached". -->
+<!-- NOTE: ST AN4879 is also a useful reference. -->
+If the USB device is always bus powered, these pull-up resistors may be always connected.
+However, because devices are not allowed to supply current on the data lines when VBUS is not present (sections 7.1.5 and 7.2.1 of the [USB 2.0 specification][usb-2.0-spec]), self-powered devices must implement VBUS detection.
+VBUS detection (aka VBUS sensing) involves monitoring whether VBUS is present, connecting the pull-up resistor when it is applied, and disconnecting it when VBUS is removed, within 10 seconds (see section 7.2.1 of the [USB 2.0 specification][usb-2.0-spec]).
+To this effect, microcontroller USB peripherals often implement VBUS detection in hardware, and require a dedicated GPIO pin to monitor the state of VBUS.
+If they do not, or if the pin is not connected on the board, VBUS detection must be implemented manually, to enable/disable the pull-up resistor as necessary.
+
+<!-- NOTE:
+HALs do not currently document the pull-up behavior:
+
+- ESP: currently only have OTG-capable MCU peripherals, see section 32.4.2.1 of ESP32-S3 TRM v1.5.
+- nRF: <https://github.com/embassy-rs/embassy/blob/3861d3088da30d40c777dc05d282352e68ec5511/embassy-nrf/src/usb/mod.rs#L220-L221>
+- RP: <https://github.com/embassy-rs/embassy/blob/84444a19eb57d978e3c09fcdc8e60cdd7278eb03/embassy-rp/src/usb.rs#L347>
+- STM32: <https://github.com/embassy-rs/embassy/blob/84444a19eb57d978e3c09fcdc8e60cdd7278eb03/embassy-stm32/src/usb/usb.rs#L539-L542>
+-->
+<!-- NOTE: For pull-up management with OTG, see section 72.4.4 of ST RM0456 Rev 6 for instance. -->
+Ariel OS always uses the internal pull-up resistors when available in hardware, and supports enabling VBUS detection when supported by the hardware (so they are only connected when VBUS is present).
+When the microcontroller USB peripheral in use is USB OTG-capable, the pull-up is always managed by hardware, as part of OTG's protocols.
+Otherwise, if VBUS detection is required and is not made possible by the hardware, it must currently be implemented manually in the application.
+
+<!-- NOTE: These resistance values show up in RP2040's datasheet regarding `RPU_OPT`. -->
+[^usb-rpu]: Originally, the pull-up resistance was required to be 1.5 kΩ ±5% (see section 7.1.3 of the USB 1.0 specification, section 7.1.5 of the USB 1.1 specification, and section 7.1.5 of the [USB 2.0 specification][usb-2.0-spec]).
+Following the [Resistor ECN][usb-2.0-spec], the resistance value is given more tolerance and is allowed to fall into two different ranges: one around 1.2 kΩ when the bus is idle, and the other around 2.3 kΩ when the upstream device (i.e., the USB host or hub) is transmitting.
+The higher tolerance allowed integrating these pull-up resistors into the chip as internal resistors (as these have higher manufacturing tolerance than discrete resistors).
 
 ## Software Integration
 
