@@ -210,7 +210,7 @@ jobs:
       # Allows us to clean up even if build fails
       - name: Cache with post-job cleanup
         if: steps.should-skip.outputs.result != 'true' && runner.environment == 'self-hosted'
-        uses: gacts/run-and-post-run@598d7a875d5620e0457490555b5e18e46082aa47 # v1
+        uses: gacts/run-and-post-run@fc6503862aba998e2f2123225ad63c09a92ed46e # v1
         with:
           run: |
             export  RUST_LOG=trace
