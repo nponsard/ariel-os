@@ -523,10 +523,6 @@ criteria = "safe-to-deploy"
 version = "0.13.8"
 criteria = "safe-to-deploy"
 
-[[exemptions.embassy-embedded-hal]]
-version = "0.5.0"
-criteria = "safe-to-deploy"
-
 [[exemptions.embassy-executor]]
 version = "0.9.1"
 criteria = "safe-to-deploy"
@@ -817,6 +813,10 @@ criteria = "safe-to-deploy"
 
 [[exemptions.esp32s3]]
 version = "0.34.0"
+criteria = "safe-to-deploy"
+
+[[exemptions.evalexpr]]
+version = "11.3.1"
 criteria = "safe-to-deploy"
 
 [[exemptions.featurecomb]]
