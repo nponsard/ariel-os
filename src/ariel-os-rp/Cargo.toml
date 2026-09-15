@@ -38,6 +38,10 @@ bt-hci = { workspace = true, optional = true }
 [build-dependencies]
 ariel-os-buildutils = { workspace = true }
 
+# Gating with `ariel-os` so CI runs don't depend on it.
+[target.'cfg(context = "ariel-os")'.dependencies]
+ariel-os-rt = { workspace = true, features = ["memory-x"] }
+
 [target.'cfg(context = "cortex-m")'.dependencies]
 embassy-executor = { workspace = true, default-features = false, features = [
   "arch-cortex-m",
