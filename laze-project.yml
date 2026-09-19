@@ -1849,6 +1849,8 @@ modules:
       - multi-core:
           - core-affinity
       - network
+    context:
+      - esp
     provides_unique:
       - network_device
     env:
