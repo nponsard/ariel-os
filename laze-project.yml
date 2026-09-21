@@ -613,9 +613,6 @@ contexts:
     parent: ariel-os
     selects:
       - infini-core
-      # NOTE: semantically this should only be enabled when `logging` is
-      # enabled, but laze does not support conditions on contexts.
-      - logging-over-stdout
     provides:
       - has_device_identity
       - has_hwrng
@@ -2127,6 +2124,10 @@ modules:
       - native-chip
     provides_unique:
       - logging-transport
+    env:
+      global:
+        FEATURES:
+          - ariel-os/logging-over-stdout
 
   - name: logging-over-usb
     help: use USB CDC-ACM as logging transport
