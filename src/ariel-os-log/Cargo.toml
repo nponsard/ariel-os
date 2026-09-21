@@ -81,6 +81,7 @@ debug-uart = ["dep:embassy-sync", "logging-over-uart"]
 defmt-rtt = ["ariel-os-debug/defmt-rtt"]
 # Using the debug channel as the transport
 logging-over-debug-channel = ["dep:ariel-os-debug"]
+logging-over-stdout = ["std"]
 logging-over-uart = ["esp-println?/uart"]
 logging-over-usb = ["esp-println?/jtag-serial"]
 # Connect log transports that are implemented inside Ariel OS' repo.
