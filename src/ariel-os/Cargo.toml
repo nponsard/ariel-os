@@ -245,6 +245,8 @@ esp-println = ["ariel-os-log/esp-println"]
 semihosting = ["ariel-os-debug/semihosting"]
 # Log transport defined by the application.
 custom-logging-transport = ["ariel-os-log/custom-transport-driver"]
+# Logging over stdout (only available on native).
+logging-over-stdout = ["ariel-os-log/logging-over-stdout"]
 
 net = ["ariel-os-embassy/net"]
 
