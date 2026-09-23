@@ -2038,7 +2038,7 @@ modules:
       # Optional as we want to be able to disable it in applications.
       - ?panic-printing
 
-  - name: custom-logging-transport
+  - name: logging-over-custom-transport
     help: Connect a custom logging transport to pass the logs through.
     provides_unique:
       - logging-transport
@@ -2048,7 +2048,7 @@ modules:
     env:
       global:
         FEATURES:
-          - ariel-os/custom-logging-transport
+          - ariel-os/logging-over-custom-transport
 
   # Ordered by priority.
   # Currently the logging transports are mutually exclusive.
