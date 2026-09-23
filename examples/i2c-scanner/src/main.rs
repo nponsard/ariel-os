@@ -4,6 +4,7 @@
 mod pins;
 
 use ariel_os::{
+    debug::{ExitCode, exit},
     hal,
     i2c::controller::{Kilohertz, highest_freq_in},
     log::info,
@@ -21,10 +22,13 @@ async fn i2c_scanner(peripherals: pins::Peripherals) {
     info!("Checking for I2C devices on the bus...");
 
     for addr in 1..=127 {
-        if i2c_bus.write(addr, &[]).await.is_ok() {
+        // The byte is unnecessary, but this otherwise always fails on RP.
+        let mut buf = [0u8; 1];
+        if i2c_bus.read(addr, &mut buf).await.is_ok() {
             info!("Found device at address 0x{:x}", addr);
         }
     }
 
     info!("Done checking. Have a great day!");
+    exit(ExitCode::SUCCESS);
 }
