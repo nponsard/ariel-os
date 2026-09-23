@@ -121,6 +121,7 @@
 - [SPI](./spi.md)
 - [Global Allocator](./global-allocator.md)
 - [Networking](./networking.md)
+- [Ethernet](./ethernet.md)
 - [USB](./usb.md)
 - [Bluetooth Low Energy](./bluetooth.md)
 - [Randomness and Entropy](./randomness.md)
