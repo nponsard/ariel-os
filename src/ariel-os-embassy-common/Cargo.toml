@@ -28,6 +28,9 @@ bootloader = ["dep:embassy-boot", "dep:embedded-storage"]
 ## Enables GPIO interrupt support.
 external-interrupts = []
 
+## Enables firmware updater support.
+firmware-updater = []
+
 ## Enables I2C support.
 i2c = ["dep:embassy-time", "dep:fugit"]
 

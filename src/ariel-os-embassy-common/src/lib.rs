@@ -13,6 +13,9 @@ pub mod bootloader;
 #[cfg(context = "cortex-m")]
 pub mod executor_swi;
 
+#[cfg(feature = "firmware-updater")]
+pub mod firmware_updater;
+
 #[cfg(feature = "executor-thread")]
 pub mod executor_thread;
 
