@@ -35,7 +35,9 @@ impl BootloaderStorage for HalBootLoaderBackend {
     type DFU = BlockingPartition<'static, CriticalSectionRawMutex, Nvmc<'static>>;
     type STATE = BlockingPartition<'static, CriticalSectionRawMutex, Nvmc<'static>>;
 
-    fn partitions(flash_config: &FlashConfig) -> BootloaderPartitions<ACTIVE, DFU, STATE> {
+    fn partitions(
+        flash_config: &FlashConfig,
+    ) -> BootloaderPartitions<Self::ACTIVE, Self::DFU, Self::STATE> {
         // TODO: implement flash watchdog to avoid hangs ?
 
         let nvmc = NVMC.try_get().expect("obtaining initialized NVMC");

@@ -23,8 +23,12 @@ pub struct FlashConfig {
 
 /// Partitions used by the bootloader and firmware updater.
 pub struct BootloaderPartitions<ACTIVE: NorFlash, DFU: NorFlash, STATE: NorFlash> {
+
+    /// Active partition, where current firmware is stored.
     pub active: ACTIVE,
+    /// DFU partition, where the previous firmware or next update is stored.
     pub dfu: DFU,
+    /// Where the bootloader state is stored.
     pub bootloader_state: STATE,
 }
 
@@ -53,7 +57,7 @@ pub trait BootloaderStorage {
         ),
     );
     /// Configures partitions from the flash configuration.
-    fn partitions(flash_config: &FlashConfig) -> BootloaderPartitions<ACTIVE, DFU, STATE>;
+    fn partitions(flash_config: &FlashConfig) -> BootloaderPartitions<Self::ACTIVE, Self::DFU, Self::STATE>;
 }
 
 /// Backend to be implemented by the HAL to allow the bootloader to operate on the chip.
