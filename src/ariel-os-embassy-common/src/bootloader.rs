@@ -21,8 +21,15 @@ pub struct FlashConfig {
     pub bootloader_state: Range<u32>,
 }
 
-/// Backend to be implemented by the HAL to allow the bootloader to operate on the chip.
-pub trait BootLoaderBackend {
+/// Partitions used by the bootloader and firmware updater.
+pub struct BootloaderPartitions<ACTIVE: NorFlash, DFU: NorFlash, STATE: NorFlash> {
+    pub active: ACTIVE,
+    pub dfu: DFU,
+    pub bootloader_state: STATE,
+}
+
+/// Generates the partitions to be used by the bootloader and firmware updater.
+pub trait BootloaderStorage {
     /// Active section flash type.
     type ACTIVE: NorFlash;
     /// DFU section flash type.
@@ -45,12 +52,29 @@ pub trait BootLoaderBackend {
             ),
         ),
     );
+    /// Configures partitions from the flash configuration.
+    fn partitions(flash_config: &FlashConfig) -> BootloaderPartitions<ACTIVE, DFU, STATE>;
+}
 
+/// Backend to be implemented by the HAL to allow the bootloader to operate on the chip.
+pub trait BootLoaderBackend: BootloaderStorage {
     /// Creates the bootloader config, use `embassy_embedded_hal::flash::partition::BlockingPartition` if you want to share the flash with different sections.
     // maybe give the flash layout as parameter here ?
     // how would different flashes for active,dfu and state be handled in terms of configurations given to this function ?
-    fn config(flash_config: &FlashConfig)
-    -> BootLoaderConfig<Self::ACTIVE, Self::DFU, Self::STATE>;
+    fn config(
+        flash_config: &FlashConfig,
+    ) -> BootLoaderConfig<Self::ACTIVE, Self::DFU, Self::STATE> {
+        let BootloaderPartitions {
+            active,
+            dfu,
+            bootloader_state,
+        } = Self::partitions(flash_config);
+        BootLoaderConfig {
+            active,
+            dfu,
+            state: bootloader_state,
+        }
+    }
 
     /// Start execution of the active partition.
     fn load_active(flash_config: &FlashConfig);
