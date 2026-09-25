@@ -4,7 +4,6 @@ use core::cell::RefCell;
 use ariel_os_embassy_common::bootloader::{
     BootLoaderBackend, BootloaderPartitions, BootloaderStorage, FlashConfig,
 };
-use embassy_boot::BootLoaderConfig;
 use embassy_embedded_hal::flash::partition::BlockingPartition;
 use embassy_rp::{OptionalPeripherals, flash::Blocking, peripherals::FLASH};
 use embassy_sync::{
