@@ -2,7 +2,7 @@
 #![no_std]
 
 use ariel_os::{hal::bootloader::HalBootLoaderBackend, rt::memory::sections};
-use ariel_os_embassy_common::bootloader::{BootLoaderBackend, FlashConfig};
+use ariel_os_embassy_common::bootloader::{BootLoaderBackend, BootloaderStorage, FlashConfig};
 use embassy_boot::{AlignedBuffer, State};
 
 #[ariel_os::task(autostart)]
@@ -19,7 +19,7 @@ async fn main() {
     // TODO: set up watchdog
 
     let mut aligned_buf =
-        AlignedBuffer([0; <HalBootLoaderBackend as BootLoaderBackend>::ALIGNED_BUFFER_SIZE]);
+        AlignedBuffer([0; <HalBootLoaderBackend as BootloaderStorage>::ALIGNED_BUFFER_SIZE]);
     let mut bootloader = embassy_boot::BootLoader::new(config);
     let state = bootloader.prepare_boot(aligned_buf.as_mut()).unwrap();
 
