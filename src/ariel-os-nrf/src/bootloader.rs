@@ -1,7 +1,9 @@
 //! Bootloader backend
 use core::cell::RefCell;
 
-use ariel_os_embassy_common::bootloader::{BootLoaderBackend, FlashConfig};
+use ariel_os_embassy_common::bootloader::{
+    BootLoaderBackend, BootloaderPartitions, BootloaderStorage, FlashConfig,
+};
 use embassy_boot::BootLoaderConfig;
 use embassy_embedded_hal::flash::partition::BlockingPartition;
 use embassy_nrf::{OptionalPeripherals, nvmc::Nvmc};
@@ -28,15 +30,12 @@ pub fn init(peripherals: &mut OptionalPeripherals) {
 // TODO : find a better name.
 pub struct HalBootLoaderBackend;
 
-#[allow(unsafe_code)]
-impl BootLoaderBackend for HalBootLoaderBackend {
+impl BootloaderStorage for HalBootLoaderBackend {
     type ACTIVE = BlockingPartition<'static, CriticalSectionRawMutex, Nvmc<'static>>;
     type DFU = BlockingPartition<'static, CriticalSectionRawMutex, Nvmc<'static>>;
     type STATE = BlockingPartition<'static, CriticalSectionRawMutex, Nvmc<'static>>;
 
-    fn config(
-        flash_config: &FlashConfig,
-    ) -> BootLoaderConfig<Self::ACTIVE, Self::DFU, Self::STATE> {
+    fn partitions(flash_config: &FlashConfig) -> BootloaderPartitions<ACTIVE, DFU, STATE> {
         // TODO: implement flash watchdog to avoid hangs ?
 
         let nvmc = NVMC.try_get().expect("obtaining initialized NVMC");
@@ -58,13 +57,16 @@ impl BootLoaderBackend for HalBootLoaderBackend {
             flash_config.bootloader_state.len() as u32,
         );
 
-        BootLoaderConfig {
+        BootloaderPartitions {
             active: active_partition,
             dfu: dfu_partition,
-            state: state_partition,
+            bootloader_state: state_partition,
         }
     }
+}
 
+#[allow(unsafe_code)]
+impl BootLoaderBackend for HalBootLoaderBackend {
     // from [embassy-boot-nrf](https://github.com/embassy-rs/embassy/blob/4c9a8998805b95d472b5e8137b16588369c2a8b6/embassy-boot-nrf/src/lib.rs#L48), license MIT OR Apache-2.0
     fn load_active(flash_config: &FlashConfig) {
         let start = flash_config.active.start;
