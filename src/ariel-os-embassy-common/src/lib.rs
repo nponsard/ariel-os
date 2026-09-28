@@ -7,6 +7,7 @@
 pub mod cell;
 pub mod gpio;
 
+#[doc(hidden)]
 #[cfg(feature = "bootloader")]
 pub mod bootloader;
 

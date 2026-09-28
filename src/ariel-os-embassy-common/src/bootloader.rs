@@ -1,5 +1,5 @@
 //! Common traits for implementin and using the bootloader infrastructure.
-use core::ops::Range;
+use core::{error::Error, ops::Range};
 
 use embassy_boot::BootLoaderConfig;
 use embedded_storage::nor_flash::NorFlash;
@@ -93,11 +93,11 @@ pub trait BootLoaderBackend: BootloaderStorage {
     fn pet_watchdog();
 }
 
-pub enum FirmwareUpdaterError<STORAGE_ERROR: Error> {
+pub enum FirmwareUpdaterError<StorageError: Error> {
     /// Operation Was attempted while in a bad state.
     BadState,
     /// An error happened when interacting with the storage medium.
-    StorageError(STORAGE_ERROR),
+    StorageError(StorageError),
 }
 
 pub trait FirmwareUpdater {
@@ -105,19 +105,19 @@ pub trait FirmwareUpdater {
 
     /// Mark current firmware as successfully booted.
     /// Preventing the bootloader from rolling back the update.
-    fn mark_booted(&mut self) -> Result<(), FirmwareUpdaterError<StorageError>>;
+    fn mark_booted(&mut self) -> Result<(), FirmwareUpdaterError<Self::StorageError>>;
     /// Indicate that the new firmware has been written to the DFU slot, it will applied next boot.
-    fn mark_updated(&mut self) -> Result<(), FirmwareUpdaterError<StorageError>>;
+    fn mark_updated(&mut self) -> Result<(), FirmwareUpdaterError<Self::StorageError>>;
     /// Write to the DFU storage area, errors out if unaligned or out of bounds.
     fn write_dfu(
         &mut self,
         offset: usize,
         data: &[u8],
-    ) -> Result<(), FirmwareUpdaterError<StorageError>>;
+    ) -> Result<(), FirmwareUpdaterError<Self::StorageError>>;
     /// Read from the DFU storage area, errors out if unaligned or out of bounds.
     fn read_dfu(
         &mut self,
         offset: usize,
         buffer: &mut [u8],
-    ) -> Result<(), FirmwareUpdaterError<StorageError>>;
+    ) -> Result<(), FirmwareUpdaterError<Self::StorageError>>;
 }
