@@ -1,6 +1,8 @@
 #![allow(missing_docs)]
 
-use ariel_os_embassy_common::bootloader::{BootLoaderBackend, FlashConfig};
+use ariel_os_embassy_common::bootloader::{
+    BootLoaderBackend, BootloaderPartitions, BootloaderStorage, FlashConfig,
+};
 use embassy_boot::BootLoaderConfig;
 use embedded_storage::nor_flash::{self, NorFlash, ReadNorFlash};
 
@@ -10,17 +12,19 @@ pub fn init(peripherals: &mut OptionalPeripherals) {}
 
 pub struct HalBootLoaderBackend;
 
-#[allow(unsafe_code)]
-impl BootLoaderBackend for HalBootLoaderBackend {
+impl BootloaderStorage for HalBootLoaderBackend {
     type ACTIVE = DummyFlash;
     type DFU = DummyFlash;
     type STATE = DummyFlash;
 
-    fn config(
+    fn partitions(
         flash_config: &ariel_os_embassy_common::bootloader::FlashConfig,
-    ) -> BootLoaderConfig<Self::ACTIVE, Self::DFU, Self::STATE> {
+    ) -> BootloaderPartitions<Self::ACTIVE, Self::DFU, Self::STATE> {
         unimplemented!()
     }
+}
+#[allow(unsafe_code)]
+impl BootLoaderBackend for HalBootLoaderBackend {
     fn load_active(flash_config: &ariel_os_embassy_common::bootloader::FlashConfig) {
         unimplemented!()
     }
