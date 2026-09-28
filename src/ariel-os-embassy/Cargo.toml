@@ -13,6 +13,7 @@ portable-atomic = { workspace = true }
 rand_core = { workspace = true, optional = true }
 static_cell = { workspace = true }
 
+embassy-boot = { workspace = true, optional = true }
 embassy-embedded-hal = { workspace = true, optional = true }
 embassy-executor = { workspace = true }
 embassy-futures = { workspace = true }
@@ -245,6 +246,8 @@ defmt = [
 log = ["ariel-os-hal/log"]
 
 bootloader = ["ariel-os-embassy-common/bootloader", "ariel-os-hal/bootloader"]
+
+firmware_updater = ["dep:embassy-boot", "bootloader"]
 
 _test = ["dhcpv4", "external-interrupts", "i2c", "spi", "time"]
 

@@ -219,6 +219,7 @@ dependencies = [
  "const-str",
  "const_panic",
  "critical-section",
+ "embassy-boot",
  "embassy-embedded-hal 0.5.0",
  "embassy-executor",
  "embassy-futures",

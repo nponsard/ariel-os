@@ -13,6 +13,9 @@ use ariel_os_embassy_common::executor_thread;
 #[cfg(feature = "debug-uart")]
 pub mod debug_uart;
 
+#[cfg(feature = "firmware-updater")]
+pub mod firmware_updater;
+
 #[cfg(feature = "spi")]
 pub mod spi;
 
