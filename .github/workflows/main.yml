@@ -580,7 +580,7 @@ jobs:
       - name: Install sbd-gen
         uses: taiki-e/install-action@fa23953489c080190314742a9b907f8e97c6767c # v2
         with:
-          tool: sbd-gen@0.4.0
+          tool: sbd-gen@0.5.0
 
       - name: Check sbd-gen output
         run: |

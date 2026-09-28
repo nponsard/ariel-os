@@ -9,7 +9,7 @@ pub mod pins {
         P0_19, }
     );
     ariel_os_hal::define_uarts![
-        { name : uart0, device : SERIAL3, tx : P0_27, rx : P0_26, host_facing : true },
+        { name : Uart0, device : SERIAL3, tx : P0_27, rx : P0_26, host_facing : true },
     ];
 }
 #[allow(unused_variables)]
