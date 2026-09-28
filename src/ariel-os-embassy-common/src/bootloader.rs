@@ -23,7 +23,6 @@ pub struct FlashConfig {
 
 /// Partitions used by the bootloader and firmware updater.
 pub struct BootloaderPartitions<ACTIVE: NorFlash, DFU: NorFlash, STATE: NorFlash> {
-
     /// Active partition, where current firmware is stored.
     pub active: ACTIVE,
     /// DFU partition, where the previous firmware or next update is stored.
@@ -57,7 +56,9 @@ pub trait BootloaderStorage {
         ),
     );
     /// Configures partitions from the flash configuration.
-    fn partitions(flash_config: &FlashConfig) -> BootloaderPartitions<Self::ACTIVE, Self::DFU, Self::STATE>;
+    fn partitions(
+        flash_config: &FlashConfig,
+    ) -> BootloaderPartitions<Self::ACTIVE, Self::DFU, Self::STATE>;
 }
 
 /// Backend to be implemented by the HAL to allow the bootloader to operate on the chip.
@@ -90,4 +91,33 @@ pub trait BootLoaderBackend: BootloaderStorage {
     /// Pet the watchdog, preventing reset.
     // Currently not used.
     fn pet_watchdog();
+}
+
+pub enum FirmwareUpdaterError<STORAGE_ERROR: Error> {
+    /// Operation Was attempted while in a bad state.
+    BadState,
+    /// An error happened when interacting with the storage medium.
+    StorageError(STORAGE_ERROR),
+}
+
+pub trait FirmwareUpdater {
+    type StorageError: Error;
+
+    /// Mark current firmware as successfully booted.
+    /// Preventing the bootloader from rolling back the update.
+    fn mark_booted(&mut self) -> Result<(), FirmwareUpdaterError<StorageError>>;
+    /// Indicate that the new firmware has been written to the DFU slot, it will applied next boot.
+    fn mark_updated(&mut self) -> Result<(), FirmwareUpdaterError<StorageError>>;
+    /// Write to the DFU storage area, errors out if unaligned or out of bounds.
+    fn write_dfu(
+        &mut self,
+        offset: usize,
+        data: &[u8],
+    ) -> Result<(), FirmwareUpdaterError<StorageError>>;
+    /// Read from the DFU storage area, errors out if unaligned or out of bounds.
+    fn read_dfu(
+        &mut self,
+        offset: usize,
+        buffer: &mut [u8],
+    ) -> Result<(), FirmwareUpdaterError<StorageError>>;
 }
