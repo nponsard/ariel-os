@@ -1,6 +1,6 @@
 version: 0.4.1
 targets:
-  dwm1001:
+  decawave-dwm1001-dev:
     chip: nrf52832
     leds:
       # led0
