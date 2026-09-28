@@ -2256,6 +2256,7 @@ modules:
     help: use UART as logging transport
     # Temporarily restricted to ESP and boards that have ad hoc support.
     context:
+      - dwm1001
       - esp
       - nrf52840dk
       - nrf52dk
@@ -2277,6 +2278,7 @@ modules:
   - name: debug-uart
     help: private
     context:
+      - dwm1001
       - nrf52840dk
       - nrf52dk
       - rp2040
