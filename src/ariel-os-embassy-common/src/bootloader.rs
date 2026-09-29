@@ -93,7 +93,7 @@ pub trait BootLoaderBackend: BootloaderStorage {
     fn pet_watchdog();
 }
 
-pub enum FirmwareUpdaterError<StorageError: Error> {
+pub enum FirmwareUpdaterError<StorageError> {
     /// Operation Was attempted while in a bad state.
     BadState,
     /// An error happened when interacting with the storage medium.
@@ -101,7 +101,7 @@ pub enum FirmwareUpdaterError<StorageError: Error> {
 }
 
 pub trait FirmwareUpdater {
-    type StorageError: Error;
+    type StorageError;
 
     /// Mark current firmware as successfully booted.
     /// Preventing the bootloader from rolling back the update.
