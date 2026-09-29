@@ -247,7 +247,7 @@ log = ["ariel-os-hal/log"]
 
 bootloader = ["ariel-os-embassy-common/bootloader", "ariel-os-hal/bootloader"]
 
-firmware_updater = ["dep:embassy-boot", "bootloader"]
+firmware-updater = ["dep:embassy-boot", "bootloader"]
 
 _test = ["dhcpv4", "external-interrupts", "i2c", "spi", "time"]
 
