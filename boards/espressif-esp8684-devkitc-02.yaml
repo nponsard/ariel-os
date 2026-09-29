@@ -1,4 +1,4 @@
-version: 0.4.0
+version: 0.4.1
 targets:
   espressif-esp8684-devkitc-02-h2:
     chip: esp8684-wroom-02c-h2
