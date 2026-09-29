@@ -41,6 +41,34 @@ Configuration is applied to the whole bus, and it is not currently possible to u
 > [!TIP]
 > If only a single I2C target is used on the bus, using the device driver is unnecessary as the bus driver also implements [`embedded_hal_async::i2c::I2c`][embedded-hal-async-i2c-i2c-docsrs].
 
+### Leveraging the Structured Board Descriptions
+
+Instead of relying on the I2C pins being defined inside the application as presented above, it is also possible to leverage [the SBD files][sbd-book], if the board is supported in-tree.
+In that case, the driver for the I2C bus can be instantiated as follows:
+
+```rust
+ariel_os::hal::group_peripherals!(Peripherals {
+    i2c: ariel_os_boards::pins::I2c0,
+    // or, assuming `SensorI2c` is defined as an alias for the bus in the SBD file:
+    i2c: ariel_os_boards::pins::SensorI2c,
+});
+
+#[ariel_os::task(autostart, peripherals)]
+async fn main(peripherals: Peripherals) {
+    let i2c_bus = peripherals.i2c.with_config(i2c_config);
+}
+```
+
+This uses the pins defined in the SBD file for the I2C bus.
+The SBD file currently lists possible I2C peripherals that can be used for the bus, and the first one is automatically selected.
+It is not currently possible to select another one.
+
+> [!IMPORTANT]
+> Here, `I2c0` does not refer to the `I2C0` microcontroller peripheral, but instead to the I2C bus defined at index 0 in the SBD sequence of I2C buses.
+
+> [!NOTE]
+> In the future, [SBD files][sbd-book] should gain the ability to encode what I2C controllers and targets are attached to the bus, and `ariel-os-boards` should expose higher-level access to those.
+
 ### Bus Configuration
 
 I2C configuration is HAL-specific, and a default configuration can be obtained this way:
@@ -89,6 +117,7 @@ Some HALs also allow increasing the [drive strength of the pins][pin-drive-stren
 
 [embedded-hal-async-i2c-i2c-docsrs]: https://docs.rs/embedded-hal-async/latest/embedded_hal_async/i2c/trait.I2c.html
 [embedded-hal-i2c-i2c-docsrs]: https://docs.rs/embedded-hal/latest/embedded_hal/i2c/trait.I2c.html
+[sbd-book]: ./structured-board-descriptions.md
 [i2c-controller-highest-freq-in-rustdoc]: https://ariel-os.github.io/ariel-os/dev/docs/api/ariel_os/i2c/controller/fn.highest_freq_in.html
 [i2c-clock-stretching-wikipedia]: https://en.wikipedia.org/wiki/I2C#Clock_stretching_using_SCL
 [obtaining-peripheral-access-book]: ./application.md#obtaining-peripheral-access
