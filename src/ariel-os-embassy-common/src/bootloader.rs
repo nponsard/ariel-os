@@ -111,13 +111,13 @@ pub trait FirmwareUpdater {
     /// Write to the DFU storage area, errors out if unaligned or out of bounds.
     fn write_dfu(
         &mut self,
-        offset: usize,
+        offset: u32,
         data: &[u8],
     ) -> Result<(), FirmwareUpdaterError<Self::StorageError>>;
     /// Read from the DFU storage area, errors out if unaligned or out of bounds.
     fn read_dfu(
         &mut self,
-        offset: usize,
+        offset: u32,
         buffer: &mut [u8],
     ) -> Result<(), FirmwareUpdaterError<Self::StorageError>>;
 }
