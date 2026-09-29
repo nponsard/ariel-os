@@ -19,3 +19,8 @@ targets:
     buttons:
       # button0
       - pin: PC2
+    i2c:
+      - sda_pin: PB7
+        scl_pin: PB8
+        possible_peripherals:
+          - I2C1
