@@ -11,3 +11,8 @@ targets:
     leds:
       # led0
       - pin: GPIO7
+    i2c:
+      - sda_pin: GPIO10
+        scl_pin: GPIO8
+        possible_peripherals:
+          - I2C0

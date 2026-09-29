@@ -10,3 +10,9 @@ targets:
       - pin: GPIO0
         aliases:
           - BOOT
+    i2c:
+      - sda_pin: GPIO47
+        scl_pin: GPIO48
+        possible_peripherals:
+          - I2C0
+          - I2C1

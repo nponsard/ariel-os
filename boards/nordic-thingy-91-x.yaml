@@ -15,6 +15,14 @@ targets:
     buttons:
       # button0
       - pin: P0_26
+    i2c:
+      - sda_pin: P0_09
+        scl_pin: P0_08
+        possible_peripherals:
+          - SERIAL0
+          - SERIAL1
+        aliases:
+          - QwiicI2c
 
   nordic-thingy-91-x-nrf5340-app:
     chip: nrf5340-app
@@ -33,6 +41,14 @@ targets:
     buttons:
       # button0
       - pin: P0_24
+    i2c:
+      - sda_pin: P1_03
+        scl_pin: P1_02
+        possible_peripherals:
+          - SERIAL0
+          - SERIAL1
+        aliases:
+          - QwiicI2c
 
   nordic-thingy-91-x-nrf5340-net:
     chip: nrf5340-net
