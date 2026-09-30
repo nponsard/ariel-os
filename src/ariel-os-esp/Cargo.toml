@@ -206,7 +206,12 @@ executor-interrupt = ["embassy-executor/executor-interrupt"]
 
 
 # Enables interaction with the bootloader for firmware updates.
-bootloader = ["dep:embassy-sync", "dep:embedded-storage", "dep:esp-storage", "ariel-os-embassy-common/bootloader"]
+bootloader = [
+  "dep:embassy-sync",
+  "dep:embedded-storage",
+  "dep:esp-storage",
+  "ariel-os-embassy-common/bootloader",
+]
 
 [lints]
 workspace = true
