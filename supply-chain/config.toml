@@ -118,6 +118,9 @@ audit-as-crates-io = true
 [policy.nrf-mpsl-sys]
 audit-as-crates-io = true
 
+[policy.nrf-pac]
+audit-as-crates-io = true
+
 [policy.nrf-sdc]
 audit-as-crates-io = true
 
@@ -558,6 +561,10 @@ criteria = "safe-to-deploy"
 
 [[exemptions.embassy-nrf]]
 version = "0.8.0@git:3940a79a29ae578a35625cae949bea473abf21d1"
+criteria = "safe-to-deploy"
+
+[[exemptions.embassy-nrf]]
+version = "0.9.0@git:cfaa7e92d1f79143b5e892442b1f2ff87b330770"
 criteria = "safe-to-deploy"
 
 [[exemptions.embassy-rp]]
@@ -1029,7 +1036,15 @@ version = "0.10.1"
 criteria = "safe-to-deploy"
 
 [[exemptions.nrf-mpsl]]
+version = "0.3.0@git:d4d244d5ce21f59fa2263333cb1d8f2a5d997145"
+criteria = "safe-to-deploy"
+
+[[exemptions.nrf-mpsl]]
 version = "0.3.0@git:e64ad081a6948b3439d1e811da36d39a5785dbda"
+criteria = "safe-to-deploy"
+
+[[exemptions.nrf-mpsl-sys]]
+version = "0.2.1@git:d4d244d5ce21f59fa2263333cb1d8f2a5d997145"
 criteria = "safe-to-deploy"
 
 [[exemptions.nrf-mpsl-sys]]
@@ -1040,8 +1055,20 @@ criteria = "safe-to-deploy"
 version = "0.1.0"
 criteria = "safe-to-deploy"
 
+[[exemptions.nrf-pac]]
+version = "0.2.0@git:074935b9b24ab302fe812f91725937f57cd082cf"
+criteria = "safe-to-deploy"
+
+[[exemptions.nrf-sdc]]
+version = "0.4.0@git:d4d244d5ce21f59fa2263333cb1d8f2a5d997145"
+criteria = "safe-to-deploy"
+
 [[exemptions.nrf-sdc]]
 version = "0.4.0@git:e64ad081a6948b3439d1e811da36d39a5785dbda"
+criteria = "safe-to-deploy"
+
+[[exemptions.nrf-sdc-sys]]
+version = "0.2.1@git:d4d244d5ce21f59fa2263333cb1d8f2a5d997145"
 criteria = "safe-to-deploy"
 
 [[exemptions.nrf-sdc-sys]]
