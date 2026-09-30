@@ -170,15 +170,28 @@ defmt = [
 ]
 log = ["ariel-os-esp/log"]
 
-bootloader = [
+_boot-common = [
   "dep:embassy-boot",
   "dep:embedded-storage",
-  "ariel-os-embassy-common/bootloader",
-  "ariel-os-esp/bootloader",
-  "ariel-os-nrf/bootloader",
-  "ariel-os-rp/bootloader",
-  "ariel-os-stm32/bootloader",
 ]
+
+boot-loader = [
+  "ariel-os-embassy-common/boot-loader",
+  # "ariel-os-esp/boot-loader",
+  "ariel-os-nrf/boot-loader",
+  "ariel-os-rp/boot-loader",
+  "ariel-os-stm32/boot-loader",
+]
+
+boot-application = [
+  "ariel-os-embassy-common/boot-application",
+  "ariel-os-esp/boot-application",
+  "ariel-os-nrf/boot-application",
+  "ariel-os-rp/boot-application",
+  "ariel-os-stm32/boot-application",
+
+]
+
 
 rcc-config-override = ["ariel-os-stm32/rcc-config-override"]
 

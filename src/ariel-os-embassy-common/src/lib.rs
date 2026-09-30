@@ -8,7 +8,7 @@ pub mod cell;
 pub mod gpio;
 
 #[doc(hidden)]
-#[cfg(feature = "bootloader")]
+#[cfg(feature = "_boot-common")]
 pub mod bootloader;
 
 #[cfg(context = "cortex-m")]

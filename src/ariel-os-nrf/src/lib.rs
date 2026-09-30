@@ -17,7 +17,7 @@ pub mod peripheral {
 #[doc(hidden)]
 pub mod ble;
 
-#[cfg(feature = "bootloader")]
+#[cfg(feature = "_boot-common")]
 #[doc(hidden)]
 pub mod bootloader;
 

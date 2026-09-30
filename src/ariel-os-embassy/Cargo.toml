@@ -245,9 +245,14 @@ defmt = [
 ]
 log = ["ariel-os-hal/log"]
 
-bootloader = ["ariel-os-embassy-common/bootloader", "ariel-os-hal/bootloader"]
 
-firmware-updater = ["dep:embassy-boot", "bootloader"]
+_boot-common = []
+## Enables access to firmware updater support.
+boot-application = ["ariel-os-embassy-common/boot-application","ariel-os-hal/boot-application","_boot-common"]
+## Enables bootloader funcionality.
+boot-loader = ["ariel-os-embassy-common/boot-loader","ariel-os-hal/boot-loader", "_boot-common"]
+
+embassy-boot-application = ["dep:embassy-boot", "boot-application"]
 
 _test = ["dhcpv4", "external-interrupts", "i2c", "spi", "time"]
 

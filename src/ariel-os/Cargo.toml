@@ -267,11 +267,14 @@ embedded-test = ["ariel-os-rt/embedded-test"]
 idle-threads = ["ariel-os-threads/idle-threads"]
 
 # ## Boot loader / OTA related features
-embassy-boot-loader = ["ariel-os-rt/embassy-boot-loader"]
-embassy-boot-application = ["ariel-os-rt/embassy-boot-application"]
-
-# Bootloader backend implementation
-bootloader = ["ariel-os-embassy/bootloader"]
+embassy-boot-loader = [
+  "ariel-os-embassy/boot-loader",
+  "ariel-os-rt/embassy-boot-loader",
+]
+embassy-boot-application = [
+  "ariel-os-embassy/boot-application",
+  "ariel-os-rt/embassy-boot-application",
+]
 
 # features needed for `cargo test`
 _test = [

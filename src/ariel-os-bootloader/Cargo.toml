@@ -8,7 +8,6 @@ license.workspace = true
 
 [dependencies]
 ariel-os = { workspace = true, default-features = true, features = [
-  "bootloader",
   "embassy-boot-loader",
 ] }
 ariel-os-boards = { workspace = true }

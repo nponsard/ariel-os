@@ -1,6 +1,6 @@
 //! Common traits for implementin and using the bootloader infrastructure.
 use core::{error::Error, ops::Range};
-
+#[cfg(feature="boot-loader")]
 use embassy_boot::BootLoaderConfig;
 use embedded_storage::nor_flash::NorFlash;
 
@@ -62,6 +62,7 @@ pub trait BootloaderStorage {
 }
 
 /// Backend to be implemented by the HAL to allow the bootloader to operate on the chip.
+#[cfg(feature="boot-loader")]
 pub trait BootLoaderBackend: BootloaderStorage {
     /// Creates the bootloader config, use `embassy_embedded_hal::flash::partition::BlockingPartition` if you want to share the flash with different sections.
     // maybe give the flash layout as parameter here ?
@@ -93,6 +94,7 @@ pub trait BootLoaderBackend: BootloaderStorage {
     fn pet_watchdog();
 }
 
+#[cfg(feature="boot-application")]
 pub enum FirmwareUpdaterError<StorageError> {
     /// Operation Was attempted while in a bad state.
     BadState,
@@ -100,6 +102,7 @@ pub enum FirmwareUpdaterError<StorageError> {
     StorageError(StorageError),
 }
 
+#[cfg(feature="boot-application")]
 pub trait FirmwareUpdater {
     type StorageError;
 

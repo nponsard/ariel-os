@@ -22,8 +22,11 @@ static_cell = { workspace = true, optional = true }
 trouble-host = { workspace = true, optional = true }
 
 [features]
-## Enables access to bootloader types
-bootloader = ["dep:embassy-boot", "dep:embedded-storage"]
+_boot-common = ["dep:embedded-storage"]
+## Enables access to firmware updater support.
+boot-application = ["_boot-common"]
+## Enables access to bootloader types.
+boot-loader = ["dep:embassy-boot", "_boot-common"]
 
 ## Enables GPIO interrupt support.
 external-interrupts = []

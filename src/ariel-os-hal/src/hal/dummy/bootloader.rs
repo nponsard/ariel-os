@@ -10,6 +10,9 @@ use crate::hal::OptionalPeripherals;
 
 pub fn init(peripherals: &mut OptionalPeripherals) {}
 
+// TODO: dummy updater interface
+// TODO: additional feature for BootloaderStorage implementation ?
+
 pub struct HalBootLoaderBackend;
 
 impl BootloaderStorage for HalBootLoaderBackend {
@@ -23,7 +26,8 @@ impl BootloaderStorage for HalBootLoaderBackend {
         unimplemented!()
     }
 }
-#[allow(unsafe_code)]
+
+#[cfg(feature = "boot-loader")]
 impl BootLoaderBackend for HalBootLoaderBackend {
     fn load_active(flash_config: &ariel_os_embassy_common::bootloader::FlashConfig) {
         unimplemented!()

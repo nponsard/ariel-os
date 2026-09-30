@@ -13,7 +13,7 @@ use ariel_os_embassy_common::executor_thread;
 #[cfg(feature = "debug-uart")]
 pub mod debug_uart;
 
-#[cfg(feature = "firmware-updater")]
+#[cfg(feature = "boot-application")]
 pub mod firmware_updater;
 
 #[cfg(feature = "spi")]
@@ -79,10 +79,14 @@ pub mod api {
         };
     }
 
-    #[cfg(feature = "bootloader")]
+    #[cfg(feature = "_boot-common")]
     pub mod bootloader {
+        #[cfg(feature = "boot-loader")]
         pub use ariel_os_hal::hal::bootloader::HalBootLoaderBackend;
+        #[cfg(feature = "boot-application")]
+        pub use firmware_updater::FirmwareUpdaterBackend;
     }
+
     #[cfg(feature = "ble")]
     pub use crate::ble;
     #[cfg(feature = "net")]
@@ -219,7 +223,7 @@ async fn init_task(mut peripherals: hal::OptionalPeripherals) {
     #[cfg(all(not(feature = "no-boards"), context = "ariel-os"))]
     ariel_os_boards::init(&mut peripherals);
 
-    #[cfg(feature = "bootloader")]
+    #[cfg(feature = "_boot-common")]
     hal::bootloader::init(&mut peripherals);
 
     #[cfg(all(context = "stm32", feature = "external-interrupts"))]

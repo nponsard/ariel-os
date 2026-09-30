@@ -17,7 +17,7 @@
 mod executor;
 
 #[doc(hidden)]
-#[cfg(feature = "bootloader")]
+#[cfg(feature = "_boot-common")]
 pub mod bootloader;
 
 #[doc(hidden)]

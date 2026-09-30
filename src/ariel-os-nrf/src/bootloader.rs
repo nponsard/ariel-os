@@ -66,6 +66,7 @@ impl BootloaderStorage for HalBootLoaderBackend {
     }
 }
 
+#[cfg(feature = "boot-loader")]
 #[allow(unsafe_code)]
 impl BootLoaderBackend for HalBootLoaderBackend {
     // from [embassy-boot-nrf](https://github.com/embassy-rs/embassy/blob/4c9a8998805b95d472b5e8137b16588369c2a8b6/embassy-boot-nrf/src/lib.rs#L48), license MIT OR Apache-2.0

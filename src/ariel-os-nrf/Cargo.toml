@@ -137,12 +137,21 @@ executor-interrupt = [
   "nrf-modem?/os-irq",
 ]
 
-## Access to bootloader backend.
-bootloader = [
-  "ariel-os-embassy-common/bootloader",
-  "dep:cortex-m",
-  "dep:embassy-boot",
+_boot-common = [
   "dep:embassy-embedded-hal",
+]
+
+## Access to bootloader backend.
+boot-loader = [
+  "dep:cortex-m",
+  "ariel-os-embassy-common/boot-loader",
+  "_boot-common"
+]
+
+## Access to firmware updater.
+boot-application = [
+  "ariel-os-embassy-common/boot-application",
+  "_boot-common"
 ]
 
 _test = ["embassy-nrf/nrf52840", "external-interrupts", "i2c", "spi"]
