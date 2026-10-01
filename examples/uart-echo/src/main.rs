@@ -27,7 +27,7 @@ async fn main(peripherals: UartPeripherals) {
     let mut tx_buf = [0u8; 32];
 
     let mut uart = peripherals
-        .with_config(&mut rx_buf, &mut tx_buf, config)
+        .build_with_config(&mut rx_buf, &mut tx_buf, config)
         .expect("Invalid UART configuration");
 
     uart.write_all(b"Ariel OS uart echo started!\r\n")

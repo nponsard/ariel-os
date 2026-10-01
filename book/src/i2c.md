@@ -55,7 +55,7 @@ ariel_os::hal::group_peripherals!(Peripherals {
 
 #[ariel_os::task(autostart, peripherals)]
 async fn main(peripherals: Peripherals) {
-    let i2c_bus = peripherals.i2c.with_config(i2c_config);
+    let i2c_bus = peripherals.i2c.build_with_config(i2c_config);
 }
 ```
 

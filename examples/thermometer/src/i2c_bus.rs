@@ -17,6 +17,6 @@ pub fn init(peripherals: I2c0) {
     i2c_config.frequency = const { highest_freq_in(Kilohertz::kHz(100)..=Kilohertz::kHz(400)) };
     debug!("Selected frequency: {:?}", i2c_config.frequency);
 
-    let i2c_bus = peripherals.with_config(i2c_config);
+    let i2c_bus = peripherals.build_with_config(i2c_config);
     let _ = I2C_BUS.set(Mutex::new(i2c_bus));
 }
