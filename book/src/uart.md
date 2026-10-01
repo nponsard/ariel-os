@@ -40,6 +40,36 @@ Some microcontrollers allow using (almost) any pair of pins, but most require sp
 
 The buffers should be sized depending on how long it may take for the application to yield to the [async executor][async-executors-book]: the longer the larger buffers.
 
+### Leveraging the Structured Board Descriptions
+
+Instead of relying on the UART pins being defined inside the application as presented above, it is also possible to leverage [the SBD files][sbd-book], if the board is supported in-tree.
+In that case, the driver for the UART can be instantiated as follows:
+
+```rust
+ariel_os::hal::group_peripherals!(Peripherals {
+    uart: ariel_os_boards::pins::Uart0,
+    // or, to use the UART defined as host-facing in the SBD file:
+    uart: ariel_os_boards::pins::HOST_FACING_UART,
+});
+
+#[ariel_os::task(autostart, peripherals)]
+async fn main(peripherals: Peripherals) {
+    let uart = peripherals.uart.build_with_config(&mut rx_buf, &mut tx_buf, uart_config)
+        .expect("UART configuration should be valid");
+}
+```
+
+This uses the pins defined in the SBD file for the UART.
+The SBD file currently lists possible UART peripherals that can be used for the bus, and the first one is automatically selected.
+It is not currently possible to select another one.
+
+The host-facing UART is the UART connected to a USB ⟷ UART adapter on the board (which may be part of an interface MCU), if present.
+To make sure such a UART is available on the board the application is compiled for, the application should be made to depend on the `has_host_facing_uart` [laze module][laze-modules-book].
+There is currently no equivalent laze module for other UARTs.
+
+> [!IMPORTANT]
+> Here, `Uart0` does not refer to the `UART0` microcontroller peripheral, but instead to the UART defined at index 0 in the SBD sequence of UARTs.
+
 ### Configuration
 
 UART configuration is HAL-specific, and a default configuration can be obtained this way:
@@ -93,4 +123,6 @@ The number of data and stop bits and whether a parity bit is used can also be co
 [uart-baudrate-rustdoc]: https://ariel-os.github.io/ariel-os/dev/docs/api/ariel_os/uart/enum.Baudrate.html
 [embassy-style-hals]: ./glossary.md#embassy-style-hals
 [async-executors-book]: ./async-support.md
+[laze-modules-book]: ./build-system.md#laze-modules
+[sbd-book]: ./structured-board-descriptions.md
 [using-third-party-hals-directly-book]: ./application.md#using-the-third-party-hals-directly
