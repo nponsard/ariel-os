@@ -63,6 +63,8 @@ This uses the pins defined in the SBD file for the I2C bus.
 The SBD file currently lists possible I2C peripherals that can be used for the bus, and the first one is automatically selected.
 It is not currently possible to select another one.
 
+To make sure an I2C bus is available on the board the application is compiled for, the application should be made to depend on the `has_i2c_bus` [laze module][laze-modules-book].
+
 > [!IMPORTANT]
 > Here, `I2c0` does not refer to the `I2C0` microcontroller peripheral, but instead to the I2C bus defined at index 0 in the SBD sequence of I2C buses.
 
@@ -124,4 +126,5 @@ Some HALs also allow increasing the [drive strength of the pins][pin-drive-stren
 [internal-pull-resistors-book]: ./pins-gpios.md#pull-uppull-down-resistors
 [pin-drive-strength-book]: ./pins-gpios.md#output-configuration
 [embassy-style-hals]: ./glossary.md#embassy-style-hals
+[laze-modules-book]: ./build-system.md#laze-modules
 [using-third-party-hals-directly-book]: ./application.md#using-the-third-party-hals-directly
