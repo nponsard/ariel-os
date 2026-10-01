@@ -151,7 +151,7 @@ macro_rules! define_uarts {
 /// [`define_peripherals!`](crate::define_peripherals!) (that is, by using [`ariel_os::task(autostart,
 /// peripherals)`](ariel_os::task()) or the underlying `TakePeripherals` trait).
 ///
-/// The struct also has a method `.with_config()` that can be used to initialize an Ariel OS uart
+/// The struct also has a method `.build_with_config()` that can be used to initialize an Ariel OS uart
 /// instance.
 #[cfg(feature = "uart")]
 #[macro_export]
@@ -176,7 +176,7 @@ macro_rules! define_uart {
         }
 
         impl<'d> $name {
-            pub fn with_config(
+            pub fn build_with_config(
                 self,
                 rx_buf: &'d mut [u8],
                 tx_buf: &'d mut [u8],
