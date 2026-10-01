@@ -267,7 +267,7 @@ macro_rules! define_i2c_bus {
         }
 
         impl $name {
-            pub fn with_config(self, config: $crate::hal::i2c::controller::Config) -> $crate::hal::i2c::controller::I2c {
+            pub fn build_with_config(self, config: $crate::hal::i2c::controller::Config) -> $crate::hal::i2c::controller::I2c {
                 $crate::hal::i2c::controller::$peripheral::new(self.sda, self.scl, config)
             }
         }

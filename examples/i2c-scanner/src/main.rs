@@ -19,7 +19,7 @@ async fn i2c_scanner(peripherals: Peripherals) {
     let mut i2c_config = hal::i2c::controller::Config::default();
     i2c_config.frequency = const { highest_freq_in(Kilohertz::kHz(100)..=Kilohertz::kHz(400)) };
 
-    let mut i2c_bus = peripherals.i2c.with_config(i2c_config);
+    let mut i2c_bus = peripherals.i2c.build_with_config(i2c_config);
 
     info!("Checking for I2C devices on the bus...");
 
