@@ -38,3 +38,5 @@ targets:
         scl_pin: PB8
         possible_peripherals:
           - I2C1
+        aliases:
+          - ArduinoI2c

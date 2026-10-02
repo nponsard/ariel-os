@@ -28,3 +28,25 @@ targets:
       # led5
       - color: blue
         pin: PH15
+    i2c:
+      # These pins have strong pull-ups suitable for I2C.
+      - sda_pin: PB11
+        scl_pin: PB10
+        possible_peripherals:
+          - I2C2
+        aliases:
+          - ArduinoI2c
+      - sda_pin: PD13
+        scl_pin: PD12
+        possible_peripherals:
+          - I2C4
+        aliases:
+          - QwiicI2c
+      # TODO: currently not allowed by sbd-gen because the peripheral is shared.
+      # These pins have strong pull-ups suitable for I2C.
+      # - sda_pin: PF15
+      #   scl_pin: PF14
+      #   possible_peripherals:
+      #     - I2C4
+      #   aliases:
+      #     - JmiscI2c

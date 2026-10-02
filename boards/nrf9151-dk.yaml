@@ -44,6 +44,14 @@ targets:
         active: low
         aliases:
           - Button 4
+    i2c:
+      # Only available when a shield is inserted and if enabled by the interface
+      # MCU using the nRF Connect for Desktop application.
+      - sda_pin: P0_30
+        scl_pin: P0_31
+        possible_peripherals:
+          - SERIAL0
+          - SERIAL1
     uarts:
       - aliases:
           - VCOM0
