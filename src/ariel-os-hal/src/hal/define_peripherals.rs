@@ -222,7 +222,7 @@ macro_rules! _uart_get_host_facing_names {
     ( name: $name:ident, device: $_device:ident, tx: $_tx:ident, rx: $_rx:ident, host_facing: true ) => {
         $name
     };
-    ( name: $_name:ident, device: $_device:ident, tx: $_tx:ident, rx: $_rx:ident, host_facing: false ) => {};
+    ( name: $_name:ident, device: $_device:ident, tx: $_tx:ident, rx: $_rx:ident, host_facing: false ) => {()};
 }
 
 #[macro_export]
