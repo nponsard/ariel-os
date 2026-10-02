@@ -215,10 +215,7 @@ chips:
     support:
       gpio: supported
       debug_channel: supported
-      hwrng:
-        status: not_currently_supported
-        comments:
-          - no standalone RNG in the application core, only in the CryptoCell which is not currently supported
+      hwrng: supported
       i2c_controller: supported
       spi_main: supported
       uart: supported
@@ -255,10 +252,7 @@ chips:
     support:
       gpio: supported
       debug_channel: supported
-      hwrng:
-        status: not_currently_supported
-        comments:
-          - only available through the CryptoCell
+      hwrng: supported
       i2c_controller: supported
       spi_main: supported
       uart: needs_testing
@@ -276,10 +270,7 @@ chips:
     support:
       gpio: supported
       debug_channel: supported
-      hwrng:
-        status: not_currently_supported
-        comments:
-          - only available through the CryptoCell
+      hwrng: supported
       i2c_controller: supported
       spi_main: supported
       uart: supported
