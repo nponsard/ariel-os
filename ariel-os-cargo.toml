@@ -23,6 +23,8 @@ cyw43 = { git = "https://github.com/ariel-os/embassy", rev = "603583d9" }
 # Includes commit e349ebb that fixes some issues with some rpi-pico2-w boards, see https://github.com/ariel-os/ariel-os/issues/2192 .
 cyw43-pio = { git = "https://github.com/ariel-os/embassy", rev = "603583d9" }
 
+# branch = "embassy-embedded-hal-v0.5.0+ariel-os+flush-fix"
+embassy-embedded-hal = { git = "https://github.com/ariel-os/embassy", rev = "5211daf214eecd64c6754b760fecdb1f16622312" }
 # branch = "embassy-hal-internal-v0.3.0+ariel-os"
 embassy-hal-internal = { git = "https://github.com/ariel-os/embassy", rev = "0feffeb3c90748112a64c6570a39e1251311accb" }
 # branch = "embassy-nrf-v0.9.0+ariel-os+cryptocell"
