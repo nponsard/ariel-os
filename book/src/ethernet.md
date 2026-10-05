@@ -33,10 +33,10 @@ The table below details the supported chips, and how to enable support for them:
 
 | Chip           | [laze module][laze-modules-book] to select                 |
 | -------------- | ---------------------------------------------------------- |
-| WIZnet W5100S  | [`ethernet-wiznet-5100s`][ethernet-wiznet-networking-book] |
-| WIZnet W5500   | [`ethernet-wiznet-5500`][ethernet-wiznet-networking-book]  |
-| WIZnet W6100   | [`ethernet-wiznet-6100`][ethernet-wiznet-networking-book]  |
-| WIZnet W6300   | [`ethernet-wiznet-6300`][ethernet-wiznet-networking-book]  |
+| WIZnet W5100S  | [`ethernet-wiznet-w5100s`][ethernet-wiznet-networking-book] |
+| WIZnet W5500   | [`ethernet-wiznet-w5500`][ethernet-wiznet-networking-book]  |
+| WIZnet W6100   | [`ethernet-wiznet-w6100`][ethernet-wiznet-networking-book]  |
+| WIZnet W6300   | [`ethernet-wiznet-w6300`][ethernet-wiznet-networking-book]  |
 
 Only the MAC of these chips is currently used (i.e., WIZnet chips are used in MACRAW mode): the hardware acceleration of higher level protocols is not leveraged.
 
