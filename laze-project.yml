@@ -330,6 +330,7 @@ contexts:
       - rp-link-arg
       - cortex-m0-plus
     provides:
+      - has_device_identity # Currently requires a Winbond memory chip to be used.
       - has_multi_core_support
       - has_storage_support
     env:
