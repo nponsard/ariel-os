@@ -86,7 +86,7 @@ Boards using this chip.
 	    <td rowspan="2"><a href="../boards/espressif-esp32-h2-devkitm-1.html">Espressif ESP32-H2-DevKitM-1</a></td>
 	  </tr>
 	  <tr>
-	    <td><code>espressif-esp32-h2-devkitm-1-h4s</code></td>
+	    <td><code>espressif-esp32-h2-devkitm-1</code></td>
 		<td style="text-align: center;">3</td>
 		  <td class="support-cell" title="supported">✅</td>
 		  <td class="support-cell" title="supported">✅</td>
