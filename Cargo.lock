@@ -425,6 +425,7 @@ dependencies = [
  "ariel-os-random",
  "ariel-os-utils",
  "bt-hci",
+ "critical-section",
  "cyw43",
  "cyw43-firmware",
  "cyw43-pio",
