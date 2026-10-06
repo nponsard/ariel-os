@@ -88,8 +88,8 @@ uart = [
   "ariel-os-stm32/uart",
 ]
 
-## Suppresses the built-in ESP app descriptor so the application can emit its own.
-custom-app-desc = ["ariel-os-esp/custom-app-desc"]
+## Suppresses the built-in app descriptor so the application can emit its own.
+custom-app-descriptor = ["ariel-os-esp/custom-app-descriptor"]
 
 usb = [
   "ariel-os-esp/usb",
