@@ -2289,8 +2289,8 @@ modules:
       - single-core
 
   - name: custom-app-descriptor
-    help: let the application emit its own ESP app descriptor
-    context: esp
+    help: let the application emit its own app descriptor (ESP32-only)
+    context: esp # Could be extended to other families if later needed.
     env:
       global:
         FEATURES:
