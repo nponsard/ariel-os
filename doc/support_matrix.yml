@@ -1348,26 +1348,14 @@ builders:
     note_snippets:
       - espressif-devkit-two-usb-ports-no-usb-otg
 
-  espressif-esp32-h2-devkitm-1-h2s:
-    chip: esp32h2fh2s
-    tier: "3"
-    support:
-    note_snippets:
-      - espressif-devkit-two-usb-ports-no-usb-otg
-
-  espressif-esp32-h2-devkitm-1-h4s:
+  espressif-esp32-h2-devkitm-1:
     chip: esp32h2fh4s
     tier: "3"
     support:
     note_snippets:
       - espressif-devkit-two-usb-ports-no-usb-otg
 
-  espressif-esp8684-devkitc-02-h2:
-    chip: esp8684h2
-    tier: "3"
-    support:
-
-  espressif-esp8684-devkitc-02-h4:
+  espressif-esp8684-devkitc-02:
     chip: esp8684h4
     tier: "3"
     support:
@@ -1701,14 +1689,12 @@ boards:
   - name: Espressif ESP32-H2-DevKitM-1
     url: https://web.archive.org/web/20260420232231/https://docs.espressif.com/projects/esp-dev-kits/en/latest/esp32h2/esp32-h2-devkitm-1/index.html
     builders:
-      - espressif-esp32-h2-devkitm-1-h2s
-      - espressif-esp32-h2-devkitm-1-h4s
+      - espressif-esp32-h2-devkitm-1
 
   - name: Espressif ESP8684-DevKitC-02
     url: https://web.archive.org/web/20260607024208/https://docs.espressif.com/projects/esp-dev-kits/en/latest/esp32c2/esp8684-devkitc-02/user_guide.html
     builders:
-      - espressif-esp8684-devkitc-02-h2
-      - espressif-esp8684-devkitc-02-h4
+      - espressif-esp8684-devkitc-02
 
   - name: Espressif ESP32-S2-DevKitC-1
     url: https://web.archive.org/web/20251022182104/https://www.espressif.com/en/dev-board/esp32-s2-devkitc-1-en
