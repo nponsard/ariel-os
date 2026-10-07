@@ -45,7 +45,7 @@ targets:
       #   # FIXME: Is this exhaustive? (Seems those are all we have in Ariel right now)
       #   possible_peripherals: [SERIAL3]
       #   # While this UART's existence is official at least in the sense that
-      #   # the schematic labels those pins VCOM0 TX/RX, that this is actually
+      #   # the schematic labels those pins VCOM1 TX/RX, that this is actually
       #   # forwarded to the host is more of a convention upheld by the default
       #   # firmware; sbd is not yet experessive enough to capture this in a
       #   # machine-readable fashion.
