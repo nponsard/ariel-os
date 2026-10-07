@@ -75,7 +75,7 @@ checksum = "c583acf993cf4245c4acb0a2cc2ab1f9cc097de73411bb6d3647ff6af2b1013d"
 
 [[package]]
 name = "ariel-os"
-version = "0.5.0"
+version = "0.6.0"
 dependencies = [
  "ariel-os-bench",
  "ariel-os-boards",
@@ -103,7 +103,7 @@ dependencies = [
 
 [[package]]
 name = "ariel-os-alloc"
-version = "0.5.0"
+version = "0.6.0"
 dependencies = [
  "ariel-os",
  "ariel-os-boards",
@@ -118,7 +118,7 @@ dependencies = [
 
 [[package]]
 name = "ariel-os-bench"
-version = "0.5.0"
+version = "0.6.0"
 dependencies = [
  "cortex-m",
  "defmt 1.1.1",
@@ -136,18 +136,18 @@ dependencies = [
 
 [[package]]
 name = "ariel-os-buildinfo"
-version = "0.5.0"
+version = "0.6.0"
 dependencies = [
  "ariel-os-utils",
 ]
 
 [[package]]
 name = "ariel-os-buildutils"
-version = "0.5.0"
+version = "0.6.0"
 
 [[package]]
 name = "ariel-os-coap"
-version = "0.5.0"
+version = "0.6.0"
 dependencies = [
  "ariel-os-embassy",
  "ariel-os-log",
@@ -180,7 +180,7 @@ dependencies = [
 
 [[package]]
 name = "ariel-os-debug"
-version = "0.5.0"
+version = "0.6.0"
 dependencies = [
  "defmt-rtt",
  "featurecomb",
@@ -190,7 +190,7 @@ dependencies = [
 
 [[package]]
 name = "ariel-os-embassy"
-version = "0.5.0"
+version = "0.6.0"
 dependencies = [
  "ariel-os-boards",
  "ariel-os-buildinfo",
@@ -236,7 +236,7 @@ dependencies = [
 
 [[package]]
 name = "ariel-os-embassy-common"
-version = "0.5.0"
+version = "0.6.0"
 dependencies = [
  "ariel-os-buildinfo",
  "ariel-os-utils",
@@ -253,7 +253,7 @@ dependencies = [
 
 [[package]]
 name = "ariel-os-esp"
-version = "0.5.0"
+version = "0.6.0"
 dependencies = [
  "ariel-os-embassy-common",
  "ariel-os-log",
@@ -287,7 +287,7 @@ dependencies = [
 
 [[package]]
 name = "ariel-os-hal"
-version = "0.5.0"
+version = "0.6.0"
 dependencies = [
  "ariel-os-embassy-common",
  "ariel-os-esp",
@@ -310,7 +310,7 @@ dependencies = [
 
 [[package]]
 name = "ariel-os-identity"
-version = "0.5.0"
+version = "0.6.0"
 dependencies = [
  "ariel-os",
  "ariel-os-boards",
@@ -321,7 +321,7 @@ dependencies = [
 
 [[package]]
 name = "ariel-os-log"
-version = "0.5.0"
+version = "0.6.0"
 dependencies = [
  "ariel-os-debug",
  "ariel-os-utils",
@@ -336,7 +336,7 @@ dependencies = [
 
 [[package]]
 name = "ariel-os-macros"
-version = "0.5.0"
+version = "0.6.0"
 dependencies = [
  "ariel-os",
  "heapless 0.9.3",
@@ -349,7 +349,7 @@ dependencies = [
 
 [[package]]
 name = "ariel-os-native"
-version = "0.5.0"
+version = "0.6.0"
 dependencies = [
  "ariel-os-buildinfo",
  "ariel-os-debug",
@@ -369,7 +369,7 @@ dependencies = [
 
 [[package]]
 name = "ariel-os-nrf"
-version = "0.5.0"
+version = "0.6.0"
 dependencies = [
  "ariel-os-embassy-common",
  "ariel-os-log",
@@ -397,7 +397,7 @@ dependencies = [
 
 [[package]]
 name = "ariel-os-power"
-version = "0.5.0"
+version = "0.6.0"
 dependencies = [
  "cortex-m",
  "esp-hal",
@@ -405,7 +405,7 @@ dependencies = [
 
 [[package]]
 name = "ariel-os-random"
-version = "0.5.0"
+version = "0.6.0"
 dependencies = [
  "embassy-sync 0.7.2",
  "getrandom 0.3.3",
@@ -417,7 +417,7 @@ dependencies = [
 
 [[package]]
 name = "ariel-os-rp"
-version = "0.5.0"
+version = "0.6.0"
 dependencies = [
  "ariel-os-buildutils",
  "ariel-os-embassy-common",
@@ -443,7 +443,7 @@ dependencies = [
 
 [[package]]
 name = "ariel-os-rt"
-version = "0.5.0"
+version = "0.6.0"
 dependencies = [
  "ariel-os-alloc",
  "ariel-os-buildutils",
@@ -465,7 +465,7 @@ dependencies = [
 
 [[package]]
 name = "ariel-os-runqueue"
-version = "0.5.0"
+version = "0.6.0"
 dependencies = [
  "defmt 1.1.1",
  "hax-lib",
@@ -590,7 +590,7 @@ dependencies = [
 
 [[package]]
 name = "ariel-os-stm32"
-version = "0.5.0"
+version = "0.6.0"
 dependencies = [
  "ariel-os-embassy-common",
  "ariel-os-random",
@@ -610,14 +610,14 @@ dependencies = [
 
 [[package]]
 name = "ariel-os-stm32-mapping"
-version = "0.5.0"
+version = "0.6.0"
 dependencies = [
  "embassy-stm32",
 ]
 
 [[package]]
 name = "ariel-os-storage"
-version = "0.5.0"
+version = "0.6.0"
 dependencies = [
  "ariel-os-hal",
  "ariel-os-log",
@@ -632,7 +632,7 @@ dependencies = [
 
 [[package]]
 name = "ariel-os-threads"
-version = "0.5.0"
+version = "0.6.0"
 dependencies = [
  "ariel-os-log",
  "ariel-os-runqueue",
@@ -656,7 +656,7 @@ dependencies = [
 
 [[package]]
 name = "ariel-os-utils"
-version = "0.5.0"
+version = "0.6.0"
 dependencies = [
  "const-str",
  "const_panic",
