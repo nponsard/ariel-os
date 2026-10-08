@@ -7,7 +7,7 @@ targets:
     # flags:
     #   - has_usb_device_port
     ariel:
-      swi: USART2
+      swi: WWDG
     leds:
       # led0
       - pin: PB5

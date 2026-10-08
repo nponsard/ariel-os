@@ -3,7 +3,7 @@ targets:
   st-nucleo-f042k6:
     chip: stm32f042k6
     ariel:
-      swi: USART2
+      swi: WWDG
     leds:
       # led0
       - pin: PA5

@@ -3,7 +3,7 @@ targets:
   st-nucleo-f401re:
     chip: stm32f401re
     ariel:
-      swi: USART2
+      swi: WWDG
     leds:
       # led0
       - pin: PA5

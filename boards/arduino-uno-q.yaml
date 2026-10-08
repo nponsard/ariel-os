@@ -8,7 +8,7 @@ targets:
       global_env:
         CARGO_ENV:
           - CONFIG_VBUS_DETECTION=false
-          - CONFIG_SWI=USART2
+          - CONFIG_SWI=WWDG
     leds:
       # led0
       - color: red
