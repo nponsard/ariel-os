@@ -23,7 +23,7 @@ builders:
   env:
     CARGO_ENV:
     - CONFIG_VBUS_DETECTION=false
-    - CONFIG_SWI=USART2
+    - CONFIG_SWI=WWDG
 - name: bbc-microbit-v1
   parent: nrf51822-xxaa
   provides:
@@ -197,7 +197,7 @@ builders:
   - has_swi
   env:
     CARGO_ENV:
-    - CONFIG_SWI=USART2
+    - CONFIG_SWI=WWDG
 - name: seeedstudio-xiao-esp32-s3
   parent: esp32s3r8
   provides:
@@ -226,7 +226,7 @@ builders:
   - has_swi
   env:
     CARGO_ENV:
-    - CONFIG_SWI=USART2
+    - CONFIG_SWI=WWDG
 - name: st-b-l475e-iot01a
   parent: stm32l475vg
   provides:
@@ -237,7 +237,7 @@ builders:
   - has_usb_device_port
   env:
     CARGO_ENV:
-    - CONFIG_SWI=UART5
+    - CONFIG_SWI=WWDG
 - name: st-nucleo-c031c6
   parent: stm32c031c6
   provides:
@@ -246,7 +246,7 @@ builders:
   - has_swi
   env:
     CARGO_ENV:
-    - CONFIG_SWI=USART2
+    - CONFIG_SWI=WWDG
 - name: st-nucleo-f042k6
   parent: stm32f042k6
   provides:
@@ -254,7 +254,7 @@ builders:
   - has_swi
   env:
     CARGO_ENV:
-    - CONFIG_SWI=USART2
+    - CONFIG_SWI=WWDG
 - name: st-nucleo-f303re
   parent: stm32f303re
   provides:
@@ -263,7 +263,7 @@ builders:
   - has_swi
   env:
     CARGO_ENV:
-    - CONFIG_SWI=USART2
+    - CONFIG_SWI=WWDG
 - name: st-nucleo-f401re
   parent: stm32f401re
   provides:
@@ -272,7 +272,7 @@ builders:
   - has_swi
   env:
     CARGO_ENV:
-    - CONFIG_SWI=USART2
+    - CONFIG_SWI=WWDG
 - name: st-nucleo-f411re
   parent: stm32f411re
   provides:
@@ -281,7 +281,7 @@ builders:
   - has_swi
   env:
     CARGO_ENV:
-    - CONFIG_SWI=USART2
+    - CONFIG_SWI=WWDG
 - name: st-nucleo-f767zi
   parent: stm32f767zi
   provides:
@@ -291,7 +291,7 @@ builders:
   - has_swi
   env:
     CARGO_ENV:
-    - CONFIG_SWI=USART2
+    - CONFIG_SWI=WWDG
 - name: st-nucleo-g431rb
   parent: stm32g431rb
   provides:
@@ -300,7 +300,7 @@ builders:
   - has_swi
   env:
     CARGO_ENV:
-    - CONFIG_SWI=USART2
+    - CONFIG_SWI=WWDG
 - name: st-nucleo-h753zi
   parent: stm32h753zi
   provides:
@@ -311,7 +311,7 @@ builders:
   - has_usb_device_port
   env:
     CARGO_ENV:
-    - CONFIG_SWI=UART5
+    - CONFIG_SWI=WWDG
 - name: st-nucleo-h755zi-q
   parent: stm32h755zi
   provides:
@@ -322,7 +322,7 @@ builders:
   - has_usb_device_port
   env:
     CARGO_ENV:
-    - CONFIG_SWI=UART5
+    - CONFIG_SWI=WWDG
 - name: st-nucleo-wb55
   parent: stm32wb55rg
   provides:
@@ -332,7 +332,7 @@ builders:
   - has_usb_device_port
   env:
     CARGO_ENV:
-    - CONFIG_SWI=USART1
+    - CONFIG_SWI=WWDG
 - name: st-nucleo-wba55
   parent: stm32wba55cg
   provides:
@@ -341,7 +341,7 @@ builders:
   - has_swi
   env:
     CARGO_ENV:
-    - CONFIG_SWI=USART2
+    - CONFIG_SWI=WWDG
 - name: st-nucleo-wba65ri
   parent: stm32wba65ri
   provides:
@@ -351,7 +351,7 @@ builders:
   - has_usb_device_port
   env:
     CARGO_ENV:
-    - CONFIG_SWI=USART1
+    - CONFIG_SWI=WWDG
 - name: st-steval-mkboxpro
   parent: stm32u585ai
   provides:
@@ -363,7 +363,7 @@ builders:
   env:
     CARGO_ENV:
     - CONFIG_VBUS_DETECTION=false
-    - CONFIG_SWI=USART2
+    - CONFIG_SWI=WWDG
 - name: stm32u083c-dk
   parent: stm32u083mc
   provides:

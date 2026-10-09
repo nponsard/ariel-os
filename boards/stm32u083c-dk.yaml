@@ -5,6 +5,7 @@ targets:
     flags:
       - has_usb_device_port
     ariel:
+      # WWDG's interrupt is shared with IWDG's.
       swi: USART4_LPUART3
     leds:
       # led0

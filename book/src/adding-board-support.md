@@ -54,7 +54,7 @@ targets:
     # It contains e.g., the choice of SWI interrupt used for the embassy interrupt executor,
     # which is needed to be set on e.g., stm32 MCUs.
     ariel:
-      swi: USART2
+      swi: WWDG
     leds:
       # led0
       - pin: PB5
@@ -84,7 +84,7 @@ sbd-gen generate-ariel boards -o src/ariel-os-boards --mode update
 
 ### `stm32`
 
-- STM32 chips do not have a dedicated SWI, so you need to choose one. Select any unused interrupt, like one of the UARTs, and set the `targets.<board_name>.ariel.swi` field in the board description.
+- STM32 chips do not have a dedicated SWI, so you need to choose one. Select any unused interrupt, typically that of the WWDG, and set the `targets.<board_name>.ariel.swi` field in the board description.
 - Each STM32 MCU needs an entry for configuring the clock config, in `src/ariel-os-stm32/src/rcc.rs`'s `default()`.
 
 ### `esp32`

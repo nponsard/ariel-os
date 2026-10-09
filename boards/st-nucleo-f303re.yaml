@@ -3,7 +3,7 @@ targets:
   st-nucleo-f303re:
     chip: stm32f303re
     ariel:
-      swi: USART2
+      swi: WWDG
     leds:
       # led0
       - pin: PA5
