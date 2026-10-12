@@ -17,6 +17,8 @@ critical-section = { workspace = true }
 defmt = { workspace = true, optional = true }
 embassy-embedded-hal = { workspace = true, optional = true }
 embassy-executor = { workspace = true, default-features = false }
+embassy-futures = { workspace = true }
+embassy-sync = { workspace = true }
 embassy-time = { workspace = true, optional = true }
 embassy-time-driver = { workspace = true, features = [
   "tick-hz-1_000_000",

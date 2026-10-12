@@ -266,6 +266,8 @@ dependencies = [
  "defmt 1.1.1",
  "embassy-embedded-hal",
  "embassy-executor",
+ "embassy-futures",
+ "embassy-sync 0.7.2",
  "embassy-time",
  "embassy-time-driver",
  "embassy-time-queue-utils",

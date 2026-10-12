@@ -19,6 +19,9 @@ use embassy_sync::{
 
 use crate::{NetworkDevice, cell::SameExecutorCell};
 
+#[cfg(feature = "wifi-esp")]
+pub use crate::hal::wifi::esp_wifi::{connect, disconnect};
+
 #[allow(dead_code)]
 pub(crate) const ETHERNET_MTU: usize = 1514;
 

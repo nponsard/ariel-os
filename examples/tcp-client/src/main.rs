@@ -24,9 +24,11 @@ async fn tcp_echo() {
     let mut tx_buffer = [0; 256];
 
     info!("waiting for interface to come up...");
-    stack.wait_config_up().await;
 
     loop {
+        net::connect();
+        stack.wait_config_up().await;
+
         let mut socket = embassy_net::tcp::TcpSocket::new(stack, &mut rx_buffer, &mut tx_buffer);
         socket.set_timeout(Some(Duration::from_secs(10)));
 
@@ -51,6 +53,8 @@ async fn tcp_echo() {
             info!("txd: {}", core::str::from_utf8(msg).unwrap());
             Timer::after_secs(1).await;
         }
+
+        net::disconnect();
 
         Timer::after_secs(4).await;
     }

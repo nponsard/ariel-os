@@ -116,7 +116,7 @@ cfg_select! {
         use ethernet::NetworkDevice;
     }
     feature = "tuntap" => {
-       use crate::hal::tuntap::NetworkDevice;
+        use crate::hal::tuntap::NetworkDevice;
     }
     feature = "ltem-nrf-modem" => {
         use crate::hal::ltem::NetworkDevice;
