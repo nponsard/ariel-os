@@ -34,3 +34,8 @@ targets:
         aliases:
           - BT_WAKE_UP
         active: low
+    uarts:
+      - tx_pin: P0_05
+        rx_pin: P0_11
+        possible_peripherals: [UARTE0]
+        host_facing: true
