@@ -1,6 +1,6 @@
 version: 0.4.1
 targets:
-  nrf52840-mdk:
+  makerdiary-nrf52840-mdk:
     chip: nrf52840
     leds:
       # led0

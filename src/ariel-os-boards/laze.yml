@@ -96,6 +96,11 @@ builders:
   parent: nrf52840
   provides:
   - has_leds
+- name: makerdiary-nrf52840-mdk
+  parent: nrf52840
+  provides:
+  - has_buttons
+  - has_leds
 - name: makerdiary-nrf9151-connect-kit
   parent: nrf9151
   provides:
@@ -121,11 +126,6 @@ builders:
   parent: nrf5340-net
   provides:
   - has_nrf_ble
-- name: nrf52840-mdk
-  parent: nrf52840
-  provides:
-  - has_buttons
-  - has_leds
 - name: nrf52840dk
   parent: nrf52840
   provides:

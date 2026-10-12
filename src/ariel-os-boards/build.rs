@@ -40,6 +40,7 @@ pub fn main() {
     println!(
         "cargo::rustc-check-cfg=cfg(context, values(\"makerdiary-nrf52840-mdk-usb-dongle\"))"
     );
+    println!("cargo::rustc-check-cfg=cfg(context, values(\"makerdiary-nrf52840-mdk\"))");
     println!(
         "cargo::rustc-check-cfg=cfg(context, values(\"makerdiary-nrf9151-connect-kit\"))"
     );
@@ -53,7 +54,6 @@ pub fn main() {
     println!(
         "cargo::rustc-check-cfg=cfg(context, values(\"nordic-thingy-91-x-nrf5340-net\"))"
     );
-    println!("cargo::rustc-check-cfg=cfg(context, values(\"nrf52840-mdk\"))");
     println!("cargo::rustc-check-cfg=cfg(context, values(\"nrf52840dk\"))");
     println!("cargo::rustc-check-cfg=cfg(context, values(\"nrf52dk\"))");
     println!("cargo::rustc-check-cfg=cfg(context, values(\"nrf5340dk-app\"))");
