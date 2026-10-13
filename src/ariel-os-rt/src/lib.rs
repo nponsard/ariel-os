@@ -17,6 +17,14 @@ compile_error!(
     "feature \"single-core\" and feature \"multi-core\" cannot be enabled at the same time"
 );
 
+#[cfg(all(feature = "memory-x", context = "ariel-os"))]
+#[allow(missing_docs)]
+pub mod memory {
+    pub mod sections {
+        include!(concat!(env!("OUT_DIR"), "/linker_sections.rs"));
+    }
+}
+
 use ariel_os_log::debug;
 
 cfg_select! {

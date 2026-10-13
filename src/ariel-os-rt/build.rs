@@ -61,7 +61,7 @@ fn main() {
     copy_and_rerun_if_changed("keep-stack-sizes.x");
 
     #[cfg(feature = "memory-x")]
-    memoryx::write_memoryx(&out.join("memory.x"));
+    memoryx::write_memoryx(out);
 
     println!("cargo:rustc-link-search={}", out.display());
 }
@@ -70,21 +70,28 @@ fn main() {
 mod memoryx {
     use ariel_os_buildutils::env_var_and_rerun_if_changed;
     use ld_memory::{MemorySection, Whence};
-    use memsolve::section::Section;
+    use memsolve::{Memory, section::Section};
 
     /// Writes `memory.x` based on `CHIP_[RAM|NVM]_` (or hardcoded) to `$OUTDIR`.
     ///
     /// # Panics
     /// Panics if called outside of a known laze context.
-    pub fn write_memoryx(path: &std::path::Path) {
+    pub fn write_memoryx(out_dir: &std::path::Path) {
+        // Gather chip NVM & RAM config
         let nvm = Nvm::from_env();
         let ram = Ram::from_env();
         let chip = {
             memsolve::chip::Chip::new(nvm.page_size, nvm.start_address, nvm.total_size).unwrap()
         };
 
+        // define NVM layout
         let mut layout = memsolve::Memory::new(chip);
-        layout.add_section(flash_section().set_boot(true));
+
+        #[cfg(not(any(feature = "embassy-boot-loader", feature = "embassy-boot-application")))]
+        layout_default(&mut layout);
+
+        #[cfg(any(feature = "embassy-boot-loader", feature = "embassy-boot-application"))]
+        layout_embassy_boot(&mut layout);
 
         let mut memory = layout
             .resolve_layout()
@@ -95,13 +102,109 @@ mod memoryx {
 
         memory = memory.add_section(ram_section);
 
+        // get & add extra sections from environment variable
         memory = handle_extra_sections(memory);
         memory = handle_reserve_bytes(memory);
 
+        let section_range_constants = create_section_range_constants(&memory);
+        std::fs::write(out_dir.join("linker_sections.rs"), &section_range_constants).unwrap();
+
         let mut memory_content = memory.to_ldmemory();
+
+        // get & add filenames to include in memory.x
         handle_ld_includes(&mut memory_content);
 
-        std::fs::write(path, &memory_content).unwrap();
+        std::fs::write(out_dir.join("memory.x"), &memory_content).unwrap();
+    }
+
+    /// Builds a `String` with Rust constants for each section in `memory`.
+    fn create_section_range_constants(memory: &ld_memory::Memory) -> String {
+        // So previously we've renamed these sections to `FLASH` using the memsolve `linker_name`
+        // mechanism (see `fix_linker_name()`).
+        // Then we create ld_memory sections.
+        // For exporting, having the previous names actually makes more sense so the section ranges
+        // have distinct and consistent names, so we reverse the renaming here before generating the
+        // range constants.
+        fn fix_section_name(name: &str) -> &str {
+            #[cfg(feature = "embassy-boot-loader")]
+            if name == "FLASH" {
+                return "BOOTLOADER";
+            }
+            #[cfg(feature = "embassy-boot-application")]
+            if name == "FLASH" {
+                return "ACTIVE";
+            }
+            name
+        }
+
+        use std::fmt::Write as _;
+        let mut s = String::new();
+        for section in memory.sections() {
+            let (name, from, to) = (
+                fix_section_name(section.get_name()),
+                section.get_origin(),
+                section.get_origin() + section.get_length(),
+            );
+            let _ = writeln!(s, "pub const {name}: core::ops::Range<u32> = {from}..{to};");
+        }
+        s
+    }
+
+    /// Configures the default (no bootloader, all flash for application) layout.
+    #[allow(clippy::missing_panics_doc, reason = "constant name is always correct")]
+    #[allow(unused, reason = "use depending on features")]
+    fn layout_default(layout: &mut Memory<()>) {
+        layout.add_section(
+            Section::new("FLASH")
+                .unwrap()
+                .set_maximize(true)
+                .set_boot(true),
+        );
+    }
+
+    /// Configures the embassy-boot compatible layout.
+    #[allow(
+        clippy::missing_panics_doc,
+        reason = "constant names are always correct"
+    )]
+    #[allow(unused, reason = "use depending on features")]
+    fn layout_embassy_boot(layout: &mut Memory<()>) {
+        fn fix_linker_name(section: Section<()>) -> Section<()> {
+            // Here, after creating the sections with distinct `BOOTLOADER` and `APPLICATION` as names,
+            // we rename the one actually used back to `FLASH`, as that is what the linker script
+            // expects.
+            // Also see `fix_section_name()`.
+            #[cfg(feature = "embassy-boot-loader")]
+            if section.name == "BOOTLOADER" {
+                return section.set_linker_name("FLASH").unwrap();
+            }
+            #[cfg(feature = "embassy-boot-application")]
+            if section.name == "ACTIVE" {
+                return section.set_linker_name("FLASH").unwrap();
+            }
+            section
+        }
+
+        // Going with a conservative default of `6` here, which fits embassy boot + logging.
+        let bootloader_size_pages = u64_from_env_maybe("CHIP_EMBASSY_BOOT_SIZE_PAGES").unwrap_or(6);
+
+        layout.add_section(fix_linker_name(
+            Section::new("BOOTLOADER")
+                .unwrap()
+                .set_pages(bootloader_size_pages)
+                .set_boot(true),
+        ));
+
+        layout.add_section(Section::new("BOOTLOADER_STATE").unwrap().set_pages(1));
+        layout.add_section(fix_linker_name(
+            Section::new("ACTIVE").unwrap().set_maximize(true),
+        ));
+        layout.add_section(
+            Section::new("DFU")
+                .unwrap()
+                .set_maximize(true)
+                .set_relative_pages(1),
+        );
     }
 
     /// Parses `CHIP_EXTRA_SECTIONS`.
@@ -239,12 +342,17 @@ mod memoryx {
         .unwrap_or_else(|_| panic!("{key} is not a decimal or hex value"))
     }
 
-    /// Creates the flash section for memsolve.
-    #[allow(
-        clippy::missing_panics_doc,
-        reason = "Panic only happens with incorrect section names"
-    )]
-    fn flash_section() -> Section<()> {
-        Section::new("FLASH").unwrap().set_maximize(true)
+    /// Get an u64 value (hex or dec) from env, if set and it parses correctly.
+    /// # Panics
+    /// Panics then `key` is in env but does not parse as `u64` in hex or decimal.
+    fn u64_from_env_maybe(key: &'static str) -> Option<u64> {
+        if let Ok(value) = &env_var_and_rerun_if_changed(key) {
+            Some(
+                parse_dec_or_hex(value)
+                    .unwrap_or_else(|_| panic!("{key} is not a decimal or hex value")),
+            )
+        } else {
+            None
+        }
     }
 }
