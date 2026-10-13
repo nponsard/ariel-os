@@ -1,0 +1,23 @@
+version: 0.4.1
+targets:
+  makerdiary-nrf52840-mdk:
+    chip: nrf52840
+    leds:
+      # led0
+      - # note: this is the RGB LED red channel
+        color: red
+        pin: P0_23
+        active: low
+      # led1
+      - # note: this is the RGB LED green channel
+        color: green
+        pin: P0_22
+        active: low
+      # led2
+      - # note: this is the RGB LED blue channel
+        color: blue
+        pin: P0_24
+        active: low
+    buttons:
+      # button0
+      - pin: P1_00
