@@ -323,6 +323,21 @@ contexts:
       CHIP_RAM_START_ADDRESS: "0x21000000"
     help: nRF5340 Network Core support
 
+  - name: nrf54l
+    parent: nrf
+
+  - name: nrf54l15-app
+    parent: nrf54l
+    selects:
+      - cortex-m33f
+    provides:
+      - has_hwrng
+    env:
+      PROBE_RS_CHIP: nrf54l15
+      CHIP_NVM_SIZE_BYTES: "$(1524 * 1024)"
+      CHIP_RAM_SIZE_BYTES: "$(256*1024)"
+    help: nRF54L15 Application Core support
+
   - name: nrf91
     parent: nrf
     selects:

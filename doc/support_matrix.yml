@@ -246,6 +246,24 @@ chips:
       ethernet_over_usb: not_available
       ethernet: not_available
 
+  nrf54l15-app:
+    name: nRF54L15 application core
+    manufacturer: Nordic Semiconductor
+    support:
+      gpio: supported
+      debug_channel: supported
+      hwrng: supported
+      i2c_controller: not_currently_supported
+      spi_main: not_currently_supported
+      uart: not_currently_supported
+      logging: supported
+      storage: not_currently_supported
+      wifi: not_available
+      ble: not_currently_supported
+      user_usb: not_available
+      ethernet_over_usb: not_available
+      ethernet: not_available
+
   nrf9151:
     name: nRF9151
     manufacturer: Nordic Semiconductor
@@ -1290,6 +1308,12 @@ builders:
       ethernet_over_usb: not_available
       ble: supported
 
+  nrf54l15dk-app:
+    chip: nrf54l15-app
+    tier: "3"
+    support:
+      ble: not_currently_supported
+
   nrf9151-dk:
     chip: nrf9151
     tier: "2"
@@ -1647,6 +1671,12 @@ boards:
     builders:
       - nrf5340dk-app
       - nrf5340dk-net
+
+  - name: nRF54L15-DK
+    url: https://web.archive.org/web/20260510150001/https://www.nordicsemi.com/Products/Development-hardware/nrf54l15-dk
+    builders:
+      - nrf54l15dk-app
+   #  - nrf54l15dk-vpr
 
   - name: nRF9151-DK
     url: https://web.archive.org/web/20250622211955/https://www.nordicsemi.com/Products/Development-hardware/nRF9151-DK

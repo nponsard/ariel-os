@@ -9,12 +9,12 @@ license.workspace = true
 [dependencies]
 embassy-nrf = { workspace = true, default-features = false, features = [] }
 
-[target.'cfg(context = "nrf54l15-app")'.dependencies]
+[target.'cfg(any(context = "nrf54lm20-app", context = "nrf54l15-app"))'.dependencies]
 embassy-nrf = { workspace = true, default-features = false, features = [
   "time-driver-grtc",
 ] }
 
-[target.'cfg(not(context = "nrf54l15-app"))'.dependencies]
+[target.'cfg(not(any(context = "nrf54lm20-app", context = "nrf54l15-app")))'.dependencies]
 embassy-nrf = { workspace = true, default-features = false, features = [
   "time-driver-rtc1",
 ] }
