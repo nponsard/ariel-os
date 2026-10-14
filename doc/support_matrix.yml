@@ -307,10 +307,7 @@ chips:
       hwrng: supported
       i2c_controller: supported
       spi_main: supported
-      uart:
-        status: not_currently_supported
-        comments:
-          - "[uart-loopback test only works once after a power cycle](https://github.com/ariel-os/ariel-os/pull/1368#issuecomment-3406073140)"
+      uart: supported
       logging: supported
       storage: supported
       wifi: not_available
