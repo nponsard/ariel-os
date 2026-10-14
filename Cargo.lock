@@ -373,6 +373,7 @@ version = "0.6.0"
 dependencies = [
  "ariel-os-embassy-common",
  "ariel-os-log",
+ "ariel-os-nrf-time",
  "ariel-os-random",
  "ariel-os-rt",
  "cortex-m",
@@ -393,6 +394,13 @@ dependencies = [
  "portable-atomic",
  "static_cell",
  "tinyrlibc",
+]
+
+[[package]]
+name = "ariel-os-nrf-time"
+version = "0.6.0"
+dependencies = [
+ "embassy-nrf",
 ]
 
 [[package]]
