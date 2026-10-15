@@ -131,7 +131,6 @@ impl ReadingChannels {
     /// [`Samples`].
     ///
     /// [`Samples`]: super::Samples
-    #[must_use]
     pub fn iter(
         &self,
     ) -> impl ExactSizeIterator<Item = ReadingChannel> + core::iter::FusedIterator + '_ {
