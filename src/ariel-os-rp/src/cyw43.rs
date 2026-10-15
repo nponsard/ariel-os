@@ -111,7 +111,7 @@ pub async fn device<'a, 'b: 'a>(
     //     .await;
 
     // this needs to be spawned here (before using `control`)
-    spawner.spawn(wifi_cyw43_task(runner)).unwrap();
+    spawner.spawn(wifi_cyw43_task(runner).unwrap());
 
     net_control.init(clm).await;
 

@@ -127,7 +127,7 @@ pub(crate) async fn device(
             .await
             .unwrap();
 
-    spawner.spawn(ethernet_wiznet_task(runner)).unwrap();
+    spawner.spawn(ethernet_wiznet_task(runner).unwrap());
 
     device
 }
