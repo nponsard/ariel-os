@@ -66,8 +66,10 @@ pub mod config {
     //! Provides configuration to the system and the application.
 
     pub use ariel_os_utils::{
-        eui48_from_env, ipv4_addr_from_env, ipv4_addr_from_env_or, ipv6_addr_from_env,
-        ipv6_addr_from_env_or, str_from_env, str_from_env_or,
+        eui48_from_env, i8_from_env_or, i16_from_env_or, i32_from_env_or, i64_from_env_or,
+        ipv4_addr_from_env, ipv4_addr_from_env_or, ipv6_addr_from_env, ipv6_addr_from_env_or,
+        str_from_env, str_from_env_or, u8_from_env_or, u16_from_env_or, u32_from_env_or,
+        u64_from_env_or, usize_from_env_or,
     };
 }
 
