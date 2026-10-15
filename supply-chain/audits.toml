@@ -765,9 +765,15 @@ user-id = 1 # Alex Crichton (alexcrichton)
 start = "2019-03-04"
 end = "2026-09-02"
 
+[[trusted.lazy_static]]
+criteria = "safe-to-deploy"
+user-id = 55123 # rust-lang-owner
+start = "2026-10-01"
+end = "2027-10-15"
+
 [[trusted.ld-memory]]
 criteria = "safe-to-deploy"
-user-id = 4665 # Kaspar Schleiser (kaspar030)
+user-id = 4665
 start = "2021-03-16"
 end = "2027-10-04"
 
@@ -986,6 +992,12 @@ criteria = "safe-to-deploy"
 user-id = 3618 # David Tolnay (dtolnay)
 start = "2019-10-09"
 end = "2026-09-01"
+
+[[trusted.thread_local]]
+criteria = "safe-to-deploy"
+user-id = 2915 # Amanieu d'Antras (Amanieu)
+start = "2019-09-07"
+end = "2027-10-15"
 
 [[trusted.toml]]
 criteria = "safe-to-deploy"

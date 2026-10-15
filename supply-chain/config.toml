@@ -31,6 +31,9 @@ audit-as-crates-io = true
 [policy.cyw43-pio]
 audit-as-crates-io = true
 
+[policy.embassy-embedded-hal]
+audit-as-crates-io = true
+
 [policy.embassy-hal-internal]
 audit-as-crates-io = true
 
@@ -351,6 +354,10 @@ criteria = "safe-to-deploy"
 version = "0.8.0"
 criteria = "safe-to-deploy"
 
+[[exemptions.cordyceps]]
+version = "0.3.5"
+criteria = "safe-to-deploy"
+
 [[exemptions.cortex-m]]
 version = "0.7.7"
 criteria = "safe-to-deploy"
@@ -523,12 +530,16 @@ criteria = "safe-to-deploy"
 version = "0.13.8"
 criteria = "safe-to-deploy"
 
+[[exemptions.embassy-embedded-hal]]
+version = "0.5.0@git:5211daf214eecd64c6754b760fecdb1f16622312"
+criteria = "safe-to-deploy"
+
 [[exemptions.embassy-executor]]
-version = "0.9.1"
+version = "0.10.0"
 criteria = "safe-to-deploy"
 
 [[exemptions.embassy-executor-macros]]
-version = "0.7.0"
+version = "0.8.0"
 criteria = "safe-to-deploy"
 
 [[exemptions.embassy-executor-timer-queue]]
@@ -855,6 +866,10 @@ criteria = "safe-to-deploy"
 version = "2.3.0"
 criteria = "safe-to-deploy"
 
+[[exemptions.generator]]
+version = "0.8.11"
+criteria = "safe-to-deploy"
+
 [[exemptions.generic-array]]
 version = "0.12.4"
 criteria = "safe-to-deploy"
@@ -1017,6 +1032,10 @@ criteria = "safe-to-deploy"
 
 [[exemptions.log]]
 version = "0.4.34"
+criteria = "safe-to-deploy"
+
+[[exemptions.loom]]
+version = "0.7.2"
 criteria = "safe-to-deploy"
 
 [[exemptions.matrixmultiply]]
@@ -1307,6 +1326,10 @@ criteria = "safe-to-deploy"
 version = "0.2.3"
 criteria = "safe-to-deploy"
 
+[[exemptions.scoped-tls]]
+version = "1.0.1"
+criteria = "safe-to-deploy"
+
 [[exemptions.scroll-ring]]
 version = "0.1.2"
 criteria = "safe-to-deploy"
@@ -1433,6 +1456,18 @@ criteria = "safe-to-deploy"
 
 [[exemptions.tinyrlibc]]
 version = "0.5.0"
+criteria = "safe-to-deploy"
+
+[[exemptions.tracing]]
+version = "0.1.44"
+criteria = "safe-to-deploy"
+
+[[exemptions.tracing-attributes]]
+version = "0.1.31"
+criteria = "safe-to-deploy"
+
+[[exemptions.tracing-subscriber]]
+version = "0.3.23"
 criteria = "safe-to-deploy"
 
 [[exemptions.trouble-host]]

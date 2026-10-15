@@ -44,7 +44,7 @@ ariel-os-rt = { workspace = true, features = ["memory-x"] }
 
 [target.'cfg(context = "cortex-m")'.dependencies]
 embassy-executor = { workspace = true, default-features = false, features = [
-  "arch-cortex-m",
+  "platform-cortex-m",
 ] }
 
 [target.'cfg(context = "rp2040")'.dependencies]

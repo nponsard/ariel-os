@@ -197,7 +197,7 @@ pub fn build_controller(
         mpsl::MultiprotocolServiceLayer::new(mpsl_p, Irqs, lfclk_cfg)
             .expect("Failed to initialize MPSL"),
     );
-    spawner.must_spawn(mpsl_task(mpsl));
+    spawner.spawn(mpsl_task(mpsl).unwrap());
 
     let rng = RNG.init(ariel_os_random::crypto_rng_send());
 
