@@ -69,6 +69,10 @@ ariel_os_embassy_common::executor_swi!(EGU0_SWI0);
 #[cfg(any(context = "nrf53", context = "nrf91"))]
 ariel_os_embassy_common::executor_swi!(EGU0);
 
+#[cfg(feature = "executor-interrupt")]
+#[cfg(context = "nrf54l")]
+ariel_os_embassy_common::executor_swi!(SWI00);
+
 use embassy_nrf::{Peri, PeripheralType, config::Config};
 
 #[doc(hidden)]

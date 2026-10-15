@@ -1,3 +1,4 @@
+#[cfg(not(context = "nrf54l"))]
 use crate::irqs::Irqs;
 
 /// Constructs the hardware random number generator (RNG) for the nRF family.
@@ -30,6 +31,13 @@ pub fn construct_rng(peripherals: &mut crate::OptionalPeripherals) {
             let mut cc_rng = embassy_nrf::cryptocell::rng::CcRng::new(p, Irqs);
 
             ariel_os_random::construct_rng(&mut ariel_os_random::RngAdapter(&mut cc_rng));
+        }
+        any(context = "nrf54l") => {
+            let p = peripherals.CRACEN.take().expect("CRACEN has not been previously used");
+
+            let mut cracen = embassy_nrf::cracen::Cracen::new_blocking(p);
+
+            ariel_os_random::construct_rng(&mut ariel_os_random::RngAdapter(&mut cracen));
         }
         context = "ariel-os" => {
             compile_error!("hardware RNG is not supported on this MCU family");

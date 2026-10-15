@@ -1,0 +1,40 @@
+version: 0.4.1
+targets:
+  nrf54l15dk-app:
+    chip: nrf54l15-app
+    leds:
+      # led0
+      - color: green
+        pin: P2_09
+        active: high
+      # led1
+      - color: green
+        pin: P1_10
+        active: high
+      # led2
+      - color: green
+        pin: P2_07
+        active: high
+      # led3
+      - color: green
+        pin: P1_14
+        active: high
+
+    buttons:
+      # button0
+      - pin: P1_13
+        active: low
+      # button1
+      - pin: P1_09
+        active: low
+      # button2
+      - pin: P1_08
+        active: low
+      # button3
+      - pin: P0_04
+        active: low
+
+  # TODO: Add chip and enable
+  # nrf54l15-vpr:
+  #
+  # chip: nrf54l15-vpr
