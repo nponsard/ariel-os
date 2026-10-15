@@ -27,9 +27,7 @@ pub fn ariel_os_crate_or_internal(internal: Option<&'static str>) -> syn::Ident 
         .unwrap_or_else(|| {
             panic!(
                 "{ARIEL_OS_CRATE_NAME} should be present in `Cargo.toml`{}",
-                internal
-                    .map(|i| format!(" (internal crates may also use {i})"))
-                    .unwrap_or_default()
+                internal.map_or_default(|i| format!(" (internal crates may also use {i})"))
             )
         })
 }
