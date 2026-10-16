@@ -167,6 +167,7 @@ jobs:
             -p ariel-os-storage
             -p ariel-os-threads
             -p ariel-os-utils
+            -p ariel-os-update-transports
             --
             --deny warnings
 
@@ -321,6 +322,19 @@ jobs:
             --features "
               ariel-os-log/log,
               nrf-modem/nrf9160
+              "
+            --
+            --deny warnings
+
+      - name: Clippy on ariel-os-update-transports
+        uses: clechasseur/rs-clippy-check@d626afd6670c78ecef6c7872e1c9e1221065d5c5 # v6.1.0
+        with:
+          args: |
+            --locked
+            -p ariel-os-update-transports
+            --features "
+              http,
+              defmt,
               "
             --
             --deny warnings

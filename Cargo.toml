@@ -27,6 +27,7 @@ members = [
   "src/ariel-os-sensors-utils",
   "src/ariel-os-stm32",
   "src/ariel-os-storage",
+  "src/ariel-os-update-transports",
   "src/lib/coapcore",
   "src/lib/rbi",
   "src/lib/ringbuffer",
@@ -99,6 +100,7 @@ embedded-hal = { version = "1.0.0", default-features = false }
 embedded-hal-async = { version = "1.0.0", default-features = false }
 embedded-io = { version = "0.6.1", default-features = false }
 embedded-io-async = { version = "0.6.1", default-features = false }
+embedded-nal-async = { version = "0.9.0", default-features = false }
 embedded-nal-coap = "=0.1.0-alpha.5"
 embedded-storage-async = { version = "0.4.1" }
 embedded-test = { version = "0.7.1", default-features = false, features = [
@@ -152,6 +154,7 @@ ariel-os-stm32 = { path = "src/ariel-os-stm32" }
 ariel-os-stm32-mapping = { path = "src/ariel-os-stm32-mapping" }
 ariel-os-storage = { path = "src/ariel-os-storage" }
 ariel-os-threads = { path = "src/ariel-os-threads" }
+ariel-os-update-transports = { path = "src/ariel-os-update-transports" }
 ariel-os-utils = { path = "src/ariel-os-utils", default-features = false }
 
 # Built-in sensor drivers.
@@ -161,6 +164,10 @@ ariel-os-sensor-lps22df = { path = "src/sensors/ariel-os-sensor-lps22df" }
 ariel-os-sensor-nrf91-gnss = { path = "src/sensors/ariel-os-sensor-nrf91-gnss" }
 ariel-os-sensor-stts22h = { path = "src/sensors/ariel-os-sensor-stts22h" }
 
+coap-message = { version = "0.3.7", default-features = false }
+coap-numbers = { version = "0.2.11", default-features = false }
+coap-request = { version = "0.2.0-alpha.2", default-features = false }
+coap-request-implementations = { version = "0.1.0-alpha.4", default-features = false }
 const-str = "1.0.0"
 const_panic = { version = "0.2.8", default-features = false }
 defmt = { version = "1.0.0" }
@@ -172,6 +179,7 @@ jiff = { version = "0.2", default-features = false }
 ld-memory = { version = "0.3.2" }
 log = { version = "0.4.20", default-features = false }
 memsolve = { version = "0.3.1", default-features = false }
+nourl = { version = "0.2.0", default-features = false }
 once_cell = { version = "1.21.3", default-features = false, features = [
   "critical-section",
 ] }
@@ -179,6 +187,7 @@ paste = { version = "1.0" }
 pin-project-lite = "0.2.16"
 rand = { version = "0.9.2", default-features = false }
 rand_core = { version = "0.9.3", default-features = false }
+reqwless = { version = "0.14", default-features = false }
 rtt-target = { version = "0.6.0" }
 
 bt-hci = { version = "0.6.0" }
