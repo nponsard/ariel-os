@@ -13,7 +13,7 @@
 |GPIO|<span title="supported">✅</span>|
 |I2C Controller Mode|<span title="supported">✅</span>|
 |SPI Main Mode|<span title="supported">✅</span>|
-|UART|<span title="available in hardware, but not currently supported by Ariel OS">❌</span>[^uart-loopback-test-only-works-once-after-a-power-cycle-https-github-com-ariel-os-ariel-os-pull-1368-issuecomment-3406073140]|
+|UART|<span title="supported">✅</span>|
 |Ethernet|<span title="not available on this piece of hardware">–</span>|
 |User USB|<span title="supported">✅</span>|
 |Ethernet over USB|<span title="supported">✅</span>|
@@ -93,7 +93,7 @@ Boards using this chip.
 		  <td class="support-cell" title="supported">✅</td>
 		  <td class="support-cell" title="supported">✅</td>
 		  <td class="support-cell" title="supported">✅</td>
-		  <td class="support-cell" title="available in hardware, but not currently supported by Ariel OS">❌</td>
+		  <td class="support-cell" title="supported">✅</td>
 		  <td class="support-cell" title="not available on this piece of hardware">–</td>
 		  <td class="support-cell" title="supported">✅</td>
 		  <td class="support-cell" title="supported">✅</td>
@@ -115,7 +115,7 @@ Boards using this chip.
 		  <td class="support-cell" title="supported">✅</td>
 		  <td class="support-cell" title="supported">✅</td>
 		  <td class="support-cell" title="supported">✅</td>
-		  <td class="support-cell" title="available in hardware, but not currently supported by Ariel OS">❌</td>
+		  <td class="support-cell" title="supported">✅</td>
 		  <td class="support-cell" title="not available on this piece of hardware">–</td>
 		  <td class="support-cell" title="supported">✅</td>
 		  <td class="support-cell" title="supported">✅</td>
@@ -191,5 +191,3 @@ dt, dd {
 </style>
 
 
-
-[^uart-loopback-test-only-works-once-after-a-power-cycle-https-github-com-ariel-os-ariel-os-pull-1368-issuecomment-3406073140]: [uart-loopback test only works once after a power cycle](https://github.com/ariel-os/ariel-os/pull/1368#issuecomment-3406073140).
