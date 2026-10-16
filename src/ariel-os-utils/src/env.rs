@@ -2,6 +2,16 @@ pub use {const_panic, const_str};
 
 macro_rules! define_env_with_default_macro {
     ($macro_name:ident, $output_type:ident, $output_type_name:literal) => {
+        #[doc = concat!("Reads ",$output_type_name," at compile time from the given environment variable, with a default. \n")]
+        /// - The `$default` parameter allows to provide a fallback value for when the environment variable
+        ///   is not found.
+        /// - The `$doc` parameter allows to provide a documentation string for this tunable (see
+        ///   [`str_from_env!`](str_from_env)).
+        ///
+        /// # Errors
+        ///
+        /// - Produces a compile-time error when [`option_env!`](option_env) does.
+        #[doc = concat!("- Produces a compile-time error when the environment variable cannot be parsed into ",$output_type_name, ".")]
         #[macro_export]
         macro_rules! $macro_name {
             // $doc is currently unused
@@ -31,9 +41,29 @@ macro_rules! define_env_with_default_macro {
     };
 }
 
-define_env_with_default_macro!(usize_from_env_or, usize, "a usize");
-define_env_with_default_macro!(u8_from_env_or, u8, "a u8");
+define_env_with_default_macro!(usize_from_env_or, usize, "a `usize`");
 
+define_env_with_default_macro!(u8_from_env_or, u8, "a `u8`");
+define_env_with_default_macro!(u16_from_env_or, u16, "a `u16`");
+define_env_with_default_macro!(u32_from_env_or, u32, "a `u32`");
+define_env_with_default_macro!(u64_from_env_or, u64, "a `u64`");
+
+define_env_with_default_macro!(i8_from_env_or, i8, "an `i8`");
+define_env_with_default_macro!(i16_from_env_or, i16, "an `i16`");
+define_env_with_default_macro!(i32_from_env_or, i32, "an `i32`");
+define_env_with_default_macro!(i64_from_env_or, i64, "an `i64`");
+
+/// Reads a boolean at compile time from the given environment variable, with a default.
+///
+/// - The `$default` parameter allows to provide a fallback value for when the environment variable
+///   is not found.
+/// - The `$doc` parameter allows to provide a documentation string for this tunable (see
+///   [`str_from_env!`](str_from_env)).
+///
+/// # Errors
+///
+/// - Produces a compile-time error when [`option_env!`](option_env) does.
+/// - Produces a compile-time error when the environment variable cannot be parsed into a bool.
 #[macro_export]
 macro_rules! bool_from_env_or {
     // $doc is currently unused
