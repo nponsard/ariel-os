@@ -25,3 +25,11 @@ targets:
         scl_pin: PB8
         possible_peripherals:
           - I2C1
+    uarts:
+      - aliases:
+          - VCP
+        tx_pin: PA2
+        rx_pin: PA3
+        # TODO: add LPUART1 when supported by Ariel OS.
+        possible_peripherals: [USART2]
+        host_facing: true

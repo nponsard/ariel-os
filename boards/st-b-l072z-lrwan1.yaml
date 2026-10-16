@@ -40,3 +40,11 @@ targets:
           - I2C1
         aliases:
           - ArduinoI2c
+    uarts:
+      - aliases:
+          - VCP
+        tx_pin: PA2
+        rx_pin: PA3
+        # TODO: add LPUART1 when supported by Ariel OS.
+        possible_peripherals: [USART2]
+        host_facing: true

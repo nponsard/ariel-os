@@ -17,6 +17,7 @@ builders:
 - name: arduino-uno-q
   parent: stm32u585ai
   provides:
+  - has_host_facing_uart
   - has_i2c_bus
   - has_leds
   - has_swi
@@ -206,6 +207,7 @@ builders:
   parent: stm32wle5jc
   provides:
   - has_buttons
+  - has_host_facing_uart
   - has_leds
   - has_swi
   env:
@@ -234,6 +236,7 @@ builders:
   parent: stm32l072cz
   provides:
   - has_buttons
+  - has_host_facing_uart
   - has_i2c_bus
   - has_leds
   - has_swi
@@ -244,6 +247,7 @@ builders:
   parent: stm32l475vg
   provides:
   - has_buttons
+  - has_host_facing_uart
   - has_i2c_bus
   - has_leds
   - has_swi
@@ -255,6 +259,7 @@ builders:
   parent: stm32c031c6
   provides:
   - has_buttons
+  - has_host_facing_uart
   - has_leds
   - has_swi
   env:
@@ -263,6 +268,7 @@ builders:
 - name: st-nucleo-f042k6
   parent: stm32f042k6
   provides:
+  - has_host_facing_uart
   - has_leds
   - has_swi
   env:
@@ -272,6 +278,7 @@ builders:
   parent: stm32f303re
   provides:
   - has_buttons
+  - has_host_facing_uart
   - has_leds
   - has_swi
   env:
@@ -281,6 +288,7 @@ builders:
   parent: stm32f401re
   provides:
   - has_buttons
+  - has_host_facing_uart
   - has_leds
   - has_swi
   env:
@@ -290,6 +298,7 @@ builders:
   parent: stm32f411re
   provides:
   - has_buttons
+  - has_host_facing_uart
   - has_leds
   - has_swi
   env:
@@ -300,6 +309,7 @@ builders:
   provides:
   - has_buttons
   - has_ethernet_stm32
+  - has_host_facing_uart
   - has_leds
   - has_swi
   env:
@@ -309,6 +319,7 @@ builders:
   parent: stm32g431rb
   provides:
   - has_buttons
+  - has_host_facing_uart
   - has_leds
   - has_swi
   env:
@@ -319,6 +330,7 @@ builders:
   provides:
   - has_buttons
   - has_ethernet_stm32
+  - has_host_facing_uart
   - has_leds
   - has_swi
   - has_usb_device_port
@@ -330,6 +342,7 @@ builders:
   provides:
   - has_buttons
   - has_ethernet_stm32
+  - has_host_facing_uart
   - has_leds
   - has_swi
   - has_usb_device_port
@@ -340,6 +353,7 @@ builders:
   parent: stm32wb55rg
   provides:
   - has_buttons
+  - has_host_facing_uart
   - has_leds
   - has_swi
   - has_usb_device_port
@@ -350,6 +364,7 @@ builders:
   parent: stm32wba55cg
   provides:
   - has_buttons
+  - has_host_facing_uart
   - has_leds
   - has_swi
   env:
@@ -359,6 +374,7 @@ builders:
   parent: stm32wba65ri
   provides:
   - has_buttons
+  - has_host_facing_uart
   - has_leds
   - has_swi
   - has_usb_device_port
@@ -381,6 +397,7 @@ builders:
   parent: stm32u083mc
   provides:
   - has_buttons
+  - has_host_facing_uart
   - has_i2c_bus
   - has_leds
   - has_swi
