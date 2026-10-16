@@ -134,6 +134,18 @@ who = "chrysn <chrysn@fsfe.org>"
 criteria = "safe-to-deploy"
 version = "0.6.2"
 
+[[audits.coap-message]]
+who = "Antoine Lavandier <antoine.lavandier@inria.fr>"
+criteria = "safe-to-deploy"
+delta = "0.3.6 -> 0.3.7"
+notes = "No new unsafe code. Only formatting/clippy related changes"
+
+[[audits.coap-numbers]]
+who = "Antoine Lavandier <antoine.lavandier@inria.fr>"
+criteria = "safe-to-deploy"
+delta = "0.2.7 -> 0.2.11"
+notes = "No new unsafe code."
+
 [[audits.coap-scroll-ring-server]]
 who = "chrysn <chrysn@fsfe.org>"
 criteria = "safe-to-deploy"
@@ -398,6 +410,18 @@ delta = "0.3.0 -> 0.3.1"
 who = "chrysn <chrysn@fsfe.org>"
 criteria = "safe-to-deploy"
 delta = "0.0.4 -> 0.0.8"
+
+[[audits.nourl]]
+who = "Antoine Lavandier <antoine.lavandier@inria.fr>"
+criteria = "safe-to-deploy"
+delta = "0.1.4 -> 0.1.5"
+notes = "No new unsafe code."
+
+[[audits.nourl]]
+who = "Antoine Lavandier <antoine.lavandier@inria.fr>"
+criteria = "safe-to-deploy"
+delta = "0.1.5 -> 0.2.0"
+notes = "No new unsafe code"
 
 [[audits.nrf-modem]]
 who = "Nils Ponsard <nils.ponsard@inria.fr>"
