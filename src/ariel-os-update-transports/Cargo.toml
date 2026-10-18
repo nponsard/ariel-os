@@ -21,6 +21,7 @@ embedded-nal-coap = { workspace = true, optional = true }
 featurecomb = { workspace = true }
 nourl = { workspace = true }
 reqwless = { workspace = true, optional = true }
+coap-message-utils = { git = "https://codeberg.org/chrysn/coap-tools", branch = "more-block", features = ["defmt_0_3"] }
 
 [features]
 defmt = ["dep:defmt"]

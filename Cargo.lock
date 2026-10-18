@@ -672,6 +672,7 @@ dependencies = [
  "ariel-os-coap",
  "ariel-os-log",
  "coap-message",
+ "coap-message-utils 0.3.9 (git+https://codeberg.org/chrysn/coap-tools?branch=more-block)",
  "coap-numbers",
  "coap-request",
  "coap-request-implementations",
@@ -1243,7 +1244,7 @@ checksum = "be376890958ba8ccf700300361ee426bc1a1539714690e4ab5128c50400d578c"
 dependencies = [
  "coap-handler",
  "coap-message",
- "coap-message-utils",
+ "coap-message-utils 0.3.9 (registry+https://github.com/rust-lang/crates.io-index)",
  "coap-numbers",
  "crc",
  "document-features",
@@ -1274,7 +1275,7 @@ dependencies = [
  "coap-handler",
  "coap-handler-implementations",
  "coap-message",
- "coap-message-utils",
+ "coap-message-utils 0.3.9 (registry+https://github.com/rust-lang/crates.io-index)",
  "coap-numbers",
  "coap-request",
  "heapless 0.9.3",
@@ -1289,7 +1290,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "060fedad409e77697cd86138950fa0dd9bff22beac3f1761905367e14708c727"
 dependencies = [
  "coap-message",
- "coap-message-utils",
+ "coap-message-utils 0.3.9 (registry+https://github.com/rust-lang/crates.io-index)",
  "coap-numbers",
  "document-features",
  "heapless 0.8.0",
@@ -1303,6 +1304,18 @@ checksum = "6e6b17f1db1e77a315a5c15d420f667e178f45ba17d2f4465c269343a71e58b7"
 dependencies = [
  "coap-message",
  "coap-numbers",
+ "document-features",
+ "minicbor",
+]
+
+[[package]]
+name = "coap-message-utils"
+version = "0.3.9"
+source = "git+https://codeberg.org/chrysn/coap-tools?branch=more-block#bf3591377a8b5fa7db39c856c3a25f78ef7327c8"
+dependencies = [
+ "coap-message",
+ "coap-numbers",
+ "defmt 0.3.100",
  "document-features",
  "minicbor",
 ]
@@ -1329,7 +1342,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "cc15c3be00d32fe7c2b58a7546eff18fb1f3e7d2dea74d91eaacd4346960851f"
 dependencies = [
  "coap-message",
- "coap-message-utils",
+ "coap-message-utils 0.3.9 (registry+https://github.com/rust-lang/crates.io-index)",
  "coap-numbers",
  "coap-request",
 ]
@@ -1342,7 +1355,7 @@ checksum = "a6e000edb22bfca8a5b0cecc76c8a8deb5474888b78ff3bda22d71f35e89c1ef"
 dependencies = [
  "coap-handler",
  "coap-message",
- "coap-message-utils",
+ "coap-message-utils 0.3.9 (registry+https://github.com/rust-lang/crates.io-index)",
  "coap-numbers",
  "scroll-ring",
 ]
@@ -1357,7 +1370,7 @@ dependencies = [
  "coap-handler",
  "coap-message",
  "coap-message-implementations",
- "coap-message-utils",
+ "coap-message-utils 0.3.9 (registry+https://github.com/rust-lang/crates.io-index)",
  "coap-numbers",
  "defmt 1.1.1",
  "defmt-or-log",
@@ -5340,7 +5353,7 @@ dependencies = [
  "coap-handler",
  "coap-handler-implementations",
  "coap-message",
- "coap-message-utils",
+ "coap-message-utils 0.3.9 (registry+https://github.com/rust-lang/crates.io-index)",
  "coap-numbers",
  "document-features",
  "embedded-graphics",
