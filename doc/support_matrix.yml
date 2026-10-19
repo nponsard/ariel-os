@@ -1354,6 +1354,11 @@ builders:
       ble: supported
       ethernet_over_usb: supported
 
+  decawave-dwm1001-dev:
+    chip: nrf52832
+    tier: "3"
+    support:
+
   dfrobot-firebeetle2-esp32-c6:
     chip: esp32c6fx4
     tier: "2"
@@ -1704,6 +1709,11 @@ boards:
     url: https://web.archive.org/web/20250130144056/https://www.raspberrypi.com/products/raspberry-pi-pico-2/
     builders:
       - rpi-pico2-w
+
+  - name: Decawave DWM1001-DEV
+    url: https://web.archive.org/web/20260620211515/https://www.qorvo.com/products/p/DWM1001-DEV
+    builders:
+      - decawave-dwm1001-dev
 
   - name: DFRobot FireBeetle 2 ESP32-C6
     url: https://web.archive.org/web/20250710082029/https://wiki.dfrobot.com/SKU_DFR1075_FireBeetle_2_Board_ESP32_C6

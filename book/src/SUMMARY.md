@@ -11,6 +11,7 @@
   - [Arduino UNO Q](./boards/arduino-uno-q.md)
   - [BBC micro:bit V1](./boards/bbc-micro-bit-v1.md)
   - [BBC micro:bit V2](./boards/bbc-micro-bit-v2.md)
+  - [Decawave DWM1001-DEV](./boards/decawave-dwm1001-dev.md)
   - [DFRobot FireBeetle 2 ESP32-C6](./boards/dfrobot-firebeetle-2-esp32-c6.md)
   - [Espressif ESP32-C3-DevKit-RUST-1](./boards/espressif-esp32-c3-devkit-rust-1.md)
   - [Espressif ESP32-C3-LCDkit](./boards/espressif-esp32-c3-lcdkit.md)

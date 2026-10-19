@@ -10,10 +10,10 @@ pub fn main() {
     println!("cargo::rustc-check-cfg=cfg(context, values(\"arduino-uno-q\"))");
     println!("cargo::rustc-check-cfg=cfg(context, values(\"bbc-microbit-v1\"))");
     println!("cargo::rustc-check-cfg=cfg(context, values(\"bbc-microbit-v2\"))");
+    println!("cargo::rustc-check-cfg=cfg(context, values(\"decawave-dwm1001-dev\"))");
     println!(
         "cargo::rustc-check-cfg=cfg(context, values(\"dfrobot-firebeetle2-esp32-c6\"))"
     );
-    println!("cargo::rustc-check-cfg=cfg(context, values(\"dwm1001\"))");
     println!(
         "cargo::rustc-check-cfg=cfg(context, values(\"espressif-esp32-c3-devkit-rust-1\"))"
     );
