@@ -12,7 +12,7 @@ transport.exactly-one = { features = ["coap", "http"] }
 ariel-os-coap = { workspace = true, optional = true }
 ariel-os-log = { workspace = true }
 coap-message = { workspace = true, optional = true }
-coap-message-utils = "0.3.10"
+coap-message-utils = { version = "0.3.10", features = ["defmt"] }
 coap-numbers = { workspace = true, optional = true }
 coap-request = { workspace = true, optional = true }
 coap-request-implementations = { workspace = true, optional = true }
@@ -24,7 +24,7 @@ nourl = { workspace = true }
 reqwless = { workspace = true, optional = true }
 
 [features]
-defmt = ["dep:defmt", "coap-message-utils/defmt"]
+defmt = ["dep:defmt"]
 
 # Selects CoAP as the update transport.
 coap = [
