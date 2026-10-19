@@ -672,6 +672,7 @@ dependencies = [
  "ariel-os-coap",
  "ariel-os-log",
  "coap-message",
+ "coap-message-utils",
  "coap-numbers",
  "coap-request",
  "coap-request-implementations",
@@ -1297,12 +1298,13 @@ dependencies = [
 
 [[package]]
 name = "coap-message-utils"
-version = "0.3.9"
+version = "0.3.12"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "6e6b17f1db1e77a315a5c15d420f667e178f45ba17d2f4465c269343a71e58b7"
+checksum = "8a8da30f1ffddc9b6e3036346a5e9060a2403bb87846bf9e63834d05d36ea168"
 dependencies = [
  "coap-message",
  "coap-numbers",
+ "defmt 1.1.1",
  "document-features",
  "minicbor",
 ]

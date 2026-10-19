@@ -299,7 +299,7 @@ version = "0.1.7"
 criteria = "safe-to-deploy"
 
 [[exemptions.coap-message-utils]]
-version = "0.3.9"
+version = "0.3.12"
 criteria = "safe-to-deploy"
 
 [[exemptions.coap-numbers]]
