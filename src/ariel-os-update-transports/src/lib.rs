@@ -21,43 +21,37 @@ mod coap {
         dns_client: &'_ DNS,
         uri: &'uri str,
         buf: &'buf mut [u8; N],
-        payload_capacity: u32,
+        // We currently don't evaluate Size2 (and otherwise don't have any good use for checking in
+        // advance)
+        _payload_capacity: u32,
     ) -> Result<FetchStream<'uri, 'buf, N, CHUNK_SIZE>, Error> {
-        const {
-            assert!(N >= CHUNK_SIZE);
-        }
-
-        let client = transport::new_client::<_, CHUNK_SIZE>(dns_client, uri).await?;
+        let client = transport::new_client::<_, N>(dns_client, uri, buf).await?;
 
         Ok(FetchStream {
-            buf,
-            bytes_received: 0,
             client,
             has_more: true,
-            payload_capacity,
+            _phantom: core::marker::PhantomData,
         })
     }
 
     pub struct FetchStream<'uri, 'buf, const N: usize, const CHUNK_SIZE: usize> {
-        buf: &'buf mut [u8; N],
-        bytes_received: u32,
+        // Needed because the iterator needs to call next() again after the last block to know that
+        // it was really the last -- semantics are "produces nothing more" and not "flags itself to
+        // be last": this bit persists the information.
         has_more: bool,
-        client: transport::NetworkTransportClient<'uri, CHUNK_SIZE>,
-        payload_capacity: u32,
+        client: transport::NetworkTransportClient<'uri, 'buf, N>,
+        // Generic parameter is only needed for HTTP
+        _phantom: core::marker::PhantomData<[u8; CHUNK_SIZE]>,
     }
 
     impl<const N: usize, const CHUNK_SIZE: usize> FetchStream<'_, '_, N, CHUNK_SIZE> {
         /// Fetches and returns the next chunk of the requested payload.
-        ///
-        /// # Panics
-        ///
-        /// if the chunk length is bigger than `u32::MAX`.
         pub async fn next(&mut self) -> Option<Result<Chunk<'_>, Error>> {
             if !self.has_more {
                 return None;
             }
 
-            let buf = match self.client.get(self.buf).await {
+            let buf = match self.client.get().await {
                 Ok((buf, has_more)) => {
                     self.has_more = has_more;
                     buf
@@ -68,12 +62,6 @@ mod coap {
                     return Some(Err(err));
                 }
             };
-            self.bytes_received += u32::try_from(buf.len()).unwrap();
-
-            if self.bytes_received > self.payload_capacity {
-                self.has_more = true;
-                return Some(Err(Error::ExceedsCapacity));
-            }
 
             Some(Ok(Chunk { bytes: buf }))
         }
