@@ -1,7 +1,7 @@
 use core::net::SocketAddr;
 
 use ariel_os_log::error;
-use coap_message_utils::OptionsExt;
+use coap_message_utils::OptionsExt as _;
 use coap_message_utils::option_value::{Block2RequestData, Block2ResponseData};
 use coap_request::Stack;
 use coap_request_implementations::AsUriPath as _;
