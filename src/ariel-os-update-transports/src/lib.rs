@@ -30,7 +30,6 @@ mod coap {
         let client = transport::new_client::<_, CHUNK_SIZE>(dns_client, uri).await?;
 
         Ok(FetchStream {
-            chunk_index: 0,
             buf,
             bytes_received: 0,
             client,
@@ -40,7 +39,6 @@ mod coap {
     }
 
     pub struct FetchStream<'uri, 'buf, const N: usize, const CHUNK_SIZE: usize> {
-        chunk_index: u32,
         buf: &'buf mut [u8; N],
         bytes_received: u32,
         has_more: bool,
@@ -59,7 +57,7 @@ mod coap {
                 return None;
             }
 
-            let buf = match self.client.get(self.chunk_index, self.buf).await {
+            let buf = match self.client.get(self.buf).await {
                 Ok((buf, has_more)) => {
                     self.has_more = has_more;
                     buf
@@ -77,10 +75,7 @@ mod coap {
                 return Some(Err(Error::ExceedsCapacity));
             }
 
-            let index = self.chunk_index;
-            self.chunk_index += 1;
-
-            Some(Ok(Chunk { index, bytes: buf }))
+            Some(Ok(Chunk { bytes: buf }))
         }
     }
 }
@@ -122,7 +117,6 @@ mod http {
         let client = transport::NetworkTransportClient::new(tcp_client, dns_client, uri).await?;
 
         Ok(FetchStream {
-            chunk_index: 0,
             buf,
             bytes_received: 0,
             received_any: false,
@@ -141,7 +135,6 @@ mod http {
         const N: usize,
         const CHUNK_SIZE: usize,
     > {
-        chunk_index: u32,
         buf: &'buf mut [u8; N],
         bytes_received: u32,
         received_any: bool,
@@ -197,10 +190,7 @@ mod http {
                 return Some(Err(Error::ExceedsCapacity));
             }
 
-            let index = self.chunk_index;
-            self.chunk_index += 1;
-
-            Some(Ok(Chunk { index, bytes: buf }))
+            Some(Ok(Chunk { bytes: buf }))
         }
     }
 }
@@ -213,16 +203,10 @@ pub use http::*;
 
 #[derive(Debug)]
 pub struct Chunk<'bytes> {
-    index: u32,
     bytes: &'bytes [u8],
 }
 
 impl<'bytes> Chunk<'bytes> {
-    #[must_use]
-    pub fn index(&self) -> u32 {
-        self.index
-    }
-
     #[must_use]
     pub fn bytes(&self) -> &'bytes [u8] {
         self.bytes

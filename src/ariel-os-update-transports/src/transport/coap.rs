@@ -16,7 +16,9 @@ const CONCURRENT_REQUESTS: usize = 3;
 
 pub struct NetworkTransportClient<'uri, const CHUNK_SIZE: usize> {
     pub(crate) client: RequestingCoAPClient<'static, CONCURRENT_REQUESTS>,
-    pub(crate) path: &'uri str,
+    // Reusing a single request instance because in there, not only is the path stored, but also
+    // the state of the block-wise transfer.
+    request: SuitPayloadRequest<'uri, CHUNK_SIZE>,
 }
 
 /// Create a new CoAP client to send requests to a given uri.
@@ -60,7 +62,7 @@ pub(crate) async fn new_client<'uri, DNS: Dns, const CHUNK_SIZE: usize>(
 
     Ok(NetworkTransportClient {
         client,
-        path: uri.path(),
+        request: SuitPayloadRequest::<CHUNK_SIZE>::new(uri.path()),
     })
 }
 
@@ -72,19 +74,14 @@ impl<const CHUNK_SIZE: usize> NetworkTransportClient<'_, CHUNK_SIZE> {
     /// * If the request fails or returns garbage data.
     pub async fn get<'buf, const N: usize>(
         &mut self,
-        chunk_index: u32,
         buf: &'buf mut [u8; N],
     ) -> Result<(&'buf mut [u8], bool), Error> {
         const {
             assert!(N >= CHUNK_SIZE);
         }
-        // BIG FIXME: We're ignoring chunk_index -- generally, SuitPayloadRequest updates itself to
-        // just be called continuously, but can the outer framework deal with not even getting
-        // chunk numbers?
-        let request = SuitPayloadRequest::<CHUNK_SIZE>::new(self.path);
         let Some((has_more, coap_chunk)) = self
             .client
-            .request(request)
+            .request(&mut self.request)
             .await
             .map_err(|_| Error::Transport)?
         else {
@@ -118,7 +115,7 @@ impl<'a, const CHUNK_SIZE: usize> SuitPayloadRequest<'a, CHUNK_SIZE> {
 
 impl<const CHUNK_SIZE: usize>
     coap_request::Request<RequestingCoAPClient<'static, CONCURRENT_REQUESTS>>
-    for SuitPayloadRequest<'_, CHUNK_SIZE>
+    for &mut SuitPayloadRequest<'_, CHUNK_SIZE>
 {
     type Output = Option<(bool, CoapChunk<CHUNK_SIZE>)>;
 
