@@ -184,7 +184,7 @@ impl<const CHUNK_SIZE: usize>
 
         if !block2.matches_request(&self.request_block, response.payload()) {
             error!(
-                "Unexpected block {} (payload length {}) after requesting {}",
+                "Unexpected block {:?} (payload length {}) after requesting {:?}",
                 block2,
                 response.payload().len(),
                 self.request_block
