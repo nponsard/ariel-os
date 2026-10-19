@@ -21,10 +21,10 @@ embedded-nal-coap = { workspace = true, optional = true }
 featurecomb = { workspace = true }
 nourl = { workspace = true }
 reqwless = { workspace = true, optional = true }
-coap-message-utils = { git = "https://codeberg.org/chrysn/coap-tools", branch = "more-block", features = ["defmt_0_3"] }
+coap-message-utils = "0.3.10"
 
 [features]
-defmt = ["dep:defmt"]
+defmt = ["dep:defmt", "coap-message-utils/defmt"]
 
 # Selects CoAP as the update transport.
 coap = [

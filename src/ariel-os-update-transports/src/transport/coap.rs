@@ -182,10 +182,12 @@ impl<const CHUNK_SIZE: usize>
             return core::future::ready(None);
         };
 
-        if !block2.matches_request(&self.request_block) {
+        if !block2.matches_request(&self.request_block, response.payload()) {
             error!(
-                "Unexpected block {} after requesting {}",
-                block2, self.request_block
+                "Unexpected block {} (payload length {}) after requesting {}",
+                block2,
+                response.payload().len(),
+                self.request_block
             );
             return core::future::ready(None);
         }
