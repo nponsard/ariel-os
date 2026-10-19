@@ -1298,9 +1298,9 @@ dependencies = [
 
 [[package]]
 name = "coap-message-utils"
-version = "0.3.10"
+version = "0.3.12"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "93e4cca4ebedf03ae2975653899b34e19ca28520d7967bcd359f5db33773406c"
+checksum = "8a8da30f1ffddc9b6e3036346a5e9060a2403bb87846bf9e63834d05d36ea168"
 dependencies = [
  "coap-message",
  "coap-numbers",
