@@ -6,6 +6,9 @@
 
 pub mod gpio;
 
+#[cfg(any(feature = "storage", feature = "_cyw43"))]
+mod dma;
+
 #[doc(hidden)]
 pub mod peripheral {
     pub use embassy_rp::Peri;
@@ -20,7 +23,7 @@ mod wifi;
 #[doc(hidden)]
 pub mod ble;
 
-#[cfg(any(feature = "ble-cyw43", feature = "wifi-cyw43"))]
+#[cfg(feature = "_cyw43")]
 #[doc(hidden)]
 pub mod cyw43;
 
