@@ -82,7 +82,7 @@ impl<'a, 'uri, TCP: TcpConnect, DNS: Dns> NetworkTransportClient<'a, 'uri, TCP, 
         // NOTE: Content-Type is not checked.
         trace!(
             "HTTP response Content-Type: {:?}",
-            response.content_type.as_ref().map(|c| c.as_str())
+            response.content_type.as_ref().map(reqwless::headers::ContentType::as_str)
         );
 
         response
