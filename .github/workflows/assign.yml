@@ -1,0 +1,23 @@
+name: PR assignment
+
+on:
+    issues:
+        types: [opened]
+    pull_request:
+        types: [opened, edited, synchronize, reopened]
+
+permissions: {}
+
+jobs:
+    auto-assign:
+        runs-on: ubuntu-latest
+        permissions:
+            issues: write
+            pull-requests: write
+        steps:
+            - name: 'Auto-assign issue'
+              uses: pozil/auto-assign-issue@v4
+              with:
+                  assignees: nponsard, ROMemories, anlavandier
+                  numOfAssignee: 1
+                  allowSelfAssign: true
