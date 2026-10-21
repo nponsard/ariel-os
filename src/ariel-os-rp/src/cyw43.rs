@@ -14,6 +14,8 @@ use embassy_rp::{
 use rpi_pico_w::{CywSpi, DEFAULT_CLOCK_DIVIDER, Irqs};
 use static_cell::StaticCell;
 
+use crate::dma::DmaIrqs;
+
 #[cfg(feature = "ble-cyw43")]
 use bt_hci::controller::ExternalController;
 #[cfg(feature = "wifi")]
@@ -95,7 +97,7 @@ pub async fn device<'a, 'b: 'a>(
         cs,
         pins.dio,
         pins.clk,
-        Channel::new(pins.dma, Irqs),
+        Channel::new(pins.dma, DmaIrqs),
     );
 
     #[cfg(not(feature = "ble-cyw43"))]
