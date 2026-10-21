@@ -103,12 +103,12 @@ jobs:
             --no-deps \
             -p embedded-hal@1.0.0 \
             -p embedded-hal-async \
-            -p embedded-io-async@0.6.1
+            -p embedded-io-async@0.7.0
           cargo doc \
             --no-deps \
             -p embedded-hal@1.0.0 \
             -p embedded-hal-async \
-            -p embedded-io-async@0.6.1
+            -p embedded-io-async@0.7.0
 
           # These are split out so items from `ariel-os-sensors` are properly
           # resolved.
