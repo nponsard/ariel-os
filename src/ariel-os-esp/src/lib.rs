@@ -106,7 +106,7 @@ pub fn init() -> OptionalPeripherals {
                     TimerGroup::new(peripherals.TIMG1.take().unwrap()).timer0
                 }
                 _ => {
-                    use esp_hal::timer::systimer::{SystemTimer};
+                    use esp_hal::timer::systimer::SystemTimer;
                     SystemTimer::new(peripherals.SYSTIMER.take().unwrap()).alarm0
                 }
             }

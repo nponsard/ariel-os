@@ -63,7 +63,7 @@ cfg_select! {
             type ThreadData = ();
             const DEFAULT_THREAD_DATA: Self::ThreadData = ();
 
-            fn setup_stack( _: &mut Thread, _: &mut [u8], _: fn(), _: Option<usize>) {
+            fn setup_stack(_: &mut Thread, _: &mut [u8], _: fn(), _: Option<usize>) {
                 unimplemented!()
             }
             fn start_threading() {

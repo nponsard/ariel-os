@@ -91,7 +91,7 @@ pub mod log {
             pub use ariel_os_debug::debug_channel_println as println;
         }
         feature = "debug-uart" => {
-           pub use crate::uart_println as println;
+            pub use crate::uart_println as println;
         }
         feature = "esp-println" => {
             pub use esp_println::println;
@@ -99,7 +99,10 @@ pub mod log {
         feature = "logging-over-stdout" => {
             pub use std::println;
         }
-        any(feature = "internal-transport-driver", feature = "custom-transport-driver") => {
+        any(
+            feature = "internal-transport-driver",
+            feature = "custom-transport-driver"
+        ) => {
             pub use crate::transport_println as println;
         }
         not(context = "ariel-os") => {
