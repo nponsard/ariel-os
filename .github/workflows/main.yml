@@ -335,6 +335,7 @@ jobs:
             --features "
               http,
               defmt,
+              ariel-os-log/defmt,
               "
             --
             --deny warnings
