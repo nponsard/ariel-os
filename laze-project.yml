@@ -135,7 +135,7 @@ contexts:
           - ${CARGO_PRESHELL} ${CARGO_ENV} $@
 
       cargo:
-        workdir: ${relpath}
+        workdir: ${appdir}
         cmd:
           - ${CARGO_PRESHELL} ${CARGO_ENV} ${CARGO} ${CARGO_TOOLCHAIN} ${CARGO_ARGS} $@
         build: false
