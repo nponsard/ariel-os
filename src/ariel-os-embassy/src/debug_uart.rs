@@ -79,7 +79,7 @@ mod iot_lab {
         #[cfg(any(context = "nrf52dk", context = "nrf52840dk"))]
         let (p, uart_rx, uart_tx) = {
             // https://www.iot-lab.info/docs/boards/nordic-nrf52840dk/
-            config.baudrate = embassy_nrf::buffered_uarte::Baudrate::BAUD115200;
+            config.baudrate = embassy_nrf::buffered_uarte::Baudrate::Baud115200;
             (
                 peripherals.UARTE0.take().unwrap(),
                 peripherals.P0_08.take().unwrap(),
@@ -90,7 +90,7 @@ mod iot_lab {
         // UART wired to the on-board J-Link virtual COM port.
         #[cfg(context = "decawave-dwm1001-dev")]
         let (p, uart_rx, uart_tx) = {
-            config.baudrate = embassy_nrf::buffered_uarte::Baudrate::BAUD115200;
+            config.baudrate = embassy_nrf::buffered_uarte::Baudrate::Baud115200;
             (
                 peripherals.UARTE0.take().unwrap(),
                 peripherals.P0_11.take().unwrap(),
