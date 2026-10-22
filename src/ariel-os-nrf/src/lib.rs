@@ -124,6 +124,11 @@ fn enable_flash_cache() {
                 .enable()
                 .write(|w| w.set_enable(true));
         }
+        context = "nrf54l15-app" => {
+            embassy_nrf::pac::ICACHE_S
+                .enable()
+                .write(|w| w.set_enable(true));
+        }
         _ => {}
     }
 }
