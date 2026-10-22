@@ -71,7 +71,9 @@ cfg_select! {
         // need something that has a `new()`
         pub struct Dummy;
         impl Dummy {
-            pub const fn new() -> Self { Self {}}
+            pub const fn new() -> Self {
+                Self {}
+            }
         }
         impl StackLimits for Dummy {}
 

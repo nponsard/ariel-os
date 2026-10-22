@@ -56,8 +56,12 @@ cfg_select! {
 
             pub fn init() {}
             pub fn wfi() {}
-            pub fn sp() -> usize { 0 }
-            pub fn stack() -> Stack { Stack::default() }
+            pub fn sp() -> usize {
+                0
+            }
+            pub fn stack() -> Stack {
+                Stack::default()
+            }
         }
     }
 }

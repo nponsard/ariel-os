@@ -121,7 +121,8 @@ fn enable_flash_cache() {
         }
         context = "nrf5340-app" => {
             embassy_nrf::pac::CACHE_S
-                .enable().write(|w| w.set_enable(true));
+                .enable()
+                .write(|w| w.set_enable(true));
         }
         _ => {}
     }
