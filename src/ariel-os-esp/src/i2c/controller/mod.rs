@@ -7,7 +7,7 @@ use portable_atomic::{AtomicBool, Ordering};
 use ariel_os_embassy_common::impl_async_i2c_for_driver_enum;
 use esp_hal::{
     Async,
-    gpio::interconnect::PeripheralOutput,
+    gpio::interconnect::{PeripheralInput, PeripheralOutput},
     i2c::master::{BusTimeout, I2c as EspI2c},
     peripherals,
 };
@@ -105,7 +105,7 @@ macro_rules! define_i2c_drivers {
                 /// I2C peripheral.
                 #[expect(clippy::new_ret_no_self)]
                 #[must_use]
-                pub fn new<SDA: PeripheralOutput<'static>, SCL: PeripheralOutput<'static>>(
+                pub fn new<SDA: PeripheralInput<'static> + PeripheralOutput<'static>, SCL: PeripheralInput<'static> + PeripheralOutput<'static>>(
                     sda_pin: impl $crate::IntoPeripheral<'static, SDA>,
                     scl_pin: impl $crate::IntoPeripheral<'static, SCL>,
                     config: Config,
@@ -121,7 +121,7 @@ macro_rules! define_i2c_drivers {
                         .with_frequency(config.frequency.into())
                         // disable timeout as we handle that at a higher level.
                         .with_timeout(
-                            #[cfg(any(context = "esp32c3", context = "esp32c6", context = "esp32s2", context = "esp32s3"))]
+                            #[cfg(not(context = "esp32"))]
                             BusTimeout::Disabled,
                             // Use the maximum value as timeout cannot be disabled.
                             #[cfg(context = "esp32")]
@@ -207,10 +207,14 @@ fn from_error(err: esp_hal::i2c::master::Error) -> ariel_os_embassy_common::i2c:
 // Define a driver per peripheral
 #[cfg(context = "esp32")]
 define_i2c_drivers!(I2C0, I2C1);
+#[cfg(context = "esp32c2")]
+define_i2c_drivers!(I2C0);
 #[cfg(context = "esp32c3")]
 define_i2c_drivers!(I2C0);
 #[cfg(context = "esp32c6")]
 define_i2c_drivers!(I2C0);
+#[cfg(context = "esp32h2")]
+define_i2c_drivers!(I2C0, I2C1);
 #[cfg(context = "esp32s2")]
 define_i2c_drivers!(I2C0, I2C1);
 #[cfg(context = "esp32s3")]

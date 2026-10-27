@@ -1,4 +1,4 @@
-version: 0.4.0
+version: 0.4.1
 targets:
   nrf9151-dk:
     chip: nrf9151
@@ -44,3 +44,31 @@ targets:
         active: low
         aliases:
           - Button 4
+    i2c:
+      # Only available when a shield is inserted and if enabled by the interface
+      # MCU using the nRF Connect for Desktop application.
+      - sda_pin: P0_30
+        scl_pin: P0_31
+        possible_peripherals:
+          - SERIAL0
+          - SERIAL1
+    uarts:
+      - aliases:
+          - VCOM0
+        tx_pin: P0_27
+        rx_pin: P0_26
+        rts_pin: P0_14
+        cts_pin: P0_15
+        # FIXME: Is this exhaustive? (Seems those are all we have in Ariel right now)
+        possible_peripherals: [SERIAL3]
+        host_facing: true
+      # Pins are correct, but SERIAL3 is already taken
+      # - aliases:
+      #   - VCOM1
+      #   tx_pin: P0_29
+      #   rx_pin: P0_28
+      #   rts_pin: P0_16
+      #   cts_pin: P0_17
+      #   # FIXME: Is this exhaustive? (Seems those are all we have in Ariel right now)
+      #   possible_peripherals: [SERIAL3]
+      #   host_facing: true

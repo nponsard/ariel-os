@@ -136,7 +136,9 @@ async fn coap_run_impl(handler: impl coap_handler::Handler + coap_handler::Repor
             // resource to which the policy would be applied.
 
             #[cfg(all(feature = "coap-server", not(feature = "doc")))]
-            compile_error!("No CoAP server configuration chosen out of the coap-server-config-* features.");
+            compile_error!(
+                "No CoAP server configuration chosen out of the coap-server-config-* features."
+            );
         }
     }
 
@@ -157,14 +159,12 @@ async fn coap_run_impl(handler: impl coap_handler::Handler + coap_handler::Repor
     );
 
     cfg_select! {
-        feature = "coap-transport-udp" => {
-            transport_udp::coap_run_udp(handler).await
-        }
-        feature = "doc" => {
-            loop {}
-        }
+        feature = "coap-transport-udp" => transport_udp::coap_run_udp(handler).await,
+        feature = "doc" => loop {},
         _ => {
-            compile_error!("No CoAP transport configuration was chosen out of the coap-transport-* features.")
+            compile_error!(
+                "No CoAP transport configuration was chosen out of the coap-transport-* features."
+            )
         }
     }
 }

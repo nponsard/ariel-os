@@ -1,6 +1,6 @@
 [package]
 name = "ariel-os-hal"
-version = "0.5.0"
+version = "0.6.0"
 edition.workspace = true
 rust-version.workspace = true
 license.workspace = true
@@ -17,16 +17,16 @@ embedded-hal = { workspace = true }
 embedded-hal-async = { workspace = true }
 
 [target.'cfg(context = "esp")'.dependencies]
-ariel-os-esp = { path = "../ariel-os-esp" }
+ariel-os-esp = { workspace = true }
 
 [target.'cfg(context = "native")'.dependencies]
-ariel-os-native = { path = "../ariel-os-native" }
+ariel-os-native = { workspace = true }
 
 [target.'cfg(context = "nrf")'.dependencies]
-ariel-os-nrf = { path = "../ariel-os-nrf" }
+ariel-os-nrf = { workspace = true }
 
 [target.'cfg(context = "rp")'.dependencies]
-ariel-os-rp = { path = "../ariel-os-rp" }
+ariel-os-rp = { workspace = true }
 
 [target.'cfg(context = "stm32")'.dependencies]
 ariel-os-stm32 = { workspace = true }
@@ -87,6 +87,9 @@ uart = [
   "ariel-os-rp/uart",
   "ariel-os-stm32/uart",
 ]
+
+## Suppresses the built-in app descriptor so the application can emit its own.
+custom-app-descriptor = ["ariel-os-esp/custom-app-descriptor"]
 
 usb = [
   "ariel-os-esp/usb",
@@ -163,7 +166,7 @@ defmt = [
   "ariel-os-stm32/defmt",
   "embedded-hal-async/defmt-03",
   "embedded-hal/defmt-03",
-  "embedded-io?/defmt-03",
+  "embedded-io?/defmt",
 ]
 log = ["ariel-os-esp/log"]
 

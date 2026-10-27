@@ -71,6 +71,20 @@ async fn blinky(peripherals: pins::LedPeripherals) {
 }
 ```
 
+## Using the Third-Party HALs Directly
+
+<!-- NOTE: This implies that underlying HALs are not implementation details of Ariel OS. -->
+Ariel OS internally uses third-party HALs in [its HAL crates][ariel-os-hals], which currently all are [Embassy-style HALs][embassy-style-hals].
+[Ariel OS HAL crates][ariel-os-hals] provide portable drivers and APIs to abstract over the most common types of APIs and peripherals, so that applications can generally run just the same on boards featuring microcontrollers from different manufacturers.
+When Ariel OS does not (yet) provide a portable driver over a peripheral that *is* supported by the third-party HAL, it is still possible to directly use that driver.
+This can be done by simply adding the third-party HAL as a dependency of the application and passing the required peripheral ZSTs obtained through [Ariel OS mechanisms](#obtaining-peripheral-access) to instantiate the third-party driver in the application.
+
+> [!IMPORTANT]
+> When adding the third-party HAL as a dependency, the same version as that of Ariel OS *must* be used.
+
+This is made possible by the fact that Ariel OS takes peripherals and binds interrupts needed for a piece of functionality only when that functionality is enabled (through Cargo features or [laze modules][laze-modules-book]), unless it is a core functionality of the OS.
+For instance, leaving the `i2c` Cargo feature disabled allows drivers other than Ariel OS's to bind the interrupts required for the I2C peripherals, allowing to use I2C drivers from third-party HALs.
+
 [embassy-style-hals]: ./glossary.md#embassy-style-hals
 [ariel-os-hals]: ./glossary.md#ariel-os-hals
 [spawner-attr-docs]: https://ariel-os.github.io/ariel-os/dev/docs/api/ariel_os/attr.spawner.html
@@ -79,3 +93,4 @@ async fn blinky(peripherals: pins::LedPeripherals) {
 [blinky-example-src]: https://github.com/ariel-os/ariel-os/tree/main/examples/blinky
 [define_peripherals-docs]: https://ariel-os.github.io/ariel-os/dev/docs/api/ariel_os/hal/macro.define_peripherals.html
 [group_peripherals-docs]: https://ariel-os.github.io/ariel-os/dev/docs/api/ariel_os/hal/macro.group_peripherals.html
+[laze-modules-book]: ./build-system.md#laze-modules

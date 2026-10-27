@@ -1,9 +1,9 @@
-version: 0.4.0
+version: 0.4.1
 targets:
   st-nucleo-wba55:
     chip: stm32wba55cg
     ariel:
-      swi: USART2
+      swi: WWDG
     leds:
       # led0
       - pin: PB4
@@ -33,3 +33,10 @@ targets:
       - pin: PB7
         aliases:
           - B3
+    uarts:
+      - aliases:
+          - VCP1
+        tx_pin: PB12
+        rx_pin: PA8
+        possible_peripherals: [USART1]
+        host_facing: true

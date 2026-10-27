@@ -26,12 +26,12 @@ jobs:
           persist-credentials: false
 
       - name: Install toolchain
-        uses: dtolnay/rust-toolchain@efa25f7f19611383d5b0ccf2d1c8914531636bf9 # master
+        uses: dtolnay/rust-toolchain@e2a55d2ffb04f378e9626c28d38b36d230d1e12f # master
         with:
           toolchain: stable
 
       - name: Install laze
-        uses: taiki-e/install-action@b20dedce73af6905cdc30d6611090c9b67557c8d # v2
+        uses: taiki-e/install-action@1168f6810a3cb30a3514bf5756a3b7f0422c6df8 # v2
         with:
           tool: laze@0.1
 
@@ -82,7 +82,7 @@ jobs:
 
       # Clippy linting is better done with the nightly set of lints.
       - name: Install toolchain
-        uses: dtolnay/rust-toolchain@efa25f7f19611383d5b0ccf2d1c8914531636bf9 # master
+        uses: dtolnay/rust-toolchain@e2a55d2ffb04f378e9626c28d38b36d230d1e12f # master
         with:
           toolchain: ${{ steps.get_toolchain.outputs.toolchain }}
           # Required for checking ariel-os-esp and ariel-os-nrf
@@ -96,7 +96,7 @@ jobs:
         uses: Swatinem/rust-cache@6323deb102c322ba6fcbdcafc7e3dddab59af2b6 # v2
 
       - name: Install cargo-deny
-        uses: taiki-e/install-action@b20dedce73af6905cdc30d6611090c9b67557c8d # v2
+        uses: taiki-e/install-action@1168f6810a3cb30a3514bf5756a3b7f0422c6df8 # v2
         with:
           tool: cargo-deny
 
@@ -117,7 +117,7 @@ jobs:
       # TODO: we'll eventually want to check relevant feature combinations
       # TODO: we may want to use --no-deps as well
       - name: clippy
-        uses: clechasseur/rs-clippy-check@e198ae0533dc69d707c383951d90dc356a692026 # v6.0.6
+        uses: clechasseur/rs-clippy-check@d626afd6670c78ecef6c7872e1c9e1221065d5c5 # v6.1.0
         with:
           args: |
             --locked
@@ -167,11 +167,12 @@ jobs:
             -p ariel-os-storage
             -p ariel-os-threads
             -p ariel-os-utils
+            -p ariel-os-update-transports
             --
             --deny warnings
 
       - name: lint with Clippy when using the `log` logging facade
-        uses: clechasseur/rs-clippy-check@e198ae0533dc69d707c383951d90dc356a692026 # v6.0.6
+        uses: clechasseur/rs-clippy-check@d626afd6670c78ecef6c7872e1c9e1221065d5c5 # v6.1.0
         with:
           args: |
             --locked
@@ -186,7 +187,7 @@ jobs:
 
       - run: echo 'RUSTFLAGS=--cfg context="esp32c6" --cfg getrandom_backend="custom"' >> $GITHUB_ENV
       - name: clippy for ESP32
-        uses: clechasseur/rs-clippy-check@e198ae0533dc69d707c383951d90dc356a692026 # v6.0.6
+        uses: clechasseur/rs-clippy-check@d626afd6670c78ecef6c7872e1c9e1221065d5c5 # v6.1.0
         with:
           args: |
             --locked
@@ -206,7 +207,7 @@ jobs:
 
       - run: echo 'RUSTFLAGS=--cfg context="cortex-m" --cfg context="rp" --cfg context="rp2040" --cfg getrandom_backend="custom"' >> $GITHUB_ENV
       - name: clippy for RP
-        uses: clechasseur/rs-clippy-check@e198ae0533dc69d707c383951d90dc356a692026 # v6.0.6
+        uses: clechasseur/rs-clippy-check@d626afd6670c78ecef6c7872e1c9e1221065d5c5 # v6.1.0
         with:
           args: |
             --locked
@@ -225,7 +226,7 @@ jobs:
 
       - run: echo 'RUSTFLAGS=--cfg context="nrf52840" --cfg context="nrf52" --cfg getrandom_backend="custom"' >> $GITHUB_ENV
       - name: clippy for nRF52
-        uses: clechasseur/rs-clippy-check@e198ae0533dc69d707c383951d90dc356a692026 # v6.0.6
+        uses: clechasseur/rs-clippy-check@d626afd6670c78ecef6c7872e1c9e1221065d5c5 # v6.1.0
         with:
           args: |
             --locked
@@ -244,7 +245,7 @@ jobs:
             --deny warnings
       - run: echo 'RUSTFLAGS=--cfg context="nrf9160" --cfg context="nrf91" --cfg context="nrf" --cfg getrandom_backend="custom"' >> $GITHUB_ENV
       - name: clippy for nRF91
-        uses: clechasseur/rs-clippy-check@e198ae0533dc69d707c383951d90dc356a692026 # v6.0.6
+        uses: clechasseur/rs-clippy-check@d626afd6670c78ecef6c7872e1c9e1221065d5c5 # v6.1.0
         with:
           args: |
             --locked
@@ -273,7 +274,7 @@ jobs:
 
       - run: echo 'RUSTFLAGS=--cfg context="stm32wb55rg" --cfg getrandom_backend="custom"' >> $GITHUB_ENV
       - name: clippy for STM32
-        uses: clechasseur/rs-clippy-check@e198ae0533dc69d707c383951d90dc356a692026 # v6.0.6
+        uses: clechasseur/rs-clippy-check@d626afd6670c78ecef6c7872e1c9e1221065d5c5 # v6.1.0
         with:
           args: |
             --locked
@@ -291,7 +292,7 @@ jobs:
       # Reset `RUSTFLAGS`.
       - run: echo 'RUSTFLAGS=' >> $GITHUB_ENV
       - name: clippy
-        uses: clechasseur/rs-clippy-check@e198ae0533dc69d707c383951d90dc356a692026 # v6.0.6
+        uses: clechasseur/rs-clippy-check@d626afd6670c78ecef6c7872e1c9e1221065d5c5 # v6.1.0
         with:
           args: |
             --locked
@@ -301,7 +302,7 @@ jobs:
 
       # Lint sensor drivers.
       - name: Clippy on sensor drivers
-        uses: clechasseur/rs-clippy-check@e198ae0533dc69d707c383951d90dc356a692026 # v6.0.6
+        uses: clechasseur/rs-clippy-check@d626afd6670c78ecef6c7872e1c9e1221065d5c5 # v6.1.0
         with:
           args: |
             --locked
@@ -313,7 +314,7 @@ jobs:
             --deny warnings
 
       - name: Clippy on nrf91 sensor drivers
-        uses: clechasseur/rs-clippy-check@e198ae0533dc69d707c383951d90dc356a692026 # v6.0.6
+        uses: clechasseur/rs-clippy-check@d626afd6670c78ecef6c7872e1c9e1221065d5c5 # v6.1.0
         with:
           args: |
             --locked
@@ -321,6 +322,20 @@ jobs:
             --features "
               ariel-os-log/log,
               nrf-modem/nrf9160
+              "
+            --
+            --deny warnings
+
+      - name: Clippy on ariel-os-update-transports
+        uses: clechasseur/rs-clippy-check@d626afd6670c78ecef6c7872e1c9e1221065d5c5 # v6.1.0
+        with:
+          args: |
+            --locked
+            -p ariel-os-update-transports
+            --features "
+              http,
+              defmt,
+              ariel-os-log/defmt,
               "
             --
             --deny warnings
@@ -339,7 +354,7 @@ jobs:
 
       # Generating the rustdoc docs requires nightly features.
       - name: Install toolchain
-        uses: dtolnay/rust-toolchain@efa25f7f19611383d5b0ccf2d1c8914531636bf9 # master
+        uses: dtolnay/rust-toolchain@e2a55d2ffb04f378e9626c28d38b36d230d1e12f # master
         with:
           toolchain: ${{ steps.get_toolchain.outputs.toolchain }}
           targets: riscv32imac-unknown-none-elf
@@ -480,7 +495,7 @@ jobs:
           persist-credentials: false
 
       - name: Install taplo
-        uses: taiki-e/install-action@b20dedce73af6905cdc30d6611090c9b67557c8d # v2
+        uses: taiki-e/install-action@1168f6810a3cb30a3514bf5756a3b7f0422c6df8 # v2
         with:
           tool: taplo
           fallback: none
@@ -498,7 +513,7 @@ jobs:
           persist-credentials: false
 
       - name: Install cargo-manifest-check
-        uses: taiki-e/install-action@b20dedce73af6905cdc30d6611090c9b67557c8d # v2
+        uses: taiki-e/install-action@1168f6810a3cb30a3514bf5756a3b7f0422c6df8 # v2
         with:
           tool: cargo-manifest-check@0.3
 
@@ -529,7 +544,7 @@ jobs:
           persist-credentials: false
 
       - name: typos
-        uses: crate-ci/typos@8a48f81b6c64dcfea44b3633223084c4be58ac5f # v1.49.0
+        uses: crate-ci/typos@7f9d0819ca1c008ade73f4b41fa9d258d48f605b # v1.51.1
 
       - name: Check that the book summary has an up-to-date board list
         run: ./doc/gen_book.rs summary doc/support_matrix.yml book/src/SUMMARY.md --template-path book/templates/SUMMARY.md.tmpl --check
@@ -553,7 +568,7 @@ jobs:
           ./doc/gen_book.rs chip-index doc/support_matrix.yml book/src/chips/index.md --template-path book/templates/chip-index.md.tmpl --check
 
       - name: Install mdbook
-        uses: taiki-e/install-action@b20dedce73af6905cdc30d6611090c9b67557c8d # v2
+        uses: taiki-e/install-action@1168f6810a3cb30a3514bf5756a3b7f0422c6df8 # v2
         with:
           tool: mdbook@0.5
 
@@ -565,7 +580,7 @@ jobs:
       - name: Link Checker
         uses: lycheeverse/lychee-action@e7477775783ea5526144ba13e8db5eec57747ce8 # v2
         with:
-          args: --root-dir book/book --offline --require-https --no-progress --include-fragments --include-verbatim -v '*.md' book/book
+          args: --root-dir book/book --offline --require-https --no-progress --include-fragments=full --include-verbatim -v '*.md' book/book
           fail: true
 
   sbd-gen-check:
@@ -578,9 +593,9 @@ jobs:
           persist-credentials: false
 
       - name: Install sbd-gen
-        uses: taiki-e/install-action@b20dedce73af6905cdc30d6611090c9b67557c8d # v2
+        uses: taiki-e/install-action@1168f6810a3cb30a3514bf5756a3b7f0422c6df8 # v2
         with:
-          tool: sbd-gen@0.4.0
+          tool: sbd-gen@0.5.0
 
       - name: Check sbd-gen output
         run: |

@@ -51,6 +51,7 @@ pub struct UnconnectedUdp<'a> {
 #[allow(
     dead_code,
     clippy::unused_async,
+    clippy::unused_async_trait_impl,
     clippy::missing_errors_doc,
     reason = "pub item is being prepared for embedded-nal-async where it will be reachable publicly"
 )]
@@ -100,6 +101,7 @@ impl<'a> ConnectedUdp<'a> {
 #[allow(
     dead_code,
     clippy::unused_async,
+    clippy::unused_async_trait_impl,
     clippy::missing_errors_doc,
     reason = "pub item is being prepared for embedded-nal-async where it will be reachable publicly"
 )]

@@ -16,7 +16,7 @@ concurrency:
 
 jobs:
   build:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
 
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -44,7 +44,7 @@ jobs:
           espup install
 
       - name: Install cargo-generate
-        uses: taiki-e/install-action@b20dedce73af6905cdc30d6611090c9b67557c8d # v2
+        uses: taiki-e/install-action@1168f6810a3cb30a3514bf5756a3b7f0422c6df8 # v2
         with:
           tool: cargo-generate
 

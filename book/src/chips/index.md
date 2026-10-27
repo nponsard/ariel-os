@@ -8,11 +8,15 @@ Here is the list of supported chips in Ariel OS.
 
 ## Espressif
   
+- [ESP32-C2](./esp32c2.md)
 - [ESP32-C3](./esp32c3.md)
 - [ESP32-C3Fx4](./esp32c3fx4.md)
 - [ESP32-C6](./esp32c6.md)
 - [ESP32-C6Fx4](./esp32c6fx4.md)
 - [ESP32-D0WD](./esp32-d0wd.md)
+- [ESP32-H2](./esp32h2.md)
+- [ESP32-H2FH2S](./esp32h2fh2s.md)
+- [ESP32-H2FH4S](./esp32h2fh4s.md)
 - [ESP32-S2](./esp32s2.md)
 - [ESP32-S2Fx2](./esp32s2fx2.md)
 - [ESP32-S2Fx4](./esp32s2fx4.md)
@@ -20,6 +24,9 @@ Here is the list of supported chips in Ariel OS.
 - [ESP32-S3](./esp32s3.md)
 - [ESP32-S3Fx4R2](./esp32s3fx4r2.md)
 - [ESP32-S3Fx8](./esp32s3fx8.md)
+- [ESP32-S3R8](./esp32s3r8.md)
+- [ESP8684H2](./esp8684h2.md)
+- [ESP8684H4](./esp8684h4.md)
 
 ## Nordic Semiconductor
   
@@ -29,6 +36,7 @@ Here is the list of supported chips in Ariel OS.
 - [nRF52840](./nrf52840.md)
 - [nRF5340 application core](./nrf5340-app.md)
 - [nRF5340 network core](./nrf5340-net.md)
+- [nRF54L15 application core](./nrf54l15-app.md)
 - [nRF9151](./nrf9151.md)
 - [nRF9160](./nrf9160.md)
 
@@ -48,6 +56,7 @@ Here is the list of supported chips in Ariel OS.
 - [STM32G431RB](./stm32g431rb.md)
 - [STM32H753ZI](./stm32h753zi.md)
 - [STM32H755ZI](./stm32h755zi.md)
+- [STM32L072CZ](./stm32l072cz.md)
 - [STM32L475VG](./stm32l475vg.md)
 - [STM32U073KC](./stm32u073kc.md)
 - [STM32U083MC](./stm32u083mc.md)

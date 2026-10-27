@@ -1,6 +1,129 @@
 
 # cargo-vet audits file
 
+[[audits.async-io]]
+who = "Antoine Lavandier <antoine.lavandier@inria.fr>"
+criteria = "safe-to-deploy"
+delta = "1.13.0 -> 2.0.0"
+notes = """
+New unsafe code seems reasonable and uses of unsafe code have proper accompanying comments.
+Some exceptions:
+- Win32 unsafe functions that don't have safety docs.
+- `polling::os::kqueue::Process:new`. This is called in `reactor::kqueue::Registration::add` which is pub(crate).
+- Same remark in `reactor::kqueue::Registration::delete`.
+"""
+
+[[audits.async-io]]
+who = "Antoine Lavandier <antoine.lavandier@inria.fr>"
+criteria = "safe-to-deploy"
+delta = "2.0.0 -> 2.1.0"
+notes = "Only adds new (unsafe) marker impls of `IoSafe` to more std types."
+
+[[audits.async-io]]
+who = "Antoine Lavandier <antoine.lavandier@inria.fr>"
+criteria = "safe-to-deploy"
+delta = "2.1.0 -> 2.2.0"
+notes = "No new code, only bumps futures-lite and async-lock deps"
+
+[[audits.async-io]]
+who = "Antoine Lavandier <antoine.lavandier@inria.fr>"
+criteria = "safe-to-deploy"
+delta = "2.2.0 -> 2.2.1"
+notes = """
+No new unsafe code.
+Updates windowsd-sys deps and drop waker-fn dep.
+"""
+
+[[audits.async-io]]
+who = "Antoine Lavandier <antoine.lavandier@inria.fr>"
+criteria = "safe-to-deploy"
+delta = "2.2.1 -> 2.2.2"
+notes = """
+No new unsafe code.
+Fixes an error when trying to use abstract sockets.
+"""
+
+[[audits.async-io]]
+who = "Antoine Lavandier <antoine.lavandier@inria.fr>"
+criteria = "safe-to-deploy"
+delta = "2.2.2 -> 2.3.0"
+notes = """
+New unsafe code uses includes:
+- `Registration::new_waitable` in `Waitable::new`. The constraint is upheld by the implementation although not stated.
+- `Send + Sync` impls on `Registration`. No idea if that's safe.
+- `Poller::add_waitable` in `Registration::add`. Covered by the previous safety comment for `Poller::add`
+"""
+
+[[audits.async-io]]
+who = "Antoine Lavandier <antoine.lavandier@inria.fr>"
+criteria = "safe-to-deploy"
+delta = "2.3.0 -> 2.3.1"
+notes = """
+No new unsafe code.
+Only fixes and issue on windows.
+"""
+
+[[audits.async-io]]
+who = "Antoine Lavandier <antoine.lavandier@inria.fr>"
+criteria = "safe-to-deploy"
+delta = "2.3.1 -> 2.3.2"
+notes = """
+No new unsafe code.
+Only adds compilation flags to fix an issue for aix OS. Also remove some unnecessary imports.
+"""
+
+[[audits.async-io]]
+who = "Antoine Lavandier <antoine.lavandier@inria.fr>"
+criteria = "safe-to-deploy"
+delta = "2.3.2 -> 2.3.3"
+notes = """
+No new unsafe code.
+Only fixes some clippy warnings.
+"""
+
+[[audits.async-io]]
+who = "Antoine Lavandier <antoine.lavandier@inria.fr>"
+criteria = "safe-to-deploy"
+delta = "2.3.3 -> 2.3.4"
+notes = """
+No new unsafe code.
+Only bumps windows-sys dep and make netbsd and dragonfly set `nosigpipe` on sockets.
+"""
+
+[[audits.async-io]]
+who = "Antoine Lavandier <antoine.lavandier@inria.fr>"
+criteria = "safe-to-deploy"
+delta = "2.3.4 -> 2.4.0"
+notes = """
+New unsafe code uses includes:
+- `polling::Process::from_pid` in `kqueue::Registration::add`. This code is only reached by registration of the form `Registration::Process(_)` which are only produced by `os::kqueue::Exit` which upholds the expected constraint either by construction when used from safe code or by forwarded the constraint when used from unsafe code.
+Otherwise this just groups apple OSes by their common vendor in `cfg`s.
+"""
+
+[[audits.async-io]]
+who = "Antoine Lavandier <antoine.lavandier@inria.fr>"
+criteria = "safe-to-deploy"
+delta = "2.4.0 -> 2.4.1"
+notes = "No new unsafe code. Only updates rustix deps."
+
+[[audits.async-io]]
+who = "Antoine Lavandier <antoine.lavandier@inria.fr>"
+criteria = "safe-to-deploy"
+delta = "2.4.1 -> 2.5.0"
+notes = """
+No new unsafe code.
+Makes tracing optional, fixes some comments and add Haiku OS support without adding code.
+"""
+
+[[audits.async-io]]
+who = "Antoine Lavandier <antoine.lavandier@inria.fr>"
+criteria = "safe-to-deploy"
+delta = "2.5.0 -> 2.6.0"
+notes = """
+New unsafe code is reduced to conditional impls of unsafe marker trait `IoSafe` on std types.
+Otherwise it's mainly refactors, including dropping `async_lock::OnceCell` for `std::sync::OnceLock`.
+"""
+
 [[audits.coap-handler]]
 who = "chrysn <chrysn@fsfe.org>"
 criteria = "safe-to-deploy"
@@ -10,6 +133,18 @@ version = "0.2.1"
 who = "chrysn <chrysn@fsfe.org>"
 criteria = "safe-to-deploy"
 version = "0.6.2"
+
+[[audits.coap-message]]
+who = "Antoine Lavandier <antoine.lavandier@inria.fr>"
+criteria = "safe-to-deploy"
+delta = "0.3.6 -> 0.3.7"
+notes = "No new unsafe code. Only formatting/clippy related changes"
+
+[[audits.coap-numbers]]
+who = "Antoine Lavandier <antoine.lavandier@inria.fr>"
+criteria = "safe-to-deploy"
+delta = "0.2.7 -> 0.2.11"
+notes = "No new unsafe code."
 
 [[audits.coap-scroll-ring-server]]
 who = "chrysn <chrysn@fsfe.org>"
@@ -84,6 +219,19 @@ who = "chrysn <chrysn@fsfe.org>"
 criteria = "safe-to-deploy"
 version = "0.1.0"
 
+[[audits.embassy-net-tuntap]]
+who = "Antoine Lavandier <antoine.lavandier@inria.fr>"
+criteria = "safe-to-deploy"
+delta = "0.1.0 -> 0.1.1"
+notes = """
+New unsafe code:
+- in impl of AsFd for TunTap. Unavoidable looking at the trait def. Safety comms missing but otherwise looks fine
+- repercussion of `Async::get_mut()` now unsafe in async-io. Doesn't change safety from previous version
+Only other changes are:
+- some constant from `lib_c` are used directly instead of locally aliased.
+- the hardware address of TunTapDevice is now modifiable instead of hardcoded but the default stays the same.
+"""
+
 [[audits.embassy-time]]
 who = "ROMemories <152802150+ROMemories@users.noreply.github.com>"
 criteria = "safe-to-deploy"
@@ -129,6 +277,82 @@ who = "Nils Ponsard <nils.ponsard@inria.fr>"
 criteria = "safe-to-deploy"
 delta = "0.3.31 -> 0.3.32"
 
+[[audits.futures-lite]]
+who = "Antoine Lavandier <antoine.lavandier@inria.fr>"
+criteria = "safe-to-deploy"
+delta = "1.13.0 -> 2.0.0"
+notes = """
+No new unsafe code.
+Only internal refactors, refactors to drop local `Pending` and `Ready` Futures for core equivalents.
+Also make race futures available in no std using provided rng.
+"""
+
+[[audits.futures-lite]]
+who = "Antoine Lavandier <antoine.lavandier@inria.fr>"
+criteria = "safe-to-deploy"
+delta = "2.0.0 -> 2.0.1"
+notes = "No new code, just removes an unnecessary dependency."
+
+[[audits.futures-lite]]
+who = "Antoine Lavandier <antoine.lavandier@inria.fr>"
+criteria = "safe-to-deploy"
+delta = "2.0.1 -> 2.1.0"
+notes = """
+No new unsafe code.
+Just makes use of the `memchr` crate optional.
+"""
+
+[[audits.futures-lite]]
+who = "Antoine Lavandier <antoine.lavandier@inria.fr>"
+criteria = "safe-to-deploy"
+delta = "2.1.0 -> 2.2.0"
+notes = """
+No new unsafe code.
+Relaxes MSRV; Remove `UnPin` bound; refactor a match expressions; impl `size_hint` for `Filter`
+"""
+
+[[audits.futures-lite]]
+who = "Antoine Lavandier <antoine.lavandier@inria.fr>"
+criteria = "safe-to-deploy"
+delta = "2.2.0 -> 2.3.0"
+notes = """
+No new unsafe code.
+Adds a drain method to streams and related code. Also fix some conditional compilation flags regarding alloc and std.
+"""
+
+[[audits.futures-lite]]
+who = "Antoine Lavandier <antoine.lavandier@inria.fr>"
+criteria = "safe-to-deploy"
+delta = "2.3.0 -> 2.4.0"
+notes = """
+No new unsafe code.
+Make TryZip and Zip drop the futures when completed. Also add some Stream functionality.
+"""
+
+[[audits.futures-lite]]
+who = "Antoine Lavandier <antoine.lavandier@inria.fr>"
+criteria = "safe-to-deploy"
+delta = "2.4.0 -> 2.5.0"
+notes = """
+No new unsafe code.
+Removes `Unpin` bound on `Lines`
+"""
+
+[[audits.futures-lite]]
+who = "Antoine Lavandier <antoine.lavandier@inria.fr>"
+criteria = "safe-to-deploy"
+delta = "2.5.0 -> 2.6.0"
+notes = """
+No new unsafe code.
+Small changes to docs and adds `map_while` to stream and removes some explicit lifetimes.
+"""
+
+[[audits.futures-lite]]
+who = "Antoine Lavandier <antoine.lavandier@inria.fr>"
+criteria = "safe-to-deploy"
+delta = "2.6.0 -> 2.6.1"
+notes = "No new unsafe code. Only docs change and import positions."
+
 [[audits.futures-macro]]
 who = "Nils Ponsard <nils.ponsard@inria.fr>"
 criteria = "safe-to-deploy"
@@ -149,6 +373,17 @@ who = "Nils Ponsard <nils.ponsard@inria.fr>"
 criteria = "safe-to-deploy"
 delta = "0.3.31 -> 0.3.32"
 
+[[audits.heapless]]
+who = "chrysn <chrysn@fsfe.org>"
+criteria = "safe-to-deploy"
+delta = "0.9.1 -> 0.9.3"
+notes = "Newly introduced unsafe code was checked more carefully; changes of fixing unsoundness (e.g. by making functions unsafe and adding safety comments) were checked for rough consistency."
+
+[[audits.ld-memory]]
+who = "Kaspar Schleiser <kaspar@schleiser.de>"
+criteria = "safe-to-deploy"
+version = "0.3.2"
+
 [[audits.litrs]]
 who = "Antoine Lavandier <antoine.lavandier@inria.fr>"
 criteria = "safe-to-deploy"
@@ -160,15 +395,44 @@ who = "chrysn <chrysn@fsfe.org>"
 criteria = "safe-to-deploy"
 delta = "0.4.27 -> 0.4.28"
 
+[[audits.log]]
+who = "Koen Zandberg <koen@bergzand.net>"
+criteria = "safe-to-deploy"
+delta = "0.4.29 -> 0.4.33"
+notes = "No changes to unsafe code. Newly added code looks reasonable."
+
+[[audits.memsolve]]
+who = "Kaspar Schleiser <kaspar@schleiser.de>"
+criteria = "safe-to-deploy"
+delta = "0.3.0 -> 0.3.1"
+
 [[audits.minicbor-adapters]]
 who = "chrysn <chrysn@fsfe.org>"
 criteria = "safe-to-deploy"
 delta = "0.0.4 -> 0.0.8"
 
+[[audits.nourl]]
+who = "Antoine Lavandier <antoine.lavandier@inria.fr>"
+criteria = "safe-to-deploy"
+delta = "0.1.4 -> 0.1.5"
+notes = "No new unsafe code."
+
+[[audits.nourl]]
+who = "Antoine Lavandier <antoine.lavandier@inria.fr>"
+criteria = "safe-to-deploy"
+delta = "0.1.5 -> 0.2.0"
+notes = "No new unsafe code"
+
 [[audits.nrf-modem]]
 who = "Nils Ponsard <nils.ponsard@inria.fr>"
 criteria = "safe-to-deploy"
 delta = "0.10.1 -> 0.10.2"
+
+[[audits.nrf-modem]]
+who = "chrysn <chrysn@fsfe.org>"
+criteria = "safe-to-deploy"
+delta = "0.10.2 -> 0.11.0"
+notes = "Changes look bigger than they are, and are best viewed with --ignore-all-space (as the latest version follows the new edition style of unsafe functions not automatically being unsafe inside, some attributes being unsafe that did not require annotation before, and more regular code formatting)."
 
 [[audits.nrfxlib-sys]]
 who = "chrysn <chrysn@fsfe.org>"
@@ -179,13 +443,139 @@ notes = "Review extends to the source of nrfxlib-sys only. The library ships als
 [[audits.nrfxlib-sys]]
 who = "chrysn <chrysn@fsfe.org>"
 criteria = "safe-to-deploy"
-delta = "3.0.3+3.0.2 -> 3.1.0+3.3.0"
+delta = "3.1.0+3.3.0 -> 4.0.0+3.4.0"
 notes = "Review extends to the source of nrfxlib-sys only. The library ships also proprietary C components, which were not (and, due to being closed source, can not) be reviewed."
+
+[[audits.num-complex]]
+who = "Koen Zandberg <koen@bergzand.net>"
+criteria = "safe-to-deploy"
+delta = "0.4.2 -> 0.4.6"
+notes = """
+Minor update of the crate:
+- Bumps the rust  edition to 2021
+- Adds support for rkyv and bytecheck as optional dependencies
+- Rest of the changes are all safe code
+"""
 
 [[audits.num-conv]]
 who = "Nils Ponsard <nils.ponsard@inria.fr>"
 criteria = "safe-to-deploy"
 delta = "0.2.0 -> 0.2.1"
+
+[[audits.polling]]
+who = "Antoine Lavandier <antoine.lavandier@inria.fr>"
+criteria = "safe-to-deploy"
+delta = "3.0.0 -> 3.1.0"
+notes = "No new unsafe code. This only adds a Event::new constructor to make some internals simpler and avoid using direct struct construction."
+
+[[audits.polling]]
+who = "Antoine Lavandier <antoine.lavandier@inria.fr>"
+criteria = "safe-to-deploy"
+delta = "3.1.0 -> 3.2.0"
+notes = "No new unsafe code. This makes the kqueue backend remember the sources that hold and adds a lib wide test for this. This also adds support for Haiku OS"
+
+[[audits.polling]]
+who = "Antoine Lavandier <antoine.lavandier@inria.fr>"
+criteria = "safe-to-deploy"
+delta = "3.2.0 -> 3.3.0"
+notes = "No new unsafe code in the lib. Added test looks sounds to me. This versions makes polling automatically restore when interrupted by a signal. Also fixes a doc link"
+
+[[audits.polling]]
+who = "Antoine Lavandier <antoine.lavandier@inria.fr>"
+criteria = "safe-to-deploy"
+delta = "3.3.0 -> 3.3.1"
+notes = "No new unsafe code. Only bumps window-sys dep from 0.48 to 0.52."
+
+[[audits.polling]]
+who = "Antoine Lavandier <antoine.lavandier@inria.fr>"
+criteria = "safe-to-deploy"
+delta = "3.3.1 -> 3.3.2"
+notes = "No new unsafe code. This only improves error handling by adding an internal error type."
+
+[[audits.polling]]
+who = "Antoine Lavandier <antoine.lavandier@inria.fr>"
+criteria = "safe-to-deploy"
+delta = "3.3.2 -> 3.4.0"
+notes = "New unsafe code is properly documented. The rest of the changes are better error message and adding a way to check for connection failures."
+
+[[audits.polling]]
+who = "Antoine Lavandier <antoine.lavandier@inria.fr>"
+criteria = "safe-to-deploy"
+delta = "3.4.0 -> 3.5.0"
+notes = "No new unsafe code. Only has conditional compilation flags for use with redox OS."
+
+[[audits.polling]]
+who = "Antoine Lavandier <antoine.lavandier@inria.fr>"
+criteria = "safe-to-deploy"
+delta = "3.5.0 -> 3.6.0"
+notes = """
+Hermit OS support features lots of unsafe code without safety comments but the underlying functions don't have safety docs either.
+Since this target is out of scope for Ariel OS and looks fine, I'm not concerned about repercussions.
+Otherwise no new unsafe code.
+"""
+
+[[audits.polling]]
+who = "Antoine Lavandier <antoine.lavandier@inria.fr>"
+criteria = "safe-to-deploy"
+delta = "3.6.0 -> 3.7.0"
+notes = "No new unsafe code. Mainly typo fixes in docs and adds PS Vita support in a way that does not affect other platforms."
+
+[[audits.polling]]
+who = "Antoine Lavandier <antoine.lavandier@inria.fr>"
+criteria = "safe-to-deploy"
+delta = "3.7.0 -> 3.7.1"
+notes = """
+No new unsafe code.
+Fix one typo and use i32::MAX over std::i32::MAX.
+"""
+
+[[audits.polling]]
+who = "Antoine Lavandier <antoine.lavandier@inria.fr>"
+criteria = "safe-to-deploy"
+delta = "3.7.1 -> 3.7.2"
+notes = "No new code. Only updates hermit-abi dep from 0.3.9 to 0.4.0"
+
+[[audits.polling]]
+who = "Antoine Lavandier <antoine.lavandier@inria.fr>"
+criteria = "safe-to-deploy"
+delta = "3.7.2 -> 3.7.3"
+notes = "No new code. Just typo fixing and adding visionOS as a valid target."
+
+[[audits.polling]]
+who = "Antoine Lavandier <antoine.lavandier@inria.fr>"
+criteria = "safe-to-deploy"
+delta = "3.7.3 -> 3.7.4"
+notes = """
+No new unsafe code.
+Adds Default impl to AfdPollHandleInfo and changes some `==0` to `.is_null()`
+"""
+
+[[audits.polling]]
+who = "Antoine Lavandier <antoine.lavandier@inria.fr>"
+criteria = "safe-to-deploy"
+delta = "3.7.4 -> 3.8.0"
+notes = "No new unsafe code. Update to rustix 1.0, and make timeout optional in some functions"
+
+[[audits.polling]]
+who = "Antoine Lavandier <antoine.lavandier@inria.fr>"
+criteria = "safe-to-deploy"
+delta = "3.8.0 -> 3.9.0"
+notes = "No new unsafe code. Make traces optional and apply some clippy lints that don't change functionality"
+
+[[audits.polling]]
+who = "Antoine Lavandier <antoine.lavandier@inria.fr>"
+criteria = "safe-to-deploy"
+delta = "3.9.0 -> 3.10.0"
+notes = "No new unsafe code. change `wait` to `wait_deadline` in the poller impls and moves the deadline to timeout logic in these impls"
+
+[[audits.polling]]
+who = "Antoine Lavandier <antoine.lavandier@inria.fr>"
+criteria = "safe-to-deploy"
+delta = "3.10.0 -> 3.11.0"
+notes = """
+No new unsafe code.
+Updates windows-sys dep and drops local type OnceCell for core::OnceLock
+"""
 
 [[audits.pretty-hex]]
 who = "ROMemories <152802150+ROMemories@users.noreply.github.com>"
@@ -399,6 +789,18 @@ user-id = 1 # Alex Crichton (alexcrichton)
 start = "2019-03-04"
 end = "2026-09-02"
 
+[[trusted.lazy_static]]
+criteria = "safe-to-deploy"
+user-id = 55123 # rust-lang-owner
+start = "2026-10-01"
+end = "2027-10-15"
+
+[[trusted.ld-memory]]
+criteria = "safe-to-deploy"
+user-id = 4665
+start = "2021-03-16"
+end = "2027-10-04"
+
 [[trusted.libc]]
 criteria = "safe-to-deploy"
 user-id = 55123 # rust-lang-owner
@@ -440,6 +842,12 @@ criteria = "safe-to-deploy"
 user-id = 189 # Andrew Gallant (BurntSushi)
 start = "2019-07-07"
 end = "2026-09-01"
+
+[[trusted.memsolve]]
+criteria = "safe-to-deploy"
+user-id = 407161 # Koen Zandberg (bergzand)
+start = "2026-06-16"
+end = "2027-10-04"
 
 [[trusted.new_debug_unreachable]]
 criteria = "safe-to-deploy"
@@ -608,6 +1016,12 @@ criteria = "safe-to-deploy"
 user-id = 3618 # David Tolnay (dtolnay)
 start = "2019-10-09"
 end = "2026-09-01"
+
+[[trusted.thread_local]]
+criteria = "safe-to-deploy"
+user-id = 2915 # Amanieu d'Antras (Amanieu)
+start = "2019-09-07"
+end = "2027-10-15"
 
 [[trusted.toml]]
 criteria = "safe-to-deploy"

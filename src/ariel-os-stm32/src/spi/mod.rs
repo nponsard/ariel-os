@@ -55,7 +55,10 @@ pub fn init(peripherals: &mut crate::OptionalPeripherals) {
         any(context = "stm32h755zi", context = "stm32h753zi") => {
             take_all_spi_peripherals!(Peripherals, SPI1, SPI2, SPI3, SPI4, SPI5, SPI6);
         }
-        context = "stm32l475vg" =>{
+        context = "stm32l072cz" => {
+            take_all_spi_peripherals!(Peripherals, SPI1, SPI2);
+        }
+        context = "stm32l475vg" => {
             take_all_spi_peripherals!(Peripherals, SPI1, SPI2, SPI3);
         }
         any(context = "stm32u073kc", context = "stm32u083mc") => {

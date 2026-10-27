@@ -248,9 +248,9 @@ impl Scheduler {
 
     /// Returns an unused [`ThreadId`] / Thread slot.
     fn get_unused(&mut self) -> Option<(&mut Thread, ThreadId)> {
-        for i in 0..THREAD_COUNT {
-            if self.threads[i].state == ThreadState::Invalid {
-                return Some((&mut self.threads[i], ThreadId::new(i as u8)));
+        for (i, thread_handle) in self.threads.iter_mut().enumerate() {
+            if thread_handle.state == ThreadState::Invalid {
+                return Some((thread_handle, ThreadId::new(i as u8)));
             }
         }
         None

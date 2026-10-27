@@ -7,16 +7,19 @@ mod rpi_pico_w;
 use cyw43::{Control, Runner};
 use embassy_executor::Spawner;
 use embassy_rp::{
+    dma::Channel,
     gpio::{Level, Output},
     pio::Pio,
 };
 use rpi_pico_w::{CywSpi, DEFAULT_CLOCK_DIVIDER, Irqs};
 use static_cell::StaticCell;
 
+use crate::dma::DmaIrqs;
+
 #[cfg(feature = "ble-cyw43")]
 use bt_hci::controller::ExternalController;
 #[cfg(feature = "wifi")]
-use cyw43::JoinOptions;
+use cyw43::{JoinError, JoinOptions};
 
 pub type NetworkDevice = cyw43::NetDriver<'static>;
 
@@ -38,15 +41,18 @@ pub async fn join(mut control: cyw43::Control<'static>) {
                 info!("Wifi connected!");
                 break;
             }
-            Err(err) => {
-                info!(" Wifi join failed with status={}", err.status);
+            Err(JoinError::JoinFailure(status)) => {
+                info!(" Wifi join failed with status={}", status);
+            }
+            Err(e) => {
+                info!(" Wifi join failed with error={:?}", e);
             }
         }
     }
 }
 
 #[embassy_executor::task]
-async fn wifi_cyw43_task(runner: Runner<'static, Output<'static>, CywSpi>) -> ! {
+async fn wifi_cyw43_task(runner: Runner<'static, cyw43::SpiBus<Output<'static>, CywSpi>>) -> ! {
     runner.run().await
 }
 
@@ -68,6 +74,7 @@ pub async fn device<'a, 'b: 'a>(
     let pins = rpi_pico_w::take_pins(peripherals);
 
     let fw = cyw43_firmware::CYW43_43439A0;
+    let nvram = cyw43_firmware::NVRAM_RP2040;
     let clm = cyw43_firmware::CYW43_43439A0_CLM;
     #[cfg(feature = "ble-cyw43")]
     let btfw = cyw43_firmware::CYW43_43439A0_BTFW;
@@ -90,17 +97,25 @@ pub async fn device<'a, 'b: 'a>(
         cs,
         pins.dio,
         pins.clk,
-        pins.dma,
+        Channel::new(pins.dma, DmaIrqs),
     );
 
     #[cfg(not(feature = "ble-cyw43"))]
     let (net_device, mut net_control, runner) =
-        cyw43::new(STATE.init_with(cyw43::State::new), pwr, spi, fw).await;
+        cyw43::new(STATE.init_with(cyw43::State::new), pwr, spi, fw, nvram).await;
 
     #[cfg(feature = "ble-cyw43")]
     let (net_device, mut net_control, runner, ble_controller) = {
-        let (net_device, bt_device, control, runner) =
-            cyw43::new_with_bluetooth(STATE.init_with(cyw43::State::new), pwr, spi, fw, btfw).await;
+        let (net_device, bt_device, control, runner) = cyw43::new_with_bluetooth(
+            STATE.init_with(cyw43::State::new),
+            pwr,
+            spi,
+            fw,
+            btfw,
+            nvram,
+        )
+        .await;
+
         let ble_controller = ExternalController::new(bt_device);
 
         (net_device, control, runner, ble_controller)
@@ -111,7 +126,7 @@ pub async fn device<'a, 'b: 'a>(
     //     .await;
 
     // this needs to be spawned here (before using `control`)
-    spawner.spawn(wifi_cyw43_task(runner)).unwrap();
+    spawner.spawn(wifi_cyw43_task(runner).unwrap());
 
     net_control.init(clm).await;
 
