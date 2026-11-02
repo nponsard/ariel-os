@@ -1,12 +1,24 @@
 use embassy_executor::Spawner;
-use embassy_sync::{blocking_mutex::raw::CriticalSectionRawMutex, pipe::Pipe};
+use embassy_sync::{
+    blocking_mutex::{Mutex, raw::CriticalSectionRawMutex},
+    pipe::Pipe,
+};
 use embedded_io_async::Write;
 use static_cell::ConstStaticCell;
 
 use ariel_os_embassy_common::uart::Baudrate;
-use ariel_os_hal::hal::{OptionalPeripherals, TakePeripherals, uart::Uart};
+use ariel_os_hal::hal::{
+    OptionalPeripherals,
+    TakePeripherals,
+    // uart::Uart
+};
+use core::cell::RefCell;
 
 type UartAssignment = ariel_os_boards::pins::HOST_FACING_UART;
+
+type Uart = embassy_stm32::usart::BufferedUart<'static>;
+
+static UART: Mutex<CriticalSectionRawMutex, RefCell<Option<Uart>>> = Mutex::new(RefCell::new(None));
 
 const UART_PIPE_SIZE: usize = 1024;
 const UART_BUF_SIZE: usize = 32;
@@ -24,28 +36,32 @@ pub fn init(mut peripherals: &mut OptionalPeripherals, spawner: Spawner) {
     let tx_buf = TX_BUF.take();
     let rx_buf = RX_BUF.take();
 
-    let assignment: UartAssignment = peripherals.take_peripherals();
+    // let assignment: UartAssignment = peripherals.take_peripherals();
 
     // let (tx, rx) = assignment.into_pins();
 
-    let uart = assignment
-        .build_with_config(rx_buf, tx_buf, config)
-        .unwrap();
+    // let uart = assignment
+    //     .build_with_config(rx_buf, tx_buf, config)
+    //     .unwrap();
 
-    spawner.spawn(run(uart).expect("start UART log task"));
+    let tx_pin = peripherals.PA2.take();
+    let rx_pin = peripherals.PA3.take();
+    let usart = peripherals.USART2.take();
+
+    // spawner.spawn(run(uart).expect("start UART log task"));
 
     ariel_os_log::transport::register_custom_transport(write_bytes, flush);
 }
 
-#[embassy_executor::task]
-async fn run(mut uart: Uart<'static>) {
-    let mut buf = [0u8; UART_BUF_SIZE];
-    loop {
-        let len = UART_LOG_PIPE.read(&mut buf).await;
-        let _ = uart.write_all(&buf[..len]).await;
-        let _ = uart.flush().await;
-    }
-}
+// #[embassy_executor::task]
+// async fn run(mut uart: Uart<'static>) {
+//     let mut buf = [0u8; UART_BUF_SIZE];
+//     loop {
+//         let len = UART_LOG_PIPE.read(&mut buf).await;
+//         let _ = uart.write_all(&buf[..len]).await;
+//         let _ = uart.flush().await;
+//     }
+// }
 
 fn write_bytes(bytes: &[u8]) {
     let end = bytes.len();

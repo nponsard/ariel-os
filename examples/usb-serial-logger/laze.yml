@@ -1,6 +1,6 @@
 apps:
   - name: example-usb-serial-logger
     selects:
-      - log
+      # - log
       - logging-over-custom-transport # Has to be selected before `usb` is selected
-      - usb
+      # - usb

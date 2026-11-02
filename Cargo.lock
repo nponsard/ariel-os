@@ -3382,8 +3382,11 @@ dependencies = [
  "ariel-os",
  "ariel-os-boards",
  "embassy-futures",
+ "embassy-nrf",
+ "embassy-stm32",
  "embassy-sync 0.8.0",
- "embedded-io-async 0.7.0",
+ "embedded-io 0.7.1",
+ "static_cell",
 ]
 
 [[package]]

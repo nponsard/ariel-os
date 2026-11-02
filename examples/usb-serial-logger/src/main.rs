@@ -2,17 +2,23 @@
 #![no_main]
 
 use ariel_os::{
-    cell::StaticCell,
     log::{debug, error, info, println, trace, transport::register_custom_transport, warn},
-    reexports::embassy_usb::{self, class::cdc_acm::CdcAcmError},
     time::Timer,
 };
-use embassy_sync::{blocking_mutex::raw::CriticalSectionRawMutex, pipe::Pipe};
-use embassy_usb::{
-    class::cdc_acm::{CdcAcmClass, State},
-    driver::EndpointError,
+
+#[cfg(context = "stm32")]
+use embassy_stm32::{
+    bind_interrupts,
+    mode::Blocking,
+    peripherals,
+    usart::{BufferedUart, InterruptHandler},
 };
-use embedded_io_async::Write;
+
+#[cfg(context = "nrf")]
+use embassy_nrf::{bind_interrupts, peripherals, uarte};
+use embassy_sync::{blocking_mutex::raw::CriticalSectionRawMutex, mutex::Mutex, pipe::Pipe};
+use embedded_io::Write;
+use static_cell::ConstStaticCell;
 
 const MAX_FULL_SPEED_PACKET_SIZE: u8 = 64;
 
@@ -33,72 +39,89 @@ async fn logging() {
     }
 }
 
-#[ariel_os::task(autostart, usb_builder_hook)]
-async fn main() {
+#[cfg(context = "stm32")]
+type Uart = embassy_stm32::usart::Uart<'static, Blocking>;
+
+#[cfg(context = "nrf")]
+type Uart = embassy_nrf::uarte::Uarte<'static>;
+
+static UART: Mutex<CriticalSectionRawMutex, Option<Uart>> = Mutex::new(None);
+
+// Side UART of Arduino v3 connector
+#[cfg(context = "stm32u083c-dk")]
+ariel_os::hal::define_peripherals!(Peripherals {
+    uart_rx: PA3,
+    uart_tx: PA2,
+    uart: USART2,
+});
+
+#[cfg(context = "stm32u083c-dk")]
+bind_interrupts!(struct Irqs {
+    USART2_LPUART2 => InterruptHandler<peripherals::USART2>;
+});
+
+#[cfg(context = "nrf52840dk")]
+ariel_os::hal::define_peripherals!(Peripherals {
+    uart_rx: P0_08,
+    uart_tx: P0_06,
+    uart: UARTE0,
+});
+
+#[cfg(context = "nrf52840dk")]
+bind_interrupts!(struct Irqs {
+    UARTE0 => uarte::InterruptHandler<peripherals::UARTE0>;
+});
+
+const UART_BUF_SIZE: usize = 32;
+static RX_BUF: ConstStaticCell<[u8; UART_BUF_SIZE]> = ConstStaticCell::new([0u8; UART_BUF_SIZE]);
+static TX_BUF: ConstStaticCell<[u8; UART_BUF_SIZE]> = ConstStaticCell::new([0u8; UART_BUF_SIZE]);
+
+#[ariel_os::task(autostart, peripherals)]
+async fn main(p: Peripherals) {
     register_custom_transport(write_bytes, flush);
+    let tx_buf = TX_BUF.take();
+    let rx_buf = RX_BUF.take();
 
-    info!("Hello World!");
+    #[cfg(context = "stm32")]
+    let config = embassy_stm32::usart::Config::default();
+    #[cfg(context = "nrf")]
+    let config = embassy_nrf::uarte::Config::default();
+    if let Ok(mut l) = UART.try_lock() {
+        #[cfg(context = "stm32")]
+        let uart = Uart::new_blocking(p.uart, p.uart_rx, p.uart_tx, config).unwrap();
+        #[cfg(context = "nrf")]
+        let uart = Uart::new(p.uart, p.uart_rx, p.uart_tx, Irqs, config);
 
-    static STATE: StaticCell<State<'_>> = StaticCell::new();
-
-    // Create and inject the USB class on the system USB builder.
-    let class = USB_BUILDER_HOOK
-        .with(|builder| {
-            CdcAcmClass::new(
-                builder,
-                STATE.init_with(State::new),
-                MAX_FULL_SPEED_PACKET_SIZE.into(),
-            )
-        })
-        .await;
-
-    let (mut sender, mut receiver) = class.split();
-    loop {
-        let sender_fut = async {
-            sender.wait_connection().await;
-            let mut buffer = [0; LOG_BUFFER_SIZE as usize];
-            loop {
-                let len = LOG_BUFFER.read(&mut buffer).await;
-
-                if matches!(
-                    sender.write_all(&buffer[..len]).await,
-                    Err(CdcAcmError::NotConnected)
-                ) {
-                    // If the USB connection is disconnected, wait until it's reconnected.
-                    sender.wait_connection().await;
-                };
-            }
-        };
-
-        // The serial has to be read otherwise the USB device hangs on some MCUs.
-        let receiver_fut = async {
-            receiver.wait_connection().await;
-            let mut buffer = [0; MAX_FULL_SPEED_PACKET_SIZE as usize];
-            loop {
-                if matches!(
-                    receiver.read_packet(&mut buffer).await,
-                    Err(EndpointError::Disabled)
-                ) {
-                    receiver.wait_connection().await;
-                }
-            }
-        };
-
-        embassy_futures::join::join(sender_fut, receiver_fut).await;
+        l.replace(uart);
     }
+
+    info!("Hello world!");
 }
 
 pub fn write_bytes(bytes: &[u8]) {
     let end = bytes.len();
 
-    let mut total = 0;
-    while total < end {
-        let n = match LOG_BUFFER.try_write(&bytes[total..end]) {
-            Ok(n) => n,
-            // Pipe full, drop the data.
-            Err(_) => return,
-        };
-        total += n;
+    if let Ok(mut opt) = UART.try_lock() {
+        if let Some(mut uart) = opt.take() {
+            let res = cfg_select! {
+                context = "nrf"=> {
+                    uart.blocking_write(bytes)
+                }
+                _ => {
+                    uart.write_all(bytes)
+                }
+            };
+
+            if let Err(e) = res {
+                panic!("aaaa");
+            }
+
+            opt.replace(uart);
+        } else {
+            panic!("aaaa");
+        }
+    } else {
+        panic!("aaaa");
     }
 }
 

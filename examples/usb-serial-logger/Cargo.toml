@@ -9,7 +9,17 @@ ariel-os = { path = "../../src/ariel-os", features = ["time"] }
 ariel-os-boards = { path = "../../src/ariel-os-boards" }
 embassy-futures = { workspace = true }
 embassy-sync = { workspace = true }
-embedded-io-async = { version = "0.7" }
+embedded-io = { version = "0.7" }
+static_cell = {workspace = true}
+
+
+
+[target.'cfg(context = "stm32")'.dependencies]
+embassy-stm32 = {workspace = true}
+
+[target.'cfg(context = "nrf")'.dependencies]
+embassy-nrf = {workspace = true}
+
 
 [lints]
 workspace = true
