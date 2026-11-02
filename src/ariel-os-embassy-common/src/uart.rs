@@ -108,7 +108,7 @@ macro_rules! impl_async_uart_bufread_for_driver_enum {
 #[macro_export]
 macro_rules! impl_async_uart_for_driver_enum {
     ($driver_enum:ident, $( $peripheral:ident ),*) => {
-        impl embedded_io_async::Read for $driver_enum<'_> {
+        impl<BACKEND:embedded_io_async::Read >  embedded_io_async::Read for $driver_enum<'_,BACKEND> {
             async fn read(&mut self, buf: &mut [u8]) -> Result<usize, Self::Error> {
                 match self {
                     $( Self::$peripheral(uart) => embedded_io_async::Read::read(&mut uart.uart, buf).await, )*
@@ -117,7 +117,7 @@ macro_rules! impl_async_uart_for_driver_enum {
         }
 
 
-        impl embedded_io_async::ReadReady for $driver_enum<'_> {
+        impl<BACKEND: embedded_io_async::ReadReady> embedded_io_async::ReadReady for $driver_enum<'_,BACKEND> {
             fn read_ready(&mut self) -> Result<bool, Self::Error> {
                 match self {
                     $( Self::$peripheral(uart) => embedded_io_async::ReadReady::read_ready(&mut uart.uart), )*
@@ -125,7 +125,7 @@ macro_rules! impl_async_uart_for_driver_enum {
             }
         }
 
-        impl embedded_io_async::Write for $driver_enum<'_> {
+        impl <BACKEND:  embedded_io_async::Write> embedded_io_async::Write for $driver_enum<'_,BACKEND> {
             async fn write(&mut self, buf: &[u8]) -> Result<usize, Self::Error> {
                 match self {
                     $( Self::$peripheral(uart) => embedded_io_async::Write::write(&mut uart.uart, buf).await, )*

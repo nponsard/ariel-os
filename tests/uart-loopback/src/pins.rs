@@ -57,7 +57,7 @@ ariel_os::hal::define_peripherals!(Peripherals {
 });
 
 #[cfg(context = "rp")]
-pub type TestUart<'a> = uart::UART0<'a>;
+pub type TestUart<'a> = uart::UART0<'a, uart::AsyncBackend>;
 #[cfg(context = "rp")]
 ariel_os::hal::define_peripherals!(Peripherals {
     uart_rx: PIN_17,

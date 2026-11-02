@@ -7,7 +7,9 @@ use portable_atomic::{AtomicBool, Ordering};
 use ariel_os_embassy_common::{impl_async_uart_for_driver_enum, uart::ConfigError};
 
 use embassy_rp::{
-    bind_interrupts, peripherals,
+    bind_interrupts,
+    gpio::Output,
+    peripherals,
     uart::{BufferedInterruptHandler, BufferedUart, RxPin, TxPin},
 };
 
@@ -160,12 +162,55 @@ impl From<ariel_os_embassy_common::uart::StopBits<Self>> for StopBits {
     }
 }
 
+/// Async UART marker.
+pub struct AsyncBackend {
+    uart: BufferedUart,
+}
+
+impl AsyncBackend {
+    fn new(uart: BufferedUart) -> Self {
+        Self { uart }
+    }
+}
+
+impl embedded_io_async::ErrorType for AsyncBackend {
+    type Error = embassy_rp::uart::Error;
+}
+
+impl embedded_io_async::Read for AsyncBackend {
+    fn read(&mut self, buf: &mut [u8]) -> impl Future<Output = Result<usize, Self::Error>> {
+        self.uart.read(buf)
+    }
+}
+
+impl embedded_io_async::ReadReady for AsyncBackend {
+    fn read_ready(&mut self) -> Result<bool, Self::Error> {
+        self.uart.read_ready()
+    }
+}
+
+impl embedded_io_async::Write for AsyncBackend {
+    fn write(&mut self, buf: &[u8]) -> impl Future<Output = Result<usize, Self::Error>> {
+        self.uart.write(buf)
+    }
+    fn flush(&mut self) -> impl Future<Output = Result<(), Self::Error>> {
+        self.uart.flush()
+    }
+    fn write_all(&mut self, buf: &[u8]) -> impl Future<Output = Result<(), Self::Error>> {
+        self.uart.write_all(buf)
+    }
+}
+
 macro_rules! define_uart_drivers {
     ($( $interrupt:ident => $peripheral:ident ),* $(,)?) => {
         $(
+
+
+
+
             /// Peripheral-specific UART driver.
-            pub struct $peripheral<'d> {
-                uart: BufferedUart,
+            pub struct $peripheral<'d, BACKEND> {
+                uart: BACKEND,
                 // This field is necessary as embassy_rp's `BufferedUart` does not
                 // actually have a lifetime, but `impl_async_uart_for_driver_enum!()`
                 // expects one on the `Uart` enum.
@@ -184,7 +229,7 @@ macro_rules! define_uart_drivers {
                 static [< ACTIVE_ $peripheral >]: AtomicBool = AtomicBool::new(false);
             }
 
-            impl<'d> $peripheral<'d> {
+            impl<'d> $peripheral<'d,AsyncBackend> {
                 /// Returns a driver implementing embedded-io traits for this Uart
                 /// peripheral.
                 ///
@@ -198,7 +243,7 @@ macro_rules! define_uart_drivers {
                     rx_buf: &mut [u8],
                     tx_buf: &mut [u8],
                     config: Config,
-                ) -> Result<Uart<'d>, ConfigError> {
+                ) -> Result<Uart<'d,AsyncBackend>, ConfigError> {
                     let mut uart_config = embassy_rp::uart::Config::default();
                     uart_config.baudrate = Baudrate::from(config.baudrate).into();
                     uart_config.data_bits = from_data_bits(config.data_bits);
@@ -231,11 +276,11 @@ macro_rules! define_uart_drivers {
                         uart_config,
                     );
 
-                    Ok(Uart::$peripheral(Self { uart, _phantom: core::marker::PhantomData }))
+                    Ok(Uart::$peripheral(Self { uart: AsyncBackend::new(uart), _phantom: core::marker::PhantomData }))
                 }
             }
 
-            impl<'d> Drop for $peripheral<'d> {
+            impl<'d,BACKEND> Drop for $peripheral<'d,BACKEND> {
                 fn drop(&mut self) {
                     paste::paste! {
                         [< ACTIVE_ $peripheral >].store(false, Ordering::Release);
@@ -245,15 +290,15 @@ macro_rules! define_uart_drivers {
         )*
 
         /// Peripheral-agnostic UART driver.
-        pub enum Uart<'d> {
+        pub enum Uart<'d, BACKEND> {
             $(
                 #[doc = concat!(stringify!($peripheral), " peripheral.")]
-                $peripheral($peripheral<'d>)
+                $peripheral($peripheral<'d, BACKEND>)
             ),*
         }
 
-        impl embedded_io_async::ErrorType for Uart<'_> {
-            type Error = embassy_rp::uart::Error;
+        impl<BACKEND: embedded_io_async::ErrorType> embedded_io_async::ErrorType for Uart<'_,BACKEND> {
+            type Error = BACKEND::Error;
         }
 
         impl_async_uart_for_driver_enum!(Uart, $( $peripheral ),*);
