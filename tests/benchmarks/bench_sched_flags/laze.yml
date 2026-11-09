@@ -1,7 +1,0 @@
-apps:
-  - name: bench_sched_flags
-    selects:
-      - sw/threading
-      - sw/benchmark
-    conflicts:
-      - ram-tiny

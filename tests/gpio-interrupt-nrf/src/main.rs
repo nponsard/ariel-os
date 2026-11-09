@@ -46,6 +46,19 @@ ariel_os::hal::define_peripherals!(ButtonPeripherals {
     btn_8: P0_10,
 });
 
+#[cfg(context = "nrf54l15-app")]
+ariel_os::hal::define_peripherals!(ButtonPeripherals {
+    btn_0: P1_00,
+    btn_1: P1_01,
+    btn_2: P1_04,
+    btn_3: P1_05,
+    btn_4: P1_06,
+    btn_5: P1_07,
+    btn_6: P1_08,
+    btn_7: P1_09,
+    btn_8: P1_10,
+});
+
 #[cfg(context = "nrf91")]
 ariel_os::hal::define_peripherals!(ButtonPeripherals {
     btn_0: P0_00,

@@ -28,11 +28,7 @@ impl Executor {
 pub struct Spawner;
 
 impl Spawner {
-    #[allow(clippy::result_unit_err)]
-    pub fn spawn<S>(&self, _token: SpawnToken<S>) -> Result<(), ()> {
+    pub fn spawn<S>(&self, _token: SpawnToken<S>) {
         unimplemented!();
     }
-
-    #[allow(clippy::unused_self)]
-    pub fn must_spawn<S>(&self, _token: SpawnToken<S>) {}
 }

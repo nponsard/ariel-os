@@ -1,6 +1,6 @@
 [package]
 name = "ariel-os"
-version = "0.5.0"
+version = "0.6.0"
 edition.workspace = true
 rust-version.workspace = true
 license.workspace = true
@@ -19,23 +19,23 @@ pre-release-replacements = [
 
 [dependencies]
 ariel-os-bench = { workspace = true, optional = true }
-ariel-os-boards = { path = "../ariel-os-boards" }
+ariel-os-boards = { workspace = true }
 ariel-os-buildinfo = { workspace = true }
-ariel-os-coap = { path = "../ariel-os-coap", optional = true }
+ariel-os-coap = { workspace = true, optional = true }
 ariel-os-debug = { workspace = true }
-ariel-os-embassy = { path = "../ariel-os-embassy" }
+ariel-os-embassy = { workspace = true }
 ariel-os-hal = { workspace = true }
 ariel-os-identity = { workspace = true }
 ariel-os-log = { workspace = true }
-ariel-os-macros = { path = "../ariel-os-macros" }
-ariel-os-nrf = { path = "../ariel-os-nrf", optional = true }
-ariel-os-power = { path = "../ariel-os-power" }
+ariel-os-macros = { workspace = true }
+ariel-os-nrf = { workspace = true, optional = true }
+ariel-os-power = { workspace = true }
 ariel-os-random = { workspace = true, optional = true }
-ariel-os-rt = { path = "../ariel-os-rt" }
+ariel-os-rt = { workspace = true }
 ariel-os-sensors = { workspace = true, optional = true }
 ariel-os-sensors-registry = { workspace = true, optional = true }
 ariel-os-storage = { workspace = true, optional = true }
-ariel-os-threads = { path = "../ariel-os-threads", optional = true }
+ariel-os-threads = { workspace = true, optional = true }
 ariel-os-utils = { workspace = true }
 document-features = { workspace = true }
 linkme = { workspace = true }
@@ -133,10 +133,17 @@ network-config-override = ["ariel-os-embassy/network-config-override"]
 rcc-config-override = ["ariel-os-embassy/rcc-config-override"]
 ## Enables custom USB configuration.
 override-usb-config = ["ariel-os-embassy/override-usb-config"]
+# Suppresses the built-in app descriptor so the application can emit its own.
+# Currently only useful on ESP32.
+custom-app-descriptor = ["ariel-os-embassy/custom-app-descriptor"]
 
 #! ## Multicore functionality
 ## Enables support for core affinities (restricting threads to specific cores).
-core-affinity = ["ariel-os-threads?/core-affinity", "multi-core"]
+core-affinity = [
+  "ariel-os-macros/core-affinity",
+  "ariel-os-threads?/core-affinity",
+  "multi-core",
+]
 # Exactly one of the features below must be enabled at once.
 # Selection of these should be done through laze configuration.
 # Enables one single core, even if the hardware provides multiple cores.
@@ -159,6 +166,16 @@ wifi-cyw43 = ["ariel-os-embassy/wifi-cyw43"]
 wifi-esp = ["ariel-os-embassy/wifi-esp"]
 # Selects STM32 Ethernet
 ethernet-stm32 = ["ariel-os-embassy/ethernet-stm32"]
+# Selects Ethernet via a WIZnet SPI chip.
+ethernet-wiznet = ["ariel-os-embassy/ethernet-wiznet"]
+# Selects the W5500 as the WIZnet chip in use.
+wiznet-w5500 = ["ariel-os-embassy/wiznet-w5500"]
+# Selects the W5100S as the WIZnet chip in use.
+wiznet-w5100s = ["ariel-os-embassy/wiznet-w5100s"]
+# Selects the W6100 as the WIZnet chip in use.
+wiznet-w6100 = ["ariel-os-embassy/wiznet-w6100"]
+# Selects the W6300 as the WIZnet chip in use.
+wiznet-w6300 = ["ariel-os-embassy/wiznet-w6300"]
 # Selects the network backend that goes through tun/tap (native only).
 tuntap = ["ariel-os-embassy/tuntap"]
 # Selects LTE-M on nRF SiPs (currently only available on nRF91 SiPs).
@@ -178,7 +195,7 @@ ble-peripheral = ["ariel-os-embassy/ble-peripheral", "ble"]
 ble-config-static-address = ["ariel-os-embassy/ble-config-static-address"]
 
 # ## Enables support for the nRF91xx SiP modem.
-nrf91-modem = ["ariel-os-embassy/nrf91-modem", "ariel-os-rt/nrf91-modem"]
+nrf91-modem = ["ariel-os-embassy/nrf91-modem"]
 # Adjusts nRF modem (or related components) to assume that there is the DECT firmware running on the radio core.
 nrf-radiocore-firmware-dect = ["ariel-os-nrf/radiocore-firmware-dect"]
 
@@ -229,6 +246,10 @@ rtt-target = ["ariel-os-debug/rtt-target"]
 defmt-rtt = ["ariel-os-log/defmt-rtt"]
 esp-println = ["ariel-os-log/esp-println"]
 semihosting = ["ariel-os-debug/semihosting"]
+# Log transport defined by the application.
+logging-over-custom-transport = ["ariel-os-log/custom-transport-driver"]
+# Logging over stdout (only available on native).
+logging-over-stdout = ["ariel-os-log/logging-over-stdout"]
 
 net = ["ariel-os-embassy/net"]
 
@@ -247,6 +268,10 @@ embedded-test = ["ariel-os-rt/embedded-test"]
 
 # Enables idle threads. Selected by laze if needed.
 idle-threads = ["ariel-os-threads/idle-threads"]
+
+# ## Boot loader / OTA related features
+embassy-boot-loader = ["ariel-os-rt/embassy-boot-loader"]
+embassy-boot-application = ["ariel-os-rt/embassy-boot-application"]
 
 # features needed for `cargo test`
 _test = [

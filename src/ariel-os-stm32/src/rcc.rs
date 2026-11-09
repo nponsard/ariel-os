@@ -273,6 +273,19 @@ fn default() -> embassy_stm32::rcc::Config {
         });
     }
 
+    #[cfg(context = "stm32l072cz")]
+    {
+        use embassy_stm32::rcc::*;
+
+        rcc.hsi = true;
+        rcc.pll = Some(Pll {
+            source: PllSource::HSI,
+            mul: PllMul::MUL6, // PLLVCO = 16 * 6 = 96 MHz, USB and RNG clock = PLLVCO / 2 = 48 MHz
+            div: PllDiv::DIV3, // sysclk 32 MHz (16 * 6 / 3)
+        });
+        rcc.sys = Sysclk::PLL1_R;
+    }
+
     #[cfg(context = "seeedstudio-lora-e5-mini")]
     {
         use embassy_stm32::rcc::*;
@@ -294,6 +307,29 @@ fn default() -> embassy_stm32::rcc::Config {
         });
 
         rcc.sys = Sysclk::PLL1_R;
+    }
+
+    #[cfg(context = "st-nucleo-wba55")]
+    {
+        use embassy_stm32::rcc::*;
+
+        rcc.hse = Some(Hse {
+            prescaler: HsePrescaler::DIV1,
+        });
+
+        rcc.pll1 = Some(Pll {
+            source: PllSource::HSE,
+            prediv: PllPreDiv::DIV2, // 32 / 2 = 16 MHz
+            mul: PllMul::MUL25,      // 16 * 25 = 400 MHz VCO (128..=544)
+            divp: None,
+            divq: None,
+            divr: Some(PllDiv::DIV4), // 400 / 4 = 100 MHz (sysclk, max)
+            frac: None,
+        });
+        rcc.sys = Sysclk::PLL1_R;
+        // The PLL is unavailable in voltage range 2
+        rcc.voltage_scale = VoltageScale::RANGE1;
+        rcc.mux.sai1sel = mux::Sai1sel::HSI;
     }
 
     #[cfg(context = "st-nucleo-wba65ri")]

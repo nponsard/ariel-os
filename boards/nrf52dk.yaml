@@ -1,4 +1,4 @@
-version: 0.4.0
+version: 0.4.1
 targets:
   nrf52dk:
     chip: nrf52832
@@ -32,3 +32,20 @@ targets:
       # button3
       - pin: P0_16
         active: low
+    # TODO: support for the TWI peripheral needs to be added to Ariel OS first.
+    # i2c:
+    #   # Only available when a shield is inserted.
+    #   - sda_pin: P0_26
+    #     scl_pin: P0_27
+    #     possible_peripherals:
+    #       - TWISPI0
+    #       - TWISPI1
+    uarts:
+      - aliases:
+          - VCOM0
+        tx_pin: P0_06
+        rx_pin: P0_08
+        rts_pin: P0_05
+        cts_pin: P0_07
+        possible_peripherals: [UARTE0]
+        host_facing: true

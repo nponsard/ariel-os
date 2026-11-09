@@ -7,6 +7,7 @@
 #[cfg(feature = "_radio-esp")]
 extern crate alloc;
 
+#[cfg(not(feature = "custom-app-descriptor"))]
 mod app_desc {
     esp_bootloader_esp_idf::esp_app_desc!();
 }
@@ -38,11 +39,7 @@ pub mod hwrng {
 pub mod i2c;
 
 #[doc(hidden)]
-pub mod identity {
-    use ariel_os_embassy_common::identity;
-
-    pub type DeviceId = identity::NoDeviceId<identity::NotImplemented>;
-}
+pub mod identity;
 
 #[cfg(feature = "spi")]
 pub mod spi;
@@ -109,7 +106,7 @@ pub fn init() -> OptionalPeripherals {
                     TimerGroup::new(peripherals.TIMG1.take().unwrap()).timer0
                 }
                 _ => {
-                    use esp_hal::timer::systimer::{SystemTimer};
+                    use esp_hal::timer::systimer::SystemTimer;
                     SystemTimer::new(peripherals.SYSTIMER.take().unwrap()).alarm0
                 }
             }

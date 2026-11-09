@@ -1,11 +1,11 @@
-version: 0.4.0
+version: 0.4.1
 targets:
   st-nucleo-wb55:
     chip: stm32wb55rg
     flags:
       - has_usb_device_port
     ariel:
-      swi: USART1
+      swi: WWDG
     leds:
       # led0
       - pin: PB5
@@ -35,3 +35,11 @@ targets:
       - pin: PD1
         aliases:
           - SW3
+    uarts:
+      # Jumpers must be on.
+      - aliases:
+          - VCP
+        tx_pin: PB6
+        rx_pin: PB7
+        possible_peripherals: [USART1]
+        host_facing: true
