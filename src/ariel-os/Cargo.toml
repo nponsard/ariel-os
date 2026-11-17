@@ -20,6 +20,7 @@ pre-release-replacements = [
 [dependencies]
 ariel-os-bench = { workspace = true, optional = true }
 ariel-os-boards = { workspace = true }
+ariel-os-bootloader-common = { workspace = true, optional = true }
 ariel-os-buildinfo = { workspace = true }
 ariel-os-coap = { workspace = true, optional = true }
 ariel-os-debug = { workspace = true }
